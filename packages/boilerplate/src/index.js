@@ -23,6 +23,5 @@ const init = (selector, options) => {
 };
 /*
  * Component API
- * e.g. Boilerplate.init(...)
  */
 export default { init };

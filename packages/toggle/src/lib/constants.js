@@ -1,0 +1,8 @@
+// Events that trigger toggle open/close
+export const TRIGGER_EVENTS = window.PointerEvent ? ['pointerdown', 'keydown'] : ['ontouchstart' in window ? 'touchstart' : 'click', 'keydown' ];
+
+// Event keycodes that trigger toggle open/close for keyboard events
+export const TRIGGER_KEYCODES = [13, 32];
+
+//Array of focusable child elements
+export const FOCUSABLE_ELEMENTS = ['a[href]', 'area[href]', 'input:not([disabled])', 'select:not([disabled])', 'textarea:not([disabled])', 'button:not([disabled])', 'iframe', 'object', 'embed', '[contenteditable]', '[tabindex]:not([tabindex="-1"])'];
