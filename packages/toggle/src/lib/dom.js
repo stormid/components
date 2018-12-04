@@ -1,28 +1,54 @@
 import { FOCUSABLE_ELEMENTS } from './constants';
 
+/*
+ * DOM side effecta and mutations
+ */
+
+/*
+ * Returns an Array of HTMLElements selected based on data-toggle attribute of a given node
+ * 
+ * @param node, HTMLElement, node to be toggled
+ * @return Array of HTMLElements
+ */
 export const findToggles = node => {
     const toggles = node.getAttribute('data-toggle') && Array.from(document.querySelectorAll('.' + node.getAttribute('data-toggle')));
     if(!toggles) throw console.warn(`Toggle cannot be initialised, no buttons found for ${node}. Does it have a data-toggle attribute that identifies toggle buttons?`);
     return toggles;
 };
 
+/*
+ * Returns an Array of HTMLElements selected from parentNode based on whitelist FOCUSABLE_ELEMENTS constant
+ * 
+ * @param node, HTMLElement, node to be toggled
+ * @return Array of HTMLElements
+ */
 export const getFocusableChildren = node => Array.from(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
 
+/*
+ * Change toggle button attributes and node target classNames
+ * 
+ * @param props, Object, composed of properties of current state required to accessibly change node toggles attributes
+ */
 export const toggleAttributes = ({ toggles, isOpen, classTarget, animatingClass, statusClass }) => {
     toggles.forEach(toggle => toggle.setAttribute('aria-expanded', isOpen));
     classTarget.classList.remove(animatingClass);
     classTarget.classList.toggle(statusClass);
 };
 
+/*
+ * Partially applied function that returns handler for keyboard events when toggle is open
+ * 
+ * @param Store, Object, model or store of the current instance
+ * @returns Function, keyboard event handler
+ * @param Event
+ */
 export const keyListener = Store => e => {
     switch(e.keyCode){
         case 27:
             e.preventDefault();
-            console.log('escape');
             startToggleCycle(Store);
         break;
         case 9:
-        console.log('tab');
             trapTab(Store, e);
         break;
     }
