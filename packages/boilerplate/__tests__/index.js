@@ -55,9 +55,9 @@ describe('Component API', () => {
 
   it('should trigger the handleClick function toggling the className', () => {
 
-    basic[0].handleClick();
+    basic[0].handleClick.call(basic[0].node);
     expect(basic[0].node.classList).toContain('clicked');
-    basic[0].handleClick();
+    basic[0].handleClick.call(basic[0].node);
     expect(basic[0].node.classList).not.toContain('clicked');
 
    });
