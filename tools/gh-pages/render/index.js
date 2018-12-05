@@ -3,7 +3,7 @@ const fse = require('fs-extra');
 const doctype = require('../src/doctype.js');
 const content = require('../src');
 fse.outputFile(
-    path.resolve(__dirname,`../../../gh-pages/index.html`),
+    path.resolve(__dirname,`../../../docs/index.html`),
     doctype(content()),
     'utf8',
     err => {

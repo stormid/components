@@ -11,3 +11,4 @@ lerna.json
 package-lock.json
 tools
 gh-pages
+docs
