@@ -1,6 +1,13 @@
 const styles = require('./styles');
 const packages = require('../utils').findPackages();
 const script = require('./script');
+const MarkdownIt = require('markdown-it');
+const md = new MarkdownIt();
+/*
+
+md.render(<<< path to readme >>);
+*/
+
 
 module.exports = () => `<html lang="en" class="no-webfonts no-js">
     <head>

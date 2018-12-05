@@ -2,7 +2,6 @@ const path = require('path');
 const fse = require('fs-extra');
 const doctype = require('../src/doctype.js');
 const content = require('../src');
-
 fse.outputFile(
     path.resolve(__dirname,`../../../gh-pages/index.html`),
     doctype(content()),
