@@ -10,11 +10,21 @@ import {
     manageFocus
 } from './dom';
 
-
+/*
+ * Dispatches a toggle action to the Store
+ * 
+ * @param Store, Object, model or state of the current instance
+ */
 const toggle = Store => () => {
     Store.dispatch({ isOpen: !Store.getState().isOpen }, [toggleAttributes, manageFocus(Store), closeOnBlur(Store)]);
 };
 
+/*
+ * Partially applied function that returns a function that being sthe toggle lifecycle (prehook > toggle > callback)
+ * 
+ * @param Store, Object, model or state of the current instance
+ * @returns Function
+ */
 const startToggleCycle = Store => () => {
     const { node, toggles, settings, isOpen, classTarget, animatingClass } = Store.getState();
     (settings.prehook && typeof settings.prehook === 'function') && settings.prehook({ node, toggles, isOpen });		
@@ -27,6 +37,11 @@ const startToggleCycle = Store => () => {
     else fn();
 };
 
+/*
+ * Sets aria attributes and adds eventLIstener on each toggle button
+ * 
+ * @param Store, Object, model or state of the current instance
+ */
 const initToggles = Store => {
     const { toggles, node } = Store.getState();
 
@@ -50,9 +65,12 @@ const initToggles = Store => {
 /* 
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
  * @param node, HTMLElement, DOM node to be toggled
+ *
+ * @returns Object, Toggle API
  */
 export default ({ node, settings }) => {
     const Store = createStore();
+    //set initial state of Store
     Store.dispatch({
         node,
         settings,
@@ -69,7 +87,6 @@ export default ({ node, settings }) => {
     initToggles(Store);
 	settings.startOpen && startToggleCycle(Store)();
 
-    //API
     return { 
         node,
         startToggleCycle: startToggleCycle(Store),

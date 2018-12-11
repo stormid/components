@@ -36,7 +36,7 @@ export const toggleAttributes = ({ toggles, isOpen, classTarget, animatingClass,
 };
 
 /*
- * Partially applied function that returns handler for keydown events when toggle is open
+ * Partially applied function that returns a handler function for keydown events when toggle is open
  * Only added as an eventListener when trapTab option is set
  * 
  * @param Store, Object, model or store of the current instance
@@ -97,10 +97,10 @@ export const focusInListener = Store => e => {
 };
 
 /*
- * Partially applied function that adds and removes the document focusInListener
+ * Partially applied function that returns a function that adds and removes the document focusInListener
  * Only added as an eventListener when closeOnBlur option is set
  * 
- * @param Store, Object, model or store of the current instance
+ * @param Store, Object, model or state of the current instance
  */
 export const closeOnBlur = Store => () => {
     const { settings, isOpen, focusInListener } = Store.getState();
@@ -109,9 +109,9 @@ export const closeOnBlur = Store => () => {
 };
 
 /*
- * Sets up and pulls down focus event handlers based on toggle status and focus management options 
+ * Partially applied function that returns a function that sets up and pulls down focus event handlers based on toggle status and focus management options 
  * 
- * @param Store, Object, model or store of the current instance
+ * @param Store, Object, model or state of the current instance
  */
 export const manageFocus = Store => () => {
     const { isOpen, focusableChildren, settings, lastFocused, keyListener } = Store.getState();

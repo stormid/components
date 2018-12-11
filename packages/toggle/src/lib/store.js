@@ -15,7 +15,7 @@ export const createStore = () => {
      * 
      * @param type [String] 
      * @param nextState [Object] New slice of state to combine with current state to create next state
-     * @param effects [Array] Array of functions to invoke after state update (DOM, operations, cmds...)
+     * @param effects [Array] Array of side effect functions to invoke after state update (DOM, operations, cmds...)
      */
     const dispatch = (nextState, effects) => {
         state = nextState ? ({ ...state, ...nextState }) : state;
