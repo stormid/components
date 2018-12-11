@@ -36,11 +36,13 @@ export const toggleAttributes = ({ toggles, isOpen, classTarget, animatingClass,
 };
 
 /*
- * Partially applied function that returns handler for keyboard events when toggle is open
+ * Partially applied function that returns handler for keydown events when toggle is open
+ * Only added as an eventListener when trapTab option is set
  * 
  * @param Store, Object, model or store of the current instance
  * @returns Function, keyboard event handler
- * @param Event
+ * 
+ * @param Event, document keydown event dispatched from document
  */
 export const keyListener = Store => e => {
     switch(e.keyCode){
@@ -54,6 +56,14 @@ export const keyListener = Store => e => {
     }
 };
 
+/*
+ * Checks activeElement and compares with array of focusable elements in target node
+ * If shift is held focus set on the last focusable element
+ * If last element, focus is set on the first element
+ * 
+ * @param Store, Object, model or store of the current instance
+ * @param e, Event, document keydown event passed down from keyListener
+ */
 const trapTab = (Store, e) => {
     const focusableChildren = Store.getState().focusableChildren;
     const focusedIndex = focusableChildren.indexOf(document.activeElement);
@@ -68,6 +78,15 @@ const trapTab = (Store, e) => {
     }
 };
 
+/*
+ * Partially applied function that returns handler for focusin events when toggle is open
+ * Only added as an eventListener when closeOnBlur option is set
+ * 
+ * @param Store, Object, model or store of the current instance
+ * @returns Function, focusin event handler
+ * 
+ * @param Event, focusin event dispatched from document
+ */
 export const focusInListener = Store => e => {
     const { node, toggles } = Store.getState();
     if(!node.contains(e.target) && !toggles.reduce((acc, toggle) => {
@@ -77,15 +96,25 @@ export const focusInListener = Store => e => {
     ) toggle();
 };
 
+/*
+ * Partially applied function that adds and removes the document focusInListener
+ * Only added as an eventListener when closeOnBlur option is set
+ * 
+ * @param Store, Object, model or store of the current instance
+ */
 export const closeOnBlur = Store => () => {
     const { settings, isOpen, focusInListener } = Store.getState();
     if(!settings.closeOnBlur) return;
     document[`${isOpen ? 'add' : 'remove'}EventListener`]('focusin', focusInListener);
 };
 
+/*
+ * Sets up and pulls down focus event handlers based on toggle status and focus management options 
+ * 
+ * @param Store, Object, model or store of the current instance
+ */
 export const manageFocus = Store => () => {
     const { isOpen, focusableChildren, settings, lastFocused, keyListener } = Store.getState();
-    console.log(lastFocused);
 
     if(!settings.focus || focusableChildren.length === 0) return;
     if(!isOpen){
