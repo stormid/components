@@ -119,15 +119,19 @@ export const manageFocus = Store => () => {
     if(!settings.focus || focusableChildren.length === 0) return;
     if(!isOpen){
         Store.dispatch({ lastFocused: document.activeElement });
-        window.setTimeout(() => focusableChildren[0].focus(), settings.delay);
+        const focusFn = () => focusableChildren[0].focus();
+        if(settings.delay) window.setTimeout(focusFn, settings.delay);
+        else focusFn();
         if(!settings.trapTab) return;
         document.addEventListener('keydown', keyListener);
     }
     else {
         settings.trapTab && document.removeEventListener('keydown', keyListener);
-        focusableChildren.length > 0 && window.setTimeout(() => {
+        const reFocusFn = () => {
             lastFocused && lastFocused.focus();
             Store.dispatch({ lastFocused: false });
-        }, settings.delay);
+        };
+        if(settings.delay) window.setTimeout(reFocusFn, settings.delay);
+        else reFocusFn();
     }
 };

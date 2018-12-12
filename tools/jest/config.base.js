@@ -1,5 +1,9 @@
 module.exports = {
-    transform: {
-        "^.+\\.jsx?$": "babel-jest"
-    }
+    moduleFileExtensions: [ "js" ],
+    moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/$1'
+      },
+    collectCoverage: false,
+    verbose: true,
+    testPathIgnorePatterns: []
 };

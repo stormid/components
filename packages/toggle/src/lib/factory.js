@@ -25,7 +25,7 @@ const toggle = Store => () => {
  * @param Store, Object, model or state of the current instance
  * @returns Function
  */
-const startToggleCycle = Store => () => {
+const startToggleLifecycle = Store => () => {
     const { node, toggles, settings, isOpen, classTarget, animatingClass } = Store.getState();
     (settings.prehook && typeof settings.prehook === 'function') && settings.prehook({ node, toggles, isOpen });		
     classTarget.classList.add(animatingClass);
@@ -33,12 +33,12 @@ const startToggleCycle = Store => () => {
         toggle(Store)();
         (!!settings.callback && typeof settings.callback === 'function') && settings.callback({ node, toggles, isOpen: Store.getState().isOpen });
     };
-    if(isOpen && settings.delay > 0) window.setTimeout(fn, settings.delay);
+    if(isOpen && +settings.delay > 0) window.setTimeout(fn, +settings.delay);
     else fn();
 };
 
 /*
- * Sets aria attributes and adds eventLIstener on each toggle button
+ * Sets aria attributes and adds eventListener on each toggle button
  * 
  * @param Store, Object, model or state of the current instance
  */
@@ -55,12 +55,11 @@ const initToggles = Store => {
             toggle.addEventListener(ev, e => {
                 if(!!e.keyCode && !~TRIGGER_KEYCODES.indexOf(e.keyCode) || (e.which && e.which === 3)) return;
                 e.preventDefault();
-                startToggleCycle(Store)();
+                startToggleLifecycle(Store)();
             });
         });
     });
 };
-
 
 /* 
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
@@ -85,11 +84,12 @@ export default ({ node, settings }) => {
         focusInListener: focusInListener(Store)
     });
     initToggles(Store);
-	settings.startOpen && startToggleCycle(Store)();
+	settings.startOpen && startToggleLifecycle(Store)();
 
     return { 
         node,
-        startToggleCycle: startToggleCycle(Store),
-        toggle: toggle(Store)
+        startToggle: startToggleLifecycle(Store),
+        toggle: toggle(Store),
+        getState: Store.getState
     }
 }; 
