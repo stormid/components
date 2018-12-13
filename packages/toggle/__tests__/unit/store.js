@@ -3,6 +3,10 @@ import { createStore } from '../../src/lib/store';
 describe(`Store`, () => {
 
     const Store = createStore();
+    let effect = false;
+    const sideEffect = state => {
+        effect = !effect;
+    };
 
     it('createStore should return an Object with an API', async () => {
       expect(Store).not.toBeNull();
@@ -14,6 +18,17 @@ describe(`Store`, () => {
         expect(Store.state).toBeUndefined();
         expect(Store.getState()).toEqual({});
     });
-  
+
+    it('should have a dispatch function that updates state', async () => {
+        const nextState = { isOpen: true }
+        Store.dispatch(nextState);
+        expect(Store.getState()).toEqual(nextState);
+    });
+
+    it('should have a dispatch function that invokes any side effect functions passed after the state change, with new state as only argument', async () => {
+        Store.dispatch({}, [sideEffect]);
+        expect(effect).toEqual(true);
+    });
+
 
 });
