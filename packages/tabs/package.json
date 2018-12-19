@@ -1,5 +1,5 @@
 {
-  "name": "@stormid/toggle",
+  "name": "@stormid/tabs",
   "version": "0.1.0",
   "description": "",
   "author": "stormid",
@@ -13,7 +13,7 @@
   },
   "main": "dist/index.js",
   "source": "src/index.js",
-  "browser": "dist/toggle.umd.js",
+  "browser": "dist/tabs.umd.js",
   "keywords": [
     "stormid",
     "component",
@@ -21,7 +21,7 @@
     "toggle"
   ],
   "scripts": {
-    "build": "npx microbundle --name Toggle",
+    "build": "npx microbundle --name Tabs",
     "test": "node_modules/.bin/jest",
     "eg:dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "eg:prod": "webpack --config example/webpack.config.js --mode production",

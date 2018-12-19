@@ -13,7 +13,7 @@ const init = (selector, options) => {
    const nodes = Array.from(document.querySelectorAll(selector));
 
    //no DOM nodes found, return with warning
-   if(nodes.length === 0) return console.warn(`Toggle not initialised, no elements found for selector '${sel}'`);
+   if(nodes.length === 0) return console.warn(`Tabs not initialised, no elements found for selector '${sel}'`);
    
    //return array of Objects, one for each DOM node found
    //each Object has a prototype consisting of the node (HTMLElement),
