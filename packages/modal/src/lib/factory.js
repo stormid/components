@@ -1,6 +1,6 @@
 import { createStore } from './store';
-import { findTabsAndPanels, initUI, open } from './dom';
-import { getActiveIndexByHash } from './utils';
+import { findDialog, findToggles, initUI, getFocusableChildren } from './dom';
+
 
 /* 
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
@@ -10,18 +10,18 @@ import { getActiveIndexByHash } from './utils';
  */
 export default ({ node, settings }) => {
     const Store = createStore();
-    const { tabs, panels } = findTabsAndPanels(node, settings);
-    const activeIndex = getActiveIndexByHash(panels);
+    
     Store.dispatch({
         settings,
         node,
-        activeIndex: activeIndex !== undefined ? activeIndex : settings.activeIndex,
-        tabs,
-        panels
-    }, [ initUI(Store), open ]);
+        dialog: findDialog(node),
+        toggles: findToggles(node, settings),
+        focusableChildren: getFocusableChildren(node),
+        lastFocused: false,
+        isOpen: false
+    }, [ initUI(Store) ]);
 
-    return { 
-        node,
+    return {
         getState: Store.getState
     }
 }; 
