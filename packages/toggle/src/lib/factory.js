@@ -34,9 +34,10 @@ export default ({ node, settings }) => {
         lastFocused: false,
         keyListener: keyListener(Store),
         focusInListener: focusInListener(Store)
-    }, [ initUI(Store) ]);
+    }, [ initUI(Store), () => {
+	    settings.startOpen && startToggleLifecycle(Store)();
+    }]);
 
-	settings.startOpen && startToggleLifecycle(Store)();
 
     return { 
         node,
