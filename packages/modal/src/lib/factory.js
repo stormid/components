@@ -1,5 +1,11 @@
 import { createStore } from './store';
-import { findDialog, findToggles, initUI, getFocusableChildren } from './dom';
+import {
+    findDialog,
+    findToggles,
+    initUI,
+    getFocusableChildren,
+    keyListener
+} from './dom';
 
 
 /* 
@@ -17,6 +23,7 @@ export default ({ node, settings }) => {
         dialog: findDialog(node),
         toggles: findToggles(node, settings),
         focusableChildren: getFocusableChildren(node),
+        keyListener: keyListener(Store),
         lastFocused: false,
         isOpen: false
     }, [ initUI(Store) ]);
