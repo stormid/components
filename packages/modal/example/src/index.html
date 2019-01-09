@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+  <head>
+    <title>StormID</title>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: sans-serif;
+        }
+        html,
+        body {
+            height:100%;
+        }
+        .container {
+            clear:both;
+            overflow:hidden;
+            margin:0 auto;
+            width:80%;
+            max-width:1200px;
+        }
+        .modal {
+			position: absolute;
+			overflow: hidden;
+			width:	0;
+			height:0;
+            background-color: rgba(0,0,0,.9);
+			top:0;
+			left:0;
+			opacity:0;
+			visibility:hidden;
+		}
+		.modal__inner {
+			width:50%;
+			height:50%;
+			background:#fff;
+			margin:20px auto;
+			position: relative;
+			transform:scale(0.1);
+			transform-origin: center;
+			transition: transform 200ms ease, opacity 160ms ease;
+			transform:scale(1);
+			z-index:3;
+		}
+		.modal__close {
+			position:fixed;
+			z-index:3;
+			top:0;
+			bottom:0;
+			left:0;
+			right:0;
+		}
+		.modal__close-btn {
+			position: fixed;
+			top:0px;
+			right:-30px;
+			cursor:pointer;
+		}
+        .modal.is--active {
+			opacity:1;
+			visibility: visible;
+			overflow: auto;
+			position: fixed;
+			width: auto;
+			height: auto;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			z-index: 9;
+        }
+		*:focus {
+			outline: 1px solid red;
+		}
+        button {
+            background:#191919;
+            color:#fff;
+            padding:8px;
+            display:inline-block;
+            font-size:1rem;
+            border:0 none;
+        }
+    </style>
+  </head>
+  <body>
+    <button class="js-modal-toggle">Open modal</button>
+    <div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle">
+        <div class="modal__close js-modal-close js-modal-toggle" aria-label="close">
+        </div>
+        <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label">
+            <h1 id="modal-label"></h1>
+            <button>Focusable element</button>
+            <input type="text">
+            <input type="text">
+            <button class="modal__close-btn js-modal-toggle" aria-label="close" >
+                <svg focusable="false" fill="#fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+  </body>
+</html>

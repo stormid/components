@@ -1,5 +1,5 @@
 {
-  "name": "@stormid/tabs",
+  "name": "@stormid/modal",
   "version": "0.1.0",
   "description": "",
   "author": "stormid",
@@ -18,10 +18,10 @@
     "stormid",
     "component",
     "ui",
-    "tabs"
+    "modal"
   ],
   "scripts": {
-    "build": "npx microbundle --name Tabs",
+    "build": "npx microbundle --name Modal",
     "test": "node_modules/.bin/jest",
     "eg:dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "eg:prod": "webpack --config example/webpack.config.js --mode production",

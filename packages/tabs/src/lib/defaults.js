@@ -1,5 +1,5 @@
 /*
- * Default settings used by a Toggle instance if not otherwise overwritten with config
+ * Default settings used by a Tabs instance if not otherwise overwritten with config
  *
  * @property titleSelector, String, selector for a tab link  
  * @property currentClass, String, className added to active tab
