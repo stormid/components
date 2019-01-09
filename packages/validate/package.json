@@ -1,5 +1,5 @@
 {
-  "name": "@stormid/modal",
+  "name": "@stormid/validate",
   "version": "0.1.0",
   "description": "",
   "author": "stormid",
@@ -16,12 +16,17 @@
   "browser": "dist/index.umd.js",
   "keywords": [
     "stormid",
+    "form",
     "component",
-    "ui",
-    "modal"
+    "validation",
+    "unobtrustive",
+    "constraint",
+    "dotnetcore",
+    ".NETMVC",
+    "HTML5"
   ],
   "scripts": {
-    "build": "npx microbundle --name Modal",
+    "build": "npx microbundle --name Validate",
     "test": "node_modules/.bin/jest",
     "eg:dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "eg:prod": "webpack --config example/webpack.config.js --mode production",
