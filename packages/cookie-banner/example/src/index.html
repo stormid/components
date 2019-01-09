@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+    <title>StormID</title>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: sans-serif;
+        }
+        html,
+        body {
+            height:100%;
+        }
+        hr {
+            height:1px;
+            width:100%;
+            display:block;
+            background:#ddd;
+            margin:24px 0;
+            border:0 none;
+        }
+        h1 {
+            font: 1.25rem/1.2 sans-serif;
+            margin-bottom:1.5rem;
+        }
+        h2 {
+            font: 1.1rem/1.2 sans-serif;
+            margin-bottom:12px;
+            padding-top:12px;
+        }
+        h3 {
+            font: 1rem/1.2 sans-serif;
+            margin-bottom:12px;
+            padding-top:12px;
+        }
+        p {
+            margin-bottom:1.5rem;
+        }
+        header {
+            width:100%;
+            padding:20px;
+            margin-bottom:40px;
+        }
+        .preferences-banner {
+            position: fixed;
+            bottom: 0;
+            left:0;
+            right:0;
+            padding:24px 25px;
+            /* border-top:1px solid #191919; */
+            box-shadow: 0 1px 3px 1px rgba(60,64,67,.2), 0 2px 8px 4px rgba(60,64,67,.1)
+        }
+        .preferences-banner__list {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+        .preferences-banner__btn {
+            background-color:#191919;
+            padding:8px 16px;
+            color: #fff;
+            border:0 none;
+            cursor: pointer;
+        }
+        .preferences-banner__btn:hover {
+            background-color: blue
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <div class="preferences-banner__update"></div>
+    </div>
+  </body>
+</html>
