@@ -29,6 +29,14 @@ export const findToggles = (node, settings) => {
  */
 export const getFocusableChildren = node => Array.from(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
 
+/* 
+ * Partially applied function that returns a function
+ * 
+ * @param Store, Object, model or store of the current instance
+ * @returns Function, handler for keyDown
+ *
+ * @param e, Event
+ */
 export const keyListener = Store => e => {
     if (Store.getState().isOpen && e.keyCode === 27) {
         e.preventDefault();
@@ -37,6 +45,14 @@ export const keyListener = Store => e => {
     if (Store.getState().isOpen && e.keyCode === 9) trapTab(Store.getState())(e);
 };
 
+/* 
+ * Partially applied function that returns a function
+ * 
+ * @param Store, Object, model or store of the current instance
+ * @returns Function:
+ *
+ * @param state, Object, the current state or model of the instance
+ */
 const trapTab = state => e =>{
     const focusedIndex = state.focusableChildren.indexOf(document.activeElement);
     if(e.shiftKey && focusedIndex === 0) {
@@ -50,12 +66,18 @@ const trapTab = state => e =>{
     }
 };
 
+/* 
+ * @param state, Object, the current state or model of the instance
+ */
 const toggle = state => {
     state.dialog.setAttribute('aria-hidden', !state.isOpen);
     state.node.classList.toggle(state.settings.onClassName);
     // document.querySelector(this.settings.mainSelector) && document.querySelector(this.settings.mainSelector).setAttribute('aria-hidden', this.isOpen);
 };
 
+/* 
+ * @param state, Object, the current state or model of the instance
+ */
 const open = state => {
     document.addEventListener('keydown', state.keyListener);
     toggle(state);
@@ -64,16 +86,20 @@ const open = state => {
     else focusFn();
 };
 
+/* 
+ * @param state, Object, the current state or model of the instance
+ */
 const close = state => {
     document.removeEventListener('keydown', state.keyListener);
     toggle(state);
     state.lastFocused.focus();
 };
 
-/*
+/* 
+ * Partially applied function that returns a function
  * 
- * 
- * @param 
+ * @param Store, Object, model or store of the current instance
+ * @returns Function
  *
  */
 export const change = Store => state => {

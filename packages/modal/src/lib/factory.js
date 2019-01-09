@@ -12,7 +12,7 @@ import {
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
  * @param node, HTMLElement, DOM node to be toggled
  *
- * @returns Object, Toggle API
+ * @returns Object, Modal API
  */
 export default ({ node, settings }) => {
     const Store = createStore();
