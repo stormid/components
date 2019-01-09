@@ -1,0 +1,275 @@
+<!doctype html>
+<html>
+  <head>
+    <title>StormID</title>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: sans-serif;
+        }
+        html,
+        body {
+            height:100%;
+        }
+        hr {
+            height:1px;
+            width:100%;
+            display:block;
+            background:#ddd;
+            margin:24px 0;
+            border:0 none;
+        }
+        h1 {
+            font: 1.25rem/1.2 sans-serif;
+            margin-bottom:1.5rem;
+        }
+        h2 {
+            font: 1.1rem/1.2 sans-serif;
+            margin-bottom:12px;
+            padding-top:12px;
+        }
+        h3 {
+            font: 1rem/1.2 sans-serif;
+            margin-bottom:12px;
+            padding-top:12px;
+        }
+        p {
+            margin-bottom:1.5rem;
+        }
+        header {
+            width:100%;
+            padding:20px;
+            margin-bottom:40px;
+        }
+        .container {
+            clear:both;
+            overflow:hidden;
+            margin:0 auto;
+            width:80%;
+            max-width:1200px;
+        }
+        .row {
+            margin-left:-30px;
+            overflow:hidden
+        }
+        .field-validation-error,
+        .error {
+            background-color:darkred;
+            color:#fff !important;
+            font-size: .875rem;
+            padding: 4px 12px;
+            position: relative;
+            margin-top: 8px;
+            display: inline-block;
+        }
+        .field-validation-error:before,
+        .error:before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            border-style: solid;
+            border-width: 0 5px 5px 5px;
+            border-color: transparent transparent firebrick transparent;
+        }
+        form {
+            padding:40px;
+            margin:0 auto;
+            max-width:900px;
+        }
+        fieldset {
+            border: 0 none;
+        }
+        .form-group {
+            margin:0 0 30px 0;
+        }
+        .boolean-group {
+            padding: 16px 16px 2px 16px;
+            position: relative;
+            background: #f8f8f8;
+        }
+        .boolean-group:last-child{
+            padding-bottom: 13px;
+        }
+        .boolean-group label {
+            padding-left:25px;
+        }
+        .boolean-group input {
+            position: absolute;
+            left:17px;
+            top:17px;
+            width:auto !important;
+        }
+        label {
+            display: block;
+            font-size:.875rem;
+            margin-bottom: 5px;
+            padding:0;
+        }
+        input:not([type=submit]),
+        textarea,
+        select {
+            padding:16px;
+            display: block;
+            width:100%;
+            border:0 none;
+            background-color:#f8f8f8;
+            border-bottom:1px solid #eee;
+            font-size: 1rem;
+        }
+        select {
+            height:48px;
+            border-radius: 0 !important;
+            padding:0;
+            border-bottom: 0 none;
+        }
+        input:not([type=submit]):focus,
+        textarea:focus {
+            outline: 0 none;
+            border-bottom:1px solid #ddd;
+        }
+        textarea {
+            min-height:150px;
+            resize: none;
+        }
+        input[type=submit] {
+            background-color:#191919;
+            padding:8px 16px;
+            color:#fff;
+            border:0 none;
+            float: right;
+            font-size: .95rem;
+            cursor: pointer;
+        }
+    </style>
+  </head>
+  <body>
+    <form action="" autocomplete="off">
+        <div class="form-group">
+            <label for="RequiredString1">Required String</label>
+            <input class="form-control" type="text" data-val="true" data-val-required="The Required String field is required." id="RequiredString1" name="RequiredString1" value="" />
+            <span style="color: red" class="field-validation-valid" data-valmsg-for="RequiredString" data-valmsg-replace="true" />
+        </div>
+        <input type="submit" name="onward" value="Submit">
+        <input type="submit" name="onward" value="Submit and continue">
+    </form>
+    
+    <form method="post" action="" autocomplete="off" novalidate>
+        <!--
+
+            Should add  role="alert"
+
+            <div class="validation-summary-errors" data-valmsg-summary="true">
+        <ul>
+            <li>The Email field is required.</li> //should link these, give them an  id and add an aria-describedby to the corresponding field/group
+            <li>The Password field is required.</li>
+        </ul>
+        </div>
+
+
+        <div class="validation-summary-valid" data-valmsg-summary="true">
+        <ul>
+            <li style="display: none;"></li>
+        </ul>
+        </div>
+
+        -->
+
+        <!-- <div class="form-group">
+            <label for="RequiredString">Required String</label>
+            <input class="form-control" type="text" data-val="true" data-val-required="The Required String field is required." id="RequiredString" name="RequiredString" value="" />
+        </div> -->
+
+
+        <fieldset>
+            <div class="panel-heading">String Based</div>
+            <div class="form-group">
+                <label for="RequiredString">Required String</label>
+                <input class="form-control" type="text" data-val="true" data-val-required="The Required String field is required." id="RequiredString" name="RequiredString" value="" />
+                <span style="color: red" class="field-validation-valid" data-valmsg-for="RequiredString" data-valmsg-replace="true" />
+            </div>
+            <div class="form-group">
+                <label for="CustomValidator">Custom validator (value must equal 'test', but is not required)</label>
+                <input class="form-control" type="text" id="CustomValidator" name="CustomValidator" value="" />
+            </div>
+            <div class="form-group">
+                <label for="StringMinMaxLength">String with min and max length, not required</label>
+                <input class="form-control" type="text" data-val="true" data-val-length="The field String with min and max length must be a string with a minimum length of 5 and a maximum length of 10." data-val-length-max="10" data-val-length-min="5" id="StringMinMaxLength" name="StringMinMaxLength" value="" />
+                <span style="color: red" class="field-validation-valid" data-valmsg-for="StringMinMaxLength" data-valmsg-replace="true" />
+            </div>
+
+            <div class="form-group">
+                <label for="EmailAddress">Email address + required</label>
+                <input class="form-control" type="email" data-val="true" data-val-email="The Email address field is not a valid e-mail address." id="EmailAddress" name="EmailAddress" value="" required />
+                <span style="color: red" class="field-validation-valid" data-valmsg-for="EmailAddress" data-valmsg-replace="true" />
+            </div>
+            <div class="form-group">
+                <label for="RegularExpression">Regular Expression/pattern (at least one letter [a-z]) + required</label>
+                <input class="form-control" type="text" pattern="[a-z]&#x2B;" id="RegularExpression" name="RegularExpression" value="" required />
+                <!-- <span style="color: red" class="field-validation-valid" data-valmsg-for="RegularExpression" data-valmsg-replace="true" /> -->
+            </div>
+            <div class="form-group">
+                <label for="Url">URL + required</label>
+                <input class="form-control" type="url" data-val="true" data-val-url="The Url field is not a valid URL." id="Url" name="Url" value="" required />
+                <span style="color: red" class="field-validation-valid" data-valmsg-for="Url" data-valmsg-replace="true" />
+            </div>
+            <div class="form-group">
+                <label for="Remote">Remote validation (no backend so the library will surface the fetch error)</label>
+                <input class="form-control" type="text" data-val="true" data-val-remote="&#x27;Remote validation is invalid." data-val-remote-additionalfields="*.Remote,*.EmailAddress" data-val-remote-type="post" data-val-remote-url="/Home/IsUnique" data-val-required="The Remote validation field is required." id="Remote" name="Remote" value="" />
+                <span style="color: red" class="field-validation-valid" data-valmsg-for="Remote" data-valmsg-replace="true" />
+            </div>
+        </fieldset>
+        <fieldset>
+            <div class="panel-heading">Number Based</div>
+            <div class="form-group">
+              <label for="cmin">HTML5 number optional, at least 2, recycling data-valmsg-for span for error messages</label>
+              <input id="cmin" name="cmin" min="2" type="number">
+              <span class="text-danger field-validation-valid" data-valmsg-for="cmin" data-valmsg-replace="true"></span>
+            </div>
+            <div class="panel-body">
+            <div class="form-group">
+                <label for="OptionalRangeNumeric">Optional Range Numeric must be between 5 and 10</label>
+                <input class="form-control" type="number" data-val="true" data-val-range="The field Optional Range Numeric must be between 5 and 10." data-val-range-max="10" data-val-range-min="5" id="OptionalRangeNumeric" name="OptionalRangeNumeric" value="" />
+                <span style="color: red" class="field-validation-valid" data-valmsg-for="OptionalRangeNumeric" data-valmsg-replace="true" />
+            </div>
+        </fieldset>
+            <fieldset>
+                <div class="panel-heading">Others</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="Upload">Upload</label>
+                        <input class="form-control" type="file" data-val="true" data-val-required="The Upload field is required." id="Upload" name="Upload">
+                        <span style="color: red" class="field-validation-valid" data-valmsg-for="Upload" data-valmsg-replace="true">
+                    </span></div>
+                    <div class="form-group">
+                        <label for="Upload">Password</label>
+                        <input class="form-control" type="password" data-val="true" data-val-required="The Password field is required." name="Password" id="Password">
+                        <span class="field-validation-valid" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="ConfirmPassword">Confirm Password (equalto validation agaonst password field above)</label>
+                        <input class="form-control" type="password" data-val="true" data-val-equalto="Passwords must match" data-val-equalto-other="*.Password" data-val-required="The Re-enter Password field is required." name="ConfirmPassword" id="ConfirmPassword">
+                        <span class="field-validation-valid" data-valmsg-for="ConfirmPassword" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+            </fieldset>
+        <fieldset>
+        <div class="form-group">
+            <fieldset>
+                <legend>Checkbox group</legend>
+                <div class="boolean-group">
+                    <label for="cb-1">Option 1</label>
+                    <input type="checkbox" name="cb" id="cb-1" value="option 1" data-val="true" data-val-required="One of these fields is required">
+                </div>
+                <div class="boolean-group">
+                    <label for="cb-2">Option 2</label>
+                    <input type="checkbox" name="cb" id="cb-2" value="option 2">
+                </div>
+            </fieldset>
+        </div>
+        <input type="submit" value="Submit">
+        </fieldset>
+    </form>
+  </body>
+</html>

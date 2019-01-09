@@ -13,7 +13,7 @@
   },
   "main": "dist/index.js",
   "source": "src/index.js",
-  "browser": "dist/boilerplate.standalone.js",
+  "browser": "dist/index.umd.js",
   "keywords": [
     "stormid",
     "boilerplate",
