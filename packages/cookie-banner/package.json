@@ -1,5 +1,5 @@
 {
-  "name": "@stormid/validate",
+  "name": "@stormid/cookie-banner",
   "version": "0.1.0",
   "description": "",
   "author": "stormid",
@@ -16,17 +16,12 @@
   "browser": "dist/index.umd.js",
   "keywords": [
     "stormid",
-    "form",
-    "component",
-    "validation",
-    "unobtrustive",
-    "constraint",
-    "dotnetcore",
-    ".NETMVC",
-    "HTML5"
+    "cookies",
+    "gdpr",
+    "component"
   ],
   "scripts": {
-    "build": "npx microbundle --name Validate",
+    "build": "npx microbundle --name CookieBanner",
     "test": "node_modules/.bin/jest",
     "eg:dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "eg:prod": "webpack --config example/webpack.config.js --mode production",
