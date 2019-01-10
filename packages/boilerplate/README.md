@@ -1,15 +1,11 @@
 
 # Component Name
 
-[![npm version](https://badge.fury.io/js/@stormid/component-boilerplate.svg)](https://badge.fury.io/js/@stormid/component-boilerplate)
+[![npm version](https://badge.fury.io/js/storm-component-boilerplate.svg)](https://badge.fury.io/js/storm-component-boilerplate)
 
 This is a **boilerplate for developing UI components** by **StormId**, used in production in conjunction with our project scaffold.
 
 Before use make sure to grep for “@stormid/component-boilerplate” and replace every occurrence as well as updating your tests, readme and example.
-
-## Example
-[https://mjbp.github.io/@stormid/component-boilerplate](https://mjbp.github.io/@stormid/component-boilerplate)
-
 
 ## Usage
 HTML

@@ -23,7 +23,7 @@ const writeFile = (file, data) => {
 for (package of packages) {
     writeFile(
         path.resolve(__dirname,`../../../docs/packages/${package}.html`),
-        componentContent(md.render(fse.readFileSync(path.resolve(__dirname,`../../../packages/${package}/README.md`), 'utf8')))
+        componentContent(md.render(fse.readFileSync(path.resolve(__dirname,`../../../packages/${package}/README.md`), 'utf8')), package)
     );
 }
 writeFile(
