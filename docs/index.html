@@ -25,29 +25,18 @@
         bottom: 0;
         height:100%;
         overflow-y: auto;
-        padding-top:25px;
+        padding-top:38px;
         width: 200px;
     }
     .logo {
         position:relative;
         margin:0 0 20px 20px;
     }
-    .logo:before {
-        position:absolute;
-        left:0;
-        bottom:14px;
-        right:35px;
-        content:'';
-        height:1px;
-        display:block;
-        background-color:#fff;
-    } 
     .logo__subtitle {
         position:relative;
-        left:20px;
+        left:0;
         z-index:1;
         display:inline-block;
-        padding:5px;
         background-color:#161616;
         text-transform: uppercase;
         font-size: 13px;
@@ -63,21 +52,21 @@
         width: calc(100% - 200px);
     }
     .button:first-of-type {
-        border-top: 1px solid rgba(255,255,255, .2);
+        border-top: 1px solid rgba(255,255,255, .1);
     }
     .button {
         display: block;
         width: 100%;
         text-align: left;
         color: #fff;
-        padding: 10px 0 10px 25px;
+        padding: 10px 0 10px 20px;
         margin: 0;
         border: 0 none;
         font-family: "AvenirNextLTW01-Regular", Helvetica, "Lucida Grande", sans-serif;
         font-size:14px;
         background-color: transparent;
         cursor:pointer;
-        border-bottom: 1px solid rgba(255,255,255, .2);
+        border-bottom: 1px solid rgba(255,255,255, .1);
     }
     .button:focus {
         outline: 0 none;
@@ -95,9 +84,9 @@
                 </svg>
                 <div class="logo__subtitle">Components</div>
             </div>
-            <button class="button is--active" data-url="../packages/boilerplate/example/build/index.html">Boilerplate</button><button class="button" data-url="../packages/toggle/example/build/index.html">Toggle</button>
+            <button class="button is--active" data-url="packages/boilerplate.html">Boilerplate</button><button class="button" data-url="packages/cookie-banner.html">Cookie-banner</button><button class="button" data-url="packages/modal.html">Modal</button><button class="button" data-url="packages/tabs.html">Tabs</button><button class="button" data-url="packages/toggle.html">Toggle</button><button class="button" data-url="packages/validate.html">Validate</button>
         </header>
-        <iframe class="iframe" src="../packages/boilerplate/example/build/index.html"></iframe>
+        <iframe class="iframe" src="packages/boilerplate.html"></iframe>
         <script>(function(iframe, buttons, activeClass){
     var TRIGGER_KEYCODES = [13, 32];
     (window.PointerEvent ? ['pointerdown', 'keydown'] : ['ontouchstart' in window ? 'touchstart' : 'click', 'keydown' ]).forEach(function(ev){

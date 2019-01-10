@@ -1,15 +1,7 @@
 const styles = require('./styles');
-const packages = require('../utils').findPackages();
 const script = require('./script');
-const MarkdownIt = require('markdown-it');
-const md = new MarkdownIt();
-/*
 
-md.render(<<< path to readme >>);
-*/
-
-
-module.exports = () => `<html lang="en" class="no-webfonts no-js">
+module.exports = packages => `<html lang="en" class="no-webfonts no-js">
     <head>
         <title>StormId Components</title>
         <link type="text/css" rel="stylesheet" href="http://fast.fonts.net/cssapi/5b32fdc1-42a3-4334-b7b1-5befe7df53c8.css">
@@ -24,9 +16,9 @@ module.exports = () => `<html lang="en" class="no-webfonts no-js">
                 </svg>
                 <div class="logo__subtitle">Components</div>
             </div>
-            ${packages.map((package, i) => `<button class="button${i === 0 ? ' is--active' : ''}" data-url="../packages/${package}/example/build/index.html">${package.substr(0, 1).toUpperCase()}${package.substr(1)}</button>`).join('')}
+            ${packages.map((package, i) => `<button class="button${i === 0 ? ' is--active' : ''}" data-url="packages/${package}.html">${package.substr(0, 1).toUpperCase()}${package.substr(1)}</button>`).join('')}
         </header>
-        <iframe class="iframe" src="../packages/${packages[0]}/example/build/index.html"></iframe>
+        <iframe class="iframe" src="packages/${packages[0]}.html"></iframe>
         <script>${script}</script>
     </body>
 </html>`;
