@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>StormId Components</title>
+    <link type="text/css" rel="stylesheet" href="https://fast.fonts.net/cssapi/5b32fdc1-42a3-4334-b7b1-5befe7df53c8.css">
+    <style>
+        :root {
+            --font-family-default: "Avenir Next W01 Light", Helvetica, "Lucida Grande", sans-serif;
+            --font-family-medium: "AvenirNextLTW01-Medium", Helvetica, "Lucida Grande", sans-serif;
+            --font-family-bold: "Avenir Next LT W01 Bold", Helvetica, "Lucida Grande", sans-serif;
+            --font-family-thin: "Avenir Next W01 Thin", Helvetica, "Lucida Grande", sans-serif;
+
+            --font-size-peta: 2.986rem;
+            --line-height-peta: 1.25;
+            --font-size-giga: 2.074rem;
+            --line-height-giga: 1.25;
+            --font-size-mega: 01.728rem;
+            --line-height-mega: 1.25;
+            --font-size-alpha: 1.44rem;
+            --line-height-alpha: 1.25;
+            --font-size-gamma: 1rem;
+            --line-height-gamma: 1.2;
+            --font-size-delta: 0.85rem;
+            --line-height-delta: 1.4;
+            --font-size-epsilon: 0.694rem;
+            --line-height-epsilon: 1.4;
+
+            --baseline: 1.5rem;
+            --gutter: 24px;
+
+            --light-grey-1: #f5f5f5;
+            --light-grey-2: #e6e6e6;
+            --light-grey-3: #cccccc;
+            --mid-grey-1: #b3b3b3;
+            --mid-grey-2: #999999;
+            --mid-grey-3: #808080;
+            --dark-grey-1: #666666;
+            --dark-grey-3: #323232;
+            --teal: #187E81;
+            --light-teal: #77b5be;
+            --teal-black: #072425;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            background: var(--light-grey-1);
+            color: #333333;
+            font: 100%/1.4 "AvenirNextLTW01-Regular", Helvetica, "Lucida Grande", sans-serif;
+        }
+        h1 {
+            font-size: var(--font-size-peta);
+            font-family: var(--font-family-default);
+            margin-bottom:calc(var(--baseline)/4);
+        }
+        h2 {
+            font-size: var(--font-size-alpha);
+            font-family: var(--font-family-medium);
+            margin-top:calc(var(--baseline)*2);
+            margin-bottom:calc(var(--baseline)/4);
+        }
+        h3 {
+            font-size: var(--font-size-beta);
+            font-family: var(--font-family-medium);
+            margin-bottom:calc(var(--baseline)/4);
+        }
+        p {
+            margin-bottom:calc(var(--baseline)/2);
+        }
+        p:nth-of-type(2) {
+            font-size: 1.3rem;
+        }
+        p:nth-of-type(2):after{
+            content:'';
+            display:block;
+            width:70px;
+            height:4px;
+            background-color:#28CBD0;
+            margin-top:30px;
+        }
+        .entry-content {
+            overflow: none;
+            margin: var(--baseline) 0 var(--baseline) 0;
+            max-width: 900px;
+            padding: 0 calc(var(--gutter)*2);
+            width: 100%
+        }
+        img {
+            filter: grayscale(100%);
+            position: absolute;
+            top: var(--baseline);
+            right: var(--baseline);
+        }
+        .header {
+            border-bottom: 1px solid var(--light-grey-2);
+            margin-bottom: calc(var(--baseline)*2);
+            padding-bottom: var(--baseline);
+            margin-left: calc(var(--baseline)/2);
+            margin-right: calc(var(--baseline)/2);
+        }
+        .col {
+            float: left;
+            margin-left: calc(var(--baseline)/2);
+            margin-right: calc(var(--baseline)/2);
+        }
+        .clearfix:after,
+        .clearfix:before {
+            content: "";
+            display: table
+        }
+        .clearfix:after {
+            clear: both
+        }
+        .section {
+            margin-bottom: calc(var(--baseline)*2);
+        }
+        .section__title {
+            border-top: 2px solid;
+            width: calc(((99.999% / 12) * 3) - (36px));
+            padding-top: calc(var(--baseline)/2);
+        }
+        .section__content {
+            border-top: 2px solid;
+            width: calc(((99.999% / 12) * 8) - (36px));
+            padding-top: calc(var(--baseline)/2);
+        }
+        .markdown-body .highlight pre,
+        .markdown-body pre {
+            border-left:3px solid var(--light-grey-3);
+            background-color: white;
+            line-height: 1.45;
+            overflow: auto;
+            padding: var(--baseline);
+            margin-bottom: calc(var(--baseline));
+            margin-top: calc(var(--baseline)/2);
+        }
+    </style>
+</head>
+<body>
+    <article class="markdown-body entry-content"><h1>Storm Cookie banner</h1>
+<p>Cookie banner that can categorise cookies and conditionally invoke cookie-reliant functionality based on user-consent.</p>
+<p><a href="https://badge.fury.io/js/@storm/cookie-banner"><img src="https://badge.fury.io/js/@storm/cookie-banner.svg" alt="npm version"></a></p>
+<h2>Usage</h2>
+<p>Cookie management works by categorising cookies and the functions that initialise them, encapsulating them in a configuration object.</p>
+<p>Cookies category names can be any valid String.</p>
+<p>JS</p>
+<pre><code>npm i -S @storm/cookie-banner
+</code></pre>
+<p>Using es6 import</p>
+<pre><code>import CookieBanner from '@storm/cookie-banner';
+
+CookieBanner.init({
+    types: {
+        'necessary': {
+            fns: [
+                model =&gt; { 
+                    //function that depends upon or creates a 'necessary' cookie
+                 }
+            ]
+        },
+        'advertising and marketing': {
+            checked: false,
+            fns: [
+                model =&gt; { 
+                    //function that depends upon or creates an 'Advertising and marketing' cookie
+                }
+            ]
+        }
+    }
+});
+
+## Options
+</code></pre>
+<p>{
+name: ‘CookiePreferences’,
+path: ‘/’,
+domain: ‘’,
+secure: true,
+expiry: 365,
+types: {
+‘necessary’: {
+checked: true,
+disabled: true,
+fns: []
+}
+},
+policyURL: ‘/cookie-policy’,
+classNames: {
+banner: ‘preferences-banner’,
+btn: ‘preferences-banner__btn’,
+field: ‘preferences-banner__field’,
+updateBtnContainer: ‘preferences-banner__update’,
+updateBtn: ‘preferences-banner__update-btn’
+},
+updateBtnTemplate(model){
+return <code>&lt;button class=&quot;${model.classNames.updateBtn}&quot;&gt;Update cookie preferences&lt;/button&gt;</code>
+},
+bannerTemplate(model){
+return <code>&lt;section role=&quot;dialog&quot; aria-live=&quot;polite&quot; aria-label=&quot;Cookie consent&quot; aria-describedby=&quot;preferences-banner__desc&quot; class=&quot;${model.classNames.banner}&quot;&gt; 			&lt;div class=&quot;preferences-content&quot;&gt; 				&lt;div class=&quot;wrap&quot;&gt; 					&lt;div class=&quot;row&quot;&gt; 						&lt;!--googleoff: all--&gt; 						&lt;div id=&quot;preferences-banner__desc&quot;&gt; 							&lt;div class=&quot;preferences-banner__heading&quot;&gt;This website uses cookies.&lt;/div&gt; 							&lt;p class=&quot;preferences-banner__text&quot;&gt;We use cookies to analyse our traffic and to provide social media features. You can choose which categories of cookies you consent to, or accept our recommended settings. 							&lt;a class=&quot;preferences-banner__link&quot; rel=&quot;noopener noreferrer nofollow&quot; href=&quot;${model.policyURL}&quot;&gt; Find out more about the cookies we use.&lt;/a&gt;&lt;/p&gt; 							&lt;ul class=&quot;preferences-banner__list&quot;&gt; 								${Object.keys(model.types).map(type =&gt;</code><li class="preferences-banner__list-item">
+&lt;input id=“preferences-banner__${type.split(’ ‘)[0].replace(’ ', ‘-’)}” class=&quot;${model.classNames.field}&quot; value=&quot;${type}&quot; type=“checkbox”${model.types[type].checked ? <code>checked</code> : ‘’}${model.types[type].disabled ? <code>disabled</code> : ‘’}&gt;
+<label class="preferences-banner__label" for="preferences-banner__${type.split(' ')[0].replace(' ', '-')}">
+${type.substr(0, 1).toUpperCase()}${type.substr(1)} cookies
+</label><br>
+</li><code>).join('')} 							&lt;/ul&gt; 						&lt;/div&gt; 						&lt;button class=&quot;${model.classNames.btn}&quot;&gt;OK&lt;/button&gt; 						&lt;!--googleon: all--&gt; 					&lt;/div&gt; 				&lt;/div&gt; 			&lt;/div&gt; 		&lt;/section&gt;</code>;
+}
+}</p>
+<pre><code>
+## Tests
+</code></pre>
+<p>npm t</p>
+<pre><code>
+## Browser support
+This is module has both es6 and es5 distributions. The es6 version should be used in a workflow that transpiles.
+
+The es5 version depends unpon Object.assign so all evergreen browsers are supported out of the box, ie9+ is supported with polyfills. ie8+ will work with even more polyfils for Array functions and eventListeners.
+
+## Dependencies
+None
+
+## License
+MIT
+</code></pre>
+</body>
+</html>

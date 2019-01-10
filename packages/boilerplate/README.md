@@ -1,18 +1,11 @@
-This is a **boilerplate for developing UI components** by **StormId**, used in production in conjunction with our project scaffold.
-
-It includes an opinionated JS component boilerplate, build system, test integration, example, README (see below), and deployment, using nodeJS, npm, jest, and babel
-
-Before use make sure to grep for “@stormid/component-boilerplate” and replace every occurrence as well as updating your tests, readme and example.
-
-
----
-
 
 # Component Name
 
 [![npm version](https://badge.fury.io/js/@stormid/component-boilerplate.svg)](https://badge.fury.io/js/@stormid/component-boilerplate)
 
-One line summary
+This is a **boilerplate for developing UI components** by **StormId**, used in production in conjunction with our project scaffold.
+
+Before use make sure to grep for “@stormid/component-boilerplate” and replace every occurrence as well as updating your tests, readme and example.
 
 ## Example
 [https://mjbp.github.io/@stormid/component-boilerplate](https://mjbp.github.io/@stormid/component-boilerplate)
