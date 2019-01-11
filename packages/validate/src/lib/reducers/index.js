@@ -14,26 +14,31 @@ export default {
             return acc;
         }, {})
     }),
-    [ACTIONS.CLEAR_ERROR]: (state, data) => Object.assign({}, state, {
-        groups: Object.assign({}, state.groups, {
-            [data]: Object.assign({}, state.groups[data], {
-                errorMessages: [],
-                valid: true
-            })
-        })
-    }),
-    [ACTIONS.ADD_VALIDATION_METHOD]: (state, data) => Object.assign({}, state, {
-        groups: Object.assign({}, state.groups, {
-            [data.groupName]: Object.assign({}, state.groups[data.groupName] ? state.groups[data.groupName] : {},
-                                                state.groups[data.groupName] ?  { validators: [...state.groups[data.groupName].validators, data.validator] }
-                                                : {
-                                                    fields: [].slice.call(document.getElementsByName(data.groupName)),
-                                                    serverErrorNode: document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}=${data.groupName}]`) || false,
-                                                    valid: false,
-                                                    validators: [data.validator],
-                                                })
-        })
-    }),
+    [ACTIONS.CLEAR_ERROR]: (state, data) => {
+        const nextGroup = {};
+        nextGroup[data] = Object.assign({}, state.groups[data], {
+            errorMessages: [],
+            valid: true
+        });
+        return Object.assign({}, state, {
+            groups: Object.assign({}, state.groups, nextGroup)
+        });
+    },
+    [ACTIONS.ADD_VALIDATION_METHOD]: (state, data) => {
+        const nextGroup = {};
+        nextGroup[data.groupName] = Object.assign({}, state.groups[data.groupName] ? state.groups[data.groupName] : {},
+            state.groups[data.groupName] ?  { validators: [...state.groups[data.groupName].validators, data.validator] }
+            : {
+                fields: [].slice.call(document.getElementsByName(data.groupName)),
+                serverErrorNode: document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}=${data.groupName}]`) || false,
+                valid: false,
+                validators: [data.validator],
+            });
+
+        return Object.assign({}, state, {
+            groups: Object.assign({}, state.groups, nextGroup[data.groupName])
+        });
+    },
     [ACTIONS.VALIDATION_ERRORS]: (state, data) => {
         return Object.assign({}, state, {
             realTimeValidation: true,

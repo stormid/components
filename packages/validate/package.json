@@ -26,7 +26,7 @@
     "HTML5"
   ],
   "scripts": {
-    "build": "npx microbundle --name Validate",
+    "build": "node_modules/.bin/microbundle --name Validate",
     "test": "node_modules/.bin/jest",
     "eg:dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "eg:prod": "webpack --config example/webpack.config.js --mode production",
