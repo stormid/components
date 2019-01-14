@@ -1,7 +1,7 @@
 {
-  "name": "@stormid/validate",
+  "name": "@stormid/load",
   "version": "0.1.0",
-  "description": "",
+  "description": "Promise-based script loader",
   "author": "stormid",
   "license": "MIT",
   "repository": {
@@ -16,17 +16,12 @@
   "browser": "dist/index.umd.js",
   "keywords": [
     "stormid",
-    "form",
     "component",
-    "validation",
-    "unobtrustive",
-    "constraint",
-    "dotnetcore",
-    ".NETMVC",
-    "HTML5"
+    "ui",
+    "tabs"
   ],
   "scripts": {
-    "build": "node_modules/.bin/microbundle --name Validate",
+    "build": "npx microbundle --name Load",
     "test": "node_modules/.bin/jest",
     "eg:dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "eg:prod": "webpack --config example/webpack.config.js --mode production",

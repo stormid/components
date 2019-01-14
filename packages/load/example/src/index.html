@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <title>StormID</title>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: sans-serif;
+        }
+        html,
+        body {
+            height:100%;
+        }
+        hr {
+            height:1px;
+            width:100%;
+            display:block;
+            background:#ddd;
+            margin:24px 0;
+            border:0 none;
+        }
+        h1 {
+            font: 1.25rem/1.2 sans-serif;
+            margin-bottom:1.5rem;
+        }
+        h2 {
+            font: 1.1rem/1.2 sans-serif;
+            margin-bottom:12px;
+            padding-top:12px;
+        }
+        h3 {
+            font: 1rem/1.2 sans-serif;
+            margin-bottom:12px;
+            padding-top:12px;
+        }
+        p {
+            margin-bottom:1.5rem;
+        }
+        .chart {
+            margin-bottom:40px;
+        }
+        .chart div {
+            font: 10px sans-serif;
+            background-color: steelblue;
+            text-align: right;
+            padding: 3px;
+            margin: 1px;
+            color: white;
+        }
+    </style>
+  </head>
+  <body>
+    <p>Asynchronously loads d3, then uses it to renders this chart:</p>
+    <div class="chart"></div>
+    <p>Synchronously loads d3 and d3 charts (that depends on d3), then uses it to renders this diagram chart:</p>
+    <div class="chart-2"></div>
+  </body>
+</html>
