@@ -38,10 +38,7 @@ const getStatePrefix = fieldName => fieldName.substr(0, fieldName.lastIndexOf('.
 const appendStatePrefix = (value, prefix) => {
     if (value.indexOf("*.") === 0) value = value.replace("*.", prefix);
     return value;
-}
-
-export const pipe = (...fns) => fns.reduce((acc, fn) => fn(acc));
-
+};
 
 export const extractValueFromGroup = group => group.hasOwnProperty('fields') 
                                             ? group.fields.reduce(groupValueReducer, '')

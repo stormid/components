@@ -144,6 +144,7 @@ export default form => {
     form.addEventListener('reset', () => { Store.update(UPDATES.CLEAR_ERRORS, null, [clearErrors]); });
 
     return {
+        getState: Store.getState,
         validate: validate(form),
         addMethod
     }

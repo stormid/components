@@ -1,7 +1,6 @@
 import methods from './methods';
 import messages from '../constants/messages';
-import { 
-    pipe,
+import {
     isCheckable,
     isSelect,
     isFile,
@@ -73,16 +72,37 @@ const extractDataValValidators = input => DOTNET_ADAPTORS.reduce((validators, ad
 
       
 /**
- * Pipes an input through a series of validator checks (fns directly below) to extract array of validators based on HTML5 attributes
- * so HTML5 constraints validation is not used, we use the same validation methods as .NET MVC validation
- * 
- * If we are to actually use the Constraint Validation API we would not need to assemble this validator array...
+ * Checks attributes on an input to generate an array of validators the attributes describe
  * 
  * @param input [DOM node]
  * 
  * @return validators [Array]
- */                                                  
-const extractAttrValidators = input => pipe(email(input), url(input), number(input), minlength(input), maxlength(input), min(input), max(input), pattern(input), required(input));
+ */
+const extractAttrValidators = input => {
+    let validators = [];
+    if(input.hasAttribute('required') && input.getAttribute('required') !== 'false'){
+        validators.push({ type: 'required'} )
+    }
+    if(input.getAttribute('type') === 'email') validators.push({type: 'email'});
+    if(input.getAttribute('type') === 'url') validators.push({type: 'url'});
+    if(input.getAttribute('type') === 'number') validators.push({type: 'number'});
+    if((input.getAttribute('minlength') && input.getAttribute('minlength') !== 'false')){
+        validators.push({ type: 'minlength', params: { min: input.getAttribute('minlength') } });
+    }
+    if((input.getAttribute('maxlength') && input.getAttribute('maxlength') !== 'false')){
+        validators.push({ type: 'maxlength', params: { min: input.getAttribute('maxlength') } });
+    }
+    if((input.getAttribute('min') && input.getAttribute('min') !== 'false')){
+        validators.push({ type: 'min', params: { min: input.getAttribute('min') } });
+    }
+    if((input.getAttribute('max') && input.getAttribute('max') !== 'false')){
+        validators.push({ type: 'max', params: { min: input.getAttribute('max') } });
+    }
+    if((input.getAttribute('pattern') && input.getAttribute('pattern') !== 'false')){
+        validators.push({ type: 'pattern', params: { regex: input.getAttribute('pattern') } });
+    }
+    return validators;
+};
 
 /**
  * Validator checks to extract validators based on HTML5 attributes
@@ -90,7 +110,10 @@ const extractAttrValidators = input => pipe(email(input), url(input), number(inp
  * Each function is curried so we can seed each fn with an input and pipe the result array through each function
  * Signature: inputDOMNode => validatorArray => updateValidatorArray
  */
-const required = input => (validators = [])  => input.hasAttribute('required') && input.getAttribute('required') !== 'false' ? [...validators, {type: 'required'}] : validators;
+const required = input => (validators = []) => {
+    // console.log(validators);
+    return input.hasAttribute('required') && input.getAttribute('required') !== 'false' ? [...validators, {type: 'required'}] : validators;
+};
 const email = input => (validators = [])  => input.getAttribute('type') === 'email' ? [...validators, {type: 'email'}] : validators;
 const url = input => (validators = [])  => input.getAttribute('type') === 'url' ? [...validators, {type: 'url'}] : validators;
 const number = input => (validators = [])  => input.getAttribute('type') === 'number' ? [...validators, {type: 'number'}] : validators;
@@ -197,11 +220,13 @@ export const removeUnvalidatableGroups = groups => {
  * @return state [Object] consisting of groups [Object] name-indexed validation groups
  * 
  */ 
-export const getInitialState = form => ({
-    realTimeValidation: false,
-    groups: removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
-                    .reduce(assembleValidationGroup, {}))
-});
+export const getInitialState = form => {
+    return {
+        realTimeValidation: false,
+        groups: removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
+                        .reduce(assembleValidationGroup, {}))
+    }
+};
 
 /**
  * Reducer run against an array of resolved validation promises to set the overall validityState of a group

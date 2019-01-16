@@ -59,7 +59,10 @@ export const clearError = groupName => state => {
         state.groups[groupName].serverErrorNode.classList.remove(DOTNET_CLASSNAMES.ERROR);
         state.groups[groupName].serverErrorNode.classList.add(DOTNET_CLASSNAMES.VALID);
     }
-    state.groups[groupName].fields.forEach(field => { field.removeAttribute('aria-invalid'); });
+    state.groups[groupName].fields.forEach(field => {
+        field.parentNode.classList.remove('is--invalid');
+        field.removeAttribute('aria-invalid');
+    });
     delete errorNodes[groupName];
 };
 
@@ -109,9 +112,13 @@ export const renderError = groupName => state => {
                 : state.groups[groupName]
                             .fields[state.groups[groupName].fields.length-1]
                             .parentNode
-                            .appendChild(h('div', { class: DOTNET_CLASSNAMES.ERROR }, state.groups[groupName].errorMessages[0]));
+                            .insertBefore(
+                                h('div', { class: DOTNET_CLASSNAMES.ERROR }, state.groups[groupName].errorMessages[0]),
+                                state.groups[groupName].fields[state.groups[groupName].fields.length-1]
+                            );
 						
-	state.groups[groupName].fields.forEach(field => { 
+	state.groups[groupName].fields.forEach(field => {
+        field.parentNode.classList.add('is--invalid');
         field.setAttribute('aria-invalid', 'true');
     });
 };

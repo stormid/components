@@ -26,7 +26,7 @@ const init = (candidate, opts) => {
 { 
 	[].slice.call(document.querySelectorAll('form'))
 		.forEach(form => { 
-			if(form.querySelector('[data-val=true]') && !form.hasAttribute('novalidate')) init(form);
+			if(form.querySelector('form') && !form.hasAttribute('novalidate')) init(form);
 		});
 }
 
