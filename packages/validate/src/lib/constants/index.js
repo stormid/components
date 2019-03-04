@@ -66,5 +66,5 @@ export const DOTNET_ADAPTORS = [
 //classNames added/updated on .NET MVC error message span
 export const DOTNET_CLASSNAMES = {
     VALID: 'field-validation-valid',
-    ERROR: 'field-validation-error'
+    ERROR: 'error-message'
 };
