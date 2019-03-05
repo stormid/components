@@ -1,5 +1,5 @@
-import Tabs from '../../../src';
+import CheckAll from '../../../src';
     
 window.addEventListener('DOMContentLoaded', () => {    
-    window.__t1__ = Tabs.init('.js-tabs');
+    CheckAll.init('.js-check-all');
 });

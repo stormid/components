@@ -54,47 +54,43 @@
             margin-left:-30px;
             overflow:hidden
         }
-        section {
-            margin-bottom:30px;
-        }
-        .tabs__nav {
-            display: block;
-            border-bottom:2px solid #eee; 
-        }
-        .tabs__nav-link {
-            display: inline-block;
-            padding:.5rem 1rem;
-        }
-        .tabs__nav-link:hover {
-            background-color:#fafafa;
-        }
-        .tabs__nav-link.active{
-            background:#eee;
-        }
-        .tabs__section {
-            padding:2rem;
-            background:#eee;
-        }
     </style>
   </head>
   <body>
-    <div class="js-tabs tabs">
-        <nav class="tabs__nav">
-            <a id="tab-1" class="tabs__nav-link js-tabs__link" href="#panel-1">Tab 1</a>
-            <a id="tab-2" class="tabs__nav-link js-tabs__link" href="#panel-2">Tab 2</a>
-            <a id="tab-3" class="tabs__nav-link js-tabs__link" href="#panel-3">Tab 3</a>
-        </nav>
-        <section id="panel-1" class="tabs__section">Panel 1</section>
-        <section id="panel-2" class="tabs__section" hidden>
-                <p>Panel 2</p>
-                <p><a href="/">Test link</a></p>
-                <p><a href="/">Test link</a></p>
-        </section>
-        <section id="panel-3" class="tabs__section" hidden>
-            <p>Panel 3</p>
-            <p><a href="/">Test link</a></p>
-            <p><a href="/">Test link</a></p>
-        </section>
+    <div class="form-group relative">
+        <input class="js-check-all" type="checkbox" id="check-all" data-group="group-1" checked>
+        <label for="check-all">All</label>
+    </div>
+        
+    <div class="col small-12 medium-6 relative">
+        <input data-group-name="group-1" id="item-1" class="form-row-checkbox__checkbox" type="checkbox" name="items" value="1">
+        <label for="item-1" class="form-control-label form-control-label--checkbox">
+            Item 1
+        </label>
+    </div>
+    <div class="col small-12 medium-6 relative">
+        <input data-group-name="group-1" id="item-2" class="form-row-checkbox__checkbox" type="checkbox" name="items" value="2">
+        <label for="item-2" class="form-control-label form-control-label--checkbox">
+            Item 2
+        </label>
+    </div>
+    <div class="col small-12 medium-6 relative">
+        <input data-group-name="group-1" id="item-3" class="form-row-checkbox__checkbox" type="checkbox" name="items" value="3">
+        <label for="item-3" class="form-control-label form-control-label--checkbox">
+            Item 3
+        </label>
+    </div>
+    <div class="col small-12 medium-6 relative">
+        <input data-group-name="group-1" id="item-4" class="form-row-checkbox__checkbox" type="checkbox" name="items" value="4">
+        <label for="item-4" class="form-control-label form-control-label--checkbox">
+            Item 4
+        </label>
+    </div>
+    <div class="col small-12 medium-6 relative">
+        <input data-group-name="group-1" id="item-5" class="form-row-checkbox__checkbox" type="checkbox" name="items" value="5">
+        <label for="item-5" class="form-control-label form-control-label--checkbox">
+            Item 5
+        </label>
     </div>
   </body>
 </html>
