@@ -21,6 +21,7 @@ const init = (candidate, opts) => {
 		el.setAttribute('novalidate', 'novalidate');
 		return  acc;
 	}, []);
+
 };
 
 export default { init };

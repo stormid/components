@@ -1,4 +1,4 @@
-import Store from './store';
+import { createStore } from './store';
 import { ACTIONS } from './constants';
 import { isSubmitButton, hasNameValue } from './validator/utils';
 import { 
@@ -31,7 +31,7 @@ import {
  * @returns [boolean] The validity state of the form
  * 
  */
-const validate = form => e => {
+const validate = Store => e => {
     e && e.preventDefault();
     Store.dispatch(ACTIONS.CLEAR_ERRORS, null, [clearErrors]);
 
@@ -40,14 +40,14 @@ const validate = form => e => {
             if([].concat(...validityState).reduce(reduceGroupValidityState, true)){
                 let buttonValueNode = false;
                 if(isSubmitButton(document.activeElement) && hasNameValue(document.activeElement)) {
-                    buttonValueNode = createButtonValueNode(document.activeElement, form);
+                    buttonValueNode = createButtonValueNode(document.activeElement, Store.getState().form);
                 }
-                if(e && e.target) form.submit();                
+                if(e && e.target) Store.getState().form.submit();                
                 buttonValueNode && cleanupButtonValueNode(buttonValueNode);
                 return true
             }
 
-            Store.getState().realTimeValidation === false && startRealTimeValidation();
+            Store.getState().realTimeValidation === false && startRealTimeValidation(Store);
 
             focusFirstInvalidField(Store.getState().groups);
 
@@ -94,7 +94,7 @@ const addMethod = (groupName, method, message) => {
  * dispatched to the store to update state and render the error
  * 
  */
-const startRealTimeValidation = () => {
+const startRealTimeValidation = Store => {
     let handler = groupName => () => {
         if(!Store.getState().groups[groupName].valid) {
             Store.dispatch(ACTIONS.CLEAR_ERROR, groupName, [clearError(groupName)]);
@@ -139,13 +139,14 @@ const startRealTimeValidation = () => {
  * *
  */
 export default form => {
+    const Store = createStore();
     Store.dispatch(ACTIONS.SET_INITIAL_STATE, (getInitialState(form)));
-    form.addEventListener('submit', validate(form));
+    form.addEventListener('submit', validate(Store));
     form.addEventListener('reset', () => { Store.update(UPDATES.CLEAR_ERRORS, null, [clearErrors]); });
 
     return {
         getState: Store.getState,
-        validate: validate(form),
+        validate: validate(Store),
         addMethod
     }
 };

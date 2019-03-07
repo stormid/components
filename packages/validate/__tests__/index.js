@@ -13,12 +13,12 @@ const init = () => {
 describe('Initialisation', () => {
 	beforeAll(init);
   	it('should return an Object with validate and addMethod functions', async () => {
-		const validator = await Validation.init('form');
-	  	const form = document.querySelector('form');
-		expect(window.__validators__).not.toBeNull();
-	  	expect(window.__validators__[form]).not.toBeNull();
-	  	expect(window.__validators__[form].validate).not.toBeUndefined();
-	  	expect(window.__validators__[form].addMethod).not.toBeUndefined();
+		const validators = await Validation.init('form');
+		expect(validators[0]).not.toBeNull();
+	  	expect(validators[0]).not.toBeNull();
+	  	expect(validators[0].validate).not.toBeUndefined();
+	  	expect(validators[0].addMethod).not.toBeUndefined();
+	  	expect(validators[0].getState).not.toBeUndefined();
   });
 });
 
@@ -26,8 +26,7 @@ describe('Initialisation', () => {
 // 	beforeAll(init);
 //  	it('should write errors to the dom on validation', async () => {
 // 		const validator = Validation.init('form');
-// 		const form = document.querySelector('form');
-// 		validator[form].validate();
+// 		validator[0].validate();
 // 		console.log(document.getElementById('clen').nextElementSibling.classList);
 // 	});
 // });

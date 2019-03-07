@@ -14,19 +14,19 @@ export const overlayInner = items => `<div class="modal-gallery__inner js-modal-
                                         ${items}
                                     </div>
                                 </div>
-                                <button class="js-modal-gallery__next modal-gallery__next">
-                                    <svg role="button" role="button" width="44" height="60">
-                                        <polyline points="14 10 34 30 14 50" stroke="rgb(255,255,255)" stroke-width="4" stroke-linecap="butt" fill="none" stroke-linejoin="round"/>
+                                <button class="js-modal-gallery__next modal-gallery__next" aria-label="Next">
+                                    <svg focusable="false" width="44" height="60">
+                                        <polyline points="14 10 34 30 14 50" stroke-width="4" stroke-linecap="butt" fill="none" stroke-linejoin="round"/>
                                     </svg>
                                 </button>
-                                <button class="js-modal-gallery__previous modal-gallery__previous">
-                                    <svg role="button" width="44" height="60">
-                                        <polyline points="30 10 10 30 30 50" stroke="rgb(255,255,255)" stroke-width="4" stroke-linecap="butt" fill="none" stroke-linejoin="round"/>
+                                <button class="js-modal-gallery__previous modal-gallery__previous" aria-label="Previous">
+                                    <svg focusable="false" width="44" height="60">
+                                        <polyline points="30 10 10 30 30 50" stroke-width="4" stroke-linecap="butt" fill="none" stroke-linejoin="round"/>
                                     </svg>
                                 </button>
-                                <button class="js-modal-gallery__close modal-gallery__close">
-                                    <svg role="button" role="button" width="30" height="30">
-                                        <g stroke="rgb(255,255,255)" stroke-width="4">
+                                <button class="js-modal-gallery__close modal-gallery__close" aria-label="Close">
+                                    <svg focusable="false" width="30" height="30">
+                                        <g stroke-width="4">
                                             <line x1="5" y1="5" x2="25" y2="25"/>
                                             <line x1="5" y1="25" x2="25" y2="5"/>
                                         </g>

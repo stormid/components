@@ -1,7 +1,7 @@
 import { DOTNET_CLASSNAMES } from '../constants';
 
-//Track error message DOM nodes in local scope
-let errorNodes = {};
+//Track error message DOM nodes in local scope => ;_;
+// let errorNodes = {};
 
 /**
  * Hypertext DOM factory function
@@ -54,7 +54,8 @@ export const createErrorTextNode = (group, msg) => {
  * 
  */
 export const clearError = groupName => state => {
-    errorNodes[groupName].parentNode.removeChild(errorNodes[groupName]);
+    state.errorNodes[groupName].parentNode.removeChild(state.errorNodes[groupName]);
+    // errorNodes[groupName].parentNode.removeChild(errorNodes[groupName]);
     if(state.groups[groupName].serverErrorNode) {
         state.groups[groupName].serverErrorNode.classList.remove(DOTNET_CLASSNAMES.ERROR);
         state.groups[groupName].serverErrorNode.classList.add(DOTNET_CLASSNAMES.VALID);
@@ -63,7 +64,7 @@ export const clearError = groupName => state => {
         field.parentNode.classList.remove('is--invalid');
         field.removeAttribute('aria-invalid');
     });
-    delete errorNodes[groupName];
+    delete state.errorNodes[groupName];//shouldn't be doing this here...
 };
 
 /**
@@ -73,7 +74,7 @@ export const clearError = groupName => state => {
  * 
  */
 export const clearErrors = state => {
-    Object.keys(errorNodes).forEach(name => {
+    state.errorNodes && Object.keys(state.errorNodes).forEach(name => {
         clearError(name)(state);
     });
 };
@@ -104,9 +105,9 @@ export const renderErrors = state => {
  * 
  */
 export const renderError = groupName => state => {
-    if(errorNodes[groupName]) clearError(groupName)(state);
+    if(state.errorNodes[groupName]) clearError(groupName)(state);
     
-    errorNodes[groupName] = 
+    state.errorNodes[groupName] = 
         state.groups[groupName].serverErrorNode 
                 ? createErrorTextNode(state.groups[groupName], state.groups[groupName].errorMessages[0]) 
                 : state.groups[groupName]
