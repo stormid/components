@@ -5,7 +5,7 @@ import {
     isSelect,
     isFile,
     DOMNodesFromCommaList,
-    extractValueFromGroup
+    groupIsHidden
 } from './utils';
 import {
     DOTNET_ADAPTORS,
@@ -205,7 +205,7 @@ export const removeUnvalidatableGroups = groups => {
     let validationGroups = {};
 
     for(let group in groups)
-        if(groups[group].validators.length > 0)
+        if(groups[group].validators.length > 0 && !groupIsHidden(groups[group].fields))
             validationGroups[group] = groups[group];
 
     return validationGroups;

@@ -10,6 +10,12 @@ export const hasNameValue = node => node.hasAttribute('name') && node.hasAttribu
 
 export const isRequired = group => group.validators.filter(validator => validator.type === 'required').length > 0;
 
+export const groupIsHidden = fields => fields.reduce((acc, field) => {
+    if(field.type === 'hidden') acc = true;
+    return acc;
+}, false);
+
+
 const hasValue = input => (input.value !== undefined && input.value !== null && input.value.length > 0);
 
 export const groupValueReducer = (acc, input) => {
