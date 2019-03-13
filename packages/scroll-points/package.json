@@ -1,5 +1,5 @@
 {
-  "name": "@stormid/textarea",
+  "name": "@stormid/scroll-points",
   "version": "0.1.0",
   "description": "",
   "author": "stormid",
@@ -16,11 +16,15 @@
   "browser": "dist/index.umd.js",
   "keywords": [
     "stormid",
-    "textarea",
-    "component"
+    "scrollspy",
+    "scrollwatch",
+    "scrollpoints",
+    "component",
+    "scrolling",
+    "ui"
   ],
   "scripts": {
-    "build": "npx microbundle --name Textarea",
+    "build": "npx microbundle --name ScrollPoints",
     "test": "node_modules/.bin/jest",
     "eg:dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "eg:prod": "webpack --config example/webpack.config.js --mode production",
@@ -28,5 +32,8 @@
   },
   "jest": {
     "testURL": "http://localhost"
+  },
+  "dependencies": {
+    "raf-throttle": "^2.0.3"
   }
 }
