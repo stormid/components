@@ -1,5 +1,5 @@
 {
-  "name": "@stormid/check-all",
+  "name": "@stormid/textarea",
   "version": "0.1.0",
   "description": "",
   "author": "stormid",
@@ -9,25 +9,24 @@
     "url": "https://github.com/stormid/components.git"
   },
   "bugs": {
-    "url": "https://github.com/stormid/components"
+    "url": "https://github.com/stormid/components/issues"
   },
   "main": "dist/index.js",
   "source": "src/index.js",
   "browser": "dist/index.umd.js",
   "keywords": [
     "stormid",
-    "component",
-    "ui",
-    "form",
-    "input",
-    "checkboxes",
-    "group"
+    "textarea",
+    "component"
   ],
   "scripts": {
-    "build": "npx microbundle --name CheckAll",
+    "build": "npx microbundle --name ComponentBoilerplate",
     "test": "node_modules/.bin/jest",
     "eg:dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "eg:prod": "webpack --config example/webpack.config.js --mode production",
     "release": "npm run -s build && npm t && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+  },
+  "jest": {
+    "testURL": "http://localhost"
   }
 }

@@ -2,7 +2,7 @@ import { writeCookie } from './utils';
 
 export default {
 	name: 'CookiePreferences',
-	path: '/',
+	path: '',
 	domain: '',
 	secure: true,
 	expiry: 365,

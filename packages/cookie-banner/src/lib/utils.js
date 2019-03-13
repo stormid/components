@@ -13,13 +13,15 @@ export const cookiesEnabled = () => {
       }
 };
 
-export const writeCookie = state => document.cookie = [
-    `${state.settings.name}=${JSON.stringify(Object.assign({}, state.consent, { intent: state.intent }))};`,
-    `expires=${(new Date(new Date().getTime() + (state.settings.expiry*24*60*60*1000))).toGMTString()};`,
-    `path=${state.settings.path};`,
-    state.settings.domain ? `domain=${state.settings.domain}` : '',
-    state.settings.secure ? `secure` : ''
-].join('');
+export const writeCookie = state => {
+    document.cookie = [
+        `${state.settings.name}=${JSON.stringify(Object.assign({}, state.consent, { intent: state.intent }))};`,
+        `expires=${(new Date(new Date().getTime() + (state.settings.expiry*24*60*60*1000))).toGMTString()};`,
+        state.settings.path ? `path=${state.settings.path}` : '',
+        state.settings.domain ? `domain=${state.settings.domain}` : '',
+        state.settings.secure ? `secure` : ''
+    ].join('');
+}
 
 export const readCookie = settings => {
     const cookie = document.cookie.split('; ').map(part => ({ name: part.split('=')[0], value: part.split('=')[1] })).filter(part => part.name === settings.name)[0];
