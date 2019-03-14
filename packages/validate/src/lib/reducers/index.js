@@ -40,9 +40,6 @@ export default {
         });
     },
     [ACTIONS.VALIDATION_ERRORS]: (state, data) => {
-        // return Object.assign({}, state, {
-        //     realTimeValidation: true
-        // });
         return Object.assign({}, state, {
             realTimeValidation: true,
             groups: Object.keys(state.groups).reduce((acc, group) => {
@@ -52,20 +49,13 @@ export default {
         });
     },
     [ACTIONS.VALIDATION_ERROR]: (state, data) => {
-        const groups = {};
-        groups[data.group] = Object.assign({}, state.groups[data.group], {
-            errorMessages: data.errorMessages,
-            valid: false
+        return Object.assign({}, state, {
+            groups: Object.assign({}, state.groups, {
+                [data.group]: Object.assign({}, state.groups[data.group], {
+                    errorMessages: data.errorMessages,
+                    valid: false
+                })
+            })
         });
-        return Object.assign({}, state, { groups });
-
-        // return Object.assign({}, state, {
-        //     groups: Object.assign({}, state.groups, {
-        //         [data.group]: Object.assign({}, state.groups[data.group], {
-        //             errorMessages: data.errorMessages,
-        //             valid: false
-        //         })
-        //     })
-        // });
     }
 };

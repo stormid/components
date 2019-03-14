@@ -99,7 +99,6 @@ const startRealTimeValidation = Store => {
         if(!Store.getState().groups[groupName].valid) {
             Store.dispatch(ACTIONS.CLEAR_ERROR, groupName, [clearError(groupName)]);
         }
-        
         getGroupValidityState(Store.getState().groups[groupName])
             .then(res => {
                 if(!res.reduce(reduceGroupValidityState, true)) {
