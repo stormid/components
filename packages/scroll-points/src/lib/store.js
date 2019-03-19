@@ -1,4 +1,4 @@
-export const createStore = () => {
+export default () => {
     //shared centralised validator state
     let state = {};
 
@@ -13,17 +13,15 @@ export const createStore = () => {
      * 
      * Execute side effects of state update, as passed in the update
      * 
-     * @param type [String] 
      * @param nextState [Object] New slice of state to combine with current state to create next state
      * @param effects [Array] Array of side effect functions to invoke after state update (DOM, operations, cmds...)
      */
-    const dispatch = (nextState, effects) => {
-        state = nextState ? ({ ...state, ...nextState }) : state;
+    const update = function(nextState, effects = []) {
+        state = nextState ? { ...state, ...nextState } : state;
         //uncomment for debugging by writing state history to window
-        // window.__validator_history__.push(state), console.log(window.__validator_history__);
-        if(!effects) return;
+        // window.__validator_history__.push({[type]: state}), console.log(window.__validator_history__);
         effects.forEach(effect => { effect(state); });
     };
 
-    return { dispatch, getState };
+    return { update, getState };
 };
