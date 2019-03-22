@@ -1,0 +1,32 @@
+{
+  "name": "@stormid/check-all",
+  "version": "0.1.0",
+  "description": "",
+  "author": "stormid",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stormid/components.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stormid/components/issues"
+  },
+  "main": "dist/index.js",
+  "source": "src/index.js",
+  "browser": "dist/index.umd.js",
+  "keywords": [
+    "stormid",
+    "boilerplate",
+    "component"
+  ],
+  "scripts": {
+    "build": "npx microbundle --name CheckAll",
+    "test": "node_modules/.bin/jest",
+    "eg:dev": "webpack-dev-server --config example/webpack.config.js --mode development",
+    "eg:prod": "webpack --config example/webpack.config.js --mode production",
+    "release": "npm run -s build && npm t && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+  },
+  "jest": {
+    "testURL": "http://localhost"
+  }
+}
