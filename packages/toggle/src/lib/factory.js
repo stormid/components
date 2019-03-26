@@ -5,7 +5,7 @@ import {
     getFocusableChildren,
     keyListener,
     closeOnBlur,
-    focusInListener,
+    proxyListener,
     manageFocus,
     initUI,
     startToggleLifecycle,
@@ -33,7 +33,8 @@ export default ({ node, settings }) => {
         focusableChildren: getFocusableChildren(node),
         lastFocused: false,
         keyListener: keyListener(Store),
-        focusInListener: focusInListener(Store)
+        focusInListener: proxyListener(Store),
+        clickListener: proxyListener(Store)
     }, [ initUI(Store), () => {
 	    settings.startOpen && startToggleLifecycle(Store)();
     }]);

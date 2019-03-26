@@ -30,7 +30,10 @@ export const initUI = Store => () => {
  * @param Store, Object, model or state of the current instance
  */
 export const toggle = Store => () => {
-    Store.dispatch({ isOpen: !Store.getState().isOpen }, [toggleAttributes, manageFocus(Store), closeOnBlur(Store)]);
+    Store.dispatch({ 
+        isOpen: !Store.getState().isOpen },
+        [toggleAttributes, manageFocus(Store), closeProxy(Store)]
+    );
 };
 
 /*
@@ -126,34 +129,36 @@ const trapTab = (Store, e) => {
 };
 
 /*
- * Partially applied function that returns handler for focusin events when toggle is open
- * Only added as an eventListener when closeOnBlur option is set
+ * Partially applied factory function that returns handlers for focusin and click events
+ * Returned function is added as an eventListener when closeOnBlur and/or closeOnClick options are true
  * 
  * @param Store, Object, model or store of the current instance
- * @returns Function, focusin event handler
+ * @returns Function, event handler
  * 
- * @param Event, focusin event dispatched from document
+ * @param Event, event dispatched from document
  */
-export const focusInListener = Store => e => {
+export const proxyListener = Store => e => {
     const { node, toggles } = Store.getState();
+
     if(!node.contains(e.target) && !toggles.reduce((acc, toggle) => {
-            if(toggle === e.target) acc = true;
+            if(toggle === e.target|| toggle.contains(e.target)) acc = true;
             return acc;
         }, false)
     ) toggle(Store)();
 };
 
 /*
- * Partially applied function that returns a function that adds and removes the document focusInListener
- * Only added as an eventListener when closeOnBlur option is set
+ * Partially applied function that returns a function that adds and removes the document proxyListeners
+ * Only added as an eventListener when closeOnBlur and/or closeOnClick options are true
  * 
  * @param Store, Object, model or state of the current instance
  */
-export const closeOnBlur = Store => () => {
-    const { settings, isOpen, focusInListener } = Store.getState();
-    if(!settings.closeOnBlur) return;
-    document[`${isOpen ? 'add' : 'remove'}EventListener`]('focusin', focusInListener);
+export const closeProxy = Store => () => {
+    const { settings, isOpen, focusInListener, clickListener } = Store.getState();
+    if(settings.closeOnBlur) document[`${isOpen ? 'add' : 'remove'}EventListener`]('focusin', focusInListener);
+    if(settings.closeOnClick) document[`${isOpen ? 'add' : 'remove'}EventListener`]('click', clickListener);
 };
+
 
 /*
  * Partially applied function that returns a function that sets up and pulls down focus event handlers based on toggle status and focus management options 
