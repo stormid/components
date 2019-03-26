@@ -49,8 +49,6 @@ const validate = Store => e => {
 
             Store.getState().realTimeValidation === false && startRealTimeValidation(Store);
 
-            focusFirstInvalidField(Store.getState().groups);
-
             Store.dispatch(
                 ACTIONS.VALIDATION_ERRORS,
                 Object.keys(Store.getState().groups)
@@ -60,7 +58,7 @@ const validate = Store => e => {
                             errorMessages: validityState[i].reduce(reduceErrorMessages(group, Store.getState()), [])
                         }, acc;
                     }, {}),
-                [renderErrors]
+                [renderErrors, focusFirstInvalidField]
             );
 
             return false;

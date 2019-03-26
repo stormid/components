@@ -133,11 +133,12 @@ export const renderError = groupName => state => {
  * @param groups [Object, validation group slice of state]
  * 
  */
-export const focusFirstInvalidField = groups => {
-    groups[Object.keys(groups)
-        .filter(group => !group.valid)[0]]
-        .fields[0]
-        .focus();
+export const focusFirstInvalidField = state => {
+    const firstInvalid = Object.keys(state.groups).reduce((acc, curr) => {
+        if(!acc && !state.groups[curr].valid) acc = state.groups[curr].fields[0];
+        return acc;
+    }, false);
+    firstInvalid && firstInvalid.focus();
 };
 
 /**
