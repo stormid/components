@@ -18,5 +18,5 @@ export default {
 	callback: false,
 	focus: true,
 	trapTab: true,
-	closeOnBlur: true
+	closeOnBlur: false
 };

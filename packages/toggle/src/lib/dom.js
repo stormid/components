@@ -170,10 +170,10 @@ export const manageFocus = Store => () => {
         if(settings.delay) window.setTimeout(focusFn, settings.delay);
         else focusFn();
         if(!settings.trapTab) return;
-        document.addEventListener('keydown', keyListener);
+        document.removeEventListener('keydown', keyListener);
     }
     else {
-        settings.trapTab && document.removeEventListener('keydown', keyListener);
+        settings.trapTab && document.addEventListener('keydown', keyListener);
         const reFocusFn = () => {
             lastFocused && lastFocused.focus();
             Store.dispatch({ lastFocused: false });
