@@ -140,7 +140,7 @@ export const focusInListener = Store => e => {
             if(toggle === e.target) acc = true;
             return acc;
         }, false)
-    ) toggle();
+    ) toggle(Store)();
 };
 
 /*
