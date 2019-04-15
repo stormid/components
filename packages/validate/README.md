@@ -25,26 +25,15 @@ npm i -S @storm/validate
 ```
 ```
 import Validate from '@storm/validate';
-```
-or include dist/index.umd.js in a script tag for unobstrusive auto-validation.
-
-Instances can also be explicitly created by invoking the library's init method: 
-```
-import Validate from '@storm/validate';
 
 let validator = Validate.init('form');
 
 ```
 ## API
-Initialisation (automatic or calling the init() method) creates a window property \_\_validators\_\_.
-
-window.\_\_validators\_\_ is an object containing the returned value of each storm-validate instantiation, indexed by the form DOM element that they wrap.
-
-The returned value, the API, is an object composed of two functions:
 
 1. addMethod - to add a custom validation method:
 ```
-let validator = Validate.init('.my-form');
+var validator = Validate.init('.my-form');
 
 validator.addMethod(
     'MyFieldName', //input/input group name
@@ -54,20 +43,12 @@ validator.addMethod(
     'Value must equal "test"' //error message on validation failure
 );
 ```
-or using the window property
-```
-window.__validators__[document.querySelector('.my-form')].addMethod(...)
-```
 
 2. validate - to manually trigger validation on the whole form:
 ```
-let validator = Validate.init('.my-form');
+var validator = Validate.init('.my-form');
 
 validator.validate();
-```
-or using the window property
-```
-window.__validators__[document.querySelector('.my-form')].validate()
 ```
 
 ## Tests

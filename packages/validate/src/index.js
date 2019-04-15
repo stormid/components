@@ -16,10 +16,11 @@ const init = (candidate, opts) => {
 	//also for repeat initialisations
 	
 	return els.reduce((acc, el) => {
-		if(el.hasAttribute('novalidate')) return acc;
-		acc.push(Object.create(factory(el, opts)));
-		el.setAttribute('novalidate', 'novalidate');
-		return  acc;
+		if(!el.hasAttribute('novalidate')) {
+			acc.push(Object.create(factory(el, opts)));
+			el.setAttribute('novalidate', 'novalidate');
+		}
+		return acc;
 	}, []);
 
 };
