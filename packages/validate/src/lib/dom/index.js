@@ -1,8 +1,5 @@
 import { DOTNET_CLASSNAMES } from '../constants';
 
-//Track error message DOM nodes in local scope => ;_;
-// let errorNodes = {};
-
 /**
  * Hypertext DOM factory function
  * 
