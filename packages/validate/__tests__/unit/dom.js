@@ -6,20 +6,12 @@ import {
 } from '../../src/lib/dom';
 import { DOTNET_CLASSNAMES } from '../../src/lib/constants';
 
-// const init = () => {
-//     document.body.innerHTML = ``;
-// };
-
-// beforeAll(init);
-
 describe('Validate > Unit > DOM > h', () => {
   	it('should return a DOM node for given vNode arguments', async () => {
         document.body.innerHTML = `<div class="test">Lorem ipsum</div>`;
         expect(h('div', { class: 'test' }, 'Lorem ipsum')).toEqual(document.body.firstElementChild);
     });
 })
-
-
 
 //createErrorTextNode
 describe('Validate > Unit > DOM > createErrorTextNode', () => {
