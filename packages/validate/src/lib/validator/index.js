@@ -22,7 +22,7 @@ import {
  * 
  * @return validation param [Object] indexed by second part of param name (e.g., 'min' part of length-min') and array of DOM nodes or a string
  */
-const resolveParam = (param, input) => {
+export const resolveParam = (param, input) => {
     let value = input.getAttribute(`data-val-${param}`);
     return ({
                 [param.split('-')[1]]: !!~DOM_SELECTOR_PARAMS.indexOf(param) ? DOMNodesFromCommaList(value, input): value
