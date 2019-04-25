@@ -38,7 +38,7 @@ export const resolveParam = (param, input) => {
  * 
  * @return validation params [Object] Validation param object containing all validation parameters for an adaptor/validation method
  */
-const extractParams = (input, adaptor) => DOTNET_PARAMS[adaptor]
+export const extractParams = (input, adaptor) => DOTNET_PARAMS[adaptor]
                                             ? { 
                                                 params: DOTNET_PARAMS[adaptor]
                                                             .reduce((acc, param) => {
@@ -48,7 +48,7 @@ const extractParams = (input, adaptor) => DOTNET_PARAMS[adaptor]
                                             : false;
 
 /**
- * Reducer that takes all know .NET MVC adaptors (data-attributes that specifiy a validation method that should be papiied to the node)
+ * Reducer that takes all known .NET MVC adaptors (data-attributes that specify a validation method that should be applied to the node)
  * and checks against a DOM node for matches, returning an array of validators
  * 
  * @param input [DOM node]
@@ -58,7 +58,7 @@ const extractParams = (input, adaptor) => DOTNET_PARAMS[adaptor]
  *                              message [String] the error message displayed if the validation method returns false
  *                              params [Object] (optional) 
  */
-const extractDataValValidators = input => DOTNET_ADAPTORS.reduce((validators, adaptor) => 
+export const extractDataValValidators = input => DOTNET_ADAPTORS.reduce((validators, adaptor) => 
                                                             !input.getAttribute(`data-val-${adaptor}`) 
                                                             ? validators 
                                                             : [...validators, 
@@ -78,7 +78,7 @@ const extractDataValValidators = input => DOTNET_ADAPTORS.reduce((validators, ad
  * 
  * @return validators [Array]
  */
-const extractAttrValidators = input => {
+export const extractAttrValidators = input => {
     let validators = [];
     if(input.hasAttribute('required') && input.getAttribute('required') !== 'false'){
         validators.push({ type: 'required'} )
