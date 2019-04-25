@@ -109,7 +109,7 @@ export const extractAttrValidators = input => {
  * 
  * Each function is curried so we can seed each fn with an input and pipe the result array through each function
  * Signature: inputDOMNode => validatorArray => updateValidatorArray
- */
+
 const required = input => (validators = []) => {
     // console.log(validators);
     return input.hasAttribute('required') && input.getAttribute('required') !== 'false' ? [...validators, {type: 'required'}] : validators;
@@ -122,6 +122,7 @@ const maxlength = input => (validators = [])  => (input.getAttribute('maxlength'
 const min = input => (validators = [])  => (input.getAttribute('min') && input.getAttribute('min') !== 'false') ? [...validators, {type: 'min', params: { min: input.getAttribute('min')}}] : validators;
 const max = input => (validators = [])  => (input.getAttribute('max') && input.getAttribute('max') !== 'false') ? [...validators, {type: 'max', params: { max: input.getAttribute('max')}}] : validators;
 const pattern = input => (validators = [])  => (input.getAttribute('pattern') && input.getAttribute('pattern') !== 'false') ? [...validators, {type: 'pattern', params: { regex: input.getAttribute('pattern')}}] : validators;
+ */
 
 /**
  * Takes an input and returns the array of validators based on either .NET MVC data-val- or HTML5 attributes
@@ -139,6 +140,8 @@ export const normaliseValidators = input => input.getAttribute('data-val') === '
  * 
  * @param group [Array] DOM nodes with the same name attribute
  * @param validator [String] The type of validator matching it to validation method function
+ * 
+ * @returns validityState [Boolean]
  * 
  */  
 export const validate = (group, validator) => validator.type === 'custom' 

@@ -124,6 +124,34 @@ describe('Validate > Unit > Validator > extractAttrValidators', () => {
 			min="2"
 			max="8"
 			required
+			type="text">
+			<input
+			id="group2"
+			name="group2"
+			minlength="2"
+			maxlength="8"
+			required
+			type="text">`;
+		const input1 = document.querySelector('#group1');
+		const input2 = document.querySelector('#group2');
+		expect(extractAttrValidators(input1)).toEqual([
+			{ type: 'required' },
+			{ type: 'min', params: { min: '2' } },
+			{ type: 'max', params: { max: '8' } }
+		]);
+		expect(extractAttrValidators(input2)).toEqual([
+			{ type: 'required' },
+			{ type: 'minlength', params: { min: '2' } },
+			{ type: 'maxlength', params: { max: '8' } }
+		]);
+	});
+	it('should return an array of validator Objects for a given node containing HTML5 constraint validation attributes', async () => {
+		document.body.innerHTML = `<input
+			id="group1"
+			name="group1"
+			min="2"
+			max="8"
+			required
 			type="text">`;
 		const input = document.querySelector('#group1');
 		expect(extractAttrValidators(input)).toEqual([
@@ -133,3 +161,7 @@ describe('Validate > Unit > Validator > extractAttrValidators', () => {
 		]);
 	});
 });
+
+//normaliseValidators
+
+//validate
