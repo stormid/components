@@ -90,13 +90,13 @@ export const extractAttrValidators = input => {
         validators.push({ type: 'minlength', params: { min: input.getAttribute('minlength') } });
     }
     if((input.getAttribute('maxlength') && input.getAttribute('maxlength') !== 'false')){
-        validators.push({ type: 'maxlength', params: { min: input.getAttribute('maxlength') } });
+        validators.push({ type: 'maxlength', params: { max: input.getAttribute('maxlength') } });
     }
     if((input.getAttribute('min') && input.getAttribute('min') !== 'false')){
         validators.push({ type: 'min', params: { min: input.getAttribute('min') } });
     }
     if((input.getAttribute('max') && input.getAttribute('max') !== 'false')){
-        validators.push({ type: 'max', params: { min: input.getAttribute('max') } });
+        validators.push({ type: 'max', params: { max: input.getAttribute('max') } });
     }
     if((input.getAttribute('pattern') && input.getAttribute('pattern') !== 'false')){
         validators.push({ type: 'pattern', params: { regex: input.getAttribute('pattern') } });
