@@ -9,6 +9,8 @@ export const overlay = () => {
     return overlay;
 };
 
+const sanitize = item => item.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
 export const overlayInner = items => `<div class="modal-gallery__inner js-modal-gallery__inner">
                                     <div class="modal-gallery__content js-modal-gallery__content">
                                         ${items}
@@ -40,6 +42,6 @@ export const item = details => `<div class="modal-gallery__item js-modal-gallery
                                 </div>`;
 
 export const details = item => `<div class="modal-gallery__details">
-                                    <h1 class="modal-gallery__title">${item.title}</h1>
-                                    <div class="modal-gallery__description">${item.description}</div>
+                                    <h1 class="modal-gallery__title">${sanitize(item.title)}</h1>
+                                    <div class="modal-gallery__description">${sanitize(item.description)}</div>
                                 </div>`;
