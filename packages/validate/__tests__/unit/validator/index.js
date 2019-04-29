@@ -162,6 +162,7 @@ describe('Validate > Unit > Validator > extractAttrValidators', () => {
 	});
 });
 
-//normaliseValidators
+//normaliseValidators --> see integration tests
+
 
 //validate
