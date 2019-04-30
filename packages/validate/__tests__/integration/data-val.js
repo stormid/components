@@ -1,6 +1,4 @@
-import {
-	normaliseValidators
-} from '../../src/lib/validator';
+import { normaliseValidators } from '../../src/lib/validator';
 
 
 describe('Validate > Integration > data-val > required', () => {
@@ -249,8 +247,8 @@ describe('Validate > Integration > data-val > remote', () => {
                 type: 'remote',
                 message: 'Remote error message',
                 params: {
-                url: "/api/validate",
-                additionalfields: [input2]
+                    url: "/api/validate",
+                    additionalfields: [input2]
                 }
             }
         ]);

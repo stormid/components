@@ -260,7 +260,7 @@ export const getValidityState = groups => {
 };
 
 /**
- * Aggregates all of the validation promises for a sinlge group into a single promise
+ * Aggregates all of the validation promises for a single group into a single promise
  * 
  * @params groups [Object]
  * 
