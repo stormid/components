@@ -165,4 +165,6 @@ describe('Validate > Unit > Validator > extractAttrValidators', () => {
 //normaliseValidators --> see integration tests
 
 
-//validate
+//validate --> see integration validate tests
+
+//assembleValidationGroup -> see integration assembleValidationGroup tests

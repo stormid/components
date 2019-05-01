@@ -16,38 +16,38 @@ const isOptional = group => !isRequired(group) && extractValueFromGroup(group) =
 
 const extractValidationParams = (group, type) => group.validators.filter(validator => validator.type === type)[0].params;
 
-const curryRegexMethod = regex => group => isOptional(group)|| group.fields.reduce((acc, input) => (acc = regex.test(input.value), acc), false);
+const regexMethod = regex => group => isOptional(group)|| group.fields.reduce((acc, input) => (acc = regex.test(input.value), acc), false);
 
-const curryParamMethod = (type, reducer) => group => isOptional(group) || group.fields.reduce(reducer(extractValidationParams(group, type)), false);
+const paramMethod = (type, reducer) => group => isOptional(group) || group.fields.reduce(reducer(extractValidationParams(group, type)), false);
 
 export default {
     required: group => extractValueFromGroup(group) !== '',
-    email: curryRegexMethod(EMAIL_REGEX),
-    url: curryRegexMethod(URL_REGEX),
+    email: regexMethod(EMAIL_REGEX),
+    url: regexMethod(URL_REGEX),
     date: group => isOptional(group)|| group.fields.reduce((acc, input) => (acc = !/Invalid|NaN/.test(new Date(input.value).toString()), acc), false),
-    dateISO: curryRegexMethod(DATE_ISO_REGEX),
-    number: curryRegexMethod(NUMBER_REGEX),
-    digits: curryRegexMethod(DIGITS_REGEX),
-    minlength: curryParamMethod(
+    dateISO: regexMethod(DATE_ISO_REGEX),
+    number: regexMethod(NUMBER_REGEX),
+    digits: regexMethod(DIGITS_REGEX),
+    minlength: paramMethod(
         'minlength',
         params => (acc, input) => (acc = Array.isArray(input.value) ? input.value.length >= +params.min : +input.value.length >= +params.min, acc)
     ),
-    maxlength: curryParamMethod(
+    maxlength: paramMethod(
         'maxlength',
         params => (acc, input) => (acc = Array.isArray(input.value) ? input.value.length <= +params.max : +input.value.length <= +params.max, acc)
     ),
-    equalto: curryParamMethod('equalto', params => (acc, input) => {
+    equalto: paramMethod('equalto', params => (acc, input) => {
         return acc = params.other.reduce((subgroupAcc, subgroup) => {
             if(extractValueFromGroup(subgroup) !== input.value) subgroupAcc = false;
             return subgroupAcc;
         }, true), acc;
     }),
-    pattern: curryParamMethod('pattern', params => (acc, input) => (acc = RegExp(params.regex).test(input.value), acc)),
-    regex: curryParamMethod('regex', params => (acc, input) => (acc = RegExp(params.regex).test(input.value), acc)),
-    min: curryParamMethod('min', params => (acc, input) => (acc = +input.value >= +params.min, acc)),
-    max: curryParamMethod('max', params => (acc, input) => (acc = +input.value <= +params.max, acc)),
-    length: curryParamMethod('length', params => (acc, input) => (acc = (+input.value.length >= +params.min && (params.max === undefined || +input.value.length <= +params.max)), acc)),
-    range: curryParamMethod('range', params => (acc, input) => (acc = (+input.value >= +params.min && +input.value <= +params.max), acc)),
+    pattern: paramMethod('pattern', params => (acc, input) => (acc = RegExp(params.regex).test(input.value), acc)),
+    regex: paramMethod('regex', params => (acc, input) => (acc = RegExp(params.regex).test(input.value), acc)),
+    min: paramMethod('min', params => (acc, input) => (acc = +input.value >= +params.min, acc)),
+    max: paramMethod('max', params => (acc, input) => (acc = +input.value <= +params.max, acc)),
+    length: paramMethod('length', params => (acc, input) => (acc = (+input.value.length >= +params.min && (params.max === undefined || +input.value.length <= +params.max)), acc)),
+    range: paramMethod('range', params => (acc, input) => (acc = (+input.value >= +params.min && +input.value <= +params.max), acc)),
     remote: (group, params) => new Promise((resolve, reject) => {
         fetch((params.type !== 'get' ? params.url : `${params.url}?${resolveGetParams(params.additionalfields)}`), {
             method: params.type.toUpperCase(),
