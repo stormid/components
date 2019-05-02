@@ -140,7 +140,7 @@ const startRealTimeValidation = Store => {
  * @returns [Object] The API for the instance
  * *
  */
-export default (form, settings) => {
+export default (form, settings = {}) => {
     const Store = createStore();
     Store.dispatch(ACTIONS.SET_INITIAL_STATE, getInitialState(form, settings));
     form.addEventListener('submit', validate(Store));
