@@ -1,5 +1,5 @@
 import { createStore } from './store';
-import { ACTIONS } from './constants';
+import { ACTIONS, PREHOOK_DELAY } from './constants';
 import { isSubmitButton, hasNameValue } from './validator/utils';
 import { 
     getInitialState,
@@ -42,7 +42,12 @@ const validate = Store => e => {
                 if(isSubmitButton(document.activeElement) && hasNameValue(document.activeElement)) {
                     buttonValueNode = createButtonValueNode(document.activeElement, Store.getState().form);
                 }
-                if(e && e.target) Store.getState().form.submit();                
+                if(e && e.target) {
+                    if(Store.getState().settings.preSubmitHook) {
+                        Store.getState().settings.preSubmitHook();
+                        window.setTimeout(() => { Store.getState().form.submit(); }, PREHOOK_DELAY);
+                    } else Store.getState().form.submit();
+                }               
                 buttonValueNode && cleanupButtonValueNode(buttonValueNode);
                 return true
             }
@@ -135,9 +140,9 @@ const startRealTimeValidation = Store => {
  * @returns [Object] The API for the instance
  * *
  */
-export default form => {
+export default (form, settings) => {
     const Store = createStore();
-    Store.dispatch(ACTIONS.SET_INITIAL_STATE, (getInitialState(form)));
+    Store.dispatch(ACTIONS.SET_INITIAL_STATE, getInitialState(form, settings));
     form.addEventListener('submit', validate(Store));
     form.addEventListener('reset', () => { Store.update(UPDATES.CLEAR_ERRORS, null, [clearErrors]); });
 

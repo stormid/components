@@ -4,6 +4,8 @@ export const KEY_CODES = {
     ENTER: 13
 };
 
+export const PREHOOK_DELAY = 16; 
+
 export const ACTIONS = {
     SET_INITIAL_STATE: 'SET_INITIAL_STATE',
     CLEAR_ERRORS: 'CLEAR_ERRORS',

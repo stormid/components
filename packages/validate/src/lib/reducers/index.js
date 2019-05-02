@@ -25,23 +25,42 @@ export default {
         });
     },
     [ACTIONS.ADD_VALIDATION_METHOD]: (state, data) => {
-        const nextGroup = Object.assign({},
-                state.groups[data.groupName] 
-                    ? state.groups[data.groupName] 
-                    : {},
-                state.groups[data.groupName] 
-                    ?  { validators: [ ...state.groups[data.groupName].validators, data.validator ] }
-                    : {
-                        fields: [].slice.call(document.getElementsByName(data.groupName)),
-                        serverErrorNode: document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}=${data.groupName}]`) || false,
-                        valid: false,
-                        validators: [data.validator]
-                    }
-                );
-        return { 
-            ...state,
-            groups: { ...state.groups, [data.groupName]: nextGroup }
-        };
+        const nextGroup = Object.assign({}, 
+                            state.groups[data.groupName] 
+                                ? state.groups[data.groupName] 
+                                : {},
+                            state.groups[data.groupName] 
+                                ?  { validators: [...state.groups[data.groupName].validators, data.validator] }
+                                : {
+                                    fields: [].slice.call(document.getElementsByName(data.groupName)),
+                                    serverErrorNode: document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}=${data.groupName}]`) || false,
+                                    valid: false,
+                                    validators: [data.validator],
+                                });
+
+        return Object.assign({}, state, {
+            groups: Object.assign({}, state.groups, { [data.groupName]: nextGroup })
+        });
+
+
+
+        // const nextGroup = Object.assign({},
+        //         state.groups[data.groupName] 
+        //             ? state.groups[data.groupName] 
+        //             : {},
+        //         state.groups[data.groupName] 
+        //             ?  { validators: [ ...state.groups[data.groupName].validators, data.validator ] }
+        //             : {
+        //                 fields: [].slice.call(document.getElementsByName(data.groupName)),
+        //                 serverErrorNode: document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}=${data.groupName}]`) || false,
+        //                 valid: false,
+        //                 validators: [data.validator]
+        //             }
+        //         );
+        // return { 
+        //     ...state,
+        //     groups: { ...state.groups, [data.groupName]: nextGroup }
+        // };
     },
     [ACTIONS.VALIDATION_ERRORS]: (state, data) => {
         return Object.assign({}, state, {

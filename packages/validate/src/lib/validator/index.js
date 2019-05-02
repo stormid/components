@@ -223,9 +223,10 @@ export const removeUnvalidatableGroups = groups => {
  * @return state [Object] consisting of groups [Object] name-indexed validation groups
  * 
  */ 
-export const getInitialState = form => {
+export const getInitialState = (form, settings) => {
     return {
         form,
+        settings,
         errorNodes: {},
         realTimeValidation: false,
         groups: removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
