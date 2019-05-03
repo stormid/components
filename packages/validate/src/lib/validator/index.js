@@ -162,6 +162,7 @@ export const validate = (group, validator) => validator.type === 'custom'
  */  
 export const assembleValidationGroup = (acc, input) => {
     let name = input.getAttribute('name');
+    if(!name) return console.warn('Missing name attribute'), acc;
     return acc[name] = acc[name] ? Object.assign(acc[name], { fields: [...acc[name].fields, input]})
                                  : {
                                         valid:  false,

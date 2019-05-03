@@ -4,7 +4,6 @@ import {
 	extractDataValValidators,
 	extractAttrValidators
 } from '../../../src/lib/validator';
-import MESSAGES from '../../../src/lib/constants/messages';
 
 //resolveParam
 describe('Validate > Unit > Validator > resolveParam', () => {

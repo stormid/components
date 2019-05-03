@@ -98,6 +98,29 @@ describe('Validate > Integration > data-val > url', () => {
   });
 });
 
+describe('Validate > Integration > data-val > stringlength', () => {
+    //validation model construction
+    it('should return the correct validation model for stringlength', async () => {
+      document.body.innerHTML = `<input
+          id="group1"
+          name="group1"
+          data-val="true"
+          data-val-stringlength="Stringlength error message"
+          data-val-length-max="8"
+          type="text">`;
+      const input = document.querySelector('#group1');
+      expect(normaliseValidators(input)).toEqual([
+          { 
+              type: 'stringlength',
+              message: 'Stringlength error message',
+              params: {
+                max: "8"
+              }
+          }
+      ]);
+  });
+});
+
 describe('Validate > Integration > data-val > length', () => {
     //validation model construction
     it('should return the correct validation model for length', async () => {

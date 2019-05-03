@@ -36,7 +36,11 @@ describe('Validate > Initialisation', () => {
 
 	it('should create a realTimeValidation boolean property of the validator state set to false while the form is not dirty', async () => {
 		expect(validators[0].getState().realTimeValidation).toEqual(false);
-  	});
+	  });
+	  
+	it('should create an empty settings property of the validator state if no options are passed', async () => {
+		expect(validators[0].getState().settings).toEqual({});
+	});
 
 	it('should create a groups property of the validator state', async () => {
 		expect(validators[0].getState().groups).not.toBeUndefined();

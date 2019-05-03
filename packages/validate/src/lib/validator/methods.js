@@ -43,9 +43,11 @@ export default {
         }, true), acc;
     }),
     pattern: paramMethod('pattern', params => (acc, input) => (acc = RegExp(params.regex).test(input.value), acc)),
-    regex: paramMethod('regex', params => (acc, input) => (acc = RegExp(params.regex).test(input.value), acc)),
-    min: paramMethod('min', params => (acc, input) => (acc = +input.value >= +params.min, acc)),
-    max: paramMethod('max', params => (acc, input) => (acc = +input.value <= +params.max, acc)),
+    regex: paramMethod('regex', params => (acc, input) => (acc = RegExp(params.pattern).test(input.value), acc)),
+    min: paramMethod('min', params => (acc, input) => (acc = parseInt(input.value) !== NaN && +input.value >= +params.min, acc)),
+    max: paramMethod('max', params => (acc, input) => (acc = parseInt(input.value) !== NaN && +input.value <= +params.max, acc)),
+    stringlength: paramMethod('stringlength', params => (acc, input) => (acc = +input.value.length <= +params.max, acc)),
+    maxlength: paramMethod('maxlength', params => (acc, input) => (acc = +input.value.length <= +params.max, acc)),
     length: paramMethod('length', params => (acc, input) => (acc = (+input.value.length >= +params.min && (params.max === undefined || +input.value.length <= +params.max)), acc)),
     range: paramMethod('range', params => (acc, input) => (acc = (+input.value >= +params.min && +input.value <= +params.max), acc)),
     remote: (group, params) => new Promise((resolve, reject) => {
