@@ -1,16 +1,8 @@
 import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
-/*
-data-val
-    'remote',//should be last
-
-    custom
-*/
-
-
-
 describe('Validate > Integration > assembleValidationGroup > required', () => {
     it('should return the validation group for HTML5 required validator', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1-1"
             name="group1"
@@ -32,6 +24,7 @@ describe('Validate > Integration > assembleValidationGroup > required', () => {
 
 describe('Validate > Integration > validate > required', () => {
     it('should return the validityState false for HTML5 required validator with no value', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -44,6 +37,7 @@ describe('Validate > Integration > validate > required', () => {
     });
 
     it('should return the validityState true for HTML5 required validator with a value', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -56,6 +50,7 @@ describe('Validate > Integration > validate > required', () => {
     });
 
     it('should return the validityState false for data-val required validator with no value', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -69,6 +64,7 @@ describe('Validate > Integration > validate > required', () => {
     });
 
     it('should return the validityState true for data-val required validator with a value', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"

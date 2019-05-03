@@ -2,6 +2,7 @@ import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
 describe('Validate > Integration > validate > regex/pattern', () => {
     it('should return the validityState false for HTML5 pattern validator with non-matching value', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -14,6 +15,7 @@ describe('Validate > Integration > validate > regex/pattern', () => {
     });
     
     it('should return the validityState false for HTML5 pattern validator with matching value', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -26,6 +28,7 @@ describe('Validate > Integration > validate > regex/pattern', () => {
     });
 
     it('should return the validityState true for non-required empty HTML5 pattern validator field', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
             id="group1"
             name="group1"
@@ -38,6 +41,7 @@ describe('Validate > Integration > validate > regex/pattern', () => {
     });
 
     it('should return the validityState false for data-val regex validator with non-matching value', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -52,6 +56,7 @@ describe('Validate > Integration > validate > regex/pattern', () => {
     });
 
     it('should return the validityState true for data-val regex validator with a matching value', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -66,6 +71,7 @@ describe('Validate > Integration > validate > regex/pattern', () => {
     });
 
     it('should return the validityState true for non-required empty data-val pattern validator field', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
             id="group1"
             name="group1"

@@ -4,6 +4,7 @@ describe('Validate > Integration > validate > url', () => {
     //html5 spec regex approximation:
     ///^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?
     it('should return the validityState false for HTML5 url validator with non-spec url', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -15,6 +16,7 @@ describe('Validate > Integration > validate > url', () => {
     });
 
     it('should return the validityState false for data-val url validator with non-spec url', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -28,6 +30,7 @@ describe('Validate > Integration > validate > url', () => {
     });
 
     it('should return the validityState true for non-required empty HTML5 url validator field', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -39,6 +42,7 @@ describe('Validate > Integration > validate > url', () => {
     });
 
     it('should return the validityState true for non-required empty data-val url validator field', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
             id="group1"
             name="group1"
@@ -52,6 +56,7 @@ describe('Validate > Integration > validate > url', () => {
     });
 
     it('should return the validityState false for HTML5 url validator with an on-spec url', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -64,6 +69,7 @@ describe('Validate > Integration > validate > url', () => {
 
 
     it('should return the validityState false for data-val url validator with non-spec url', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"

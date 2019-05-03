@@ -4,6 +4,7 @@ import Reducers from '../../src/lib/reducers';
 //set initial state
 describe('Validate > Unit > Reducers > Set initial state', () => {
   	it('should compose a new object based on default empty state object and initial payload', async () => {
+        expect.assertions(1);
         const state = {};
         const nextState = {
             form: document.createElement('form'),
@@ -25,6 +26,7 @@ describe('Validate > Unit > Reducers > Set initial state', () => {
 //clear errors
 describe('Validate > Unit > Reducers > Clear errors', () => {
   	it('should compose a new object with each group Object containing an empty array of errorMessages and a true validity property', async () => {
+        expect.assertions(1);
         const state = {
             form: document.createElement('form'),
             groups: {
@@ -70,6 +72,7 @@ describe('Validate > Unit > Reducers > Clear errors', () => {
 //clear error
 describe('Validate > Unit > Reducers > Clear error', () => {
   	it('should compose a new object with a group Object containing an empty array of errorMessages and a true validity property for a given group name', async () => {
+        expect.assertions(1);
         const state = {
             form: document.createElement('form'),
             groups: {
@@ -115,6 +118,7 @@ describe('Validate > Unit > Reducers > Clear error', () => {
 //add validation errors
 describe('Validate > Unit > Reducers > Add validation errors', () => {
   	it('should compose a new object with group Objects containing an array of errorMessages and a false validity property', async () => {
+        expect.assertions(1);
         const state = {
             groups: {
                 group1: {
@@ -168,6 +172,7 @@ describe('Validate > Unit > Reducers > Add validation errors', () => {
 //add validation error
 describe('Validate > Unit > Reducers > Add validation error', () => {
     it('should compose a new Object updating one of the group Objects with an array of errorMessages and a false validity property', async () => {
+        expect.assertions(1);
       const state = {
         realTimeValidation: true,
           groups: {
@@ -210,6 +215,7 @@ describe('Validate > Unit > Reducers > Add validation error', () => {
 //add validation method
 describe('Validate > Unit > Reducers > Add validation method', () => {
     it('should add a validator or type custom to a field group', async () => {
+        expect.assertions(1);
         const validatorFn = (value, fields, param) => false;
         const state = {
             groups: {

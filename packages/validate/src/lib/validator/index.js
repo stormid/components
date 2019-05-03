@@ -13,6 +13,7 @@ import {
     DOTNET_ERROR_SPAN_DATA_ATTRIBUTE,
     DOM_SELECTOR_PARAMS
 } from '../constants';
+import { reject } from 'q';
 
 /**
  * Resolve validation parameter to a string or array of DOM nodes
@@ -272,16 +273,21 @@ export const getValidityState = groups => {
 export const getGroupValidityState = group => {
     let hasError = false;
 	return Promise.all(group.validators.map(validator => {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             if(validator.type !== 'remote'){
                 if(validate(group, validator)) resolve(true);
                 else {
                     hasError = true;
                     resolve(false);
                 }
-            } else if(hasError) resolve(false);
+            } else {
+                if(hasError) resolve(false);
                 else validate(group, validator)
-                        .then(res => { resolve(res);});
+                        .then(res => { 
+                            resolve(res);
+                        })
+                        .catch(err => console.log(err));
+            }
         });
     }));
 };

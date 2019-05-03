@@ -5,6 +5,7 @@ import MESSAGES from '../../src/lib/constants/messages';
 describe('Validate > Integration > HTML5 > required', () => {
     //validation model construction
   	it('should return the correct validation model for required', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -22,6 +23,7 @@ describe('Validate > Integration > HTML5 > required', () => {
 describe('Validate > Integration > HTML5 > email', () => {
     //validation model construction
   	it('should return the correct validation model for email', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -38,6 +40,7 @@ describe('Validate > Integration > HTML5 > email', () => {
 describe('Validate > Integration > HTML5 > url', () => {
     //validation model construction
   	it('should return the correct validation model for url', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -54,6 +57,7 @@ describe('Validate > Integration > HTML5 > url', () => {
 describe('Validate > Integration > HTML5 > number', () => {
     //validation model construction
   	it('should return the correct validation model for number', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -70,6 +74,7 @@ describe('Validate > Integration > HTML5 > number', () => {
 describe('Validate > Integration > HTML5 > minlength', () => {
     //validation model construction
   	it('should return the correct validation model for minlength', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -90,6 +95,7 @@ describe('Validate > Integration > HTML5 > minlength', () => {
 describe('Validate > Integration > HTML5 > maxlength', () => {
     //validation model construction
   	it('should return the correct validation model for maxlength', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -110,6 +116,7 @@ describe('Validate > Integration > HTML5 > maxlength', () => {
 describe('Validate > Integration > HTML5 > min', () => {
     //validation model construction
   	it('should return the correct validation model for min', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -130,6 +137,7 @@ describe('Validate > Integration > HTML5 > min', () => {
 describe('Validate > Integration > HTML5 > max', () => {
     //validation model construction
   	it('should return the correct validation model for max', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -150,6 +158,7 @@ describe('Validate > Integration > HTML5 > max', () => {
 describe('Validate > Integration > HTML5 > pattern', () => {
     //validation model construction
   	it('should return the correct validation model for max', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"

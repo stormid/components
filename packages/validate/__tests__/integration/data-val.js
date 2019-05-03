@@ -4,6 +4,7 @@ import { normaliseValidators } from '../../src/lib/validator';
 describe('Validate > Integration > data-val > required', () => {
     //validation model construction
   	it('should return the correct validation model for required', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -23,6 +24,7 @@ describe('Validate > Integration > data-val > required', () => {
 describe('Validate > Integration > data-val > regex', () => {
     //validation model construction
     it('should return the correct validation model for regex', async () => {
+        expect.assertions(1);
       document.body.innerHTML = `<input
           id="group1"
           name="group1"
@@ -44,6 +46,7 @@ describe('Validate > Integration > data-val > regex', () => {
 describe('Validate > Integration > data-val > email', () => {
     //validation model construction
     it('should return the correct validation model for email', async () => {
+        expect.assertions(1);
       document.body.innerHTML = `<input
           id="group1"
           name="group1"
@@ -63,6 +66,7 @@ describe('Validate > Integration > data-val > email', () => {
 describe('Validate > Integration > data-val > number', () => {
     //validation model construction
     it('should return the correct validation model for number', async () => {
+        expect.assertions(1);
       document.body.innerHTML = `<input
           id="group1"
           name="group1"
@@ -82,6 +86,7 @@ describe('Validate > Integration > data-val > number', () => {
 describe('Validate > Integration > data-val > url', () => {
     //validation model construction
     it('should return the correct validation model for url', async () => {
+        expect.assertions(1);
       document.body.innerHTML = `<input
           id="group1"
           name="group1"
@@ -101,6 +106,7 @@ describe('Validate > Integration > data-val > url', () => {
 describe('Validate > Integration > data-val > stringlength', () => {
     //validation model construction
     it('should return the correct validation model for stringlength', async () => {
+        expect.assertions(1);
       document.body.innerHTML = `<input
           id="group1"
           name="group1"
@@ -124,6 +130,7 @@ describe('Validate > Integration > data-val > stringlength', () => {
 describe('Validate > Integration > data-val > length', () => {
     //validation model construction
     it('should return the correct validation model for length', async () => {
+        expect.assertions(1);
       document.body.innerHTML = `<input
           id="group1"
           name="group1"
@@ -149,6 +156,7 @@ describe('Validate > Integration > data-val > length', () => {
 describe('Validate > Integration > data-val > minlength', () => {
     //validation model construction
     it('should return the correct validation model for minlength', async () => {
+        expect.assertions(1);
       document.body.innerHTML = `<input
           id="group1"
           name="group1"
@@ -172,6 +180,7 @@ describe('Validate > Integration > data-val > minlength', () => {
 describe('Validate > Integration > data-val > range', () => {
     //validation model construction
     it('should return the correct validation model for range', async () => {
+        expect.assertions(1);
       document.body.innerHTML = `<input
           id="group1"
           name="group1"
@@ -197,6 +206,7 @@ describe('Validate > Integration > data-val > range', () => {
 describe('Validate > Integration > data-val > equalto', () => {
     //validation model construction
     it('should return the correct validation model for equalto', async () => {
+        expect.assertions(1);
       document.body.innerHTML = `<input
         id="Email"
         name="Email"
@@ -231,6 +241,7 @@ describe('Validate > Integration > data-val > equalto', () => {
 describe('Validate > Integration > data-val > remote', () => {
     //validation model construction
     it('should return the correct validation model for remote', async () => {
+        expect.assertions(1);
       document.body.innerHTML = `<input
           id="group1"
           name="group1"
@@ -251,6 +262,7 @@ describe('Validate > Integration > data-val > remote', () => {
     });
 
     it('should return the correct validation model for remote with additional fields', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
             id="group1"
             name="group1"

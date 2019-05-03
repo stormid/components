@@ -3,6 +3,7 @@ import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 describe('Validate > Integration > validate > equalto', () => {
     
     it('should return the validityState false for data-val equalto validator with a value not matching the other field(s)', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
                 id="Email"
                 name="Email"
@@ -23,6 +24,7 @@ describe('Validate > Integration > validate > equalto', () => {
     });
 
     it('should return the validityState false for data-val equalto validator with a value not matching the other field(s)', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
                 id="Email"
                 name="Email"
@@ -43,6 +45,7 @@ describe('Validate > Integration > validate > equalto', () => {
     });
 
     it('should return the validityState true for data-val equalto validator with a value matching the other field(s)', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
                 id="Email"
                 name="Email"
@@ -63,6 +66,7 @@ describe('Validate > Integration > validate > equalto', () => {
     });
 
     it('should return the validityState true for an unrequired data-val equalto validator with no value', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
                 id="Email"
                 name="Email"

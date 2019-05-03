@@ -54,13 +54,12 @@ export default {
         fetch((params.type !== 'get' ? params.url : `${params.url}?${resolveGetParams(params.additionalfields)}`), {
             method: params.type.toUpperCase(),
             body: params.type === 'get' ? null : resolveGetParams(params.additionalfields),
-            headers: new Headers({
+            headers: {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            })
+            }
         })
-        .then(res => res.json())
-        .then(data => { resolve(data); })
-        .catch(res => { resolve(`Server error: ${res}`); });
+        // .then(res => res.json())
+        .then(data => resolve(data));
     }),
     custom: (method, group) => isOptional(group)|| method(extractValueFromGroup(group), group.fields)
 };

@@ -8,6 +8,7 @@ import { DOTNET_CLASSNAMES } from '../../src/lib/constants';
 
 describe('Validate > Unit > DOM > h', () => {
   	it('should return a DOM node for given vNode arguments', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<div class="test">Lorem ipsum</div>`;
         expect(h('div', { class: 'test' }, 'Lorem ipsum')).toEqual(document.body.firstElementChild);
     });
@@ -17,6 +18,7 @@ describe('Validate > Unit > DOM > h', () => {
 describe('Validate > Unit > DOM > createErrorTextNode', () => {
 
   	it('should append a child text node to a group serverErrorNode for a given invalid group', async () => {
+        expect.assertions(2);
         document.body.innerHTML = `<form class="form" method="post" action="">
             <label for="group1-1">Text (required, min 2 characters, max 8 characters)</label>
             <input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="This field is required" data-val-length-min="2" data-val-length-max="8" type="text">
@@ -52,6 +54,7 @@ describe('Validate > Unit > DOM > createErrorTextNode', () => {
 //focusFirstInvalidField
 describe('Validate > Unit > DOM > focusFirstInvalidField', () => {
     it('should focus on the first invalid field in a form post-vaidation', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<form class="form" method="post" action="">
             <label for="group1">Text (required, min 2 characters, max 8 characters)</label>
             <input id="group1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="This field is required" data-val-length-min="2" data-val-length-max="8" type="text">
@@ -81,6 +84,7 @@ describe('Validate > Unit > DOM > focusFirstInvalidField', () => {
 //createButtonValueNode
 describe('Validate > Unit > DOM > createButtonValueNode', () => {
     it('should a hidden field duplicate of a given field, for conferring submit button values', async () => {
+        expect.assertions(3);
         document.body.innerHTML = `<form class="form" method="post" action="">
             <button name="continue" value="1">Continue</button>
         </form>`;

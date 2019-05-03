@@ -2,6 +2,7 @@ import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
 describe('Validate > Integration > validate > number', () => {
     it('should return the validityState false for HTML5 number validator with non-number', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -13,6 +14,7 @@ describe('Validate > Integration > validate > number', () => {
     });
 
     it('should return the validityState true for HTML5 number validator with a number', async () => {
+        expect.assertions(2);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -32,6 +34,7 @@ describe('Validate > Integration > validate > number', () => {
     });
 
     it('should return the validityState true for non-required empty HTML5 number validator field', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
             id="group1"
             name="group1"
@@ -43,6 +46,7 @@ describe('Validate > Integration > validate > number', () => {
     });
 
     it('should return the validityState false for data-val number validator with non-number', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -56,6 +60,7 @@ describe('Validate > Integration > validate > number', () => {
     });
 
     it('should return the validityState true for data-val number validator with a number', async () => {
+        expect.assertions(2);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -78,6 +83,7 @@ describe('Validate > Integration > validate > number', () => {
     });
 
     it('should return the validityState true for non-required empty data-val number validator field', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
             id="group1"
             name="group1"

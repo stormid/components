@@ -3,6 +3,7 @@ import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 describe('Validate > Integration > validate > min', () => {
     
     it('should return the validityState false for HTML5 min validator with value less than min', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -15,6 +16,7 @@ describe('Validate > Integration > validate > min', () => {
     });
 
     it('should return the validityState true for HTML5 min validator with value greater than min', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -27,6 +29,7 @@ describe('Validate > Integration > validate > min', () => {
     });
 
     it('should return the validityState false for HTML5 min validator with a non-numeric value', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -39,6 +42,7 @@ describe('Validate > Integration > validate > min', () => {
     });
 
     it('should return the validityState true for unrequired HTML5 min validator with no value', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"

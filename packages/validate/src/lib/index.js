@@ -67,7 +67,8 @@ const validate = Store => e => {
             );
 
             return false;
-        });
+        })
+        .catch(err => console.warn(err))
 };
 
 /**

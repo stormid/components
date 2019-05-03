@@ -3,6 +3,7 @@ import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 describe('Validate > Integration > validate > length', () => {
     
     it('should return the validityState false for data-val length validator with value greater than max length', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -18,6 +19,7 @@ describe('Validate > Integration > validate > length', () => {
     });
 
     it('should return the validityState true for data-val length validator with value within the min and max length range', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -33,6 +35,7 @@ describe('Validate > Integration > validate > length', () => {
     });
 
     it('should return the validityState true for unrequired data-val length validator with no value', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"

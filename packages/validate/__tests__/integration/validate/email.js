@@ -4,6 +4,7 @@ describe('Validate > Integration > validate > email', () => {
     //html5 spec regex approximation:
     ///^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
     it('should return the validityState false for HTML5 email validator with non-spec email address', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -15,6 +16,7 @@ describe('Validate > Integration > validate > email', () => {
     });
 
     it('should return the validityState true for HTML5 email validator with an on-spec email address', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -26,6 +28,7 @@ describe('Validate > Integration > validate > email', () => {
     });
 
     it('should return the validityState true for non-required empty HTML5 email validator field', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -37,6 +40,7 @@ describe('Validate > Integration > validate > email', () => {
     });
 
     it('should return the validityState false for data-val email validator with non-spec email address', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -50,6 +54,7 @@ describe('Validate > Integration > validate > email', () => {
     });
 
     it('should return the validityState true for data-val email validator with an on-spec email address', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
@@ -63,6 +68,7 @@ describe('Validate > Integration > validate > email', () => {
     });
 
     it('should return the validityState true for non-required empty data-val email validator field', async () => {
+        expect.assertions(1);
         document.body.innerHTML = `<input
         id="group1"
         name="group1"
