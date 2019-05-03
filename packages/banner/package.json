@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "npx microbundle --name Banner",
-    "test": "node_modules/.bin/jest",
+    "test": "node_modules/.bin/jest --coverage",
     "eg:dev": "webpack-dev-server --config example/webpack.config.js --https --mode development",
     "eg:prod": "webpack --config example/webpack.config.js --mode production",
     "release": "npm run -s build && npm t && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
