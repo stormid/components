@@ -2,8 +2,10 @@ import {
 	resolveParam,
 	extractParams,
 	extractDataValValidators,
-	extractAttrValidators
+	extractAttrValidators,
+	extractErrorMessage
 } from '../../../src/lib/validator';
+import MESSAGES from '../../../src/lib/constants/messages';
 
 //resolveParam
 describe('Validate > Unit > Validator > resolveParam', () => {
@@ -79,42 +81,43 @@ describe('Validate > Unit > Validator > extractParams', () => {
 describe('Validate > Unit > Validator > extractDataValValidators', () => {
     it('should return an empty array if a given node does not contain data-attributes defining known validators', async () => {
 			expect.assertions(1);
-		document.body.innerHTML = `<input
-        id="group1"
-        name="group1"
-		type="text">`;
-		const input = document.querySelector('#group1');
-		expect(extractDataValValidators(input)).toEqual([]);
-	});
-   	it('should return an array of validator Objects for a given node containing data-attributes defining known validators', async () => {
-			expect.assertions(1);
-		document.body.innerHTML = `<input
-			id="group1"
-			name="group1"
-			data-val="true"
-			data-val-length="Please enter between 2 and 8 characters"
-			data-val-required="This field is required"
-			data-val-length-min="2"
-			data-val-length-max="8"
+			document.body.innerHTML = `<input
+					id="group1"
+					name="group1"
 			type="text">`;
-		const input = document.querySelector('#group1');
-		expect(extractDataValValidators(input)).toEqual([
-			{
-				type: 'required',
-				message: 'This field is required'
-			},
-			{
-				type: 'length',
-				message: 'Please enter between 2 and 8 characters',
-				params: { 'min': '2', 'max': '8' }
-			}
-		]);
+			const input = document.querySelector('#group1');
+			expect(extractDataValValidators(input)).toEqual([]);
+		});
+		 
+		it('should return an array of validator Objects for a given node containing data-attributes defining known validators', async () => {
+			expect.assertions(1);
+			document.body.innerHTML = `<input
+				id="group1"
+				name="group1"
+				data-val="true"
+				data-val-length="Please enter between 2 and 8 characters"
+				data-val-required="This field is required"
+				data-val-length-min="2"
+				data-val-length-max="8"
+				type="text">`;
+			const input = document.querySelector('#group1');
+			expect(extractDataValValidators(input)).toEqual([
+				{
+					type: 'required',
+					message: 'This field is required'
+				},
+				{
+					type: 'length',
+					message: 'Please enter between 2 and 8 characters',
+					params: { 'min': '2', 'max': '8' }
+				}
+			]);
 	});
 });
 
 //extractAttrValidators
 describe('Validate > Unit > Validator > extractAttrValidators', () => {
-    it('should an empty array if a given node does not contain HTML5 constraint validation attributes', async () => {
+    it('should return an empty array if a given node does not contain HTML5 constraint validation attributes', async () => {
 			expect.assertions(1);
 		document.body.innerHTML = `<input
 			id="group1"
@@ -177,3 +180,31 @@ describe('Validate > Unit > Validator > extractAttrValidators', () => {
 //validate --> see integration validate tests
 
 //assembleValidationGroup -> see integration assembleValidationGroup tests
+
+/*
+const extractErrorMessage = validator => validator.message || messages[validator.type](x.params !== undefined ? validator.params : null);
+*/
+
+//extractErrorMessage
+describe('Validate > Unit > Validator > extractErrorMessage', () => {
+	it('should return an error message given a validator containing a message', async () => {
+		expect.assertions(1);
+		const MESSAGE = 'This field is required';
+		const validator = { message: MESSAGE };
+		
+		expect(extractErrorMessage(validator)).toEqual(MESSAGE);
+	});
+
+	it('should return an error message based on constants and params given a validator without an error message', async () => {
+		expect.assertions(2);
+		const validatorWithoutParms = { type: 'required' };
+		const validatorWithParms = { 
+			type: 'max',
+			params: { max: 10 }
+		};
+		
+		expect(extractErrorMessage(validatorWithoutParms)).toEqual(MESSAGES.required());
+		expect(extractErrorMessage(validatorWithParms)).toEqual(MESSAGES.max(validatorWithParms.params));
+	});
+
+});

@@ -175,15 +175,3 @@ describe('Validate > Integration > HTML5 > pattern', () => {
 		]);
     });
 });
-
-/*
-    if((input.getAttribute('min') && input.getAttribute('min') !== 'false')){
-        validators.push({ type: 'min', params: { min: input.getAttribute('min') } });
-    }
-    if((input.getAttribute('max') && input.getAttribute('max') !== 'false')){
-        validators.push({ type: 'max', params: { max: input.getAttribute('max') } });
-    }
-    if((input.getAttribute('pattern') && input.getAttribute('pattern') !== 'false')){
-        validators.push({ type: 'pattern', params: { regex: input.getAttribute('pattern') } });
-    }
-    */

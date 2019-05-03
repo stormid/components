@@ -7,10 +7,10 @@ export default {
     dateISO() { return 'Please enter a valid date (ISO)'; },
     number() { return 'Please enter a valid number'; },
     digits() { return 'Please enter only digits'; },
-    maxlength(props) { return `Please enter no more than ${props} characters`; },
-    minlength(props) { return `Please enter at least ${props} characters`; },
-    max(props){ return `Please enter a value less than or equal to ${[props]}`; },
-    min(props){ return `Please enter a value greater than or equal to ${props}`},
+    maxlength(props) { return `Please enter no more than ${props.max} characters`; },
+    minlength(props) { return `Please enter at least ${props.min} characters`; },
+    max(props){ return `Please enter a value less than or equal to ${props.max}`; },
+    min(props){ return `Please enter a value greater than or equal to ${props.min}`},
     equalTo() { return 'Please enter the same value again'; },
     remote() { return 'Please fix this field'; }
 };

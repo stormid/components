@@ -33,11 +33,11 @@ describe('Validate > Integration > validate > remote', async () => {
         const group = assembleValidationGroup({}, input)['group1'];
         const res = await validate(group, group.validators[0]);
         expect(res).toEqual('false');
-      });
+    });
 
-      it('should return the validityState true for data-val remote validator with a passed remote validation', async () => {
+    it('should return the validityState true for data-val remote validator with a passed remote validation', async () => {
         expect.assertions(1);
- 
+
         mock.post('/api/validate', {
             status: 201,
             body: "true"
@@ -61,6 +61,6 @@ describe('Validate > Integration > validate > remote', async () => {
         const group = assembleValidationGroup({}, input)['group1'];
         const res = await validate(group, group.validators[0]);
         expect(res).toEqual('true');
-      });
+    });
       
 });

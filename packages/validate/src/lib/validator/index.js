@@ -181,7 +181,7 @@ export const assembleValidationGroup = (acc, input) => {
  * @return message [String] error message
  * 
  */ 
-const extractErrorMessage = validator => validator.message || messages[validator.type](validator.params !== undefined ? validator.params : null);
+export const extractErrorMessage = validator => validator.message || messages[validator.type](validator.params !== undefined ? validator.params : null);
 
 /**
  * Curried function that returns a reducer that reduces the resolved response from an array of validation Promises performed against a group
