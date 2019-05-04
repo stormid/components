@@ -1,6 +1,6 @@
-import { createStore } from './store';
-import { ACTIONS, PREHOOK_DELAY } from './constants';
-import { isSubmitButton, hasNameValue } from './validator/utils';
+import { createStore } from '../store';
+import { ACTIONS, PREHOOK_DELAY } from '../constants';
+import { isSubmitButton, hasNameValue } from '../validator/utils';
 import { 
     getInitialState,
     getValidityState,
@@ -8,7 +8,7 @@ import {
     reduceGroupValidityState,
     resolveRealTimeValidationEvent,
     reduceErrorMessages
-} from './validator';
+} from '../validator';
 import {
     clearErrors,
     clearError,
@@ -17,7 +17,7 @@ import {
     focusFirstInvalidField,
     createButtonValueNode,
     cleanupButtonValueNode
-}  from './dom';
+}  from '../dom';
 
 /**
  * Returns a function that extracts the validityState of the entire form

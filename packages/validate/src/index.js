@@ -1,4 +1,4 @@
-import factory from './lib';
+import factory from './lib/factory';
 
 const init = (candidate, opts) => {
 	let els;

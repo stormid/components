@@ -2,22 +2,24 @@ import Validation from '../../src';
 import messages from '../../src/lib/constants/messages';
 
 let validators;
-const init = async () => {
+const setUpDOM = () => {
 	// Set up our document body
 	document.body.innerHTML = `<form class="form" method="post" action="">
 		<label for="group1-1">Text (required, min 2 characters, max 8 characters)</label>
 		<input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="${messages.required()}" data-val-length-min="2" data-val-length-max="8" type="text">
 		<span class="text-danger field-validation-valid" data-valmsg-for="group1" data-valmsg-replace="true"></span>
   	</form>`;
+};
+const init = async () => {
+	setUpDOM();
 	validators = await Validation.init('form');
 };
 
 describe('Validate > Initialisation', () => {
 	beforeAll(init);
   	it('should return an Object with validate and addMethod functions', async () => {
-        expect.assertions(5);
+        expect.assertions(4);
 		expect(validators[0]).not.toBeNull();
-	  	expect(validators[0]).not.toBeNull();
 	  	expect(validators[0].validate).not.toBeUndefined();
 	  	expect(validators[0].addMethod).not.toBeUndefined();
 	  	expect(validators[0].getState).not.toBeUndefined();
@@ -88,4 +90,31 @@ describe('Validate > Initialisation', () => {
         expect.assertions(1);
 		expect(validators[0].getState().groups['group1'].serverErrorNode).toEqual(document.querySelector('[data-valmsg-for="group1"]'));
   	});
+});
+
+
+describe('Validate > Initialisation > DOM element', () => {
+	it('should initialise when passed a DOM element', async () => {
+        expect.assertions(4);
+		setUpDOM();
+		const form = document.querySelector('.form');
+		const validators = await Validation.init(form);
+		expect(validators[0]).not.toBeNull();
+	  	expect(validators[0].validate).not.toBeUndefined();
+	  	expect(validators[0].addMethod).not.toBeUndefined();
+	  	expect(validators[0].getState).not.toBeUndefined();
+	});
+});
+
+describe('Validate > Initialisation > novalidate', () => {
+	it('should not initialise when passed a form element (or selector identiying a form element) with a novalidate attribute', async () => {
+        expect.assertions(1);
+		document.body.innerHTML = `<form class="form" method="post" action="" novalidate>
+			<label for="group1-1">Text (required, min 2 characters, max 8 characters)</label>
+			<input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="${messages.required()}" data-val-length-min="2" data-val-length-max="8" type="text">
+			<span class="text-danger field-validation-valid" data-valmsg-for="group1" data-valmsg-replace="true"></span>
+		</form>`;
+		const validators = await Validation.init('.form');
+		expect(validators).toEqual([]);
+	});
 });
