@@ -196,15 +196,48 @@ describe('Validate > Unit > Validator > extractErrorMessage', () => {
 	});
 
 	it('should return an error message based on constants and params given a validator without an error message', async () => {
-		expect.assertions(2);
-		const validatorWithoutParms = { type: 'required' };
-		const validatorWithParms = { 
+		// expect.assertions(9);
+		const requiredValidator = { type: 'required' };
+		const emailValidator = { type: 'email' };
+		const patternValidator = { type: 'pattern' };
+		const URLValidator = { type: 'url' };
+		const dateValidator = { type: 'date' };
+		const dateISOValidator = { type: 'dateISO' };
+		const numberValidator = { type: 'number' };
+		const digitsValidator = { type: 'digits' };
+		const equalToValidator = { type: 'equalto' };
+		const remoteValidator = { type: 'remote' };
+		const maxValidator = { 
 			type: 'max',
 			params: { max: 10 }
 		};
+		const minValidator = { 
+			type: 'min',
+			params: { min: 2 }
+		};
+		const maxLengthValidator = { 
+			type: 'maxlength',
+			params: { max: 10 }
+		};
+		const minLengthValidator = { 
+			type: 'minlength',
+			params: { min: 2 }
+		};
 		
-		expect(extractErrorMessage(validatorWithoutParms)).toEqual(MESSAGES.required());
-		expect(extractErrorMessage(validatorWithParms)).toEqual(MESSAGES.max(validatorWithParms.params));
+		expect(extractErrorMessage(requiredValidator)).toEqual(MESSAGES.required());
+		expect(extractErrorMessage(emailValidator)).toEqual(MESSAGES.email());
+		expect(extractErrorMessage(patternValidator)).toEqual(MESSAGES.pattern());
+		expect(extractErrorMessage(URLValidator)).toEqual(MESSAGES.url());
+		expect(extractErrorMessage(dateValidator)).toEqual(MESSAGES.date());
+		expect(extractErrorMessage(dateISOValidator)).toEqual(MESSAGES.dateISO());
+		expect(extractErrorMessage(numberValidator)).toEqual(MESSAGES.number());
+		expect(extractErrorMessage(digitsValidator)).toEqual(MESSAGES.digits());
+		expect(extractErrorMessage(equalToValidator)).toEqual(MESSAGES.equalto());
+		expect(extractErrorMessage(remoteValidator)).toEqual(MESSAGES.remote());
+		expect(extractErrorMessage(maxValidator)).toEqual(MESSAGES.max(maxValidator.params));
+		expect(extractErrorMessage(minValidator)).toEqual(MESSAGES.min(minValidator.params));
+		expect(extractErrorMessage(maxLengthValidator)).toEqual(MESSAGES.maxlength(maxLengthValidator.params));
+		expect(extractErrorMessage(minLengthValidator)).toEqual(MESSAGES.minlength(minLengthValidator.params));
 	});
 
 });
