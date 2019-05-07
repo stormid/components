@@ -3,7 +3,10 @@ import {
 	extractParams,
 	extractDataValValidators,
 	extractAttrValidators,
-	extractErrorMessage
+	extractErrorMessage,
+	reduceErrorMessages,
+	removeUnvalidatableGroups,
+	getInitialState
 } from '../../../src/lib/validator';
 import MESSAGES from '../../../src/lib/constants/messages';
 
@@ -181,10 +184,6 @@ describe('Validate > Unit > Validator > extractAttrValidators', () => {
 
 //assembleValidationGroup -> see integration assembleValidationGroup tests
 
-/*
-const extractErrorMessage = validator => validator.message || messages[validator.type](x.params !== undefined ? validator.params : null);
-*/
-
 //extractErrorMessage
 describe('Validate > Unit > Validator > extractErrorMessage', () => {
 	it('should return an error message given a validator containing a message', async () => {
@@ -196,7 +195,7 @@ describe('Validate > Unit > Validator > extractErrorMessage', () => {
 	});
 
 	it('should return an error message based on constants and params given a validator without an error message', async () => {
-		// expect.assertions(9);
+		expect.assertions(14);
 		const requiredValidator = { type: 'required' };
 		const emailValidator = { type: 'email' };
 		const patternValidator = { type: 'pattern' };
@@ -241,3 +240,142 @@ describe('Validate > Unit > Validator > extractErrorMessage', () => {
 	});
 
 });
+
+
+// To do
+// can do better here, factory > validate function in need of refactor
+//
+ //extractErrorMessage
+// describe('Validate > Unit > Validator > reduceErrorMessages', () => {
+	// it('should return an empty array given an array of validation responses with no errors', async () => {
+	// 	expect.assertions(1);
+
+// 	});
+// });
+
+
+describe('Validate > Unit > Validator > removeUnvalidatableGroups', () => {
+	it('should remove groups that do not contain validators from the array of vaidationGroups', async () => {
+		expect.assertions(1);
+		document.body.innerHTML = `<input
+			id="group1"
+			name="group1"
+			required
+			type="text">
+			<input
+			id="group2"
+			name="group2"
+			type="text">`;
+		const input1 = document.querySelector('#group1');
+		const input2 = document.querySelector('#group2');
+		let groups = {
+			group1: {
+				validators: [{ type: 'required', message: 'This field is required'}],
+				fields: [input1],
+				errorMessages: [],
+				valid: false
+			},
+			group2: {
+				validators: [],
+				fields: [input2],
+				errorMessages: [],
+				valid: false
+			}
+		};
+
+		expect(removeUnvalidatableGroups(groups)).toEqual({
+			group1: {
+				validators: [{ type: 'required', message: 'This field is required'}],
+				fields: [input1],
+				errorMessages: [],
+				valid: false
+			}
+		});
+	});
+
+	it('should remove groups with all hidden fields  from the array of vaidationGroups', async () => {
+		expect.assertions(1);
+		document.body.innerHTML = `<input
+			id="i-1"
+			name="group1"
+			type="hidden">
+			<input
+			required
+			id="i-2"
+			name="group1"
+			type="hidden">`;
+		const input1 = document.querySelector('#i-1');
+		const input2 = document.querySelector('#i-2');
+		let groups = {
+			group1: {
+				validators: [{ type: 'required', message: 'This field is required'}],
+				fields: [input1, input2],
+				errorMessages: [],
+				valid: false
+			}
+		};
+
+		expect(removeUnvalidatableGroups(groups)).toEqual({});
+	});
+});
+
+
+/**
+ * Takes a form DOM node and returns the initial form validation state - an object consisting of all the validatable input groups
+ * with validityState, fields, validators, and associated data required to perform validation and render errors.
+ * 
+ * @param form [DOM nodes] 
+ * 
+ * @return state [Object] consisting of groups [Object] name-indexed validation groups
+ * 
+export const getInitialState = (form, settings) => {
+    return {
+        form,
+        settings,
+        errorNodes: {},
+        realTimeValidation: false,
+        groups: removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
+                        .reduce(assembleValidationGroup, {}))
+    }
+};
+ */ 
+
+ describe('Validate > Unit > Validator > getInitialState', () => {
+	it('should remove groups that do not contain validators from the array of vaidationGroups', async () => {
+		expect.assertions(1);
+		document.body.innerHTML = `<form><input
+			id="group1"
+			name="group1"
+			required
+			type="text">
+			<input
+			id="group2"
+			name="group2"
+			required
+			type="text"></form>`;
+		const input1 = document.querySelector('#group1');
+		const input2 = document.querySelector('#group2');
+		const form = document.querySelector('form');
+
+		expect(getInitialState(form, {})).toEqual({
+			form: form,
+			settings: {},
+			errorNodes: {},
+        	realTimeValidation: false,
+			groups: {
+				group1: {
+					serverErrorNode: false,
+					validators: [{ type: 'required' }],
+					fields: [input1],
+					valid: false
+				},
+				group2: {
+					serverErrorNode: false,
+					validators: [{ type: 'required' }],
+					fields: [input2],
+					valid: false
+				}
+			}
+		});
+	});
+ });
