@@ -45,4 +45,17 @@ describe('Validate > Unit > Store > dispatch', () => {
         Store.dispatch(ACTIONS.SET_INITIAL_STATE, nextState, [sideEffect]);
         expect(flag).toEqual(true);
     });
+
+    it('should execute side effect functions without updating state', async () => {
+        expect.assertions(2);
+
+        const priorState = Store.getState();
+        let flag = false;
+        const sideEffect = () => {
+            flag = true;
+        };
+        Store.dispatch(ACTIONS.SET_INITIAL_STATE, false, [sideEffect]);
+        expect(flag).toEqual(true);
+        expect(Store.getState()).toEqual(priorState);
+    });
 })

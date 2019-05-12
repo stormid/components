@@ -319,29 +319,9 @@ describe('Validate > Unit > Validator > removeUnvalidatableGroups', () => {
 	});
 });
 
-
-/**
- * Takes a form DOM node and returns the initial form validation state - an object consisting of all the validatable input groups
- * with validityState, fields, validators, and associated data required to perform validation and render errors.
- * 
- * @param form [DOM nodes] 
- * 
- * @return state [Object] consisting of groups [Object] name-indexed validation groups
- * 
-export const getInitialState = (form, settings) => {
-    return {
-        form,
-        settings,
-        errorNodes: {},
-        realTimeValidation: false,
-        groups: removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
-                        .reduce(assembleValidationGroup, {}))
-    }
-};
- */ 
-
- describe('Validate > Unit > Validator > getInitialState', () => {
-	it('should remove groups that do not contain validators from the array of vaidationGroups', async () => {
+//getInitialState
+describe('Validate > Unit > Validator > getInitialState', () => {
+	it('should return a state object containing only groups that are validatable', async () => {
 		expect.assertions(1);
 		document.body.innerHTML = `<form><input
 			id="group1"
@@ -351,7 +331,6 @@ export const getInitialState = (form, settings) => {
 			<input
 			id="group2"
 			name="group2"
-			required
 			type="text"></form>`;
 		const input1 = document.querySelector('#group1');
 		const input2 = document.querySelector('#group2');
@@ -361,18 +340,38 @@ export const getInitialState = (form, settings) => {
 			form: form,
 			settings: {},
 			errorNodes: {},
-        	realTimeValidation: false,
+      		realTimeValidation: false,
 			groups: {
 				group1: {
 					serverErrorNode: false,
 					validators: [{ type: 'required' }],
 					fields: [input1],
 					valid: false
-				},
-				group2: {
+				}
+			}
+		});
+	});
+	it('should return a state object containing any settings passed to init', async () => {
+		expect.assertions(1);
+		document.body.innerHTML = `<form><input
+			id="group1"
+			name="group1"
+			required
+			type="text">`;
+		const input1 = document.querySelector('#group1');
+		const input2 = document.querySelector('#group2');
+		const form = document.querySelector('form');
+
+		expect(getInitialState(form, { preSubmitHook: true })).toEqual({
+			form: form,
+			settings: { preSubmitHook: true },
+			errorNodes: {},
+      		realTimeValidation: false,
+			groups: {
+				group1: {
 					serverErrorNode: false,
 					validators: [{ type: 'required' }],
-					fields: [input2],
+					fields: [input1],
 					valid: false
 				}
 			}
