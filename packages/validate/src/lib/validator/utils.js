@@ -16,7 +16,7 @@ export const groupIsHidden = fields => fields.reduce((acc, field) => {
 }, false);
 
 
-const hasValue = input => (input.value !== undefined && input.value !== null && input.value.length > 0);
+export const hasValue = input => (input.value !== undefined && input.value !== null && input.value.length > 0);
 
 export const groupValueReducer = (acc, input) => {
     if(!isCheckable(input) && hasValue(input)) acc = input.value;
