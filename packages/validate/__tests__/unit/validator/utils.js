@@ -7,7 +7,8 @@ import {
     isRequired,
     groupIsHidden,
     hasValue,
-    groupValueReducer
+    groupValueReducer,
+    resolveGetParams
 } from '../../../src/lib/validator/utils';
 
 describe('Validate > Unit > Utils > isCheckable', () => {
@@ -245,8 +246,37 @@ describe('Validate > Unit > Utils > groupValueReducer', () => {
     });
 });
 
-
 // resolveGetParams
+describe('Validate > Unit > Utils > resolveGetParams', () => {
+    it('should return a url param String name/value pair given an array containing a single array of a single input', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<form>
+            <input name="field" id="field" value="Test" />
+        </form>`;
+        const fields = [document.querySelector('#field')];
+        expect(resolveGetParams([fields])).toEqual('field=Test');
+    });
+    it('should return a url param String name/value pair given an array containing multiple arrays of single inputs', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<form>
+            <input name="field1" id="field1" value="One" />
+            <input name="field2" id="field2" value="Two" />
+        </form>`;
+        const field1 = [document.querySelector('#field1')];
+        const field2 = [document.querySelector('#field2')];
+        expect(resolveGetParams([field1, field2])).toEqual('field1=One&field2=Two');
+    });
+    it('should return a uri-encoded url param String name/value pair given an array containing multiple arrays of single inputs', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<form>
+            <input name="field1" id="field1" value="Test one" />
+            <input name="field2" id="field2" value="Test two" />
+        </form>`;
+        const field1 = [document.querySelector('#field1')];
+        const field2 = [document.querySelector('#field2')];
+        expect(resolveGetParams([field1, field2])).toEqual('field1=Test%20one&field2=Test%20two');
+    });
+});
 
 // DOMNodesFromCommaList
 

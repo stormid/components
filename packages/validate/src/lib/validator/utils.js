@@ -28,7 +28,7 @@ export const groupValueReducer = (acc, input) => {
 };
 
 export const resolveGetParams = nodeArrays => nodeArrays.map((nodes) => {
-    return `${nodes[0].getAttribute('name')}=${extractValueFromGroup(nodes)}`;
+    return `${encodeURIComponent(nodes[0].getAttribute('name'))}=${encodeURIComponent(extractValueFromGroup(nodes))}`;
 }).join('&');
 
 export const DOMNodesFromCommaList = (list, input) => list.split(',')
