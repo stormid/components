@@ -8,7 +8,9 @@ import {
     groupIsHidden,
     hasValue,
     groupValueReducer,
-    resolveGetParams
+    resolveGetParams,
+    DOMNodesFromCommaList,
+    escapeAttributeValue
 } from '../../../src/lib/validator/utils';
 
 describe('Validate > Unit > Utils > isCheckable', () => {
@@ -279,11 +281,35 @@ describe('Validate > Unit > Utils > resolveGetParams', () => {
 });
 
 // DOMNodesFromCommaList
+describe('Validate > Unit > Utils > DOMNodesFromCommaList', () => {
+    it('should return an array of arrays of nodes matching each name in a comma separated String', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<form>
+            <input name="field1" id="field1" />
+            <input name="field2" id="field2" />
+        </form>`;
+        const field1s = document.querySelector('#field1');
+        const field2s = document.querySelector('#field2');
+        expect(DOMNodesFromCommaList('field1,field2')).toEqual([[field1s], [field2s]]);
+    });
+    it('should return an array of empty arrays for a comma separated String that does not select any node name attributes', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<form>
+            <input name="field1" id="field1" />
+            <input name="field2" id="field2" />
+        </form>`;
+        expect(DOMNodesFromCommaList('field3,field4')).toEqual([[], []]);
+    });
+});
 
 // escapeAttributeValue
+describe('Validate > Unit > Utils > escapeAttributeValue', () => {
+    it('should escape special characters matching /([!"#$%&\'()*+,./:;<=>?@\[\\\]^`{|}~] in a String', async () => {
+        expect(escapeAttributeValue('<script>alert("Boo")</script>')).toEqual('\\<script\\>alert\\(\\\"Boo\\\"\\)\\<\\/script\\>');
+    });
+});
 
 // getStatePrefix
-
 //appendStatePrefix
 
 //extractValueFromGroup
