@@ -10,7 +10,8 @@ import {
     groupValueReducer,
     resolveGetParams,
     DOMNodesFromCommaList,
-    escapeAttributeValue
+    escapeAttributeValue,
+    extractValueFromGroup
 } from '../../../src/lib/validator/utils';
 
 describe('Validate > Unit > Utils > isCheckable', () => {
@@ -309,9 +310,27 @@ describe('Validate > Unit > Utils > escapeAttributeValue', () => {
     });
 });
 
-// getStatePrefix
+//getStatePrefix
 //appendStatePrefix
 
-//extractValueFromGroup
+//extractValueFromGroup // -> see groupValueReducer
+describe('Validate > Unit > Utils > extractValueFromGroup', () => {
+    it('should return the String value given a group with a field array containing an input with a value', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<form>
+            <input name="field" id="field" value="Test value" />
+        </form>`;
+        const group = { fields: [document.querySelector('#field')] };
+        expect(extractValueFromGroup(group)).toEqual('Test value');
+    });
+    it('should return the String value given a field array containing an input with a value', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<form>
+            <input name="field" id="field" value="Test value" />
+        </form>`;
+        const group = [document.querySelector('#field')];
+        expect(extractValueFromGroup(group)).toEqual('Test value');
+    });
+});
 
 //fetch

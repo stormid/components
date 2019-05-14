@@ -33,12 +33,15 @@ export const resolveGetParams = nodeArrays => nodeArrays.map((nodes) => {
 
 export const DOMNodesFromCommaList = list => list.split(',')
                                                 .map(item => {
-                                                    // let resolvedSelector = escapeAttributeValue(appendStatePrefix(item, getStatePrefix(input.getAttribute('name'))));
+                                                    // const resolvedSelector = escapeAttributeValue(appendStatePrefix(item, getStatePrefix(input.getAttribute('name'))));
                                                     return [].slice.call(document.querySelectorAll(`[name=${escapeAttributeValue(item)}]`));
                                                 });
 
 export const escapeAttributeValue = value => value.replace(/([!"#$%&'()*+,./:;<=>?@\[\\\]^`{|}~])/g, "\\$1");
 
+/*
+ * Only require below functions and resolvedSelector in DOMNodesFromCommaList if supporting *. params
+ */
 // const getStatePrefix = fieldName => fieldName.substr(0, fieldName.lastIndexOf('.') + 1);
 
 // const appendStatePrefix = (value, prefix) => {
@@ -50,8 +53,9 @@ export const extractValueFromGroup = group => group.hasOwnProperty('fields')
                                             ? group.fields.reduce(groupValueReducer, '')
                                             : group.reduce(groupValueReducer, '');
 
-/* istanbul ignore next */
+
 export const fetch = (url, props) => {
+    /* istanbul ignore next */
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.open(props.method || 'GET', url);
