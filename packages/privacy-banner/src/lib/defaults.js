@@ -6,9 +6,8 @@ export default {
 	domain: '',
 	secure: true,
 	expiry: 365,
-	types: {
-		'necessary': { fns: [] }
-	},
+	types: {},
+	necessary: [],
 	bannerTrigger: false,
 	policyURL: '/cookie-policy',
 	classNames: {
@@ -46,8 +45,8 @@ export default {
 		</section>`;
 	},
 	formTemplate(model){
-		return `<form class="${model.settings.classNames.form}">
-				${Object.keys(model.settings.types).map(type => type === 'necessary' ? '' : `<fieldset class="${model.settings.classNames.fieldset}">
+		return `<form class="${model.settings.classNames.form}" novalidate>
+				${Object.keys(model.settings.types).map(type => `<fieldset class="${model.settings.classNames.fieldset}">
 				<legend class="${model.settings.classNames.legend}">
 					<span class="${model.settings.classNames.title}">${model.settings.types[type].title}</span>
 					<span class="${model.settings.classNames.description}">${model.settings.types[type].description}</span>

@@ -1,10 +1,10 @@
-import { composeUpdateUIModel, shouldReturn, writeCookie, deleteCookies } from './utils';
+import { shouldReturn, writeCookie, deleteCookies } from './utils';
 import { TRIGGER_EVENTS } from './constants';
 import { apply } from './consent';
 import { fullConsent, setConsent, updateConsent } from './reducers';
 
 export const initBanner = Store => state => {
-    document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(composeUpdateUIModel(state)));
+    document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
     const acceptBtn = document.querySelector(`.${state.settings.classNames.acceptBtn}`);
 
@@ -20,9 +20,9 @@ export const initBanner = Store => state => {
                 }, {}),
                 [
                     writeCookie,
-                    apply,
+                    apply(Store),
                     removeBanner(banner),
-                    initUpdateBtn(Store),
+                    // initUpdateBtn(Store),
                     initForm(Store)
                 ]
             );
@@ -35,6 +35,7 @@ const removeBanner = banner => () => banner && banner.parentNode.removeChild(ban
 export const initForm = Store => state => {
     const formContainer = document.querySelector(`.${state.settings.classNames.formContainer}`);
     if(!formContainer) return;
+
     formContainer.innerHTML = state.settings.formTemplate(state);
     const form = document.querySelector(`.${state.settings.classNames.form}`);
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
@@ -61,32 +62,33 @@ export const initForm = Store => state => {
                 return acc;
             }, {}),
             [
+                deleteCookies,
                 writeCookie,
-                apply,
+                apply(Store),
                 removeBanner(banner),
             ]
         );
     });
 };
 
-export const initUpdateBtn = Store => state => {
-    if(!state.settings.bannerTrigger) return;
-    const updateBtnContainer = document.querySelector(`.${state.settings.classNames.updateBtnContainer}`);
-    if(!updateBtnContainer) return;
-    const updateBtn = document.querySelector(`.${state.settings.classNames.updateBtn}`);
-    if(updateBtn) updateBtn.removeAttribute('disabled');
-    else updateBtnContainer.innerHTML = state.settings.updateBtnTemplate(state.settings);
-    const handler = e => {
-        if(shouldReturn(e)) return;
-        Store.update(updateConsent, {}, [ initBanner(Store), () => { 
-            e.target.setAttribute('disabled', 'disabled');
-            TRIGGER_EVENTS.forEach(ev => {
-                e.target.removeEventListener(ev, handler);
-            });
-        }]);
-    };
+// export const initUpdateBtn = Store => state => {
+//     if(!state.settings.bannerTrigger) return;
+//     const updateBtnContainer = document.querySelector(`.${state.settings.classNames.updateBtnContainer}`);
+//     if(!updateBtnContainer) return;
+//     const updateBtn = document.querySelector(`.${state.settings.classNames.updateBtn}`);
+//     if(updateBtn) updateBtn.removeAttribute('disabled');
+//     else updateBtnContainer.innerHTML = state.settings.updateBtnTemplate(state.settings);
+//     const handler = e => {
+//         if(shouldReturn(e)) return;
+//         Store.update(updateConsent, {}, [ initBanner(Store), () => { 
+//             e.target.setAttribute('disabled', 'disabled');
+//             TRIGGER_EVENTS.forEach(ev => {
+//                 e.target.removeEventListener(ev, handler);
+//             });
+//         }]);
+//     };
 
-    TRIGGER_EVENTS.forEach(ev => {
-        document.querySelector(`.${state.settings.classNames.updateBtn}`).addEventListener(ev, handler);
-    });
-};
+//     TRIGGER_EVENTS.forEach(ev => {
+//         document.querySelector(`.${state.settings.classNames.updateBtn}`).addEventListener(ev, handler);
+//     });
+// };

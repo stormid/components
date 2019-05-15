@@ -1,6 +1,6 @@
-import { cookiesEnabled, readCookie } from './utils';
-import { initBanner, initUpdateBtn, initForm } from './ui';
-import { apply } from './consent';
+import { cookiesEnabled, readCookie, noop } from './utils';
+import { initBanner, initForm } from './ui';
+import { necessary, apply } from './consent';
 import { createStore } from './store';
 import { initialState } from './reducers';
 
@@ -11,7 +11,7 @@ export default settings => {
     const cookies = readCookie(settings);
     Store.update(
         initialState,
-        { settings, consent: cookies ? JSON.parse(cookies.value) : { necessary: 1 } },
-        [apply, cookies ? initUpdateBtn(Store) : initBanner(Store), initForm(Store)]
+        { settings, consent: cookies ? JSON.parse(cookies.value) : { } },
+        [ necessary, apply(Store), cookies ? noop : initBanner(Store), initForm(Store) ]
     );
 };

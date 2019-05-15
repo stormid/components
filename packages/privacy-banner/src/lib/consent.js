@@ -1,13 +1,21 @@
-export const apply = state => {
-    //;_; needs proper enum
+import { updateExecuted } from './reducers';
 
-    // const appliedState = perf === 'add' 
-    //                     ? Object.assign({}, state, { consent:  Object.assign({}, state.consent, { performance: true }) })
-    //                     : perf === 'remove'
-    //                     ?  Object.assign({}, state, { consent:  Object.assign({}, state.consent, { performance: false })})
-    //                     : state;
-    
+export const apply = Store => state => {
     Object.keys(state.consent).forEach(key => {
-        (state.consent[key] && Boolean(state.settings.types[key])) && state.settings.types[key].fns.forEach(fn => fn(state));
+        if(state.settings.types[key].executed === true) return;
+        if(state.consent[key] && Boolean(state.consent[key])) {
+            state.settings.types[key].fns.forEach(fn => fn(state));
+        }
     });
+    Store.update(updateExecuted, Object.keys(state.settings.types).reduce((acc, type) => {
+        acc[type] = {
+            ...state.settings.types[type],
+            executed: state.settings.types[type].executed || (state.consent[type] && Boolean(state.consent[type]))
+        };
+        return acc;
+    }, {}));
+};
+
+export const necessary = state => {
+    state.settings.necessary.forEach(fn => fn(state));
 };

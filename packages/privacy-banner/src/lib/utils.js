@@ -47,17 +47,28 @@ export const deleteCookies = state => {
         .map(updateCookie(state));
 };
 
-export const composeUpdateUIModel = state => {
-    return Object.assign({}, state.settings, {
-        types: Object.keys(state.settings.types).reduce((acc, type) => {
-            if(state.consent[type] !== undefined) {
-                acc[type] = Object.assign({}, state.settings.types[type], {
-                    checked: state.consent[type] !== undefined ? state.consent[type] : state.settings.types[type].checked
-                });
-            } else acc[type] = state.settings.types[type];
-            return acc;
-        }, {})
-    })
-};
+// export const composeUpdateUIModel = state => {
+//     return Object.assign({}, state.settings, {
+//         types: Object.keys(state.settings.types).reduce((acc, type) => {
+//             if(state.consent[type] !== undefined) {
+//                 acc[type] = Object.assign({}, state.settings.types[type], {
+//                     checked: state.consent[type] !== undefined ? state.consent[type] : state.settings.types[type].checked
+//                 });
+//             } else acc[type] = state.settings.types[type];
+//             return acc;
+//         }, {})
+//     })
+// };
 
 export const shouldReturn = e => (!!e.keyCode && !~TRIGGER_KEYCODES.indexOf(e.keyCode) || (e.which && e.which === 3));
+
+export const composeTypes = opts => (acc, curr) => {
+    if(acc[curr]) {
+        acc[curr] = Object.assign({}, acc[curr], {
+            fns: acc[curr].fns.concat(opts.types[curr].fns),
+        });
+    }  else acc[curr] = opts.types[curr];
+    return acc;
+};
+
+export const noop = () => {};

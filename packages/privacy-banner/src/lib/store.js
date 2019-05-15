@@ -1,10 +1,7 @@
 export const createStore = () => {
     //shared centralised validator state
     let state = {};
-
-    //uncomment for debugging by writing state history to window
-    // window.__validator_history__ = [];
-
+    
     //state getter
     const getState = () => state;
 
@@ -19,7 +16,7 @@ export const createStore = () => {
      */
     const update = function(reducer, nextState, effects) {
         state =  reducer(state, nextState);
-        console.log(state);
+        // console.log(state);
         if(!effects) return;
         effects.forEach(effect => { effect(state); });
     };

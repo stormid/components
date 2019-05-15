@@ -1,13 +1,19 @@
 import PrivacyBanner from '../../../src';
+import { writeCookie } from '../../../src/lib/utils';
     
 window.addEventListener('DOMContentLoaded', () => {    
     window.__pb__ = PrivacyBanner.init({
+        necessary: [ () => { 
+            console.log('Necessary fn');
+            writeCookie({
+                settings: {
+                    name: '.Test.NecessaryCookie',
+                    expiry: 3
+                },
+                consent: '666',
+            });
+        } ],
         types: {
-            'necessary': {
-                fns: [
-                    () => { console.log('Necessary fn'); }
-                ]
-            },
             'performance': {
                 title: 'Performance preferences',
                 description: 'Performance cookies are used to measure the performance of our website and make improvements. Your personal data is not identified.',
@@ -16,7 +22,16 @@ window.addEventListener('DOMContentLoaded', () => {
                     no: 'Pages you visit and actions you take will not be measured and used to improve the service'
                 },
                 fns: [
-                    () => { console.log('Performance fn'); }
+                    () => { 
+                        console.log('Performance fn');
+                        writeCookie({
+                            settings: {
+                                name: '.Test.PerformanceCookie',
+                                expiry: 3
+                            },
+                            consent: '666',
+                        });
+                    }
                 ]
             },
             'ads': {
@@ -27,7 +42,16 @@ window.addEventListener('DOMContentLoaded', () => {
                     no: 'Our partners will still serve you ads, but they will not know you have visited out website'
                 },
                 fns: [
-                    () => { console.log('Ads fn'); }
+                    () => { 
+                        console.log('Ads fn');
+                        writeCookie({
+                            settings: {
+                                name: '.Test.AdsCookie',
+                                expiry: 3
+                            },
+                            consent: '666',
+                        });
+                    }
                 ]
             }
         }
