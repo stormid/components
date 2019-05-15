@@ -59,7 +59,7 @@ export default {
 						class="${model.settings.classNames.field}"
 						value="1"
 						type="radio"
-						${model.consent[type] && Boolean(model.consent[type]) ? ` checked` : ''}>
+						${model.consent[type] === 1 ? ` checked` : ''}>
 					<label class="privacy-banner__label privacy-banner__label-yes" for="privacy-banner__${type.split(' ')[0].replace(' ', '-')}-1">
 						<span class="privacy-banner__label-text">I am OK with this</span>
 						<span class="privacy-banner__label-description">${model.settings.types[type].labels.yes}</span>
@@ -72,7 +72,7 @@ export default {
 						class="${model.settings.classNames.field}"
 						value="0"
 						type="radio"
-						${model.consent[type] && !Boolean(model.consent[type]) ? ` checked` : ''}>
+						${model.consent[type] === 0 ? ` checked` : ''}>
 					<label class="privacy-banner__label privacy-banner__label-no" for="privacy-banner__${type.split(' ')[0].replace(' ', '-')}-0">
 						<span class="privacy-banner__label-text">No thank you</span>
 						<span class="privacy-banner__label-description">${model.settings.types[type].labels.no}</span>

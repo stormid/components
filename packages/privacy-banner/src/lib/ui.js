@@ -50,6 +50,7 @@ export const initForm = Store => state => {
         form.removeEventListener('change', enableButton);
     };
     form.addEventListener('change', enableButton);
+    
     form.addEventListener('submit', e => {
         e.preventDefault();
         Store.update(
