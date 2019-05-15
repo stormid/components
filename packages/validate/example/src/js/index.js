@@ -2,6 +2,7 @@ import Validate from '../../../src';
     
 window.addEventListener('DOMContentLoaded', () => {
     // window.__t1__ = Tabs.init('.js-tabs');
+<<<<<<< Updated upstream
     Validate.init('form', { 
         preSubmitHook(){
             window.dataLayer = [{
@@ -14,5 +15,8 @@ window.addEventListener('DOMContentLoaded', () => {
             debugger;
         }
     })
+=======
+    Validate.init('form')
+>>>>>>> Stashed changes
     // console.log(__validators__[document.querySelector('.js-validate')].getState());
 });

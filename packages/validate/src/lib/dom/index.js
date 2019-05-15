@@ -109,7 +109,11 @@ export const renderError = groupName => state => {
                 ? createErrorTextNode(state.groups[groupName], state.groups[groupName].errorMessages[0]) 
                 : state.groups[groupName]
                             .fields[state.groups[groupName].fields.length-1]
+<<<<<<< Updated upstream
                             .parentNode
+=======
+                            .previousElementSibling
+>>>>>>> Stashed changes
                             .appendChild(
                                 h('span', { class: DOTNET_CLASSNAMES.ERROR }, state.groups[groupName].errorMessages[0]),
                                 state.groups[groupName].fields[state.groups[groupName].fields.length-1]
