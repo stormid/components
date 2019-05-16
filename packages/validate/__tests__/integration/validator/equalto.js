@@ -1,6 +1,6 @@
 import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
-describe('Validate > Integration > validate > equalto', () => {
+describe('Validate > Integration > validator > equalto', () => {
     
     it('should return the validityState false for data-val equalto validator with a value not matching the other field(s)', async () => {
         expect.assertions(1);

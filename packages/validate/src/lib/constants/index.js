@@ -52,8 +52,9 @@ export const DOTNET_PARAMS = {
 export const DOTNET_ADAPTORS = [
     'required',
     'stringlength',
+    'dateISO',
     'regex',
-    // 'digits',
+    'digits',
     'email',
     'number',
     'url',
