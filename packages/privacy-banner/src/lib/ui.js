@@ -1,7 +1,7 @@
-import { shouldReturn, writeCookie, deleteCookies } from './utils';
+import { shouldReturn, writeCookie, groupValueReducer, deleteCookies } from './utils';
 import { TRIGGER_EVENTS } from './constants';
 import { apply } from './consent';
-import { fullConsent, setConsent, updateConsent } from './reducers';
+import { fullConsent, updateConsent } from './reducers';
 
 export const initBanner = Store => state => {
     document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
@@ -22,7 +22,6 @@ export const initBanner = Store => state => {
                     writeCookie,
                     apply(Store),
                     removeBanner(banner),
-                    // initUpdateBtn(Store),
                     initForm(Store)
                 ]
             );
@@ -30,13 +29,14 @@ export const initBanner = Store => state => {
     });
 };
 
-const removeBanner = banner => () => banner && banner.parentNode.removeChild(banner);
+const removeBanner = banner => () => banner.parentNode && banner.parentNode.removeChild(banner);
 
 export const initForm = Store => state => {
     const formContainer = document.querySelector(`.${state.settings.classNames.formContainer}`);
     if(!formContainer) return;
 
     formContainer.innerHTML = state.settings.formTemplate(state);
+
     const form = document.querySelector(`.${state.settings.classNames.form}`);
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
     const button = document.querySelector(`.${state.settings.classNames.submitBtn}`);
@@ -46,49 +46,41 @@ export const initForm = Store => state => {
         else groups[groupName] = [field];
         return groups;
     }, {});
+
+    const extractConsent = () => Object.keys(groups).reduce((acc, key) => {
+        const value = groups[key].reduce(groupValueReducer, '');
+        if(value) acc[key] = parseInt(value);
+        return acc;
+    }, {});
+
     const enableButton = e => {
+        if(Object.keys(extractConsent()).length !== Object.keys(groups).length) return;
         button.removeAttribute('disabled');
         form.removeEventListener('change', enableButton);
     };
-    form.addEventListener('change', enableButton);
+    button.hasAttribute('disabled') && form.addEventListener('change', enableButton);
     
     form.addEventListener('submit', e => {
         e.preventDefault();
         Store.update(
             updateConsent,
-            Object.keys(groups).reduce((acc, key) => {
-                const value = form[`privacy-${key}`].value;
-                if(value) acc[key] = parseInt(value);
-                return acc;
-            }, {}),
+            extractConsent(),
             [
                 deleteCookies,
                 writeCookie,
                 apply(Store),
                 removeBanner(banner),
+                renderMessage(button)
             ]
         );
     });
 };
 
-// export const initUpdateBtn = Store => state => {
-//     if(!state.settings.bannerTrigger) return;
-//     const updateBtnContainer = document.querySelector(`.${state.settings.classNames.updateBtnContainer}`);
-//     if(!updateBtnContainer) return;
-//     const updateBtn = document.querySelector(`.${state.settings.classNames.updateBtn}`);
-//     if(updateBtn) updateBtn.removeAttribute('disabled');
-//     else updateBtnContainer.innerHTML = state.settings.updateBtnTemplate(state.settings);
-//     const handler = e => {
-//         if(shouldReturn(e)) return;
-//         Store.update(updateConsent, {}, [ initBanner(Store), () => { 
-//             e.target.setAttribute('disabled', 'disabled');
-//             TRIGGER_EVENTS.forEach(ev => {
-//                 e.target.removeEventListener(ev, handler);
-//             });
-//         }]);
-//     };
-
-//     TRIGGER_EVENTS.forEach(ev => {
-//         document.querySelector(`.${state.settings.classNames.updateBtn}`).addEventListener(ev, handler);
-//     });
-// };
+export const renderMessage = button => state => {
+    button.insertAdjacentHTML('afterend', state.settings.messageTemplate(state));
+    button.setAttribute('disabled', 'disabled');
+    window.setTimeout(() => {
+        button.parentNode.removeChild(button.nextElementSibling);
+        button.removeAttribute('disabled');
+    }, 3000);
+};

@@ -3,6 +3,7 @@ import { writeCookie } from '../../../src/lib/utils';
     
 window.addEventListener('DOMContentLoaded', () => {    
     window.__pb__ = PrivacyBanner.init({
+        secure: false,
         necessary: [ () => { 
             console.log('Necessary fn');
             writeCookie({

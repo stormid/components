@@ -72,3 +72,16 @@ export const composeTypes = opts => (acc, curr) => {
 };
 
 export const noop = () => {};
+
+export const isCheckable = field => (/radio|checkbox/i).test(field.type);
+
+const hasValue = input => (input.value !== undefined && input.value !== null && input.value.length > 0);
+
+export const groupValueReducer = (acc, input) => {
+    if(!isCheckable(input) && hasValue(input)) acc = input.value;
+    if(isCheckable(input) && input.checked) {
+        if(Array.isArray(acc)) acc.push(input.value)
+        else acc = [input.value];
+    }
+    return acc;
+};

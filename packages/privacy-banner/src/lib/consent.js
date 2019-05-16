@@ -8,10 +8,7 @@ export const apply = Store => state => {
         }
     });
     Store.update(updateExecuted, Object.keys(state.settings.types).reduce((acc, type) => {
-        acc[type] = {
-            ...state.settings.types[type],
-            executed: state.settings.types[type].executed || (state.consent[type] && Boolean(state.consent[type]))
-        };
+        acc[type] = Object.assign({}, state.settings.types[type], { executed: state.settings.types[type].executed || (state.consent[type] && Boolean(state.consent[type])) });
         return acc;
     }, {}));
 };
@@ -19,3 +16,4 @@ export const apply = Store => state => {
 export const necessary = state => {
     state.settings.necessary.forEach(fn => fn(state));
 };
+

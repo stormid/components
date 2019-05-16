@@ -1,11 +1,4 @@
-export const initialState = (state, data) => ({ ...state, ...data });
-// export const setConsent = (state, data) => ({ ...state, ...data});
-export const fullConsent = (state, data) => ({ ...state, consent: data });
-export const updateConsent = (state, data) => ({ ...state, consent: { ...state.consent, ...data }});
-export const updateExecuted = (state, data) => ({ ...state, settings: {
-    ...state.settings,
-    types: {
-        ...state.settings.types,
-        ...data
-    }
-}});
+export const initialState = (state, data) => Object.assign({}, state, data);
+export const fullConsent = (state, data) => Object.assign({}, state, { consent: data });
+export const updateConsent = (state, data) => Object.assign({}, state, { consent: Object.assign({}, state.consent, data)});
+export const updateExecuted = (state, data) => Object.assign({}, state, { settings: Object.assign({}, state.settings, { types: Object.assign({}, state.settings.types, data) })});
