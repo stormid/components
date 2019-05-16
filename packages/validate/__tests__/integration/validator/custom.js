@@ -1,6 +1,6 @@
 import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
-describe('Validate > Integration > validate > custom', () => {
+describe('Validate > Integration > validator > custom', () => {
 
     it('should return the validityState false for custom validator that fails', async () => {
         expect.assertions(1);

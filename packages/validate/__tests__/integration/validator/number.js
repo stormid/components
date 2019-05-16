@@ -1,6 +1,6 @@
 import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
-describe('Validate > Integration > validate > number', () => {
+describe('Validate > Integration > validator > number', () => {
     it('should return the validityState false for HTML5 number validator with non-number', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
