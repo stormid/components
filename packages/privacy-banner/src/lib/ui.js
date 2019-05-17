@@ -29,7 +29,7 @@ export const initBanner = Store => state => {
     });
 };
 
-const removeBanner = banner => () => banner.parentNode && banner.parentNode.removeChild(banner);
+const removeBanner = banner => () => (banner && banner.parentNode) && banner.parentNode.removeChild(banner);
 
 export const initForm = Store => state => {
     const formContainer = document.querySelector(`.${state.settings.classNames.formContainer}`);

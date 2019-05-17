@@ -34,7 +34,7 @@ const init = () => {
 };
 
 
-describe(`Privacy banner > cookies`, () => {
+describe(`Privacy banner > cookies > accept`, () => {
     beforeAll(init);
 
     it('Sets a cookie based on accept button', async () => {
@@ -43,3 +43,19 @@ describe(`Privacy banner > cookies`, () => {
     });
 
 });
+
+describe(`Privacy banner > cookies > update`, () => {
+    beforeAll(init);
+
+    it('Sets a cookie based on preferences form', async () => {
+        expect(document.cookie).toEqual(`${defaults.name}={"test":1,"performance":1}`);
+
+        const fields = Array.from(document.querySelectorAll(`.${defaults.classNames.field}`));
+        fields[1].checked = true;
+        fields[3].checked = true;
+        document.querySelector(`.${defaults.classNames.submitBtn}`).click();
+        expect(document.cookie).toEqual(`${defaults.name}={"test":0,"performance":0}`);
+    });
+
+});
+
