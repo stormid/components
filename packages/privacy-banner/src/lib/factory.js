@@ -14,4 +14,6 @@ export default settings => {
         { settings, consent: cookies ? JSON.parse(cookies.value) : { } },
         [ necessary, apply(Store), cookies ? noop : initBanner(Store), initForm(Store) ]
     );
+
+    return { getState: Store.getState } ;
 };

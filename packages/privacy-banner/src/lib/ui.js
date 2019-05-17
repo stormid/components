@@ -1,7 +1,7 @@
 import { shouldReturn, writeCookie, groupValueReducer, deleteCookies } from './utils';
 import { TRIGGER_EVENTS } from './constants';
 import { apply } from './consent';
-import { fullConsent, updateConsent } from './reducers';
+import { updateConsent } from './reducers';
 
 export const initBanner = Store => state => {
     document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
@@ -13,7 +13,7 @@ export const initBanner = Store => state => {
             if(shouldReturn(e)) return;
 
             Store.update(
-                fullConsent,
+                updateConsent,
                 Object.keys(state.settings.types).reduce((acc, type) => {
                     acc[type] = 1;
                     return acc;

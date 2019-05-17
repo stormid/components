@@ -7,5 +7,10 @@ module.exports = {
       '^.+\\.js$': '../../tools/jest/babel-jest-wrapper.js'
   },
   displayName: pack.name,
-  name: pack.name
+  name: pack.name,
+  collectCoverageFrom: [
+    "src/**/*.{js}",
+    "!src/lib/constants.js",
+    "!src/lib/defaults.js"
+  ]
 };
