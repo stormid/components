@@ -31,21 +31,21 @@ describe('Validate > Unit > Validator > resolveParam', () => {
   it('should return a param Object indexed by second part of param name, and an array of arrays of DOMNodes', async () => {
 		expect.assertions(1);
     document.body.innerHTML = `<input data-val="true" 
-		data-val-required="The field is required." 
-		id="Email"
-		name="Email"
-		value="example@stormid.com" />
-		<input data-val="true" 
-		data-val-required="The field is required." 
-		id="ConfirmEmail"
-		name="ConfirmEmail"
-		value="example@stormid.com" />
-		<input data-val="true" 
-			data-val-equalto="Should match the previous field"
-			data-val-equalto-other="Email,ConfirmEmail"
-			id="DoubleConfirmEmail"
-			name="DoubleConfirmEmail"
-			value="" />`;
+					data-val-required="The field is required." 
+					id="Email"
+					name="Email"
+					value="example@stormid.com" />
+					<input data-val="true" 
+					data-val-required="The field is required." 
+					id="ConfirmEmail"
+					name="ConfirmEmail"
+					value="example@stormid.com" />
+				<input data-val="true" 
+						data-val-equalto="Should match the previous field"
+						data-val-equalto-other="Email,ConfirmEmail"
+						id="DoubleConfirmEmail"
+						name="DoubleConfirmEmail"
+						value="" />`;
       const input = document.querySelector('#DoubleConfirmEmail');
       const firstTarget = document.querySelector('#Email');
       const secondTarget = document.querySelector('#ConfirmEmail');
@@ -53,7 +53,7 @@ describe('Validate > Unit > Validator > resolveParam', () => {
       const resolved = resolveParam(param, input);
       expect(resolved).toEqual({ 'other':  [[firstTarget],[secondTarget]] });
   	});
-})
+});
 
 
 //extractParams

@@ -16,8 +16,8 @@ export const findDialog = node => node.querySelector('[role=dialog]') || console
  * @return Array of HTMLElements
  */
 export const findToggles = (node, settings) => {
-    const toggles = node.getAttribute(settings.toggleSelectorAttribute) && Array.from(document.querySelectorAll('.' + node.getAttribute(settings.toggleSelectorAttribute)));
-    if(!toggles.length) console.error(`Modal cannot be initialised, no modal toggle elements found. Does the modal have a ${settings.toggleSelectorAttribute} attribute that identifies toggle buttons?`);
+    const toggles = node.getAttribute(settings.toggleSelectorAttribute) && [].slice.call(document.querySelectorAll('.' + node.getAttribute(settings.toggleSelectorAttribute)));
+    if(!toggles) console.error(`Modal cannot be initialised, no modal toggle elements found. Does the modal have a ${settings.toggleSelectorAttribute} attribute that identifies toggle buttons?`);
     return toggles;
 }
 
@@ -27,7 +27,7 @@ export const findToggles = (node, settings) => {
   * @param node, HTMLElement, node to be toggled
   * @return Array of HTMLElements
  */
-export const getFocusableChildren = node => Array.from(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
+export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
 
 /* 
  * Partially applied function that returns a function
