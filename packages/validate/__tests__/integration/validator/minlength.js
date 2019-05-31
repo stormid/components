@@ -1,45 +1,45 @@
 import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
-describe('Validate > Integration > validate > maxlength', () => {
+describe('Validate > Integration > validator > minlength', () => {
     
-    it('should return the validityState false for data-val maxlength validator with value length greater than maxlength', async () => {
+    it('should return the validityState false for data-val minlength validator with value length less than minlength', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
             data-val="true"
-            data-val-maxlength="Maxlength error message"
-            data-val-maxlength-max="5"
-            value="Falsey"
+            data-val-minlength="Minlength error message"
+            data-val-minlength-min="5"
+            value="No"
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input)['group1'];
 		expect(validate(group, group.validators[0])).toEqual(false);
     });
 
-    it('should return the validityState true for data-val maxlength validator with value length less than the max', async () => {
+    it('should return the validityState true for data-val minlength validator with value length greater than the min', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
 			name="group1"
             data-val="true"
-            data-val-maxlength="Maxlength error message"
-            data-val-maxlength-max="5"
-            value="Pass"
+            data-val-minlength="Minlength error message"
+            data-val-minlength-min="5"
+            value="Valid"
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input)['group1'];
 		expect(validate(group, group.validators[0])).toEqual(true);
     });
 
-    it('should return the validityState true for unrequired data-val maxlength validator with no value', async () => {
+    it('should return the validityState true for unrequired data-val minlength validator with no value', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
             data-val="true"
-            data-val-maxlength="Maxength error message"
-            data-val-maxlength-max="5"
+            data-val-minlength="Maxlength error message"
+            data-val-minlength-min="5"
             value=""
 			type="text">`;
         const input = document.querySelector('#group1');
@@ -47,38 +47,38 @@ describe('Validate > Integration > validate > maxlength', () => {
 		expect(validate(group, group.validators[0])).toEqual(true);
     });
 
-    it('should return the validityState false for HTML5 maxlength validator with value length greater than max', async () => {
+    it('should return the validityState false for HTML5 minlength validator with value length less than min length', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
-            maxlength="5"
-            value="Falsey"
+            minlength="5"
+            value="No"
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input)['group1'];
 		expect(validate(group, group.validators[0])).toEqual(false);
     });
 
-    it('should return the validityState false for HTML5 maxlength validator with value length less than max', async () => {
+    it('should return the validityState false for HTML5 minlength validator with value length greater than min length', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
-            maxlength="5"
-            value="Pass"
+            minlength="5"
+            value="Valid"
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input)['group1'];
 		expect(validate(group, group.validators[0])).toEqual(true);
     });
 
-    it('should return the validityState true for unrequired HTML5 maxlength validator with no value', async () => {
+    it('should return the validityState true for unrequired HTML5 minlength validator with no value', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
             name="group1"
-            maxlength="5"
+            minlength="5"
             value=""
 			type="text">`;
         const input = document.querySelector('#group1');

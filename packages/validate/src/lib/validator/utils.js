@@ -16,7 +16,7 @@ export const groupIsHidden = fields => fields.reduce((acc, field) => {
 }, false);
 
 
-const hasValue = input => (input.value !== undefined && input.value !== null && input.value.length > 0);
+export const hasValue = input => (input.value !== undefined && input.value !== null && input.value.length > 0);
 
 export const groupValueReducer = (acc, input) => {
     if(!isCheckable(input) && hasValue(input)) acc = input.value;
@@ -28,29 +28,34 @@ export const groupValueReducer = (acc, input) => {
 };
 
 export const resolveGetParams = nodeArrays => nodeArrays.map((nodes) => {
-    return `${nodes[0].getAttribute('name')}=${extractValueFromGroup(nodes)}`;
+    return `${encodeURIComponent(nodes[0].getAttribute('name'))}=${encodeURIComponent(extractValueFromGroup(nodes))}`;
 }).join('&');
 
-export const DOMNodesFromCommaList = (list, input) => list.split(',')
+export const DOMNodesFromCommaList = list => list.split(',')
                                                 .map(item => {
-                                                    // let resolvedSelector = escapeAttributeValue(appendStatePrefix(item, getStatePrefix(input.getAttribute('name'))));
+                                                    // const resolvedSelector = escapeAttributeValue(appendStatePrefix(item, getStatePrefix(input.getAttribute('name'))));
                                                     return [].slice.call(document.querySelectorAll(`[name=${escapeAttributeValue(item)}]`));
                                                 });
 
-const escapeAttributeValue = value => value.replace(/([!"#$%&'()*+,./:;<=>?@\[\\\]^`{|}~])/g, "\\$1");
+export const escapeAttributeValue = value => value.replace(/([!"#$%&'()*+,./:;<=>?@\[\\\]^`{|}~])/g, "\\$1");
 
-const getStatePrefix = fieldName => fieldName.substr(0, fieldName.lastIndexOf('.') + 1);
+/*
+ * Only require below functions and resolvedSelector in DOMNodesFromCommaList if supporting *. params
+ */
+// const getStatePrefix = fieldName => fieldName.substr(0, fieldName.lastIndexOf('.') + 1);
 
-const appendStatePrefix = (value, prefix) => {
-    if (value.indexOf("*.") === 0) value = value.replace("*.", prefix);
-    return value;
-};
+// const appendStatePrefix = (value, prefix) => {
+//     if (value.indexOf("*.") === 0) value = value.replace("*.", prefix);
+//     return value;
+// };
 
 export const extractValueFromGroup = group => group.hasOwnProperty('fields') 
                                             ? group.fields.reduce(groupValueReducer, '')
                                             : group.reduce(groupValueReducer, '');
 
+
 export const fetch = (url, props) => {
+    /* istanbul ignore next */
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.open(props.method || 'GET', url);

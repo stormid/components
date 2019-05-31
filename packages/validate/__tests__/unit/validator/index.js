@@ -3,7 +3,10 @@ import {
 	extractParams,
 	extractDataValValidators,
 	extractAttrValidators,
-	extractErrorMessage
+	extractErrorMessage,
+	reduceErrorMessages,
+	removeUnvalidatableGroups,
+	getInitialState
 } from '../../../src/lib/validator';
 import MESSAGES from '../../../src/lib/constants/messages';
 
@@ -28,21 +31,21 @@ describe('Validate > Unit > Validator > resolveParam', () => {
   it('should return a param Object indexed by second part of param name, and an array of arrays of DOMNodes', async () => {
 		expect.assertions(1);
     document.body.innerHTML = `<input data-val="true" 
-		data-val-required="The field is required." 
-		id="Email"
-		name="Email"
-		value="example@stormid.com" />
-		<input data-val="true" 
-		data-val-required="The field is required." 
-		id="ConfirmEmail"
-		name="ConfirmEmail"
-		value="example@stormid.com" />
-		<input data-val="true" 
-			data-val-equalto="Should match the previous field"
-			data-val-equalto-other="Email,ConfirmEmail"
-			id="DoubleConfirmEmail"
-			name="DoubleConfirmEmail"
-			value="" />`;
+					data-val-required="The field is required." 
+					id="Email"
+					name="Email"
+					value="example@stormid.com" />
+					<input data-val="true" 
+					data-val-required="The field is required." 
+					id="ConfirmEmail"
+					name="ConfirmEmail"
+					value="example@stormid.com" />
+				<input data-val="true" 
+						data-val-equalto="Should match the previous field"
+						data-val-equalto-other="Email,ConfirmEmail"
+						id="DoubleConfirmEmail"
+						name="DoubleConfirmEmail"
+						value="" />`;
       const input = document.querySelector('#DoubleConfirmEmail');
       const firstTarget = document.querySelector('#Email');
       const secondTarget = document.querySelector('#ConfirmEmail');
@@ -50,7 +53,7 @@ describe('Validate > Unit > Validator > resolveParam', () => {
       const resolved = resolveParam(param, input);
       expect(resolved).toEqual({ 'other':  [[firstTarget],[secondTarget]] });
   	});
-})
+});
 
 
 //extractParams
@@ -181,10 +184,6 @@ describe('Validate > Unit > Validator > extractAttrValidators', () => {
 
 //assembleValidationGroup -> see integration assembleValidationGroup tests
 
-/*
-const extractErrorMessage = validator => validator.message || messages[validator.type](x.params !== undefined ? validator.params : null);
-*/
-
 //extractErrorMessage
 describe('Validate > Unit > Validator > extractErrorMessage', () => {
 	it('should return an error message given a validator containing a message', async () => {
@@ -196,15 +195,186 @@ describe('Validate > Unit > Validator > extractErrorMessage', () => {
 	});
 
 	it('should return an error message based on constants and params given a validator without an error message', async () => {
-		expect.assertions(2);
-		const validatorWithoutParms = { type: 'required' };
-		const validatorWithParms = { 
+		expect.assertions(14);
+		const requiredValidator = { type: 'required' };
+		const emailValidator = { type: 'email' };
+		const patternValidator = { type: 'pattern' };
+		const URLValidator = { type: 'url' };
+		const dateValidator = { type: 'date' };
+		const dateISOValidator = { type: 'dateISO' };
+		const numberValidator = { type: 'number' };
+		const digitsValidator = { type: 'digits' };
+		const equalToValidator = { type: 'equalto' };
+		const remoteValidator = { type: 'remote' };
+		const maxValidator = { 
 			type: 'max',
 			params: { max: 10 }
 		};
+		const minValidator = { 
+			type: 'min',
+			params: { min: 2 }
+		};
+		const maxLengthValidator = { 
+			type: 'maxlength',
+			params: { max: 10 }
+		};
+		const minLengthValidator = { 
+			type: 'minlength',
+			params: { min: 2 }
+		};
 		
-		expect(extractErrorMessage(validatorWithoutParms)).toEqual(MESSAGES.required());
-		expect(extractErrorMessage(validatorWithParms)).toEqual(MESSAGES.max(validatorWithParms.params));
+		expect(extractErrorMessage(requiredValidator)).toEqual(MESSAGES.required());
+		expect(extractErrorMessage(emailValidator)).toEqual(MESSAGES.email());
+		expect(extractErrorMessage(patternValidator)).toEqual(MESSAGES.pattern());
+		expect(extractErrorMessage(URLValidator)).toEqual(MESSAGES.url());
+		expect(extractErrorMessage(dateValidator)).toEqual(MESSAGES.date());
+		expect(extractErrorMessage(dateISOValidator)).toEqual(MESSAGES.dateISO());
+		expect(extractErrorMessage(numberValidator)).toEqual(MESSAGES.number());
+		expect(extractErrorMessage(digitsValidator)).toEqual(MESSAGES.digits());
+		expect(extractErrorMessage(equalToValidator)).toEqual(MESSAGES.equalto());
+		expect(extractErrorMessage(remoteValidator)).toEqual(MESSAGES.remote());
+		expect(extractErrorMessage(maxValidator)).toEqual(MESSAGES.max(maxValidator.params));
+		expect(extractErrorMessage(minValidator)).toEqual(MESSAGES.min(minValidator.params));
+		expect(extractErrorMessage(maxLengthValidator)).toEqual(MESSAGES.maxlength(maxLengthValidator.params));
+		expect(extractErrorMessage(minLengthValidator)).toEqual(MESSAGES.minlength(minLengthValidator.params));
 	});
 
 });
+
+
+// To do
+// can do better here, factory > validate function in need of refactor
+//
+ //extractErrorMessage
+// describe('Validate > Unit > Validator > reduceErrorMessages', () => {
+	// it('should return an empty array given an array of validation responses with no errors', async () => {
+	// 	expect.assertions(1);
+
+// 	});
+// });
+
+
+describe('Validate > Unit > Validator > removeUnvalidatableGroups', () => {
+	it('should remove groups that do not contain validators from the array of vaidationGroups', async () => {
+		expect.assertions(1);
+		document.body.innerHTML = `<input
+			id="group1"
+			name="group1"
+			required
+			type="text">
+			<input
+			id="group2"
+			name="group2"
+			type="text">`;
+		const input1 = document.querySelector('#group1');
+		const input2 = document.querySelector('#group2');
+		let groups = {
+			group1: {
+				validators: [{ type: 'required', message: 'This field is required'}],
+				fields: [input1],
+				errorMessages: [],
+				valid: false
+			},
+			group2: {
+				validators: [],
+				fields: [input2],
+				errorMessages: [],
+				valid: false
+			}
+		};
+
+		expect(removeUnvalidatableGroups(groups)).toEqual({
+			group1: {
+				validators: [{ type: 'required', message: 'This field is required'}],
+				fields: [input1],
+				errorMessages: [],
+				valid: false
+			}
+		});
+	});
+
+	it('should remove groups with all hidden fields  from the array of vaidationGroups', async () => {
+		expect.assertions(1);
+		document.body.innerHTML = `<input
+			id="i-1"
+			name="group1"
+			type="hidden">
+			<input
+			required
+			id="i-2"
+			name="group1"
+			type="hidden">`;
+		const input1 = document.querySelector('#i-1');
+		const input2 = document.querySelector('#i-2');
+		let groups = {
+			group1: {
+				validators: [{ type: 'required', message: 'This field is required'}],
+				fields: [input1, input2],
+				errorMessages: [],
+				valid: false
+			}
+		};
+
+		expect(removeUnvalidatableGroups(groups)).toEqual({});
+	});
+});
+
+//getInitialState
+describe('Validate > Unit > Validator > getInitialState', () => {
+	it('should return a state object containing only groups that are validatable', async () => {
+		expect.assertions(1);
+		document.body.innerHTML = `<form><input
+			id="group1"
+			name="group1"
+			required
+			type="text">
+			<input
+			id="group2"
+			name="group2"
+			type="text"></form>`;
+		const input1 = document.querySelector('#group1');
+		const input2 = document.querySelector('#group2');
+		const form = document.querySelector('form');
+
+		expect(getInitialState(form, {})).toEqual({
+			form: form,
+			settings: {},
+			errorNodes: {},
+      		realTimeValidation: false,
+			groups: {
+				group1: {
+					serverErrorNode: false,
+					validators: [{ type: 'required' }],
+					fields: [input1],
+					valid: false
+				}
+			}
+		});
+	});
+	it('should return a state object containing any settings passed to init', async () => {
+		expect.assertions(1);
+		document.body.innerHTML = `<form><input
+			id="group1"
+			name="group1"
+			required
+			type="text">`;
+		const input1 = document.querySelector('#group1');
+		const input2 = document.querySelector('#group2');
+		const form = document.querySelector('form');
+
+		expect(getInitialState(form, { preSubmitHook: true })).toEqual({
+			form: form,
+			settings: { preSubmitHook: true },
+			errorNodes: {},
+      		realTimeValidation: false,
+			groups: {
+				group1: {
+					serverErrorNode: false,
+					validators: [{ type: 'required' }],
+					fields: [input1],
+					valid: false
+				}
+			}
+		});
+	});
+ });

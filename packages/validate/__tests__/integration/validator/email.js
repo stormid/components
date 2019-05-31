@@ -1,6 +1,6 @@
 import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
-describe('Validate > Integration > validate > email', () => {
+describe('Validate > Integration > validator > email', () => {
     //html5 spec regex approximation:
     ///^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
     it('should return the validityState false for HTML5 email validator with non-spec email address', async () => {

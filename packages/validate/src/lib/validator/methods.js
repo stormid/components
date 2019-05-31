@@ -24,7 +24,6 @@ export default {
     required: group => extractValueFromGroup(group) !== '',
     email: regexMethod(EMAIL_REGEX),
     url: regexMethod(URL_REGEX),
-    date: group => isOptional(group)|| group.fields.reduce((acc, input) => (acc = !/Invalid|NaN/.test(new Date(input.value).toString()), acc), false),
     dateISO: regexMethod(DATE_ISO_REGEX),
     number: regexMethod(NUMBER_REGEX),
     digits: regexMethod(DIGITS_REGEX),
@@ -47,7 +46,6 @@ export default {
     min: paramMethod('min', params => (acc, input) => (acc = parseInt(input.value) !== NaN && +input.value >= +params.min, acc)),
     max: paramMethod('max', params => (acc, input) => (acc = parseInt(input.value) !== NaN && +input.value <= +params.max, acc)),
     stringlength: paramMethod('stringlength', params => (acc, input) => (acc = +input.value.length <= +params.max, acc)),
-    maxlength: paramMethod('maxlength', params => (acc, input) => (acc = +input.value.length <= +params.max, acc)),
     length: paramMethod('length', params => (acc, input) => (acc = (+input.value.length >= +params.min && (params.max === undefined || +input.value.length <= +params.max)), acc)),
     range: paramMethod('range', params => (acc, input) => (acc = (+input.value >= +params.min && +input.value <= +params.max), acc)),
     remote: (group, params) => new Promise((resolve, reject) => {
@@ -58,7 +56,6 @@ export default {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
             }
         })
-        // .then(res => res.json())
         .then(data => resolve(data));
     }),
     custom: (method, group) => isOptional(group)|| method(extractValueFromGroup(group), group.fields)

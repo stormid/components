@@ -28,47 +28,49 @@ import {
  * 
  * @param form [DOM node]
  * 
- * @returns [boolean] The validity state of the form
+ * @returns [Promise] Resolves with boolean validityState of the form
  * 
  */
 const validate = Store => e => {
     e && e.preventDefault();
     Store.dispatch(ACTIONS.CLEAR_ERRORS, null, [clearErrors]);
 
-    getValidityState(Store.getState().groups)
-        .then(validityState => {
-            if([].concat(...validityState).reduce(reduceGroupValidityState, true)){
-                let buttonValueNode = false;
-                if(isSubmitButton(document.activeElement) && hasNameValue(document.activeElement)) {
-                    buttonValueNode = createButtonValueNode(document.activeElement, Store.getState().form);
+    return new Promise(res => {
+        getValidityState(Store.getState().groups)
+            .then(validityState => {
+                if([].concat(...validityState).reduce(reduceGroupValidityState, true)){
+                    let buttonValueNode = false;
+                    if(isSubmitButton(document.activeElement) && hasNameValue(document.activeElement)) {
+                        buttonValueNode = createButtonValueNode(document.activeElement, Store.getState().form);
+                    }
+                    if(e && e.target) {
+                        if(Store.getState().settings.preSubmitHook) {
+                            Store.getState().settings.preSubmitHook();
+                            window.setTimeout(() => { Store.getState().form.submit(); }, PREHOOK_DELAY);
+                        } else Store.getState().form.submit();
+                    }               
+                    buttonValueNode && cleanupButtonValueNode(buttonValueNode);
+                    return res(true);
                 }
-                if(e && e.target) {
-                    if(Store.getState().settings.preSubmitHook) {
-                        Store.getState().settings.preSubmitHook();
-                        window.setTimeout(() => { Store.getState().form.submit(); }, PREHOOK_DELAY);
-                    } else Store.getState().form.submit();
-                }               
-                buttonValueNode && cleanupButtonValueNode(buttonValueNode);
-                return true
-            }
 
-            Store.getState().realTimeValidation === false && startRealTimeValidation(Store);
+                Store.getState().realTimeValidation === false && startRealTimeValidation(Store);
 
-            Store.dispatch(
-                ACTIONS.VALIDATION_ERRORS,
-                Object.keys(Store.getState().groups)
-                    .reduce((acc, group, i) => {                                         
-                        return acc[group] = {
-                            valid: validityState[i].reduce(reduceGroupValidityState, true),
-                            errorMessages: validityState[i].reduce(reduceErrorMessages(group, Store.getState()), [])
-                        }, acc;
-                    }, {}),
-                [renderErrors, focusFirstInvalidField]
-            );
+                Store.dispatch(
+                    ACTIONS.VALIDATION_ERRORS,
+                    Object.keys(Store.getState().groups)
+                        .reduce((acc, group, i) => {                                         
+                            return acc[group] = {
+                                valid: validityState[i].reduce(reduceGroupValidityState, true),
+                                errorMessages: validityState[i].reduce(reduceErrorMessages(group, Store.getState()), [])
+                            }, acc;
+                        }, {}),
+                    [renderErrors, focusFirstInvalidField]
+                );
 
-            return false;
-        })
-        .catch(err => console.warn(err))
+                return res(false);
+            })
+            .catch(err => console.warn(err))
+    });
 };
 
 /**

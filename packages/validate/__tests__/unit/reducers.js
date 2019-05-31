@@ -214,7 +214,7 @@ describe('Validate > Unit > Reducers > Add validation error', () => {
 
 //add validation method
 describe('Validate > Unit > Reducers > Add validation method', () => {
-    it('should add a validator or type custom to a field group', async () => {
+    it('should add a validator of type custom to an existing field group', async () => {
         expect.assertions(1);
         const validatorFn = (value, fields, param) => false;
         const state = {
@@ -246,6 +246,32 @@ describe('Validate > Unit > Reducers > Add validation method', () => {
                 group2: {
                     fields: [document.createElement('input')],
                     validators: [],
+                    valid: false
+                }
+            }
+        });
+    });
+    it('should add a validator of type custom and create a new group', async () => {
+        expect.assertions(1);
+        const validatorFn = (value, fields, param) => false;
+        document.body.innerHTML = `<form class="form" method="post" action="">
+            <label for="group1">Text</label>
+            <input id="group1" name="group1" type="text">
+        </form>`;
+        
+        const nextState = {
+            groupName: 'group1',
+            validator: { type: 'custom', validatorFn, message: 'This field can never be valid' }
+        };
+        const state = { groups: {} };
+        const input = document.getElementById('group1');
+        const output = Reducers[ACTIONS.ADD_VALIDATION_METHOD](state, nextState);
+        expect(output).toEqual({
+            groups: {
+                group1: {
+                    fields: [input],
+                    validators: [{ type: 'custom', validatorFn, message: 'This field can never be valid' }],
+                    serverErrorNode: false,
                     valid: false
                 }
             }

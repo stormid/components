@@ -11,6 +11,6 @@ export default {
     minlength(props) { return `Please enter at least ${props.min} characters`; },
     max(props){ return `Please enter a value less than or equal to ${props.max}`; },
     min(props){ return `Please enter a value greater than or equal to ${props.min}`},
-    equalTo() { return 'Please enter the same value again'; },
+    equalto() { return 'Please enter the same value again'; },
     remote() { return 'Please fix this field'; }
 };
