@@ -1,27 +1,21 @@
 import { createStore } from '../store';
+import { initialState } from '../reducers';
+import { clientId, systemInfo, documentInfo } from '../utils';
+import { send } from '../protocol';
 
 /*
- * Adds listener to augmented DOM node, returns Object defining instance API
  * 
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
- * @param node, HTMLElement, DOM node to be augmented
+ * @param Google Property Tracking Id, String
  */
-export default ({ settings, tid }) => {
+export default ({ settings, data }) => {
 	const Store = createStore();
-    // Store.dispatch(ACTIONS.SET_INITIAL_STATE, getInitialState(form, settings));
+	Store.dispatch(initialState, { settings, data: { 
+		...data,
+		...systemInfo(),
+		...documentInfo(),
+		cid: clientId(settings)
+	} }, [ send() ]);
 	
-	// return { settings, node, handleClick: handleClick(settings) };
+	return { getState: Store.getState };
 };
-
-/*
-
-pageview
-screenview
-event
-transaction
-item
-exception
-timing
-send
-
-*/

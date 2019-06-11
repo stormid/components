@@ -1,10 +1,7 @@
-import Boilerplate from '../../../dist';
+import Measure from '../../../src';
     
 window.addEventListener('DOMContentLoaded', () => {
-    const t1 = Boilerplate.init('.js-boilerplate');
-    // const t2 = Boilerplate.init('.js-boilerplate__2', {
-    //     callback(){
-    //         console.log(this);
-    //     }
-    // });
+
+    const __StormMeasure__ = Measure.init('UA-141774857-1');
+    // console.log(__StormMeasure__);
 });

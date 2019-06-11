@@ -4,7 +4,6 @@ describe(`Initialisation`, () => {
     
     beforeAll(init);
 
-
     it('should return an Object', async () => {
     });
 
