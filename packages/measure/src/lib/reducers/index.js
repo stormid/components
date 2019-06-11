@@ -1,0 +1,1 @@
+export const initialState = (state, data) => Object.assign({}, state, data);
