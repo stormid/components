@@ -5,7 +5,7 @@ export default {
 		ds: 'web'
 	},
 	settings: {
-		cookieName: '_storm',
+		cookieName: '_ga',
 		cookieValue: 'Storm'
 	}
 };

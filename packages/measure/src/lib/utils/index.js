@@ -78,7 +78,8 @@ export const clientId = settings => {
 	const cookie = readCookie(settings);
 	if(cookie) return cookie.value.replace(`${settings.cookieValue}.`, '');
 	const cid = guid();
-	writeCookie({ 
+	writeCookie({
+		name: settings.cookieName,
 		value: `${settings.cookieValue}.${cid}`,
 		expiry: new Date(new Date().getTime() + TWO_YEARS).toGMTString()
 	})
