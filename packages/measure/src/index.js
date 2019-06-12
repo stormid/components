@@ -13,10 +13,7 @@ const init = (tid, options = {}) => {
     
 	//return Measure Object
 	//;_; reeeeeefactor
-	return factory({
-		settings: { ...defaults.settings, ...(options.settings ? options.settings: {}) },
-		data: { tid, ...defaults.data, ...(options.data ? options.data: {}) }
-	});
+	return factory({ tid, ...defaults, ...options});
 };
 
 export default { init };
