@@ -1,6 +1,6 @@
-import { request, composeURL } from '../utils';
+import { request, composeURL, cacheBuster } from '../utils';
 import { PATH } from '../constants/analytics';
 
 export const send = (type = 'pageview') => state => {
-    request(composeURL({ data: { ...state.data, t: type }, action: PATH  }));
+    request(composeURL({ data: { ...state.data, t: type, z: cacheBuster() }, action: PATH  }));
 };

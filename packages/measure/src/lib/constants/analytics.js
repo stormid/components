@@ -1,5 +1,3 @@
-export const PROTOCOL_VERSION = '1';
-
 export const HOSTNAME = 'https://www.google-analytics.com';
 
 export const PATH = '/collect';
@@ -12,22 +10,22 @@ export const BATCH_SIZE = 10;
 
 export const ACCEPTED_PARAMETERS = [
 	// General
-	"v", //protocol version; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#v *****
-	"tid", //Tracking ID / Web Property ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tid *****
-	"aip", //Anonymize IP; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#aip *****
+	"v", //protocol version; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#v
+	"tid", //Tracking ID / Web Property ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tid
+	"aip", //Anonymize IP; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#aip
 	"ds", //Data Source; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ds
 	"qt",//Queue time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#qt
-	"z",//cache-buster; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#z *****
+	"z",//cache-buster; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#z
 
 	// User
-	"cid", //Client ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cid *****
-	"uid", //User ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#uid *****
+	"cid", //Client ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cid
+	"uid", //User ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#uid
 
 	// Session
-	"sc",//Session control; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#sc *****
-	"uip", // IP override; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#uip *****
-	"ua", // User Agent Override; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ua *****
-	"geoid", //Geographical Override; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#geoid *****
+	"sc",//Session control; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#sc
+	"uip", // IP override; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#uip
+	"ua", // User Agent Override; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ua
+	"geoid", //Geographical Override; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#geoid
 
 	// Traffic Sources
 	"dr", //document-referrer; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dr
@@ -51,7 +49,7 @@ export const ACCEPTED_PARAMETERS = [
 
 	// Hit
 	"t", //hit type; required; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#t
-	"ni", //Non-ninteraction hit; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ni
+	"ni", //Non-interaction hit; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ni
 
 	// Content Information
 	"dl", //Document location URL; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dl
