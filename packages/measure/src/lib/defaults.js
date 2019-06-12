@@ -1,3 +1,4 @@
 export default {
-	v: '1'
+	v: '1',
+	aip: '1'
 };
