@@ -1,0 +1,1 @@
+//https://developers.google.com/analytics/devguides/collection/protocol/v1/validating-hits

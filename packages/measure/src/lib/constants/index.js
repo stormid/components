@@ -8,6 +8,10 @@ export const BATCHING = true;
 
 export const BATCH_SIZE = 10;
 
+export const COOKIE_NAME = '_ga';
+
+export const COOKIE_VALUE = 'GA';
+
 export const ACCEPTED_PARAMETERS = [
 	// General
 	"v", //protocol version; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#v
@@ -124,39 +128,54 @@ export const ACCEPTED_PARAMETERS = [
 	"xid", //Experiment ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#xid
 	"xvar" //Experiment variant; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#xvar
 ];
-export const ACCEPTED_PARAMETERS_REGEX = [
-	/^cm[0-9]+$/,
-	/^cd[0-9]+$/,
-	/^cg(10|[0-9])$/,
 
-	/pr[0-9]{1,3}id/,
-	/pr[0-9]{1,3}nm/,
-	/pr[0-9]{1,3}br/,
-	/pr[0-9]{1,3}ca/,
-	/pr[0-9]{1,3}va/,
-	/pr[0-9]{1,3}pr/,
-	/pr[0-9]{1,3}qt/,
-	/pr[0-9]{1,3}cc/,
-	/pr[0-9]{1,3}ps/,
-	/pr[0-9]{1,3}cd[0-9]{1,3}/,
-	/pr[0-9]{1,3}cm[0-9]{1,3}/,
-
-	/il[0-9]{1,3}nm/,
-	/il[0-9]{1,3}pi[0-9]{1,3}id/,
-	/il[0-9]{1,3}pi[0-9]{1,3}nm/,
-	/il[0-9]{1,3}pi[0-9]{1,3}br/,
-	/il[0-9]{1,3}pi[0-9]{1,3}ca/,
-	/il[0-9]{1,3}pi[0-9]{1,3}va/,
-	/il[0-9]{1,3}pi[0-9]{1,3}ps/,
-	/il[0-9]{1,3}pi[0-9]{1,3}pr/,
-	/il[0-9]{1,3}pi[0-9]{1,3}cd[0-9]{1,3}/,
-	/il[0-9]{1,3}pi[0-9]{1,3}cm[0-9]{1,3}/,
-
-	/promo[0-9]{1,3}id/,
-	/promo[0-9]{1,3}nm/,
-	/promo[0-9]{1,3}cr/,
-	/promo[0-9]{1,3}ps/
+export const PERSISTENT_PARAMETERS = [
+	"v",
+	"cid",
+	"uid",
+	"aip",
+	"ds",
+	"sr",
+	"vp",
+	"de", 
+	"sd",
+	"ul",
 ];
+
+//to do - validate parameters?
+// export const ACCEPTED_PARAMETERS_REGEX = [
+// 	/^cm[0-9]+$/,
+// 	/^cd[0-9]+$/,
+// 	/^cg(10|[0-9])$/,
+
+// 	/pr[0-9]{1,3}id/,
+// 	/pr[0-9]{1,3}nm/,
+// 	/pr[0-9]{1,3}br/,
+// 	/pr[0-9]{1,3}ca/,
+// 	/pr[0-9]{1,3}va/,
+// 	/pr[0-9]{1,3}pr/,
+// 	/pr[0-9]{1,3}qt/,
+// 	/pr[0-9]{1,3}cc/,
+// 	/pr[0-9]{1,3}ps/,
+// 	/pr[0-9]{1,3}cd[0-9]{1,3}/,
+// 	/pr[0-9]{1,3}cm[0-9]{1,3}/,
+
+// 	/il[0-9]{1,3}nm/,
+// 	/il[0-9]{1,3}pi[0-9]{1,3}id/,
+// 	/il[0-9]{1,3}pi[0-9]{1,3}nm/,
+// 	/il[0-9]{1,3}pi[0-9]{1,3}br/,
+// 	/il[0-9]{1,3}pi[0-9]{1,3}ca/,
+// 	/il[0-9]{1,3}pi[0-9]{1,3}va/,
+// 	/il[0-9]{1,3}pi[0-9]{1,3}ps/,
+// 	/il[0-9]{1,3}pi[0-9]{1,3}pr/,
+// 	/il[0-9]{1,3}pi[0-9]{1,3}cd[0-9]{1,3}/,
+// 	/il[0-9]{1,3}pi[0-9]{1,3}cm[0-9]{1,3}/,
+
+// 	/promo[0-9]{1,3}id/,
+// 	/promo[0-9]{1,3}nm/,
+// 	/promo[0-9]{1,3}cr/,
+// 	/promo[0-9]{1,3}ps/
+// ];
 
 export const PARAMETERS_MAP = {
 	"PROTOCOL_VERSION": "v",
