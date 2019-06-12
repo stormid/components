@@ -1,6 +1,16 @@
 import { request, composeURL, cacheBuster } from '../utils';
-import { PATH } from '../constants/analytics';
+import { clear } from '../reducers';
+import { PATH } from '../constants';
 
-export const send = (type = 'pageview') => state => {
-    request(composeURL({ data: { ...state.data, t: type, z: cacheBuster() }, action: PATH  }));
+export const send = (Store, type = 'pageview') => ({ persistent, stack }) => {
+    request(composeURL({
+        data: {
+            ...persistent,
+            ...stack,
+            t: type,
+            z: cacheBuster()
+        }, 
+        action: PATH
+    }));
+    Store.dispatch(clear, {});
 };
