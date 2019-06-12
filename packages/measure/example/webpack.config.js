@@ -17,6 +17,16 @@ module.exports = {
 			title: pkg.name,
 			template: './example/src/index.html',
 			filename: 'index.html'
+		}),
+		new HtmlWebpackPlugin({
+			title: pkg.name,
+			template: './example/src/page-2.html',
+			filename: 'page-2.html'
+		}),
+		new HtmlWebpackPlugin({
+			title: pkg.name,
+			template: './example/src/page-3.html',
+			filename: 'page-3.html'
 		})
 	],
   	module: {
