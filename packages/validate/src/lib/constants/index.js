@@ -39,13 +39,13 @@ export const DOTNET_PARAMS = {
     length: ['length-min', 'length-max'],
     stringlength: ['length-max'],
     range: ['range-min', 'range-max'],
-    // min: ['min'],?
-    // max:  ['max'],?
+    min: ['min-min'],
+    max:  ['max-max'],
     minlength: ['minlength-min'],
     maxlength: ['maxlength-max'],
     regex: ['regex-pattern'],
     equalto: ['equalto-other'],
-    remote: ['remote-url', 'remote-additionalfields', 'remote-type']//??
+    remote: ['remote-url', 'remote-additionalfields', 'remote-type']
 };
 
 //.NET MVC data-attributes that identify validators
@@ -59,12 +59,14 @@ export const DOTNET_ADAPTORS = [
     'number',
     'url',
     'length',
+    'min',
+    'max',
     'minlength',
     'maxlength',
     'range',
     'equalto',
+    // 'password' //-> map to min, nonalphamain, and regex methods
     'remote',//should be last
-    // 'password' //-> maps to min, nonalphamain, and regex methods
 ];
 
 //classNames added/updated on .NET MVC error message span
