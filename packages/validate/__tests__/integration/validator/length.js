@@ -1,6 +1,6 @@
 import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
-describe('Validate > Integration > validate > length', () => {
+describe('Validate > Integration > validator > length', () => {
     
     it('should return the validityState false for data-val length validator with value greater than max length', async () => {
         expect.assertions(1);

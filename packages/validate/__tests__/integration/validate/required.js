@@ -1,79 +1,70 @@
-import { validate, assembleValidationGroup } from '../../../src/lib/validator';
-
-describe('Validate > Integration > assembleValidationGroup > required', () => {
-    it('should return the validation group for HTML5 required validator', async () => {
-        expect.assertions(1);
-        document.body.innerHTML = `<input
-			id="group1-1"
-            name="group1"
-            required
-            value=""
-            type="text">`;
-        const input = document.querySelector('#group1-1');
-        const group = [input].reduce(assembleValidationGroup, {});
-		expect(group).toEqual({
-            'group1': {
-                valid:  false,
-                validators: [{ type: 'required' }],
-                fields: [input],
-                serverErrorNode: false
-            }
-        });
-    });
-});
+import Validate from '../../../src';
+import { DOTNET_CLASSNAMES } from '../../../src/lib/constants';
+import MESSAGES from '../../../src/lib/constants/messages';
 
 describe('Validate > Integration > validate > required', () => {
-    it('should return the validityState false for HTML5 required validator with no value', async () => {
-        expect.assertions(1);
-        document.body.innerHTML = `<input
-			id="group1"
-            name="group1"
-            required
-            value=""
-			type="text">`;
-        const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(false);
+
+    //return boolean validityState
+    //start realtimevalidation
+    //render errors
+    //focus on first invalid field
+
+    //return boolean validityState
+    //submit form
+
+    it('should validate a form based on the HTML5 required validator', async () => {
+        expect.assertions(6);
+        document.body.innerHTML = `<form class="form">
+            <input
+                id="group1-1"
+                name="group1"
+                required
+                value=""
+                type="text">
+        </form>`;
+        const input = document.getElementById('group1-1');
+        const validator = await Validate.init('form')[0];
+        const validityState = await validator.validate();
+        //validityState
+        expect(validityState).toEqual(false);
+        //realtimeValidation start
+        expect(validator.getState().realTimeValidation).toEqual(true);
+        //focus on firstinvalid node
+        expect(document.activeElement).toEqual(input);
+        //render error message
+        expect(input.nextElementSibling.nodeName).toEqual('SPAN');
+        expect(input.nextElementSibling.className).toEqual(DOTNET_CLASSNAMES.ERROR);
+        expect(input.nextElementSibling.textContent).toEqual(MESSAGES.required());
     });
 
-    it('should return the validityState true for HTML5 required validator with a value', async () => {
-        expect.assertions(1);
-        document.body.innerHTML = `<input
-			id="group1"
-            name="group1"
-            required
-            value="Test"
-			type="text">`;
-        const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
-    });
+    it('should validate a form based on the data-val required validator', async () => {
+        expect.assertions(6);
+        document.body.innerHTML = `<form class="form">
+            <input
+                id="group1-1"
+                name="group1"
+                data-val="true"
+                data-val-required="Required error message"
+                value=""
+                type="text">
+                <!--<span data-valmsg-for="group1-1" data-valmsg-replace="true" class="${DOTNET_CLASSNAMES.ERROR}"></span>-->
+        </form>`;
+        const input = document.getElementById('group1-1');
+        const validator = await Validate.init('form')[0];
+        const validityState = await validator.validate();
+        //validityState
+        expect(validityState).toEqual(false);
+        //realtimeValidation start
+        expect(validator.getState().realTimeValidation).toEqual(true);
+        //focus on firstinvalid node
+        expect(document.activeElement).toEqual(input);
+        //render error message
+        expect(input.nextElementSibling.nodeName).toEqual('SPAN');
+        expect(input.nextElementSibling.className).toEqual(DOTNET_CLASSNAMES.ERROR);
+        expect(input.nextElementSibling.textContent).toEqual('Required error message');
 
-    it('should return the validityState false for data-val required validator with no value', async () => {
-        expect.assertions(1);
-        document.body.innerHTML = `<input
-			id="group1"
-            name="group1"
-            data-val="true"
-            data-val-required="This field is required"
-            value=""
-			type="text">`;
-        const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(false);
-    });
-
-    it('should return the validityState true for data-val required validator with a value', async () => {
-        expect.assertions(1);
-        document.body.innerHTML = `<input
-			id="group1"
-            name="group1"
-            data-val="true"
-            data-val-required="This field is required"
-            value="Test"
-			type="text">`;
-        const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
+        //to do -> server-rendered error container
+        // expect(input.nextElementSibling.textContent).toEqual('Required error message');
+        
     });
 });

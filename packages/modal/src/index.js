@@ -10,7 +10,7 @@ import factory from './lib/factory';
 const init = (selector, options) => {
    //Array.from isnt polyfilled
    //https://github.com/babel/babel/issues/5682
-   const nodes = Array.from(document.querySelectorAll(selector));
+   const nodes = [].slice.call(document.querySelectorAll(selector));
 
    //no DOM nodes found, return with warning
    if(nodes.length === 0) return console.warn(`Modal not initialised, no elements found for selector '${sel}'`);
