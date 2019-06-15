@@ -7,5 +7,6 @@ module.exports = {
       '^.+\\.js$': '../../tools/jest/babel-jest-wrapper.js'
   },
   displayName: pack.name,
-  name: pack.name
+  name: pack.name,
+  setupFiles: ['./jest.setup.js'],
 };

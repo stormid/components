@@ -35,7 +35,13 @@ const handler = eventData => e => {
 };
 
 window.addEventListener('DOMContentLoaded', () => {
-    window.__Measure__ = Measure.init('UA-141774857-1', { uid: 'unanonymised test' });    
+    window.__Measure__ = Measure.init(
+        'UA-141774857-1',
+        {
+            parameters: { uid: 'unanonymised test' },
+            settings: { debug: true }
+        }
+    );    
     // __Measure__.event({ category: 'Test category', action: 'Test action', label: 'Test label', value: 666 })
     const links = document.querySelectorAll('a');
     for(let link of links){
