@@ -72,17 +72,14 @@ export const cacheBuster = () => {
 	}
 };
 
-//https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-export const guid = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-	let r = Math.random() * 16 | 0, 
-		v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-});
+// https://gist.github.com/jed/982883
+export const uuid = function b(a){return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,b)};
+
 
 export const clientId = () => {
 	const cookie = readCookie({ name: COOKIE_NAME, value: COOKIE_VALUE });
 	if(cookie) return cookie.value.replace(`${COOKIE_VALUE}.`, '');
-	const cid = guid();
+	const cid = uuid();
 	writeCookie({
 		name: COOKIE_NAME,
 		value: `${COOKIE_VALUE}.${cid}`,
