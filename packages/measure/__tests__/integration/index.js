@@ -1,14 +1,11 @@
-<<<<<<< HEAD
-//https://developers.google.com/analytics/devguides/collection/protocol/v1/validating-hits
-=======
-import { request, composeURL, cacheBuster, guid } from '../../src/lib/utils';
+import { request, composeURL, cacheBuster, guid } from '../../src/lib/utils/request';
 import { HOSTNAME } from '../../src/lib/constants';
 // -> https://developers.google.com/analytics/devguides/collection/protocol/v1/validating-hits
 
 
 describe(`Measure > hit validation`, () => {
     fetch = window.fetch;
-    it('should ', async () => {
+    it('should send a hit request to Google Analytics', async () => {
         const url = composeURL({
             data: {
                 v: 1,
@@ -27,4 +24,3 @@ describe(`Measure > hit validation`, () => {
     });
 
 });
->>>>>>> 532e7153e3b4cd4a39a1f5f446d5da2a42432b77

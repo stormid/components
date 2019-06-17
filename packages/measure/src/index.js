@@ -12,8 +12,10 @@ const init = (tid, options = {}) => {
 	if(!tid) return console.warn(`Measure not initialised, missing tracking Id`);
     
 	//return Measure Object
-	//;_; reeeeeefactor
-	return factory({ tid, ...defaults, ...options});
+	return factory({
+		parameters: Object.assign({}, { tid }, options.parameters ? Object.assign({}, defaults.parameters, options.parameters) : defaults.parameters),
+		settings: options.settings ? Object.assign({}, defaults.settings, options.settings) : defaults.settings
+	});
 };
 
 export default { init };

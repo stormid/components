@@ -18,7 +18,6 @@ describe('Validate > Integration > validator > min', () => {
     it('should return the validityState false for data-val min validator with value less than min', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
-			id="group1"
             name="group1"
             data-val="true"
             data-val-min="Min error message"

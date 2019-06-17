@@ -1,16 +1,19 @@
 import { createStore } from '../store';
 import { initial, add } from '../reducers';
-import { clientId, systemInfo, documentInfo, stateFromOptions, composeEvent } from '../utils';
-import { send } from '../protocol';
+import { clientId, systemInfo, documentInfo } from '../utils/data';
+import { stateFromOptions, event } from '../utils/compose';
+import { send, links } from '../protocol';
 
 /*
  * @param options, Object, merged defaults + options passed in as instantiation config to module default
  */
 export default options => {
 	const Store = createStore();
-	const { persistent, stack } = stateFromOptions(options);
+	const { settings, parameters} = stateFromOptions(options);
+	const { persistent, stack } = parameters;
 
 	Store.dispatch(initial, {
+		settings,
 		persistent: {
 			...persistent,
 			...systemInfo(),
@@ -18,12 +21,12 @@ export default options => {
 			cid: clientId(options)
 		},
 		stack
-	}, [ send(Store) ]);
+	}, [ send(Store), links(Store) ]);
 	
 	return {
 		getState: Store.getState,
 		event(data) {
-			Store.dispatch(add, composeEvent(data), [ send(Store, 'event') ]);
+			Store.dispatch(add, event(data), [ send(Store, 'event') ]);
 		}
 	};
 };

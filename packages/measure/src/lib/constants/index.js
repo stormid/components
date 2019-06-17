@@ -2,11 +2,11 @@ export const HOSTNAME = 'https://www.google-analytics.com';
 
 export const PATH = '/collect';
 
-export const BATCH_PATH = '/batch';
+// export const BATCH_PATH = '/batch';
 
-export const BATCHING = true;
+// export const BATCHING = true;
 
-export const BATCH_SIZE = 10;
+// export const BATCH_SIZE = 10;
 
 export const COOKIE_NAME = '_ga';
 
@@ -18,29 +18,29 @@ export const ACCEPTED_PARAMETERS = [
 	"tid", //Tracking ID / Web Property ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tid
 	"aip", //Anonymize IP; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#aip
 	"ds", //Data Source; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ds
-	"qt",//Queue time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#qt
-	"z",//cache-buster; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#z
+	"qt", //Queue time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#qt
+	"z", //cache-buster; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#z
 
 	// User
 	"cid", //Client ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cid
 	"uid", //User ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#uid
 
 	// Session
-	"sc",//Session control; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#sc
-	"uip", // IP override; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#uip
-	"ua", // User Agent Override; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ua
-	"geoid", //Geographical Override; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#geoid
+	//"sc", //Session control; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#sc
+	//"uip", // IP override; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#uip
+	//"ua", // User Agent Override; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ua
+	//"geoid", //Geographical Override; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#geoid
 
 	// Traffic Sources
-	"dr", //document-referrer; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dr
-	"cn", //Campaign name; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cn
-	"cs", //Campaign source; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cs
-	"cm", //Campaign medium; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cm
-	"ck",  //Campaign keyword; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ck
-	"cc", //Campaign content; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cc
-	"ci", ///Campaign ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ci
-	"gclid", // Google Ads ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#gclid
-	"dclid", // Google Display Ads ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#gclid
+	//"dr", //document-referrer; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dr
+	//"cn", //Campaign name; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cn
+	//"cs", //Campaign source; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cs
+	//"cm", //Campaign medium; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cm
+	//"ck",  //Campaign keyword; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ck
+	//"cc", //Campaign content; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cc
+	//"ci", ///Campaign ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ci
+	//"gclid", // Google Ads ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#gclid
+	//"dclid", // Google Display Ads ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#gclid
 
 	// System Info
 	"sr", // Screen resolution; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#sr
@@ -48,27 +48,27 @@ export const ACCEPTED_PARAMETERS = [
 	"de", // Document encoding; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#de
 	"sd", // Screen colors; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#sd
 	"ul", // User language; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ul
-	"je", // Java enabled; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#je
-	"fl", // Flash version; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#fl
+	//"je", // Java enabled; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#je
+	//"fl", // Flash version; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#fl
 
 	// Hit
 	"t", //hit type; required; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#t
-	"ni", //Non-interaction hit; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ni
+	//"ni", //Non-interaction hit; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ni
 
 	// Content Information
 	"dl", //Document location URL; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dl
 	"dh", //Document Host Name; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dh
 	"dp", //Document Path, (for 'pageview' hits, either &dl or both &dh and &dp have to be specified for the hit to be valid) https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dp
 	"dt", //Document Title; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dh
-	"cd", // Screen name; required on mobile properties for screenview hits; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cd
-	"cg", //Content group; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cg_
-	"linkid", //Link ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#linkid
+	//"cd", // Screen name; required on mobile properties for screenview hits; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cd
+	//"cg", //Content group; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cg_
+	//"linkid", //Link ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#linkid
 
 	// App Tracking
-	"an", //App name; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#an
-	"aid", //App ID ; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#aid
-	"av", //App version; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#av
-	"aiid", //App installer ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#aiid
+	//"an", //App name; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#an
+	//"aid", //App ID ; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#aid
+	//"av", //App version; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#av
+	//"aiid", //App installer ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#aiid
 
 	// Event Tracking
 	"ec", //Event category; required for event hit type; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ec
@@ -77,56 +77,56 @@ export const ACCEPTED_PARAMETERS = [
 	"ev", //Event value; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ev
 
 	// E-commerce (transaction data: simple and enhanced)
-	"ti", //transaction ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ti
-	"ta", //transaction affiliation; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ta
-	"tr", //transaction revenue; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tr
-	"ts", //transaction shipping; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ts
-	"tt", //transaction tax; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tt
+	//"ti", //transaction ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ti
+	//"ta", //transaction affiliation; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ta
+	//"tr", //transaction revenue; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tr
+	//"ts", //transaction shipping; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ts
+	//"tt", //transaction tax; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tt
 
 	// E-commerce (item data: simple)
-	"in", //Item name; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
-	"ip", //Item price; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ip
-	"iq", //Item quantity; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iq
-	"ic", //Item code; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ic
-	"iv", //Item category; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iv 
+	//"in", //Item name; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
+	//"ip", //Item price; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ip
+	//"iq", //Item quantity; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iq
+	//"ic", //Item code; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ic
+	//"iv", //Item category; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iv 
 
 	// E-commerce (currency: simple and enhanced)
-	"cu", //Currency code; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cu
+	//"cu", //Currency code; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cu
 
 	// Enhanced E-Commerce (see also: regex below)
-	"pa", //Product action; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pa
-	"tcc", //Coupon code; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tcc
-	"pal", //Product action list; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pal
-	"cos", //Checkout step; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cos
-	"col", //Checkout step option; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#col
-	"promoa", //Promotion action; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#promoa
+	//"pa", //Product action; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pa
+	//"tcc", //Coupon code; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tcc
+	//"pal", //Product action list; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pal
+	//"cos", //Checkout step; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cos
+	//"col", //Checkout step option; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#col
+	//"promoa", //Promotion action; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#promoa
 
 	// Social Interactions
-	"sn", //Social network; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#sn
-	"sa", //Social action; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#sa
-	"st", //Social action target; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#st
+	//"sn", //Social network; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#sn
+	//"sa", //Social action; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#sa
+	//"st", //Social action target; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#st
 
 	// Timing
-	"utc", //User timing category; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#utc
-	"utv", //User timing variable name; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#utv
-	"utt", //User timing time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#utt
-	"utl", //User timing label; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#utl
-	"plt", //Page load time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#plt
-	"dns", //DNS time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dns
-	"pdt", //Page download time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pdt
-	"rrt", //Redirect response time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#rrt
-	"tcp", //TCP connect time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tcp
-	"srt", //Server response time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#srt
-	"dit", //DOM interactive time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dit
-	"clt", //Content load time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#clt
+	//"utc", //User timing category; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#utc
+	//"utv", //User timing variable name; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#utv
+	//"utt", //User timing time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#utt
+	//"utl", //User timing label; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#utl
+	//"plt", //Page load time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#plt
+	//"dns", //DNS time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dns
+	//"pdt", //Page download time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pdt
+	//"rrt", //Redirect response time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#rrt
+	//"tcp", //TCP connect time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tcp
+	//"srt", //Server response time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#srt
+	//"dit", //DOM interactive time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dit
+	//"clt", //Content load time; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#clt
 
 	// Exceptions
-	"exd", //Excveption description; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#exd
-	"exf", //Is exception fatal?; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#exf
+	//"exd", //Excveption description; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#exd
+	//exf", //Is exception fatal?; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#exf
 
 	// Content Experiments
-	"xid", //Experiment ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#xid
-	"xvar" //Experiment variant; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#xvar
+	//"xid", //Experiment ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#xid
+	//"xvar" //Experiment variant; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#xvar
 ];
 
 export const PERSISTENT_PARAMETERS = [
@@ -141,6 +141,11 @@ export const PERSISTENT_PARAMETERS = [
 	"sd",
 	"ul",
 ];
+
+export const EMAIL_REGEX = /^mailto:.*/
+
+export const TEL_REGEX = /^tel:.*/;
+
 
 //to do - validate parameters?
 // export const ACCEPTED_PARAMETERS_REGEX = [
@@ -187,70 +192,70 @@ export const PARAMETERS_MAP = {
 	"CACHE_BUSTER": "z",
 	"CLIENT_ID": "cid",
 	"USER_ID": "uid",
-	"SESSION_CONTROL": "sc",
-	"IP_OVEARRIDE": "uip",
-	"USER_AGENT_OVERRIDE": "ua",
-	"DOCUMENT_REFERRER": "dr",
-	"CAMPAIGN_NAME": "cn",
-	"CAMPAIGN_SOURCE": "cs",
-	"CAMPAIGN_MEDIUM": "cm",
-	"CAMPAIGN_KEYWORD": "ck",
-	"CAMPAIGN_CONTENT": "cc",
-	"CAMPAIGN_ID": "ci",
-	"GOOGLE_ADWORDS_ID": "gclid",
-	"GOOGLE_DISPLAY_ADS_ID": "dclid",
+	//"SESSION_CONTROL": "sc",
+	//"IP_OVEARRIDE": "uip",
+	//"USER_AGENT_OVERRIDE": "ua",
+	//"DOCUMENT_REFERRER": "dr",
+	//"CAMPAIGN_NAME": "cn",
+	//"CAMPAIGN_SOURCE": "cs",
+	//"CAMPAIGN_MEDIUM": "cm",
+	//"CAMPAIGN_KEYWORD": "ck",
+	//"CAMPAIGN_CONTENT": "cc",
+	//"CAMPAIGN_ID": "ci",
+	//"GOOGLE_ADWORDS_ID": "gclid",
+	//"GOOGLE_DISPLAY_ADS_ID": "dclid",
 	"SCREEN_RESOLUTION": "sr",
 	"VIEWPORT_SIZE": "vp",
 	"DOCUMENT_ENCODING": "de",
 	"SCREEN_COLORS": "sd",
 	"USER_LANGUAGE": "ul",
-	"JAVA_ENABLED": "je",
-	"FLASH_VERSION": "fl",
+	//"JAVA_ENABLED": "je",
+	//"FLASH_VERSION": "fl",
 	"HIT_TYPE": "t",
-	"NON_INTERACTION_HIT": "ni",
+	//"NON_INTERACTION_HIT": "ni",
 	"DOCUMENT_LOCATION_URL": "dl",
 	"DOCUMENT_HOSTNAME": "dh",
 	"DOCUMENT_PATH": "dp",
 	"DOCUMENT_TITLE": "dt",
-	"SCREEN_NAME": "cd",
-	"LINK_ID": "linkid",
-	"APPLICATION_NAME": "an",
-	"APPLICATION_ID": "aid",
-	"APPLICATION_VERSION": "av",
-	"APPLICATION_INSTALLER_ID": "aiid",
+	//"SCREEN_NAME": "cd",
+	//"LINK_ID": "linkid",
+	//"APPLICATION_NAME": "an",
+	//"APPLICATION_ID": "aid",
+	//"APPLICATION_VERSION": "av",
+	//"APPLICATION_INSTALLER_ID": "aiid",
 	"EVENT_CATEGORY": "ec",
 	"EVENT_ACTION": "ea",
 	"EVENT_LABEL": "el",
 	"EVENT_VALUE": "ev",
-	"TRANSACTION_ID": "ti",
-	"TRANSACTION_AFFILIATION": "ta",
-	"TRANSACTION_REVENUE": "tr",
-	"TRANSACTION_SHIPPING": "ts",
-	"TRANSACTION_TAX": "tt",
-	"ITEM_NAME": "in",
-	"ITEM_PRICE": "ip",
-	"ITEM_QUANTITY": "iq",
-	"ITEM_CODE": "ic",
-	"ITEM_CATEGORY": "iv",
-	"CURRENCY_CODE": "cu",
-	"SOCIAL_NETWORK": "sn",
-	"SOCIAL_ACTION": "sa",
-	"SOCIAL_ACTION_TARGET": "st",
-	"USER_TIMING_CATEGORY": "utc",
-	"USER_TIMING_VARIABLE_NAME": "utv",
-	"USER_TIMING_TIME": "utt",
-	"USER_TIMING_LABEL": "utl",
-	"PAGE_LOAD_TIME": "plt",
-	"DNS_TIME": "dns",
-	"PAGE_DOWNLOAD_TIME": "pdt",
-	"REDIRECT_RESPONSE_TIME": "rrt",
-	"TCP_CONNECT_TIME": "tcp",
-	"SERVER_RESPONSE_TIME": "srt",
-	"DOM_INTERACTIVE_TIME": "dit",
-	"CONTENT_LOAD_TIME": "clt",
-	"EXCEPTION_DESCRIPTION": "exd",
-	"IS_EXCEPTION_FATAL": "exf",
-	"IS_EXCEPTION_FATAL?": "exf",
-	"EXPERIMENT_ID": "xid",
-	"EXPERIMENT_VARIANT": "xvar"
+	//"TRANSACTION_ID": "ti",
+	//"TRANSACTION_AFFILIATION": "ta",
+	//"TRANSACTION_REVENUE": "tr",
+	//"TRANSACTION_SHIPPING": "ts",
+	//"TRANSACTION_TAX": "tt",
+	//"ITEM_NAME": "in",
+	//"ITEM_PRICE": "ip",
+	//"ITEM_QUANTITY": "iq",
+	//"ITEM_CODE": "ic",
+	//"ITEM_CATEGORY": "iv",
+	//"CURRENCY_CODE": "cu",
+	//"SOCIAL_NETWORK": "sn",
+	//"SOCIAL_ACTION": "sa",
+	//"SOCIAL_ACTION_TARGET": "st",
+	//"USER_TIMING_CATEGORY": "utc",
+	//"USER_TIMING_VARIABLE_NAME": "utv",
+	//"USER_TIMING_TIME": "utt",
+	//"USER_TIMING_LABEL": "utl",
+	//"PAGE_LOAD_TIME": "plt",
+	//"DNS_TIME": "dns",
+	//"PAGE_DOWNLOAD_TIME": "pdt",
+	//"REDIRECT_RESPONSE_TIME": "rrt",
+	//"TCP_CONNECT_TIME": "tcp",
+	//"SERVER_RESPONSE_TIME": "srt",
+	//"DOM_INTERACTIVE_TIME": "dit",
+	//"CONTENT_LOAD_TIME": "clt",
+	//"EXCEPTION_DESCRIPTION": "exd",
+	//"IS_EXCEPTION_FATAL": "exf",
+	//"IS_EXCEPTION_FATAL?": "exf",
+	//"EXPERIMENT_ID": "xid",
+	//"EXPERIMENT_VARIANT": "xvar"
 };

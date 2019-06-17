@@ -21,90 +21,136 @@
 			max-width: 960px;
 			padding:0 24px;
 		}
-		hr {
-			height: 1px;
-			width: 100%;
-			display: block;
-			background: #ddd;
-			margin: 24px 0;
-			border: 0 none;
+		table {
+			width:100%;
+			border-collapse: collapse;
 		}
-		h1 {
-			margin-bottom: 24px;
-			font-size: 24px;
-			font-weight: 400;
+		th {
+			font-size:.825rem;
+			font-weight:400;
+			color: #777;
+			text-align: left;
+			border-bottom:1px solid #eee;
+			padding:4px;
 		}
-		h2 {
-			margin-bottom: 16px;
-			font-size: 21px;
-			font-weight: 400;
-		}
-		h3 {
-			margin-bottom: 16px;
-			font-size: 18px;
-			font-weight: 400;
-		}
-		p {
-			font-size: 18px;
-			margin-bottom: 16px;
-		}
-		.row {
-			margin:0 0 0 -24px;
-		}
-		.box {
-            width:calc(50% - 24px);
-            margin-left:24px;
-            margin-bottom:24px;
-            float:left;
-            border:1px dashed rgba(0,0,0, .2);
-            cursor:pointer;
-            height:200px;
-        }
-        .box.clicked {
-            background-color:rgba(0,0,0, .1);
-        }
-		pre {
-			margin-top: 0;
-			margin-bottom: 24px;
-			font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
-			background-color: #161616;
-    		color: #fff;
-			padding:16px;
-		}
-		code {
-			font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
-			font-size: 14px;
+		td {
+			padding:4px;
+			border-bottom:1px solid #f1f1f1;
 		}
     </style>
 </head>
 <body>
-	<nav>
-		<a href="/">Index</a>
-		<a href="/page-2.html">Page 2</a>
-		<a href="/page-3.html">Page 3</a>
-	</nav>
-	<section aria-label="Test event links">
-		<a href="https://google.com">External</a>
-		<a href="https://google.com" rel="external">External with rel</a>		
-		<a href="mailto:mick.perkins@stormid.com">Email</a>
-		<a href="tel:0131 561 1250">Tel</a>
-		<a download href="">Download</a>
-		<!--
-			Category
-			Downloads
-			Action
-			{{Link Types Table}}
-			Label
-			{{Click URL}}
-		-->
-		<!--
-			Category
-External Links
-Action
-{{Click URL}}
-Label
-{{Click Text}}
-		-->
-	</section>
+	<div class="container">
+		<table>
+			<thead>
+				<tr>
+					<th>Link</th>
+					<th>Type</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><a href="/">Page 1</a></td>
+					<td>Internal</td>
+				</tr>
+				<tr>
+					<td><a href="/page-2.html">Page 2</a></td>
+					<td>Internal</td>
+				</tr>
+				<tr>
+					<td><a href="/page-3.html">Page 3</a></td>
+					<td>Internal</td>
+				</tr>
+				<tr>
+					<td><a href="mailto:mick.perkins@stormid.com">mick.perkins@stormid.com</a></td>
+					<td>Email</td>
+				</tr>
+				<tr>
+					<td><a href="tel:0131 561 1250">Telephone link</a></td>
+					<td>Tel</td>
+				</tr>
+				<tr>
+					<td><a href="https://google.com">Google</a></td>
+					<td>External</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.txt">txt file</a></td>
+					<td>Text file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.csv">csv file</a></td>
+					<td>Data file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.pdf">pdf file</a></td>
+					<td>Page layout file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.xls">xls file</a></td>
+					<td>Spreadsheet file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.mp3">mp3 file</a></td>
+					<td>Audio file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.m4v">m4v file</a></td>
+					<td>Video file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.max">max file</a></td>
+					<td>3D image file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.gif">gif file</a></td>
+					<td>Raster file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.eps">eps file</a></td>
+					<td>Vector file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.sql">sql file</a></td>
+					<td>Database file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.dwg">dwg file</a></td>
+					<td>CAD file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.kml">kml file</a></td>
+					<td>GIS file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.plugin">plugin file</a></td>
+					<td>Plugin file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.ttf">ttf file</a></td>
+					<td>Font file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.cab">cab file</a></td>
+					<td>System file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.ini">ini file</a></td>
+					<td>Settings file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.hqx">hqx file</a></td>
+					<td>Encoded file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.zip">zip file</a></td>
+					<td>Zip file download</td>
+				</tr>
+				<tr>
+					<td><a download href="./test.bak">bak file</a></td>
+					<td>Backup file download</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>
