@@ -52,8 +52,5 @@ export const links = Store => () => {
                 continue;
             }
         }
-            // url.hostname != location.hostname
-
-        //check if tel/email/download/external matches and is set in options before adding event listener
     }
 };

@@ -28,7 +28,6 @@ export const event = data => {
 	}, {});
 };
 
-//external link should be hostname property does not match location.hostname?
 export const linkEvent = (link, settings) => ({
     category: settings.category,
     label: settings.obfuscator ? settings.obfuscator.fn(link[settings.obfuscator.input]) : link.innerText,
