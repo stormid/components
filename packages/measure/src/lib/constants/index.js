@@ -129,6 +129,16 @@ export const ACCEPTED_PARAMETERS = [
 	//"xvar" //Experiment variant; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#xvar
 ];
 
+export const ENHANCED_ECOMMERCE_PARAMS = (props) => {
+// 	&il1nm=Search%20Results                  // Impression list 1. Required.
+// &il1pi1id=P12345                         // Product Impression 1 ID. Either ID or name must be set.
+// &il1pi1nm=Android%20Warhol%20T-Shirt     // Product Impression 1 name. Either ID or name must be set.
+// &il1pi1ca=Apparel%2FT-Shirts             // Product Impression 1 category.
+// &il1pi1br=Google                         // Product Impression 1 brand.
+// &il1pi1va=Black                          // Product Impression 1 variant.
+// &il1pi1ps=1                              // Product Impression 1 position.
+}
+
 export const PERSISTENT_PARAMETERS = [
 	"v",
 	"cid",

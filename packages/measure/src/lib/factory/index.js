@@ -1,7 +1,7 @@
 import { createStore } from '../store';
 import { initial, add } from '../reducers';
 import { clientId, systemInfo, documentInfo } from '../utils/data';
-import { stateFromOptions, event } from '../utils/compose';
+import { stateFromOptions, event, ecommerce } from '../utils/compose';
 import { send, links } from '../protocol';
 
 /*
@@ -27,6 +27,9 @@ export default options => {
 		getState: Store.getState,
 		event(data) {
 			Store.dispatch(add, event(data), [ send(Store, 'event') ]);
+		},
+		ecommerce(data) {
+			console.log(ecommerce(data));
 		}
 	};
 };

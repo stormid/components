@@ -1,7 +1,7 @@
 import { url } from '../utils/compose';
 import { cacheBuster, download } from '../utils/data';
 import { request } from '../utils/request';
-import { linkEvent } from '../utils/compose';
+import { linkEvent, event } from '../utils/compose';
 import { parseUrl } from '../utils/url';
 import { clear } from '../reducers';
 import { PATH, EMAIL_REGEX, TEL_REGEX } from '../constants';
@@ -21,7 +21,7 @@ export const send = (Store, type = 'pageview') => ({ persistent, stack }) => {
 
 const handler = eventData => e => {
     if(3 === e.which) return;
-    __Measure__.event(eventData);
+    Store.dispatch(add, event(eventData), [ send(Store, 'event') ]);
 };
 
 export const links = Store => () => {

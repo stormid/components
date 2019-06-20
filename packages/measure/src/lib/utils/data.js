@@ -55,3 +55,10 @@ export const clientId = () => {
 	})
 	return cid;
 };
+
+export const download = (link, types) => {
+    for(let type of types){
+        if(link.href.match(type.regex)) return type;
+    }
+    return false;
+};

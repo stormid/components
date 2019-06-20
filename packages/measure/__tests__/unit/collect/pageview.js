@@ -1,7 +1,7 @@
 import { url } from '../../../src/lib/utils/compose';
 import { HOSTNAME } from '../../../src/lib/constants';
 
-describe('Measure > utils > compose > url', () => {
+describe('Measure > collect > pageview', () => {
 	
 	it('should compose a request URL', () => {
         const requestUrl = url({ 
@@ -17,5 +17,5 @@ describe('Measure > utils > compose > url', () => {
         });
         expect(requestUrl).toEqual(`${HOSTNAME}/collect?v=1&t=pageview&tid=UA-141774857-1&cid=test&dp=%2F&z=test-z`);
     });
-
+    
 });
