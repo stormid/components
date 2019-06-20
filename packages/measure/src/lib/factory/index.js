@@ -1,7 +1,7 @@
 import { createStore } from '../store';
 import { initial, add } from '../reducers';
 import { clientId, systemInfo, documentInfo } from '../utils/data';
-import { stateFromOptions, event, ecommerce } from '../utils/compose';
+import { stateFromOptions, event, impression } from '../utils/compose';
 import { send, links } from '../protocol';
 
 /*
@@ -28,8 +28,10 @@ export default options => {
 		event(data) {
 			Store.dispatch(add, event(data), [ send(Store, 'event') ]);
 		},
-		ecommerce(data) {
-			console.log(ecommerce(data));
+		ecommerce: {
+			impression(data) {
+				Store.dispatch(add, impression(data), [ send(Store, 'event') ]);
+			}
 		}
 	};
 };

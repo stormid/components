@@ -1,59 +1,56 @@
 import Measure from '../../../src';
-const types = [
-    {
-        regex: /^tel:.*/,
-        category: 'Telephone Link'
-    },
-    {
-        regex: /^mailto:.*/,
-        category: 'Email Link'
-    },
-    {
-        regex: /^https?:.*/,
-        category: 'External Link'
-    },
-    {
-        regex: /^.+\.(pdf)$/,
-        category: 'PDF Download'
-    }
-];
-
 
 window.addEventListener('DOMContentLoaded', () => {
     window.__Measure__ = Measure.init( 'UA-141774857-1');    
     // __Measure__.event({ category: 'Test category', action: 'Test action', label: 'Test label', value: 666 })
-    __Measure__.ecommerce({ 
-        action: 'Impression',
-        data: [
-            {
-                id: '1324',
-                name: 'Product 1',
-                category: 'Category 1',
-                price: '19.95',
-                brand: 'Google',
-                variant: 'Black',
-                position: '1'//1-200
-            },            
-            {
-                id: '5678',
-                name: 'Product 3',
-                category: 'Category 1',
-                price: '29.95',
-                brand: 'Apple',
-                variant: 'Black',
-                position: '2'
-            },            
-            {
-                id: '5678',
-                name: 'Product 5',
-                category: 'Category 1',
-                price: '9.95',
-                brand: 'Microsoft',
-                variant: 'Black',
-                position: '3'
-            }
-        ]
-    });
+    __Measure__.ecommerce.impression([
+        {
+            name: 'Impression list 1',
+            items: [
+                {
+                    id: '1324',
+                    name: 'Product 1',
+                    category: 'Category 1',
+                    price: '19.95',
+                    brand: 'Google',
+                    variant: 'Black',
+                    position: '1'//1-200
+                },            
+                {
+                    id: '5678',
+                    name: 'Product 3',
+                    category: 'Category 1',
+                    price: '29.95',
+                    brand: 'Apple',
+                    variant: 'Black',
+                    position: '2'
+                },            
+                {
+                    id: '9101',
+                    name: 'Product 5',
+                    category: 'Category 1',
+                    price: '9.95',
+                    brand: 'Microsoft',
+                    variant: 'Black',
+                    position: '3'
+                }
+            ]
+        },
+        {
+            name: 'Impression list 2',
+            items: [
+                {
+                    id: '1123',
+                    name: 'Product 2',
+                    category: 'Category 1',
+                    price: '5.95',
+                    brand: 'Amazon',
+                    variant: 'Black',
+                    position: '4'//1-200
+                }
+            ]
+        }
+    ]);
 });
 
 /*

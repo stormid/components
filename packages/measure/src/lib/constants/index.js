@@ -129,7 +129,28 @@ export const ACCEPTED_PARAMETERS = [
 	//"xvar" //Experiment variant; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#xvar
 ];
 
-export const ENHANCED_ECOMMERCE_PARAMS = (props) => {
+export const ECOMMERCE_PARAMETERS = i => ({
+	ACTION_LIST: `il${i}nm`,//??
+});
+
+export const ECOMMERCE_IMPRESSION_PARAMETERS = (i, j) => ({
+	IMPRESSION_LIST: `il${i}nm`,
+	IMPRESSION_PRODUCT_ID: `il${i}pi${j}id`,
+	IMPRESSION_PRODUCT_NAME: `il${i}pi${j}nm`,
+	IMPRESSION_PRODUCT_CATEGORY: `il${i}pi${j}ca`,
+	IMPRESSION_PRODUCT_BRAND: `il${i}pi${j}br`,
+	IMPRESSION_PRODUCT_VARIANT: `il${i}pi${j}br`,
+	IMPRESSION_PRODUCT_POSITION: `il${i}pi${j}ps`,
+	IMPRESSION_PRODUCT_PRICE: `il${i}pi${j}pr`
+});
+
+// export const ECOMMERCE_PRODUCT_PARAMETERS = (i, j) => ({
+// 	PRODUCT_ID: `il1pi${i}id`,
+// 	PRODUCT_NAME: `il1pi${i}nm`,
+// 	PRODUCT_CATEGORY: `il1pi${i}ca`,
+// 	PRODUCT_BRAND: `il1pi${i}br`,
+// 	PRODUCT_VARIANT: `il1pi${i}br`,
+// });
 // 	&il1nm=Search%20Results                  // Impression list 1. Required.
 // &il1pi1id=P12345                         // Product Impression 1 ID. Either ID or name must be set.
 // &il1pi1nm=Android%20Warhol%20T-Shirt     // Product Impression 1 name. Either ID or name must be set.
@@ -137,7 +158,7 @@ export const ENHANCED_ECOMMERCE_PARAMS = (props) => {
 // &il1pi1br=Google                         // Product Impression 1 brand.
 // &il1pi1va=Black                          // Product Impression 1 variant.
 // &il1pi1ps=1                              // Product Impression 1 position.
-}
+
 
 export const PERSISTENT_PARAMETERS = [
 	"v",
