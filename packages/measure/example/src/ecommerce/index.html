@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+	<head>
+    <title>Storm ID - Ecommerce Home</title>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: sans-serif;
+        }
+		body {
+        	font:100%/1.4 "AvenirNextLTW01-Regular", Helvetica, "Lucida Grande", sans-serif;
+		}
+		.container {
+			margin:48px auto;
+			max-width: 960px;
+			padding:0 24px;
+            display: flex;
+            justify-content: space-between
+		}
+		table {
+			width:100%;
+			border-collapse: collapse;
+		}
+		th {
+			font-size:.825rem;
+			font-weight:400;
+			color: #777;
+			text-align: left;
+			border-bottom:1px solid #eee;
+			padding:4px;
+		}
+		td {
+			padding:4px;
+			border-bottom:1px solid #f1f1f1;
+		}
+        .product {
+            display: block;
+            width:calc(33.333% - 16px);
+            text-align: center;
+            text-decoration: none;
+        }
+        .product:before {
+            content:'';
+            display: block;
+            height:0;
+            padding-bottom:56%;
+            background-color:#f1f1f1;
+        }
+    </style>
+</head>
+<body>
+	<div class="container">
+        <a class="product"
+            href="/ecommerce/details.html"
+            data-measure-impression
+            data-measure-click
+            data-measure-item='{"name": "Google t-shirt","id": "115","category": "T-shirts","price": "19.00"}'>
+            Google t-shirt
+        </a>
+        <a class="product"
+            href="/ecommerce/details.html"
+            data-measure-click
+            data-measure-impression
+            data-measure-item='{ "name": "Microsoft t-shirt","id": "116","category": "T-shirts","price": "19.00"}'>
+            Microsoft t-shirt
+        </a>
+        <a class="product"
+            href="/ecommerce/details.html"
+            data-measure-click
+            data-measure-impression
+            data-measure-item='{ "name": "Apple t-shirt", "id": "117", "category": "T-shirts","price": "19.00"}'>
+            Apple t-shirt
+        </a>
+	</div>
+	<div class="container">
+        <a class="product"
+            href="/ecommerce/details.html"
+            data-measure-impression="Related items"
+            data-measure-click
+            data-measure-item='{"name": "Google sweatshirt","id": "120","category": "Sweatshirts","price": "19.00"}'>
+            Google sweatshirt
+        </a><!-- ^ named impression list -->
+    </div>
+</body>
+</html>

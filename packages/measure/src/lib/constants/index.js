@@ -12,6 +12,10 @@ export const COOKIE_NAME = '_ga';
 
 export const COOKIE_VALUE = 'GA';
 
+export const TRIGGER_EVENTS = ['click', 'keyup'];
+
+export const TRIGGER_KEYCODES = [13, 32];
+
 export const ACCEPTED_PARAMETERS = [
 	// General
 	"v", //protocol version; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#v
@@ -94,7 +98,7 @@ export const ACCEPTED_PARAMETERS = [
 	//"cu", //Currency code; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cu
 
 	// Enhanced E-Commerce (see also: regex below)
-	//"pa", //Product action; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pa
+	"pa", //Product action; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pa
 	//"tcc", //Coupon code; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tcc
 	//"pal", //Product action list; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pal
 	//"cos", //Checkout step; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cos
@@ -144,13 +148,19 @@ export const ECOMMERCE_IMPRESSION_PARAMETERS = (i, j) => ({
 	IMPRESSION_PRODUCT_PRICE: `il${i}pi${j}pr`
 });
 
-// export const ECOMMERCE_PRODUCT_PARAMETERS = (i, j) => ({
-// 	PRODUCT_ID: `il1pi${i}id`,
-// 	PRODUCT_NAME: `il1pi${i}nm`,
-// 	PRODUCT_CATEGORY: `il1pi${i}ca`,
-// 	PRODUCT_BRAND: `il1pi${i}br`,
-// 	PRODUCT_VARIANT: `il1pi${i}br`,
-// });
+export const ECOMMERCE_ACTIONS = {
+	add: 'addToCart',
+	remove: 'removeFromCart'
+}
+
+export const ECOMMERCE_PRODUCT_PARAMETERS = (i, j) => ({
+	PRODUCT_ID: `pr${i}id`,
+	PRODUCT_NAME: `pr${i}nm`,
+	PRODUCT_CATEGORY: `pr${i}ca`,
+	PRODUCT_BRAND: `pr${i}br`,
+	PRODUCT_VARIANT: `pr${i}vs`,
+	PRODUCT_PRICE: `pr${i}pr`
+});
 // 	&il1nm=Search%20Results                  // Impression list 1. Required.
 // &il1pi1id=P12345                         // Product Impression 1 ID. Either ID or name must be set.
 // &il1pi1nm=Android%20Warhol%20T-Shirt     // Product Impression 1 name. Either ID or name must be set.
@@ -269,6 +279,7 @@ export const PARAMETERS_MAP = {
 	//"ITEM_CODE": "ic",
 	//"ITEM_CATEGORY": "iv",
 	//"CURRENCY_CODE": "cu",
+	"PRODUCT_ACTION": "pa",
 	//"SOCIAL_NETWORK": "sn",
 	//"SOCIAL_ACTION": "sa",
 	//"SOCIAL_ACTION_TARGET": "st",

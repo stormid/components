@@ -33,79 +33,79 @@ export default {
 		download: [
 			{
 				regex: /^.+\.(docx?|log|msg|odt|pages|rtf|tex|txt|wpd|wps)$/,
-				category: 'Text file download'
+				action: 'Text file'
 			},
 			{
 				regex: /^.+\.(csv|dat|ged|key.*|pps|pptx?|sdf|tar|tax2.+|tsv|vcf|xml)$/,
-				category: 'Data file download'
+				action: 'Data file'
 			},			
 			{
 				regex: /^.+\.(indd|pct|pdf)$/,
-				category: 'Page layout file download'
+				action: 'Page layout file'
 			},
 			{
 				regex: /^.+\.(aif|iff|m3u|m4a|mid|mp3|mpa|wav|wma)$/,
-				category: 'Audio file download'
+				action: 'Audio file'
 			},
 			{
 				regex: /^.+\.(3g2|3gp|asf|avi|flv|m4v|mov|mp4|mpe?g|rm|srt|swf|vob|wmv)$/,
-				category: 'Video file download'
+				action: 'Video file'
 			},
 			{
 				regex: /^.+\.(3dm|3ds|max|obj)$/,
-				category: '3D image file download'
+				action: '3D image file'
 			},
 			{
 				regex: /^.+\.(bmp|dds|gif|heic|jpe?g|png|psd|pspimage|tga|thm|tif|tiff|yuv)$/,
-				category: 'Raster image file download'
+				action: 'Raster image file'
 			},
 			{
 				regex: /^.+\.(ai|eps|ps|svg)$/,
-				category: 'Vector image file download'
+				action: 'Vector image file'
 			},
 			{
 				regex: /^.+\.(accdb|db|dbf|mdb|pdb|sql)$/,
-				category: 'Database file download'
+				action: 'Database file'
 			},
 			{
 				regex: /^.+\.(dwg|dxf)$/,
-				category: 'CAD file download'
+				action: 'CAD file'
 			},
 			{
 				regex: /^.+\.(gpx|kml|kmz)$/,
-				category: 'GIS file download'
+				action: 'GIS file'
 			},
 			{
 				regex: /^.+\.(crx|plugin)$/,
-				category: 'Plug-in file download'
+				action: 'Plug-in file'
 			},
 			{
 				regex: /^.+\.(fnt|fon|otf|ttf)$/,
-				category: 'Font file download'
+				action: 'Font file'
 			},
 			{
 				regex: /^.+\.(cab|cpl|cur|deskthemepack|dll|dmp|drv|icns|ico|lnk|sys)$/,
-				category: 'System file download'
+				action: 'System file'
 			},
 			{
 				regex: /^.+\.(cfg|ini|prf)$/,
-				category: 'Settings file download'
+				action: 'Settings file'
 			},
 			{
 				regex: /^.+\.(hqx|mim|uue)$/,
-				category: 'Encoded file download'
+				action: 'Encoded file'
 			},
 			{
 				regex: /^.+\.(7z|cbr|deb|gz|pkg|rar|rpm|sitx|zipx?)$/,
-				category: 'Compressed file download'
+				action: 'Compressed file'
 			},
 			{
 				regex: /^.+\.(bak|tmp)$/,
-				category: 'Back-up file download'
+				action: 'Back-up file'
 			},
 			{
 				regex: /^.+\.(xlr|xlsx?|ods)$/,
-				category: 'Spreadsheet file download'
+				action: 'Spreadsheet file'
 			}
 		]
 	}

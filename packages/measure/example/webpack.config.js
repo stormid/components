@@ -27,6 +27,31 @@ module.exports = {
 			title: pkg.name,
 			template: './example/src/page-3.html',
 			filename: 'page-3.html'
+		}),
+		new HtmlWebpackPlugin({
+			title: pkg.name,
+			template: './example/src/ecommerce/index.html',
+			filename: 'ecommerce/index.html'
+		}),
+		new HtmlWebpackPlugin({
+			title: pkg.name,
+			template: './example/src/ecommerce/basket.html',
+			filename: 'ecommerce/basket.html'
+		}),
+		new HtmlWebpackPlugin({
+			title: pkg.name,
+			template: './example/src/ecommerce/confirmation.html',
+			filename: 'ecommerce/confirmation.html'
+		}),
+		new HtmlWebpackPlugin({
+			title: pkg.name,
+			template: './example/src/ecommerce/details.html',
+			filename: 'ecommerce/details.html'
+		}),
+		new HtmlWebpackPlugin({
+			title: pkg.name,
+			template: './example/src/ecommerce/payment.html',
+			filename: 'ecommerce/payment.html'
 		})
 	],
   	module: {

@@ -1,10 +1,16 @@
-import { url } from '../utils/compose';
 import { cacheBuster, download } from '../utils/data';
+import { add } from '../reducers';
 import { request } from '../utils/request';
-import { linkEvent, event } from '../utils/compose';
+import { linkEvent, downloadEvent, event, url } from '../utils/compose';
 import { parseUrl } from '../utils/url';
 import { clear } from '../reducers';
-import { PATH, EMAIL_REGEX, TEL_REGEX } from '../constants';
+import {
+    PATH,
+    EMAIL_REGEX,
+    TEL_REGEX,
+    TRIGGER_EVENTS,
+    TRIGGER_KEYCODES
+} from '../constants';
 
 export const send = (Store, type = 'pageview') => ({ persistent, stack }) => {
     request(url({
@@ -19,8 +25,9 @@ export const send = (Store, type = 'pageview') => ({ persistent, stack }) => {
     Store.dispatch(clear, {});
 };
 
-const handler = eventData => e => {
-    if(3 === e.which) return;
+const handler = (eventData, Store) => e => {
+    if(!!e.keyCode && !~TRIGGER_KEYCODES.indexOf(e.keyCode) 
+        || (e.which && e.which === 3)) return;
     Store.dispatch(add, event(eventData), [ send(Store, 'event') ]);
 };
 
@@ -29,18 +36,24 @@ export const links = Store => () => {
     const state = Store.getState();
     const settings = state.settings;
     for(let link of links) {
-        if(link.href.match(EMAIL_REGEX) && settings.email) {
-            link.addEventListener('click', handler(linkEvent(link, settings.email)), { composed: true, useCapture: true });
+        if(link.href.match(EMAIL_REGEX) && settings.email) {            
+            TRIGGER_EVENTS.forEach(ev => {
+                link.addEventListener(ev, handler(linkEvent(link, settings.email), Store), { composed: true, useCapture: true });
+            });
             continue;
         }
-        else if(link.href.match(TEL_REGEX) && settings.tel) {
-            link.addEventListener('click', handler(linkEvent(link, settings.tel)), { composed: true, useCapture: true });
+        else if(link.href.match(TEL_REGEX) && settings.tel) {         
+            TRIGGER_EVENTS.forEach(ev => {
+                link.addEventListener(ev, handler(linkEvent(link, settings.tel), Store), { composed: true, useCapture: true });
+            });
             continue;
         }
         if(settings.download){
             const downloadSettings = download(link, settings.download);
             if(downloadSettings) {
-                link.addEventListener('click', handler(linkEvent(link, downloadSettings)), { composed: true, useCapture: true });
+                TRIGGER_EVENTS.forEach(ev => {
+                    link.addEventListener(ev, handler(downloadEvent(link, downloadSettings), Store), { composed: true, useCapture: true });
+                });
                 continue;
             }
         }
@@ -48,7 +61,9 @@ export const links = Store => () => {
             const { host } = parseUrl(document.location.href);
             const linkUrl = parseUrl(link.href);
             if(linkUrl.host !== host) {
-                link.addEventListener('click', handler(linkEvent(link, settings.external)), { composed: true, useCapture: true });
+                TRIGGER_EVENTS.forEach(ev => {
+                    link.addEventListener(ev, handler(linkEvent(link, settings.external), Store), { composed: true, useCapture: true });
+                });
                 continue;
             }
         }
