@@ -10,3 +10,5 @@ export const DATA_ATTRIBUTES = {
     ADD: 'data-measure-add',
     DETAIL: 'data-measure-detail'
 };
+
+export const LISTENER_OPTIONS = { composed: true, useCapture: true };
