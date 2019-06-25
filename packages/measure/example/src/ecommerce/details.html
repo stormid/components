@@ -17,21 +17,27 @@
 			max-width: 960px;
 			padding:0 24px;
 		}
-		table {
-			width:100%;
-			border-collapse: collapse;
+		.product {
+            display: block;
+            max-width:500px;
+            text-align: left;
+			text-decoration: none;
+			margin-bottom:24px;
+        }
+        .product:after {
+            content:'';
+            display: block;
+            height:0;
+            padding-bottom:56%;
+            background-color:#f1f1f1;
 		}
-		th {
-			font-size:.825rem;
-			font-weight:400;
-			color: #777;
-			text-align: left;
-			border-bottom:1px solid #eee;
-			padding:4px;
-		}
-		td {
-			padding:4px;
-			border-bottom:1px solid #f1f1f1;
+		.btn {
+			display: inline-block;
+			padding:4px 8px;
+			background-color:blue;
+			color:#fff;
+			text-decoration: none;
+			font-size: .875rem
 		}
     </style>
 </head>
@@ -41,7 +47,8 @@
         data-measure-item='{"name": "Google t-shirt","id": "115","category": "T-shirts","price": "19.00"}'>
         <div class="product">
             Google t-shirt
-        </div>
+		</div>
+		<a class="btn" href="/ecommerce/basket.html" data-measure-add='{"name": "Google t-shirt","id": "115","category": "T-shirts","price": "19.00"}'>Add to basket</a>
 	</div>
 </body>
 </html>

@@ -7,5 +7,6 @@ export const DATA_ATTRIBUTES = {
     LIST: 'data-measure-impression-list',
     ITEM: 'data-measure-item',
     CLICK: 'data-measure-click',    
+    ADD: 'data-measure-add',
     DETAIL: 'data-measure-detail'
 };

@@ -34,6 +34,7 @@ const handler = (data, __m) => e => {
     __m.ecommerce.action(data);
 };
 
+//update to accept event
 const composeAction = (node, action) => ({
     event: `Product ${action}`, //ea
     action, //pa
@@ -58,5 +59,16 @@ export const detail = __m => {
     
     for(let node of nodes){
         __m.ecommerce.action(composeAction(node, 'detail'));
+    }
+};
+
+export const add = __m => {
+    const nodes = Array.from(document.querySelectorAll(`[${DATA_ATTRIBUTES.CLICK}]`));
+    if(nodes.length === 0) return;
+    
+    for(let node of nodes){
+        TRIGGER_EVENTS.forEach(ev => {
+            node.addEventListener(ev, handler(composeAction(node, 'add', 'Add to cart'), __m), { composed: true, useCapture: true });
+        });
     }
 };
