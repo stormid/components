@@ -76,11 +76,13 @@ const composeImpressionList = (acc, curr, i) => {
 };
 
 export const action = (data, state) => ({
-	[PARAMETERS_MAP.EVENT_CATEGORY]: 'Ecommerce',
+	[PARAMETERS_MAP.EVENT_CATEGORY]: data.category || 'Ecommerce',
 	[PARAMETERS_MAP.EVENT_ACTION]: data.event,
-	[PARAMETERS_MAP.EVENT_LABEL]: data.label || state.persistent[PARAMETERS_MAP.DOCUMENT_PATH], // <-- GTM sends document path as impression event label
+	[PARAMETERS_MAP.EVENT_LABEL]: data.label || state.persistent[PARAMETERS_MAP.DOCUMENT_PATH], // <-- GTM sends document path as default event label
 	[PARAMETERS_MAP.PRODUCT_ACTION]: data.action,
-	...(Array.isArray(data.data) ? data.data.reduce(composeActionList, {}) : [data.data].reduce(composeActionList, {}))
+	...(Array.isArray(data.data) ? data.data.reduce(composeActionList, {}) : [data.data].reduce(composeActionList, {})),
+	...(data.step ? { [PARAMETERS_MAP.CHECKOUT_STEP]: data.step } : {}),
+	...(data.option ? { [PARAMETERS_MAP.CHECKOUT_OPTION]: data.option } : {})
 });
 
 const composeActionList = (acc, curr, i) => {

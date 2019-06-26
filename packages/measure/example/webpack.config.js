@@ -50,6 +50,11 @@ module.exports = {
 		}),
 		new HtmlWebpackPlugin({
 			title: pkg.name,
+			template: './example/src/ecommerce/delivery.html',
+			filename: 'ecommerce/delivery.html'
+		}),
+		new HtmlWebpackPlugin({
+			title: pkg.name,
 			template: './example/src/ecommerce/payment.html',
 			filename: 'ecommerce/payment.html'
 		})

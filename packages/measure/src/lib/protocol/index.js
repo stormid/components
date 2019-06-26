@@ -1,8 +1,8 @@
-import { cacheBuster, download } from '../utils/data';
+import { cacheBuster, download } from '../shared/data';
 import { add } from '../reducers';
-import { request } from '../utils/request';
-import { linkEvent, downloadEvent, event, url } from '../utils/compose';
-import { parseUrl } from '../utils/url';
+import { request } from '../shared/request';
+import { linkEvent, downloadEvent, event, url } from '../shared/compose';
+import { parseUrl } from '../shared/url';
 import { clear } from '../reducers';
 import {
     PATH,

@@ -6,8 +6,18 @@ export const handler = (data, __m) => e => {
     __m.ecommerce.action(data);
 };
 
-export const composeAction = (node, action, event) => ({
+export const composeAction = ({ node, category = undefined, event, action = undefined }) => ({
+    category,
     event, //ea
     action, //pa
-    data: JSON.parse(node.getAttribute(DATA_ATTRIBUTES.ITEM))
+    data: JSON.parse(node.getAttribute(DATA_ATTRIBUTES.ITEM) || node.getAttribute(DATA_ATTRIBUTES.ITEMS))
+});
+
+export const composeCheckoutAction = ({ node, category = undefined, event, action = undefined }) => ({
+    category,
+    event, //ea
+    action, //pa
+    data: JSON.parse(node.getAttribute(DATA_ATTRIBUTES.ITEM) || node.getAttribute(DATA_ATTRIBUTES.ITEMS)),
+    step: node.getAttribute(DATA_ATTRIBUTES.CHECKOUT_STEP),
+    option: node.getAttribute(DATA_ATTRIBUTES.CHECKOUT_STEP_OPTION)
 });

@@ -8,7 +8,11 @@ export const DATA_ATTRIBUTES = {
     ITEM: 'data-measure-item',
     CLICK: 'data-measure-click',    
     ADD: 'data-measure-add',
-    DETAIL: 'data-measure-detail'
+    DETAIL: 'data-measure-detail',
+    CHECKOUT: 'data-measure-checkout',
+    CHECKOUT_STEP: 'data-measure-checkout-step',
+    CHECKOUT_STEP_OPTION: 'data-measure-checkout-step-option',
+    ITEMS: 'data-measure-items'
 };
 
 export const LISTENER_OPTIONS = { composed: true, useCapture: true };

@@ -7,7 +7,7 @@ export default __m => {
     
     for(let node of nodes){
         TRIGGER_EVENTS.forEach(ev => {
-            node.addEventListener(ev, handler(composeAction(node, 'add', 'Add to cart'), __m), LISTENER_OPTIONS);
+            node.addEventListener(ev, handler(composeAction({ node, action: 'add', event: 'Add to Cart' }), __m), LISTENER_OPTIONS);
         });
     }
 };

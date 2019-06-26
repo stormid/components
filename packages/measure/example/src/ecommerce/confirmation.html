@@ -17,9 +17,21 @@
 			max-width: 960px;
 			padding:0 24px;
 		}
+		h1 {
+			position: relative;
+			font-size: 1rem;
+			margin:0 0 24px 0;
+			padding:4px;
+		}
+		p {
+			font-size: .9rem;
+			margin:0 0 24px 0;
+			padding:4px;
+		}
 		table {
 			width:100%;
 			border-collapse: collapse;
+			margin-bottom: 24px;
 		}
 		th {
 			font-size:.825rem;
@@ -33,10 +45,75 @@
 			padding:4px;
 			border-bottom:1px solid #f1f1f1;
 		}
+		.numeric {
+			text-align: right;
+			max-width: 135px;
+		}
+		.product:before {
+            content:'';
+            display: inline-block;
+			vertical-align: middle;
+            height:75px;
+			width:125px;
+			margin-right:5px;
+            background-color:#f1f1f1;
+		}
+		.btn {
+			float:right;
+			display: block;
+			padding:8px 16px;
+			background-color:blue;
+			color:#fff;
+			text-decoration: none;
+			font-size: .875rem
+		}
+		.btn-icon {
+			display: block;
+		}
+		.order-number {
+			position: absolute;
+			right:0;
+			font-size:1.5rem;
+		}
+		.total {
+			font-size:1.275rem;
+			font-weight: 600
+		}
     </style>
 </head>
 <body>
-	<div class="container">
+	<div
+		data-measure-checkout
+		data-measure-checkout-step="2"
+		data-measure-items='[{"name": "Google t-shirt","id": "115","category": "T-shirts","price": "19.00","quantity": "2"}]'
+		class="container">
+		<h1>
+			Confirmation
+			<span class="order-number">#132456789</span>
+		</h1>
+		<p>Your order is being processed.</p>
+		<table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th class="numeric">Quantity</th>
+					<th class="numeric">Price (&pound;)</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<a class="product" href="/ecommerce/detail.html">Google t-shirt (black)</a>
+					</td>
+					<td class="numeric">2</td>
+					<td class="numeric">19.00</td>
+				</tr>
+				<tr>
+					<th class="numeric" scope="row" colspan="2">Total (&pound;)</th>
+					<td class="numeric total">50.70</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </body>
 </html>

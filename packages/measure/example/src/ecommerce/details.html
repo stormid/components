@@ -17,6 +17,11 @@
 			max-width: 960px;
 			padding:0 24px;
 		}
+		h1 {
+			font-size: 1rem;
+			margin:0 0 24px 0;
+			padding:4px;
+		}
 		.product {
             display: block;
             max-width:500px;
@@ -39,6 +44,20 @@
 			text-decoration: none;
 			font-size: .875rem
 		}
+        .form {
+            background-color:#fafafa;
+            padding:24px 48px 12px 24px;
+            max-width: 350px;
+            margin-bottom: 24px;
+            font-size: .875rem;
+        }
+        .input-group {
+            margin-bottom: 12px;
+        }
+        .label {
+            display: inline-block;
+            width:70px
+        }
     </style>
 </head>
 <body>
@@ -47,8 +66,23 @@
         data-measure-detail
         data-measure-item='{"name": "Google t-shirt","id": "115","category": "T-shirts","price": "19.00"}'>
         <div class="product">
-            Google t-shirt
-		</div>
+            <h1>Google t-shirt</h1>
+        </div>
+        <div class="form">
+            <div class="input-group">
+                <label class="label" for="quantity">Quantity</label>
+                <select id="quantity" class="input" name="quantity">
+                    <option value="2" selected>2</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label class="label" for="variant">Colour</label>
+                <select id="variant" class="input" name="variant">
+                    <option value="black" selected>Black</option>
+                </select>
+            </div>
+        </div>
+        
 		<a class="btn" href="/ecommerce/basket.html">Add to basket</a>
 	</div>
 </body>

@@ -1,7 +1,7 @@
 import { createStore } from '../store';
 import { initial, add } from '../reducers';
-import { clientId, systemInfo, documentInfo } from '../utils/data';
-import { stateFromOptions, event, impression, action } from '../utils/compose';
+import { clientId, systemInfo, documentInfo } from '../shared/data';
+import { stateFromOptions, event, impression, action } from '../shared/compose';
 import { send, links } from '../protocol';
 
 /*
@@ -33,8 +33,6 @@ export default options => {
 				Store.dispatch(add, impression(data, Store.getState()), [ send(Store, 'event') ]);
 			},
 			action(data){
-				console.log(data);
-				console.log(action(data, Store.getState()));
 				Store.dispatch(add, action(data, Store.getState()), [ send(Store, 'event') ]);
 			}
 		}
