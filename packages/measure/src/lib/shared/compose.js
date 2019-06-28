@@ -87,14 +87,11 @@ export const action = (data, state) => ({
 	...(data.step ? { [PARAMETERS_MAP.CHECKOUT_STEP]: data.step } : {}),
 	...(data.option ? { [PARAMETERS_MAP.CHECKOUT_OPTION]: data.option } : {}),
 	...(data.purchase ? composePurchase(data.purchase) : {}),
-	...(composeCustomParams(data) ? {} : {})
+	...(data.custom ? composeCustomParams(data) : {})
 });
 
 const composeCustomParams = data => {
-	const found = Object.keys(data).reduce((acc, curr) => {
-		if(CUSTOM_PARAM_REGEX.test(curr)) console.log(curr.match(CUSTOM_PROPERTY_REGEX));
-		return acc;
-	}, {});
+	if(CUSTOM_PARAM_REGEX.test(curr)) console.log(curr.match(CUSTOM_PROPERTY_REGEX));
 	return {};
 };
 
