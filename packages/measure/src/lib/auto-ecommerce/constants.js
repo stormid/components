@@ -12,6 +12,7 @@ export const DATA_ATTRIBUTES = {
     CHECKOUT: 'data-measure-checkout',
     CHECKOUT_STEP: 'data-measure-checkout-step',
     CHECKOUT_STEP_OPTION: 'data-measure-checkout-step-option',
+    PURCHASE: 'data-measure-purchase',
     ITEMS: 'data-measure-items'
 };
 

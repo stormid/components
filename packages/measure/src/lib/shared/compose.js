@@ -75,17 +75,25 @@ const composeImpressionList = (acc, curr, i) => {
 	};
 };
 
+//is spread syntax the most efficient?
 export const action = (data, state) => ({
 	[PARAMETERS_MAP.EVENT_CATEGORY]: data.category || 'Ecommerce',
 	[PARAMETERS_MAP.EVENT_ACTION]: data.event,
 	[PARAMETERS_MAP.EVENT_LABEL]: data.label || state.persistent[PARAMETERS_MAP.DOCUMENT_PATH], // <-- GTM sends document path as default event label
 	[PARAMETERS_MAP.PRODUCT_ACTION]: data.action,
-	...(Array.isArray(data.data) ? data.data.reduce(composeActionList, {}) : [data.data].reduce(composeActionList, {})),
+	...(Array.isArray(data.data) ? data.data.reduce(composProductList, {}) : [data.data].reduce(composProductList, {})),
 	...(data.step ? { [PARAMETERS_MAP.CHECKOUT_STEP]: data.step } : {}),
-	...(data.option ? { [PARAMETERS_MAP.CHECKOUT_OPTION]: data.option } : {})
+	...(data.option ? { [PARAMETERS_MAP.CHECKOUT_OPTION]: data.option } : {}),
+	...(data.purchase ? composePurchase(data.purchase) : {})
 });
 
-const composeActionList = (acc, curr, i) => {
+const composePurchase = data => Object.keys(data).reduce((acc, curr) => {
+	const param = `TRANSACTION_${curr.toUpperCase()}`;
+	if(PARAMETERS_MAP[param]) acc[PARAMETERS_MAP[param]] = data[curr];
+	return acc;
+}, {});
+
+const composProductList = (acc, curr, i) => {
 	const parameters = ECOMMERCE_PRODUCT_PARAMETERS(i + 1);
 	const items = Object.keys(curr).reduce((acc, param) => {
 		acc[parameters[`PRODUCT_${param.toUpperCase()}`]] = curr[param];

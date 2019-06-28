@@ -13,6 +13,14 @@ export const composeAction = ({ node, category = undefined, event, action = unde
     data: JSON.parse(node.getAttribute(DATA_ATTRIBUTES.ITEM) || node.getAttribute(DATA_ATTRIBUTES.ITEMS))
 });
 
+export const composePurchaseAction = ({ node, category = undefined, event, action = undefined }) => ({
+    category,
+    event, //ea
+    action, //pa
+    data: JSON.parse(node.getAttribute(DATA_ATTRIBUTES.ITEM) || node.getAttribute(DATA_ATTRIBUTES.ITEMS)),
+    purchase: JSON.parse(node.getAttribute(DATA_ATTRIBUTES.PURCHASE))
+});
+
 export const composeCheckoutAction = ({ node, category = undefined, event, action = undefined }) => ({
     category,
     event, //ea

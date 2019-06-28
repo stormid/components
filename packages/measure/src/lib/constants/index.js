@@ -81,11 +81,11 @@ export const ACCEPTED_PARAMETERS = [
 	"ev", //Event value; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ev
 
 	// E-commerce (transaction data: simple and enhanced)
-	//"ti", //transaction ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ti
-	//"ta", //transaction affiliation; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ta
-	//"tr", //transaction revenue; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tr
-	//"ts", //transaction shipping; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ts
-	//"tt", //transaction tax; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tt
+	"ti", //transaction ID; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ti
+	"ta", //transaction affiliation; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ta
+	"tr", //transaction revenue; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tr
+	"ts", //transaction shipping; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ts
+	"tt", //transaction tax; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tt
 
 	// E-commerce (item data: simple)
 	//"in", //Item name; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
@@ -261,11 +261,11 @@ export const PARAMETERS_MAP = {
 	"EVENT_ACTION": "ea",
 	"EVENT_LABEL": "el",
 	"EVENT_VALUE": "ev",
-	//"TRANSACTION_ID": "ti",
-	//"TRANSACTION_AFFILIATION": "ta",
-	//"TRANSACTION_REVENUE": "tr",
-	//"TRANSACTION_SHIPPING": "ts",
-	//"TRANSACTION_TAX": "tt",
+	"TRANSACTION_ID": "ti",
+	"TRANSACTION_AFFILIATION": "ta",
+	"TRANSACTION_REVENUE": "tr",
+	"TRANSACTION_SHIPPING": "ts",
+	"TRANSACTION_TAX": "tt",
 	//"ITEM_NAME": "in",
 	//"ITEM_PRICE": "ip",
 	//"ITEM_QUANTITY": "iq",
