@@ -13,7 +13,8 @@ export const DATA_ATTRIBUTES = {
     CHECKOUT_STEP: 'data-measure-checkout-step',
     CHECKOUT_STEP_OPTION: 'data-measure-checkout-step-option',
     PURCHASE: 'data-measure-purchase',
-    ITEMS: 'data-measure-items'
+    ITEMS: 'data-measure-items',
+    CUSTOM: 'data-measure-custom'
 };
 
 export const LISTENER_OPTIONS = { composed: true, useCapture: true };

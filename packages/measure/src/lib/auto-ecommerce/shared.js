@@ -10,7 +10,8 @@ export const composeAction = ({ node, category = undefined, event, action = unde
     category,
     event, //ea
     action, //pa
-    data: JSON.parse(node.getAttribute(DATA_ATTRIBUTES.ITEM) || node.getAttribute(DATA_ATTRIBUTES.ITEMS))
+    data: JSON.parse(node.getAttribute(DATA_ATTRIBUTES.ITEM) || node.getAttribute(DATA_ATTRIBUTES.ITEMS)),
+    custom: node.getAttribute(DATA_ATTRIBUTES.CUSTOM) && JSON.parse(node.getAttribute(DATA_ATTRIBUTES.CUSTOM))
 });
 
 export const composePurchaseAction = ({ node, category = undefined, event, action = undefined }) => ({
@@ -18,6 +19,7 @@ export const composePurchaseAction = ({ node, category = undefined, event, actio
     event, //ea
     action, //pa
     data: JSON.parse(node.getAttribute(DATA_ATTRIBUTES.ITEM) || node.getAttribute(DATA_ATTRIBUTES.ITEMS)),
+    custom: node.getAttribute(DATA_ATTRIBUTES.CUSTOM) && JSON.parse(node.getAttribute(DATA_ATTRIBUTES.CUSTOM)),
     purchase: JSON.parse(node.getAttribute(DATA_ATTRIBUTES.PURCHASE))
 });
 
@@ -26,6 +28,7 @@ export const composeCheckoutAction = ({ node, category = undefined, event, actio
     event, //ea
     action, //pa
     data: JSON.parse(node.getAttribute(DATA_ATTRIBUTES.ITEM) || node.getAttribute(DATA_ATTRIBUTES.ITEMS)),
+    custom: node.getAttribute(DATA_ATTRIBUTES.CUSTOM) && JSON.parse(node.getAttribute(DATA_ATTRIBUTES.CUSTOM)),
     step: node.getAttribute(DATA_ATTRIBUTES.CHECKOUT_STEP),
     option: node.getAttribute(DATA_ATTRIBUTES.CHECKOUT_STEP_OPTION)
 });

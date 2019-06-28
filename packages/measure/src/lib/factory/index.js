@@ -33,6 +33,7 @@ export default options => {
 				Store.dispatch(add, impression(data, Store.getState()), [ send(Store, 'event') ]);
 			},
 			action(data){
+				console.log(data);
 				Store.dispatch(add, action(data, Store.getState()), [ send(Store, 'event') ]);
 			}
 		}

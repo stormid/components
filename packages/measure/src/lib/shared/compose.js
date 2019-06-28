@@ -3,7 +3,9 @@ import {
 	ECOMMERCE_IMPRESSION_PARAMETERS,
 	ECOMMERCE_PRODUCT_PARAMETERS,
     PARAMETERS_MAP,
-    HOSTNAME
+	HOSTNAME,
+	CUSTOM_PARAM_REGEX,
+	CUSTOM_PROPERTY_REGEX
 } from '../constants';
 
 export const url = ({ data, action }) => `${HOSTNAME}/${action}?${Object.keys(data).reduce((acc, param) => {
@@ -81,11 +83,20 @@ export const action = (data, state) => ({
 	[PARAMETERS_MAP.EVENT_ACTION]: data.event,
 	[PARAMETERS_MAP.EVENT_LABEL]: data.label || state.persistent[PARAMETERS_MAP.DOCUMENT_PATH], // <-- GTM sends document path as default event label
 	[PARAMETERS_MAP.PRODUCT_ACTION]: data.action,
-	...(Array.isArray(data.data) ? data.data.reduce(composProductList, {}) : [data.data].reduce(composProductList, {})),
+	...(Array.isArray(data.data) ? data.data.reduce(composeProductList, {}) : [data.data].reduce(composeProductList, {})),
 	...(data.step ? { [PARAMETERS_MAP.CHECKOUT_STEP]: data.step } : {}),
 	...(data.option ? { [PARAMETERS_MAP.CHECKOUT_OPTION]: data.option } : {}),
-	...(data.purchase ? composePurchase(data.purchase) : {})
+	...(data.purchase ? composePurchase(data.purchase) : {}),
+	...(composeCustomParams(data) ? {} : {})
 });
+
+const composeCustomParams = data => {
+	const found = Object.keys(data).reduce((acc, curr) => {
+		if(CUSTOM_PARAM_REGEX.test(curr)) console.log(curr.match(CUSTOM_PROPERTY_REGEX));
+		return acc;
+	}, {});
+	return {};
+};
 
 const composePurchase = data => Object.keys(data).reduce((acc, curr) => {
 	const param = `TRANSACTION_${curr.toUpperCase()}`;
@@ -93,10 +104,11 @@ const composePurchase = data => Object.keys(data).reduce((acc, curr) => {
 	return acc;
 }, {});
 
-const composProductList = (acc, curr, i) => {
+const composeProductList = (acc, curr, i) => {
 	const parameters = ECOMMERCE_PRODUCT_PARAMETERS(i + 1);
-	const items = Object.keys(curr).reduce((acc, param) => {
-		acc[parameters[`PRODUCT_${param.toUpperCase()}`]] = curr[param];
+	const items = Object.keys(curr).reduce((acc, item) => {
+		const param = `PRODUCT_${item.toUpperCase()}`;
+		if(parameters[param]) acc[parameters[param]] = curr[item];
 		return acc;
 	}, {});
 

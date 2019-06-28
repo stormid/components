@@ -180,6 +180,10 @@ export const EMAIL_REGEX = /^mailto:.*/
 
 export const TEL_REGEX = /^tel:.*/;
 
+export const CUSTOM_PARAM_REGEX = /^(dimension|metric)\d$/;
+
+export const CUSTOM_PROPERTY_REGEX = /^(dimension|metric)/;
+
 
 //to do - validate parameters?
 // export const ACCEPTED_PARAMETERS_REGEX = [
