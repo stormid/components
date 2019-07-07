@@ -19,6 +19,7 @@ describe('Validate > Integration > validator > min', () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
             name="group1"
+            id="group1"
             data-val="true"
             data-val-min="Min error message"
             data-val-min-min="5"
