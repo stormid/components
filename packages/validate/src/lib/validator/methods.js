@@ -20,6 +20,8 @@ const regexMethod = regex => group => isOptional(group)|| group.fields.reduce((a
 
 const paramMethod = (type, reducer) => group => isOptional(group) || group.fields.reduce(reducer(extractValidationParams(group, type)), false);
 
+const shouldValidateByParam = param => param !== undefined;
+
 export default {
     required: group => extractValueFromGroup(group) !== '',
     email: regexMethod(EMAIL_REGEX),
@@ -47,7 +49,7 @@ export default {
     max: paramMethod('max', params => (acc, input) => (acc = parseInt(input.value) !== NaN && +input.value <= +params.max, acc)),
     stringlength: paramMethod('stringlength', params => (acc, input) => (acc = +input.value.length <= +params.max, acc)),
     length: paramMethod('length', params => (acc, input) => (acc = (+input.value.length >= +params.min && (params.max === undefined || +input.value.length <= +params.max)), acc)),
-    range: paramMethod('range', params => (acc, input) => (acc = (+input.value >= +params.min && +input.value <= +params.max), acc)),
+    range: paramMethod('range', params => (acc, input) => (acc = ((!shouldValidateByParam(params.min) || +input.value >= +params.min) && (!shouldValidateByParam(params.max) || +input.value <= +params.max)), acc)),
     remote: (group, params) => new Promise((resolve, reject) => {
         fetch((params.type !== 'get' ? params.url : `${params.url}?${resolveGetParams(params.additionalfields)}`), {
             method: params.type.toUpperCase(),
