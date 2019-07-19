@@ -137,6 +137,11 @@ export const ECOMMERCE_PARAMETERS = i => ({
 	ACTION_LIST: `il${i}nm`,//??
 });
 
+export const CUSTOM_PARAMETERS = {
+	DIMENSION: 'cd',
+	METRIC: 'cm'
+};
+
 export const ECOMMERCE_IMPRESSION_PARAMETERS = (i, j) => ({
 	IMPRESSION_LIST: `il${i}nm`,
 	IMPRESSION_PRODUCT_ID: `il${i}pi${j}id`,

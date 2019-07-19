@@ -14,6 +14,7 @@ const init = (tid, options = {}) => {
 	//return Measure Object
 	return factory({
 		parameters: Object.assign({}, { tid }, options.parameters ? Object.assign({}, defaults.parameters, options.parameters) : defaults.parameters),
+		custom: options.custom,
 		settings: options.settings ? Object.assign({}, defaults.settings, options.settings) : defaults.settings
 	});
 };

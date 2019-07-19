@@ -42,7 +42,7 @@ export const links = Store => () => {
             });
             continue;
         }
-        else if(link.href.match(TEL_REGEX) && settings.tel) {         
+        else if(link.href.match(TEL_REGEX) && settings.tel) {
             TRIGGER_EVENTS.forEach(ev => {
                 link.addEventListener(ev, handler(linkEvent(link, settings.tel), Store), { composed: true, useCapture: true });
             });

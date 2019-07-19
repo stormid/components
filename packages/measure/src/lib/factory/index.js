@@ -1,6 +1,6 @@
 import { createStore } from '../store';
 import { initial, add } from '../reducers';
-import { clientId, systemInfo, documentInfo } from '../shared/data';
+import { clientId, systemInfo, documentInfo, customProperties } from '../shared/data';
 import { stateFromOptions, event, impression, action } from '../shared/compose';
 import { send, links } from '../protocol';
 

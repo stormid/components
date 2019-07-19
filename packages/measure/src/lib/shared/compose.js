@@ -1,5 +1,7 @@
 import {
-    ACCEPTED_PARAMETERS,
+	ACCEPTED_PARAMETERS,
+	PERSISTENT_PARAMETERS,
+	CUSTOM_PARAMETERS,
 	ECOMMERCE_IMPRESSION_PARAMETERS,
 	ECOMMERCE_PRODUCT_PARAMETERS,
     PARAMETERS_MAP,
@@ -13,16 +15,32 @@ export const url = ({ data, action }) => `${HOSTNAME}/${action}?${Object.keys(da
 	return acc;
 }, []).join('&')}`;
 
-export const stateFromOptions = ({ parameters, settings }) => ({
-	parameters: parametersFromOptions(parameters),
+export const stateFromOptions = ({ parameters, settings, custom }) => ({
+	parameters: parametersFromOptions(parameters, custom),
 	settings
 });
 
-const parametersFromOptions = parameters => Object.keys(parameters).reduce((acc, key) => {
-	if(ACCEPTED_PARAMETERS.includes(key)) acc.persistent[key] = parameters[key];
-	else if(PERSISTENT_PARAMETERS.includes(key)) acc.stack[key] = parameters[key];
+const parametersFromOptions = (parameters, custom) => Object.keys(parameters).reduce((acc, key) => {
+	if(PERSISTENT_PARAMETERS.includes(key)) acc.persistent[key] = parameters[key];
+	else if(ACCEPTED_PARAMETERS.includes(key)) acc.stack[key] = parameters[key];
 	return acc;
-}, { persistent: {}, stack: {} });
+}, { persistent: {}, stack: custom ? stackFromCustom(custom) : {} });
+
+const isValidCustomParam = param => {
+	return CUSTOM_PARAMETERS[param.type.toUpperCase()] 
+			&& param.index 
+			&& param.value
+			&& (param.type === 'metric' && isNumeric(param.value) || param.type !== 'metric');
+};
+
+const isNumeric = n => !isNaN(parseFloat(n)) && isFinite(n);
+
+const stackFromCustom = custom => custom.reduce((acc, curr) => {
+	if(!isValidCustomParam(curr)) return acc;
+	acc[`${CUSTOM_PARAMETERS[curr.type.toUpperCase()]}${curr.index}`] = curr.value;
+	return acc;
+}, {});
+
 
 export const event = data => {
 	return Object.keys(data).reduce((acc, key) => {
