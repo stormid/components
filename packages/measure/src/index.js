@@ -4,7 +4,7 @@ import factory from './lib/factory';
 /*
  * Returns an array of objects augmenting DOM elements that match a selector
  * 
- * @param selector, String, A DOMString containing one or more selectors to match, must be a valid CSS selector string
+ * @param tid, String, tracking Id for the corresponding Google Analytics container
  * @params options, Object, to be merged with defaults to become the settings propery of each returned object
  */
 const init = (tid, options = {}) => {
