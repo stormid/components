@@ -1,5 +1,5 @@
-import { url } from '../../src/lib/utils/compose';
-import { cacheBuster, uuid } from '../../src/lib/utils/data';
+import { url } from '../../src/lib/shared/compose';
+import { cacheBuster, uuid } from '../../src/lib/shared/data';
 import { HOSTNAME } from '../../src/lib/constants';
 // -> https://developers.google.com/analytics/devguides/collection/protocol/v1/validating-hits
 

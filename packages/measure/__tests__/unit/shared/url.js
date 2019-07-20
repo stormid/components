@@ -1,6 +1,6 @@
-import { parseUrl } from '../../../src/lib/utils/url';
+import { parseUrl } from '../../../src/lib/shared/url';
 
-describe('Measure > utils > url', () => {
+describe('Measure > shared > url', () => {
 	
 	it('parses the a URL and returns a location-like object', () => {
 		const url = parseUrl('https://www.example.com:1234/path/to/file.html?a=b&c=d#hash');

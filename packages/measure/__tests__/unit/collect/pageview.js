@@ -1,4 +1,4 @@
-import { url } from '../../../src/lib/utils/compose';
+import { url } from '../../../src/lib/shared/compose';
 import { HOSTNAME } from '../../../src/lib/constants';
 
 describe('Measure > collect > pageview', () => {
