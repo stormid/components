@@ -60,6 +60,9 @@
             cursor:pointer;
             height:200px;
         }
+		.box:hover {
+            border:1px dashed rgba(0,0,0, .5);
+		}
         .box.clicked {
             background-color:rgba(0,0,0, .1);
         }
@@ -79,31 +82,10 @@
 </head>
 <body>
 	<div class="container">
-        <h1>Component Boilerplate</h1>
-        <h2>Example</h2>
-        <p>Click a box to trigger the eventHandler</p>
         <div class="row">
             <div class="js-boilerplate box"></div>
             <div class="js-boilerplate box"></div>
         </div> 
-        <hr>
-        <h2>Installation</h2>
-        <pre class="language-markup"><code>$ npm i -S @stormid/boilerplate</code></pre>
-        <h2>Usage</h2>
-        <h3>HTML</h3>
-        <pre><code>&lt;div class="js-boilerplate">&lt;/div>
-&lt;div class="js-boilerplate">&lt;/div>
-</code></pre>
-        <h3>JS</h3>
-        <p>Either import and initialise using a named import:</p>
-        <pre><code>import Boilerplate from '@stormid/boilerplate';
-Boilerplate.init('.js-boilerplate');
-</code></pre>
-        <p>Or load the UMD version and initialise using the global module name:</p>
-        <pre><code>import Load from '@stormid/load';
-await Load('https://unpkg.com/stormid/umd/@stormid/boilerplate.js');
-Boilerplate.init('.js-boilerplate');
-</code></pre>
 	</div>
 </body>
 </html>
