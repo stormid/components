@@ -31,9 +31,8 @@ export const systemInfo = () => ({
 	[PARAMETERS_MAP.USER_LANGUAGE]: window.navigator.userLanguage || window.navigator.language
 });
 
-// to do?
-// "dh", //Document Host Name; https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dh
-// "dp", //Document Path, (for 'pageview' hits, either &dl or both &dh and &dp have to be specified for the hit to be valid) https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dp
+// for 'pageview' hits, either &dl or both &dh and &dp have to be specified for the hit to be valid
+// https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dp
 export const documentInfo = () => {
     const { host, pathname } = parseUrl(document.location.href);
     return {

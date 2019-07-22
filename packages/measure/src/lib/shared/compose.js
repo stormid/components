@@ -5,9 +5,7 @@ import {
 	ECOMMERCE_IMPRESSION_PARAMETERS,
 	ECOMMERCE_PRODUCT_PARAMETERS,
     PARAMETERS_MAP,
-	HOSTNAME,
-	CUSTOM_PARAM_REGEX,
-	CUSTOM_PROPERTY_REGEX
+	HOSTNAME
 } from '../constants';
 
 export const url = ({ data, action }) => `${HOSTNAME}/${action}?${Object.keys(data).reduce((acc, param) => {
@@ -80,10 +78,7 @@ const composeImpressionList = (acc, curr, i) => {
 					acc[parameters[`IMPRESSION_PRODUCT_${param.toUpperCase()}`]] = curr[param];
 					return acc;
 				}, {});
-			return { 
-				...acc,
-				...products
-			}
+			return { ...acc, ...products }
 		}, {});
 
 	return {
@@ -104,14 +99,8 @@ export const action = (data, state) => ({
 	...(Array.isArray(data.data) ? data.data.reduce(composeProductList, {}) : [data.data].reduce(composeProductList, {})),
 	...(data.step ? { [PARAMETERS_MAP.CHECKOUT_STEP]: data.step } : {}),
 	...(data.option ? { [PARAMETERS_MAP.CHECKOUT_OPTION]: data.option } : {}),
-	...(data.purchase ? composePurchase(data.purchase) : {}),
-	...(data.custom ? composeCustomParams(data) : {})
+	...(data.purchase ? composePurchase(data.purchase) : {})
 });
-
-const composeCustomParams = data => {
-	if(CUSTOM_PARAM_REGEX.test(curr)) console.log(curr.match(CUSTOM_PROPERTY_REGEX));
-	return {};
-};
 
 const composePurchase = data => Object.keys(data).reduce((acc, curr) => {
 	const param = `TRANSACTION_${curr.toUpperCase()}`;

@@ -19,3 +19,17 @@ describe('Measure > collect > pageview', () => {
     });
     
 });
+
+//event
+    //links
+        //download
+        //external
+        //tel
+        //email
+
+
+//ecommerce
+    //impression
+    //click
+    //detail
+    //transaction

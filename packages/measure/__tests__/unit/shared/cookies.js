@@ -32,8 +32,6 @@ describe(`Measure > shared > cookies > readCookie`, () => {
     });
 
     it('Should return false if the cookie is not found', async () => {
-        //cookie we want is set in previous test...
-        //we'll set one we don't want
         expect(readCookie({ name: 'Absent cookie' })).toEqual(false);
     });
 });
