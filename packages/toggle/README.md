@@ -1,4 +1,4 @@
-# Storm Toggle
+# Toggle
 
 Accessible DOM state toggling for off-canvas and show/hide UI patterns.
 
@@ -27,7 +27,7 @@ import Load from 'storm-load';
 
 Load('/content/js/async/storm-toggle.standalone.js')
     .then(() => {
-        StormToggle.init('.js-toggle');
+        Toggle.init('.js-toggle');
     });
 ```
 
