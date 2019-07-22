@@ -1,11 +1,9 @@
 
 # Component Name
 
-[![npm version](https://badge.fury.io/js/storm-component-boilerplate.svg)](https://badge.fury.io/js/storm-component-boilerplate)
+This is a **boilerplate for developing UI components** by **StormId**.
 
-This is a **boilerplate for developing UI components** by **StormId**, used in production in conjunction with our project scaffold.
-
-Before use make sure to grep for “@stormid/component-boilerplate” and replace every occurrence as well as updating your tests, readme and example.
+Before use make sure to grep for “@stormid/boilerplate” and replace every occurrence as well as updating your tests, readme and example.
 
 ## Usage
 HTML
@@ -15,11 +13,11 @@ HTML
 
 JS
 ```
-npm i -S component-boilerplate
+npm i -S @stormid/boilerplate
 ```
 either using es6 import
 ```
-import Boilerplate from '@stormid/component-boilerplate';
+import Boilerplate from '@stormid/boilerplate';
 
 Boilerplate.init('.js-boilerplate');
 ```
@@ -27,7 +25,7 @@ asynchronous browser loading (use the .standalone version in the /dist folder) u
 ```
 import Load from 'storm-load';
 
-Load('https://unpkg.com/stormid/umd/@stormid/component-boilerplate.js')
+Load('https://unpkg.com/stormid/umd/@stormid/boilerplate.js')
     .then(() => {
         ComponentBoilerplate.init('.js-boilerplate');
     });
@@ -51,13 +49,11 @@ Boilerplate.init('.js-selector', {
 
 ## Tests
 ```
-npm test
+npm t
 ```
 
 ## Browser support
-This is module has both es6 and es5 distributions. The es6 version should be used in a workflow that transpiles.
-
-The es5 version depends upon Object.assign, element.classList, and Promises so all evergreen browsers are supported out of the box, ie9+ is supported with polyfills. ie8+ will work with even more polyfills for Array functions and eventListeners.
+This is module has both es6 and es5 distributions. It depends upon Object.assign, element.classList, and Promises so all evergreen browsers are supported out of the box, ie9+ is supported with polyfills. ie8+ will work with even more polyfills for Array functions and eventListeners.
 
 ## Dependencies
 None
