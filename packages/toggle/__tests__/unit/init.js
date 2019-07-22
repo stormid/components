@@ -32,4 +32,9 @@ describe(`Init`, () => {
         expect(Toggles[0].getState).not.toBeNull();
     });
 
+    it('should return without throwing if no DOM nodes are found', () => {
+        expect(Toggle.init('.js-no-found')).toBeUndefined();
+    });
+
+
 });

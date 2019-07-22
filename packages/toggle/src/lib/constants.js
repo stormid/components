@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 // DOM events on a trigger that initiate toggle
 export const TRIGGER_EVENTS = window.PointerEvent ? ['pointerdown', 'keydown'] : ['ontouchstart' in window ? 'touchstart' : 'click', 'keydown' ];
 

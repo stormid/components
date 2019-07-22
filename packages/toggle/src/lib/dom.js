@@ -37,7 +37,7 @@ export const toggle = Store => () => {
 };
 
 /*
- * Partially applied function that returns a function that being sthe toggle lifecycle (prehook > toggle > callback)
+ * Partially applied function that returns a function that begins the toggle lifecycle (prehook > toggle > callback)
  * 
  * @param Store, Object, model or state of the current instance
  * @returns Function
@@ -61,7 +61,7 @@ export const startToggleLifecycle = Store => () => {
  * @return Array of HTMLElements
  */
 export const findToggles = node => {
-    const toggles = node.getAttribute('data-toggle') && Array.from(document.querySelectorAll('.' + node.getAttribute('data-toggle')));
+    const toggles = node.getAttribute('data-toggle') && [].slice.call(document.querySelectorAll('.' + node.getAttribute('data-toggle')));
     if(!toggles) throw console.warn(`Toggle cannot be initialised, no buttons found for ${node}. Does it have a data-toggle attribute that identifies toggle buttons?`);
     return toggles;
 };
@@ -72,7 +72,7 @@ export const findToggles = node => {
  * @param node, HTMLElement, node to be toggled
  * @return Array of HTMLElements
  */
-export const getFocusableChildren = node => Array.from(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
+export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
 
 /*
  * Change toggle button attributes and node target classNames
