@@ -1,4 +1,4 @@
-# load
+# Load
 
 Minimal promise-based script loader for parallel and series orchestrated JS file loading via script tags.
 

@@ -1,7 +1,7 @@
 {
   "name": "@stormid/tabs",
   "version": "0.1.0",
-  "description": "",
+  "description": "Accessible tabs for multi-panelled content areas.",
   "author": "stormid",
   "license": "MIT",
   "repository": {
@@ -18,7 +18,8 @@
     "stormid",
     "component",
     "ui",
-    "tabs"
+    "tabs",
+    "browser"
   ],
   "scripts": {
     "build": "npx microbundle --name Tabs",

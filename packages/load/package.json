@@ -18,7 +18,8 @@
     "stormid",
     "component",
     "ui",
-    "tabs"
+    "script",
+    "browser"
   ],
   "scripts": {
     "build": "npx microbundle --name Load",

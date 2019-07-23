@@ -45,7 +45,7 @@ const init = () => {
     TabSet = Tabs.init('.js-tabs');
 };
 
-describe(`Initialisation`, () => {
+describe(`Tabs > Initialisation`, () => {
     
     beforeAll(init);
 
@@ -66,7 +66,7 @@ describe(`Initialisation`, () => {
 
 });
     
-describe(`Accessibility`, () => {
+describe(`Tabs > Accessibility > ARIA`, () => {
 
     it('should add correct attributes to tabs', async () => {
         expect(TabSet[0].getState().tabs[1].getAttribute('role')).toEqual('tab');
@@ -80,8 +80,11 @@ describe(`Accessibility`, () => {
         expect(TabSet[0].getState().panels[1].getAttribute('hidden')).toEqual('hidden');
         expect(TabSet[0].getState().panels[1].getAttribute('tabindex')).toEqual('-1');
     });
+    
+});
 
-    it('should add keyboard event listener for the enter key to each tab', () => {
+describe(`Tabs > Accessibility > keyboard events`, () => {
+    it('should add keyboard event listener for the left and right keys to each tab', () => {
         const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
         const left = new window.KeyboardEvent('keydown', { keyCode: 37, bubbles: true });
 
@@ -91,17 +94,47 @@ describe(`Accessibility`, () => {
         expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
     });
     
-});
+    it('should add keyboard event listener for the space key to each tab', () => {
+        const space = new window.KeyboardEvent('keydown', { keyCode: 32, bubbles: true });
 
-describe(`Mouse events`, () => {
-    it('should add keyboard event listener for the enter key to each tab', () => {
-        const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
-        const left = new window.KeyboardEvent('keydown', { keyCode: 37, bubbles: true });
-
-        TabSet[0].getState().tabs[0].dispatchEvent(right);
+        TabSet[0].getState().tabs[1].dispatchEvent(space);
         expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('true');
-        TabSet[0].getState().tabs[1].dispatchEvent(left);
-        expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
+        
     });
 
+    it('should add keyboard event listener for the enter key to each tab', () => {
+        const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
+
+        TabSet[0].getState().tabs[2].dispatchEvent(enter);
+        expect(TabSet[0].getState().tabs[2].getAttribute('aria-selected')).toEqual('true');
+        
+    });
+
+    it('should add keyboard event listener for the down key to each tab', () => {
+        const down = new window.KeyboardEvent('keydown', { keyCode: 40, bubbles: true });
+
+        TabSet[0].getState().tabs[2].dispatchEvent(down);
+        expect(document.activeElement).toEqual(TabSet[0].getState().panels[2]);
+        
+    });
+
+    it('should ignore other keyboard events, tab should follow tab order of the page', () => {
+        const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true });
+        const space = new window.KeyboardEvent('keydown', { keyCode: 32, bubbles: true });
+
+        TabSet[0].getState().tabs[1].dispatchEvent(space);
+        TabSet[0].getState().tabs[1].dispatchEvent(tab);
+        expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('true');
+        
+    });
+
+});
+
+describe(`Tabs > mouse events`, () => {
+    it('should click event listener for each tab', () => {
+        const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+
+        TabSet[0].getState().tabs[2].dispatchEvent(click);
+        expect(TabSet[0].getState().tabs[2].getAttribute('aria-selected')).toEqual('true');
+    });
 });

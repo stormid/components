@@ -1,5 +1,5 @@
 export const getActiveIndexByHash = panels => {
-    const hash = location.hash.slice(1);
+    const hash = location.hash ? location.hash.slice(1) : false;
     if(!hash) return undefined;
     
     return panels.reduce((acc, panel, i) => {

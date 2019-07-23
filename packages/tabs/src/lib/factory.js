@@ -15,7 +15,7 @@ export default ({ node, settings }) => {
     Store.dispatch({
         settings,
         node,
-        activeIndex: activeIndex !== undefined ? activeIndex : settings.activeIndex,
+        activeIndex: activeIndex !== undefined ? +activeIndex : +settings.activeIndex,
         tabs,
         panels
     }, [ initUI(Store), open ]);

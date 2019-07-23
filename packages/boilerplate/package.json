@@ -17,7 +17,8 @@
   "keywords": [
     "stormid",
     "boilerplate",
-    "component"
+    "component",
+    "browser"
   ],
   "scripts": {
     "build": "npx microbundle --name ComponentBoilerplate",
