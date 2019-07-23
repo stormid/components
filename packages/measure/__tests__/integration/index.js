@@ -11,7 +11,7 @@ describe(`Measure > hit validation`, () => {
             data: {
                 v: 1,
                 t: 'pageview',
-                tid: 'UA-141774857-1',
+                tid: global.tid,
                 cid: uuid(),
                 dp: '/',
                 z: cacheBuster()

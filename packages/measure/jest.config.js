@@ -9,4 +9,7 @@ module.exports = {
   displayName: pack.name,
   name: pack.name,
   setupFiles: ['./jest.setup.js'],
+  globals: {
+    tid: 'UA-141774857-1'
+  }
 };

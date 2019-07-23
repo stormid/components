@@ -1,3 +1,5 @@
+import reducers from '../reducers';
+
 export const createStore = () => {
     //shared centralised validator state
     let state = {};
@@ -16,8 +18,7 @@ export const createStore = () => {
      */
     const dispatch = function(reducer, nextState, effects) {
         state = nextState ? reducer(state, nextState) : state;
-        if(!effects) return;
-        effects.forEach(effect => { effect(state); });
+        effects && effects.forEach(effect => { effect(state); });
     };
 
     return { dispatch, getState };

@@ -16,7 +16,7 @@ const init = () => {
 };
 
 
-describe(`Init`, () => {
+describe(`Toggle > Init`, () => {
     
     beforeAll(init);
 

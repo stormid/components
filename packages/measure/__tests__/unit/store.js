@@ -1,6 +1,6 @@
 import { createStore } from '../../src/lib/store';
 
-describe(`Toggle > Store`, () => {
+describe(`Measure > Store`, () => {
 
     const Store = createStore();
     let effect = false;
@@ -21,18 +21,18 @@ describe(`Toggle > Store`, () => {
 
     it('should have a dispatch function that updates state', async () => {
         const nextState = { isOpen: true }
-        Store.dispatch(nextState);
+        Store.dispatch((state, nextState) => nextState, nextState);
         expect(Store.getState()).toEqual(nextState);
     });
 
     it('should have a dispatch function that does not update state if nextState is not passed', async () => {
         const Store = createStore();
-        Store.dispatch();
+        Store.dispatch((state, nextState) => nextState, null, []);
         expect(Store.getState()).toEqual({});
     });
 
     it('should have a dispatch function that invokes any side effect functions passed after the state change, with new state as only argument', async () => {
-        Store.dispatch({}, [sideEffect]);
+        Store.dispatch(() => {}, {}, [sideEffect]);
         expect(effect).toEqual(true);
     });
 

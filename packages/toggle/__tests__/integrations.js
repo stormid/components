@@ -25,7 +25,7 @@ const init = () => {
 	});
 };
 
-describe(`Initialisation`, () => {
+describe(`Toggle > Initialisation`, () => {
     
     beforeAll(init);
 
@@ -48,7 +48,7 @@ describe(`Initialisation`, () => {
 
 });
 
-describe('API', () => {
+describe('Toggle > API', () => {
 
     it('should expose a toggle function that toggles the state of the instance', async () => {
         expect(Toggles[0].getState().isOpen).toEqual(false);
@@ -59,7 +59,7 @@ describe('API', () => {
     
 });
 
-describe('Localised toggle', () => {
+describe('Toggle > Localised toggle', () => {
 
     it('should toggle a localised area of DOM', async () => {
         TogglesLocal[0].toggle();
@@ -70,7 +70,7 @@ describe('Localised toggle', () => {
     
 });
 
-describe('Global toggle', () => {
+describe('Toggle > Global toggle', () => {
 
     it('should toggle at the document level', async () => {
         Toggles[0].toggle();
@@ -81,7 +81,7 @@ describe('Global toggle', () => {
     
 });
 
-describe('Multiple toggle buttons', () => {
+describe('Toggle > Multiple toggle buttons', () => {
 
     it('should change attributes of all toggle buttons when an instance changes state', async () => {
         const togglesExpanded = toggles => toggles.reduce((acc, curr) => {

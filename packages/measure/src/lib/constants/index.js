@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export const HOSTNAME = 'https://www.google-analytics.com';
 
 export const PATH = '/collect';
