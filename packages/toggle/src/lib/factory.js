@@ -1,12 +1,9 @@
 import { createStore } from './store';
 import {
     findToggles,
-    toggleAttributes,
     getFocusableChildren,
     keyListener,
-    closeOnBlur,
     proxyListener,
-    manageFocus,
     initUI,
     startToggleLifecycle,
     toggle
