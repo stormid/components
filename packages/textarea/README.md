@@ -19,7 +19,7 @@ asynchronous browser loading (use the .standalone version in the /dist folder) u
 ```
 import Load from '@stormid/load';
 
-Load('https://unpkg.com/stormid/umd/@stormid/boilerplate.js')
+Load('https://unpkg.com/stormid/umd/@stormid/textarea.js')
     .then(() => {
         Textarea.init('textarea');
     });
@@ -29,8 +29,8 @@ Load('https://unpkg.com/stormid/umd/@stormid/boilerplate.js')
 ```
 {
     events: [
-		'input' //default textarea resize event
-	]
+        'input' //default textarea resize event
+    ]
 }
 ```
 
