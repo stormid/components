@@ -1,4 +1,5 @@
 import Modal from '../src';
+import defaults from '../src/lib/defaults';
 
 let ModalSet;
 
@@ -39,11 +40,11 @@ const init = () => {
     ModalSet = Modal.init('.js-modal');
 };
 
-describe(`Initialisation`, () => {
+describe(`Modal > Initialisation`, () => {
     
     beforeAll(init);
 
-    it('should return array of length 2', async () => {
+    it('should return array of length 2', () => {
       expect(ModalSet.length).toEqual(2);
     });
 
@@ -57,44 +58,39 @@ describe(`Initialisation`, () => {
     });
 
 });
-/*
-describe(`Accessibility`, () => {
 
-    it('should add correct attributes to tabs', async () => {
-        expect(TabSet[0].getState().tabs[1].getAttribute('role')).toEqual('tab');
-        expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('false');
-        expect(TabSet[0].getState().tabs[1].getAttribute('tabindex')).toEqual('-1');
-    });
+// describe(`Accessibility`, () => {});
 
-    it('should add correct attributes to panels', async () => {
-        expect(TabSet[0].getState().panels[1].getAttribute('aria-labelledby')).toEqual(TabSet[0].getState().tabs[1].getAttribute('id'));
-        expect(TabSet[0].getState().panels[1].getAttribute('role')).toEqual('tabpanel');
-        expect(TabSet[0].getState().panels[1].getAttribute('hidden')).toEqual('hidden');
-        expect(TabSet[0].getState().panels[1].getAttribute('tabindex')).toEqual('-1');
-    });
 
-    it('should add keyboard event listener for the enter key to each tab', () => {
-        const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
-        const left = new window.KeyboardEvent('keydown', { keyCode: 37, bubbles: true });
+describe(`Modal > Mouse events`, () => {
 
-        TabSet[0].getState().tabs[0].dispatchEvent(right);
-        expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('true');
-        TabSet[0].getState().tabs[1].dispatchEvent(left);
-        expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
-    });
-    
-});
+    beforeAll(init);
 
-describe(`Mouse events`, () => {
-    it('should add keyboard event listener for the enter key to each tab', () => {
-        const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
-        const left = new window.KeyboardEvent('keydown', { keyCode: 37, bubbles: true });
+    it('should attach the handleClick eventListener to DOMElement click event to toggle documentElement className', () => {
+		ModalSet[0].toggles[0].click();
+        expect(Array.from(ModalSet[0].node.classList)).toContain(defaults.onClassName);
+        ModalSet[0].toggles[0].click();
+        Array.from(ModalItem[0].node.classList).toContain(defaults.onClassName);
+	});
 
-        TabSet[0].getState().tabs[0].dispatchEvent(right);
-        expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('true');
-        TabSet[0].getState().tabs[1].dispatchEvent(left);
-        expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
-    });
+	// it('should pass an invokable callback as an option', () => {
+	// 	ModalItemSetting[0].settings.should.have.property('callback').Function();
+	// });
+
+	it('should change sibling buttons aria expanded attribute', () => {
+		ModalSet[0].toggles[0].click();
+		expect(ModalSet[0].node.getAttribute('aria-hidden')).toEqual(false);
+	});
+
+
+    // it('should add keyboard event listener for the enter key to each tab', () => {
+    //     const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
+    //     const left = new window.KeyboardEvent('keydown', { keyCode: 37, bubbles: true });
+
+    //     TabSet[0].getState().tabs[0].dispatchEvent(right);
+    //     expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('true');
+    //     TabSet[0].getState().tabs[1].dispatchEvent(left);
+    //     expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
+    // });
 
 });
-*/
