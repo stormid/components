@@ -4,14 +4,12 @@
  *
  * @property onClassName, String, 
  * @property mainSelector, String
- * @property modalSelector, String
  * @property callback, Function
  * @property delay, Number
  */
 export default {
 	onClassName: 'is--active',
     mainSelector: 'main',
-    modalSelector: '.js-modal',
     toggleSelectorAttribute: 'data-modal-toggle',
     callback: false,
     delay: 0
