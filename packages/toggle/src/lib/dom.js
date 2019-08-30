@@ -11,7 +11,7 @@ export const initUI = Store => () => {
     toggles.forEach(toggle => {
         if(toggle.tagName !== 'BUTTON') toggle.setAttribute('role', 'button');
         const id = node.getAttribute('id');
-        if(!id) throw console.warn(`${node} should have an id.`);
+        if(!id) throw console.warn(`The toggle target should have an id.`);
         toggle.setAttribute('aria-controls', id);
         toggle.setAttribute('aria-expanded', 'false');
         TRIGGER_EVENTS.forEach(ev => {
@@ -62,7 +62,7 @@ export const startToggleLifecycle = Store => () => {
  */
 export const findToggles = node => {
     const toggles = node.getAttribute('data-toggle') && [].slice.call(document.querySelectorAll('.' + node.getAttribute('data-toggle')));
-    if(!toggles) throw console.warn(`Toggle cannot be initialised, no buttons found for ${node}. Does it have a data-toggle attribute that identifies toggle buttons?`);
+    if(!toggles) console.warn(`Toggle cannot be initialised, no buttons found for ${node}. Does it have a data-toggle attribute that identifies toggle buttons?`);
     return toggles;
 };
 
