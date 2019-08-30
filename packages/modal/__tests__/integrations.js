@@ -1,4 +1,5 @@
 import Modal from '../src';
+import defaults from '../src/lib/defaults';
 
 let ModalSet;
 
@@ -11,7 +12,6 @@ const init = () => {
         <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label">
             <h1 id="modal-label"></h1>
             <button>Focusable element</button>
-            <input type="text">
             <input type="text">
             <svg role="button" aria-label="close" tabindex="0" class="modal__close-btn js-modal-toggle" fill="#fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
@@ -39,11 +39,11 @@ const init = () => {
     ModalSet = Modal.init('.js-modal');
 };
 
-describe(`Initialisation`, () => {
+describe(`Modal > Initialisation`, () => {
     
     beforeAll(init);
 
-    it('should return array of length 2', async () => {
+    it('should return array of length 2', () => {
       expect(ModalSet.length).toEqual(2);
     });
 
@@ -57,44 +57,62 @@ describe(`Initialisation`, () => {
     });
 
 });
-/*
-describe(`Accessibility`, () => {
 
-    it('should add correct attributes to tabs', async () => {
-        expect(TabSet[0].getState().tabs[1].getAttribute('role')).toEqual('tab');
-        expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('false');
-        expect(TabSet[0].getState().tabs[1].getAttribute('tabindex')).toEqual('-1');
-    });
 
-    it('should add correct attributes to panels', async () => {
-        expect(TabSet[0].getState().panels[1].getAttribute('aria-labelledby')).toEqual(TabSet[0].getState().tabs[1].getAttribute('id'));
-        expect(TabSet[0].getState().panels[1].getAttribute('role')).toEqual('tabpanel');
-        expect(TabSet[0].getState().panels[1].getAttribute('hidden')).toEqual('hidden');
-        expect(TabSet[0].getState().panels[1].getAttribute('tabindex')).toEqual('-1');
-    });
+describe(`Modal > Mouse events`, () => {
 
-    it('should add keyboard event listener for the enter key to each tab', () => {
-        const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
-        const left = new window.KeyboardEvent('keydown', { keyCode: 37, bubbles: true });
+    beforeAll(init);
 
-        TabSet[0].getState().tabs[0].dispatchEvent(right);
-        expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('true');
-        TabSet[0].getState().tabs[1].dispatchEvent(left);
-        expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
+    it('should attach the handleClick eventListener to DOMElement click event to toggle documentElement className', () => {
+		ModalSet[0].getState().toggles[0].click();
+        expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+        ModalSet[0].getState().toggles[0].click();
+        expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
+	});
+
+});
+
+describe(`Modal > Keyboard events`, () => {
+
+    beforeAll(init);
+
+    it('should attach the keydown eventListener to DOMElement to toggle documentElement className for space bar', () => {
+        const space = new window.KeyboardEvent('keydown', { keyCode: 32, bubbles: true });
+		ModalSet[0].getState().toggles[0].dispatchEvent(space);
+        expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+		ModalSet[0].getState().toggles[0].dispatchEvent(space);
+        expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
     });
     
-});
-
-describe(`Mouse events`, () => {
-    it('should add keyboard event listener for the enter key to each tab', () => {
-        const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
-        const left = new window.KeyboardEvent('keydown', { keyCode: 37, bubbles: true });
-
-        TabSet[0].getState().tabs[0].dispatchEvent(right);
-        expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('true');
-        TabSet[0].getState().tabs[1].dispatchEvent(left);
-        expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
+    it('should attach the keydown eventListener to DOMElement to toggle documentElement className for enter key', () => {
+        const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
+		ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+        expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+		ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+        expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
     });
+    
+    it('should attach the keydown eventListener to DOMElement to close modal on escape key press', () => {
+        const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
+        const escape = new window.KeyboardEvent('keydown', { keyCode: 27, bubbles: true });
+
+		ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+        expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+		document.dispatchEvent(escape);
+        expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
+	});
+
+    // tab events not changing activeElement in JSDOM
+    // it('should trap tab in the modal until it is closed', () => {
+    //     const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true });
+    //     const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
+
+	// 	ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+    //     // expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+	// 	// document.dispatchEvent(tab);
+    //     // document.dispatchEvent(tab);
+    //     console.log(document.activeElement.innerHTML);
+    //     // expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
+	// });
 
 });
-*/

@@ -40,7 +40,7 @@ export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(
 export const keyListener = Store => e => {
     if (Store.getState().isOpen && e.keyCode === 27) {
         e.preventDefault();
-        toggle(Store)();
+        toggle(Store.getState());
     }
     if (Store.getState().isOpen && e.keyCode === 9) trapTab(Store.getState())(e);
 };
@@ -113,15 +113,16 @@ export const change = Store => state => {
  * 
  * @param Store, Object, model or state of the current instance
  */
-export const initUI = Store => ({ node, dialog, toggles }) => { 
-   dialog.setAttribute('aria-hidden', true);
-   if(!dialog.getAttribute('aria-modal')) console.warn(`The modal dialog should have an aria-modal attribute of 'true'.`);
-   if(
-       !dialog.getAttribute('aria-label') &&
-       (!dialog.getAttribute('aria-labelledby') || !document.querySelector(`#${dialog.getAttribute('aria-labelledby')}`))
-    ) console.warn(`The modal dialog should have an aria-labelledby attribute that matches the id of an element that contains text, or an aria-label attribute.`);
-   //check aria-labelledby= an id in the dialog
-   toggles.forEach(tgl => {
+export const initUI = Store => ({ dialog, toggles }) => {
+    if(!dialog || !toggles) return;
+    dialog.setAttribute('aria-hidden', true);
+    if(!dialog.getAttribute('aria-modal')) console.warn(`The modal dialog should have an aria-modal attribute of 'true'.`);
+    if(
+        !dialog.getAttribute('aria-label') &&
+        (!dialog.getAttribute('aria-labelledby') || !document.querySelector(`#${dialog.getAttribute('aria-labelledby')}`))
+        ) console.warn(`The modal dialog should have an aria-labelledby attribute that matches the id of an element that contains text, or an aria-label attribute.`);
+    //check aria-labelledby= an id in the dialog
+    toggles.forEach(tgl => {
         TRIGGER_EVENTS.forEach(ev => {
             tgl.addEventListener(ev, e => {
                 if(!!e.keyCode && !~KEYCODES.indexOf(e.keyCode) || (e.which && e.which === 3)) return;
@@ -132,5 +133,5 @@ export const initUI = Store => ({ node, dialog, toggles }) => {
                 }, [ change(Store) ]);
             });
         });
-    })
+    });
 };
