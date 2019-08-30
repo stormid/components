@@ -31,7 +31,7 @@ const initObserver = el => {
 	const observer = new MutationObserver(mutationsList => {
 		update({ target: el });
 	});
-	observer.observe(el.parentNode, { attributes: true, attributeOldValue: true, attributeFilter: ['class']  });
+	observer.observe(el.parentNode, { attributes: true, attributeOldValue: true, attributeFilter: ['class', 'hidden']  });
 };
 
 export default { init };
