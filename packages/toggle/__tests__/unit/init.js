@@ -33,7 +33,7 @@ describe(`Toggle > Init`, () => {
     });
 
     it('should return without throwing if no DOM nodes are found', () => {
-        expect(Toggle.init('.js-no-found')).toBeUndefined();
+        expect(Toggle.init('.js-not-found')).toBeUndefined();
     });
 
 

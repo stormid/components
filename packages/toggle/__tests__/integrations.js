@@ -6,7 +6,11 @@ const init = () => {
     // Set up our document body
     document.body.innerHTML = `<a tabindex="0" id="btn-1-1" href="#target-1" class="js-toggle_btn">Test toggle</a>
         <a href="#target-1" class="js-toggle_btn">Test toggle</a>
-        <div id="target-1" class="js-toggle" data-toggle="js-toggle_btn"><div id="focusable-1-1" tabindex="0">Test focusable content</div><div tabindex="0">Test focusable content</div><div tabindex="0">Test focusable content</div></div>
+        <div id="target-1" class="js-toggle" data-toggle="js-toggle_btn">
+            <div id="focusable-1-1" tabindex="0">Test focusable content</div>
+            <div tabindex="0">Test focusable content</div>
+            <div tabindex="0">Test focusable content, last node</div>
+        </div>
         
         <a href="#target-2" class="js-toggle_btn-2">Test toggle</a>
         <div id="target-2" class="js-toggle" data-toggle="js-toggle_btn-2" data-delay="100"></div>
@@ -18,6 +22,7 @@ const init = () => {
     Toggles = Toggle.init('.js-toggle', {
 		trapTab: true,
 		closeOnBlur: true,
+		closeOnClick: true,
 		focus: true
 	});
 	TogglesLocal = Toggle.init('.js-toggle-local', {
@@ -97,37 +102,55 @@ describe('Toggle > Multiple toggle buttons', () => {
 
 });
 
+// focusin event not bubbling to document
+describe('Toggle > Close on blur', () => {
+    it('should close an open toggle when the document.activeElement becomes a non-child element', async () => {
+        Toggles[0].toggle();
+        // TogglesLocal[0].getState().toggles[0].focus();
+        const focusin = new CustomEvent('focusin', { bubbles: true, cancelable: false });
+        document.dispatchEvent(focusin);
+        expect(Toggles[0].getState().isOpen).toEqual(false);
+    });
 
-//   it('should trigger the handleClick function toggling the className', () => {
+});
 
-//     basic[0].handleClick.call(basic[0].node);
-//     expect(basic[0].node.classList).toContain('clicked');
-//     basic[0].handleClick.call(basic[0].node);
-//     expect(basic[0].node.classList).not.toContain('clicked');
+describe('Toggle > Close on click', () => {
+    it('should close an open toggle when the a non-child is clicked', async () => {
+        Toggles[0].toggle();
+        TogglesLocal[0].getState().toggles[0].click();
+        expect(Toggles[0].getState().isOpen).toEqual(false);
+    });
 
-//    });
+});
 
+describe('Toggle > Tabbing', () => {
 
+    it('should tab to the last focusable child with a shift-tab', async () => {
+        const shiftTab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true, shiftKey: true });        
+        const focusableChildren = Toggles[0].getState().focusableChildren;
+        Toggles[0].toggle();
+        focusableChildren[0].dispatchEvent(shiftTab);
+        expect(document.activeElement).toEqual(focusableChildren[focusableChildren.length -1]);
+    });
 
-    // it('should attach the handleClick eventListener to DOMElement click event to toggle className', () => {
+    it('should trapTab and return to the first focusable child', async () => {
+        const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true});        
+        const focusableChildren = Toggles[0].getState().focusableChildren;
+        focusableChildren[0].dispatchEvent(tab);
+        expect(document.activeElement).toEqual(focusableChildren[0]);
 
-    //     basic[0].node.click();
-    //     expect(basic[0].node.classList).toContain('clicked');
-    //     basic[0].node.click();
-    //     expect(basic[0].node.classList).not.toContain('clicked');
+        //and close for next test
+        Toggles[0].toggle();
+    });
 
-    // });
+});
 
-// });
+describe('Toggle > Escape to close', () => {
 
-
-// describe('Options', () => {
-
-//   it('should be passed in options', () => {
-    
-//     expect(withCallback[0].settings.callback).not.toBeNull();
-//     expect(basic[0].settings.callback).toBeNull();
-
-//   });
-
-// });
+    it('should close open toggles when the escape key is pressed', async () => {
+        const escape = new window.KeyboardEvent('keydown', { keyCode: 27, bubbles: true });      
+        Toggles[0].toggle();
+        document.dispatchEvent(escape);
+        expect(Toggles[0].getState().isOpen).toEqual(true);
+    });
+});

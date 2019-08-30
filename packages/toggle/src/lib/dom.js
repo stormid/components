@@ -98,7 +98,7 @@ export const keyListener = Store => e => {
     switch(e.keyCode){
         case 27:
             e.preventDefault();
-            startToggleCycle(Store);
+            startToggleLifecycle(Store);
         break;
         case 9:
             trapTab(Store, e);
@@ -119,7 +119,7 @@ const trapTab = (Store, e) => {
     const focusedIndex = focusableChildren.indexOf(document.activeElement);
     if(e.shiftKey && focusedIndex === 0) {
         e.preventDefault();
-        focusableChildren[this.focusableChildren.length - 1].focus();
+        focusableChildren[focusableChildren.length - 1].focus();
     } else {
         if(!e.shiftKey && focusedIndex === focusableChildren.length - 1) {
             e.preventDefault();
@@ -139,7 +139,6 @@ const trapTab = (Store, e) => {
  */
 export const proxyListener = Store => e => {
     const { node, toggles } = Store.getState();
-
     if(!node.contains(e.target) && !toggles.reduce((acc, toggle) => {
             if(toggle === e.target|| toggle.contains(e.target)) acc = true;
             return acc;
