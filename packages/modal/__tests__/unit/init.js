@@ -1,12 +1,12 @@
 import Modal from '../../src';
 
-let ModalSet;
+let ModalSet, ModalErrorSet
 
 const init = () => {
     // Set up our document body
     document.body.innerHTML = `<button class="js-modal-toggle">Open modal</button>
     <div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle">
-        <div class="modal__close js-modal-close js-modal-toggler" aria-label="close">
+        <div class="modal__close js-modal-close js-modal-toggle" aria-label="close">
         </div>
         <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label">
             <h1 id="modal-label"></h1>
@@ -21,7 +21,7 @@ const init = () => {
     </div>
     
     <button class="js-modal-toggle__2">Open modal</button>
-    <div id="modal-2" class="js-modal modal" data-delay="20" data-modal-toggle="js-modal-toggle__2">
+    <div id="modal-2" class="js-modal-error modal" data-delay="20" data-modal-toggle="js-modal-toggle__2">
         <div class="modal__close js-modal-close js-modal-toggle__2" aria-label="close">
         </div>
         <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label-2">
@@ -34,9 +34,19 @@ const init = () => {
                 <path d="M0 0h24v24H0z" fill="none"/>
             </svg>
         </div>
+    </div>
+    
+    <div id="modal-2" class="js-modal modal" data-delay="20" data-modal-toggle="js-modal-toggle__3">
+        <div class="modal__inner">
+            <h1 id="modal-label-2"></h1>
+            <button>Focusable element</button>
+            <input type="text">
+            <input type="text">
+        </div>
     </div>`;
 
     ModalSet = Modal.init('.js-modal');
+    ModalErrorSet = Modal.init('.js-modal-error');
     
 };
 
@@ -55,19 +65,20 @@ describe(`Modal > Init`, () => {
     });
 
     it('should return without throwing if no DOM nodes are found', () => {
-        expect(Modal.init('.js-no-found')).toBeUndefined();
+        expect(Modal.init('.js-not-found')).toBeUndefined();
     });
 
     it('should create instance with different options based on node data-attributes from same init function', () => {
         expect(ModalSet[0].getState().settings.delay).not.toEqual(ModalSet[1].getState().settings.delay);
     });
 
+    it('should set an aria-hidden attribute on the dialog', () => {
+        expect(ModalSet[0].getState().dialog.getAttribute('aria-hidden')).toEqual('true');
+    });
+
+    it('should find toggles associated with the modal', () => {
+        expect(ModalSet[0].getState().toggles.length).toEqual(3);
+    });
 
 });
 
-
-/*
-dom/initUI
-- dialog.setAttribute('aria-hidden', true);
-- throw warnings if no aria-label, or no valid aria-labelledby
-*/

@@ -13,7 +13,6 @@ const init = () => {
             <h1 id="modal-label"></h1>
             <button>Focusable element</button>
             <input type="text">
-            <input type="text">
             <svg role="button" aria-label="close" tabindex="0" class="modal__close-btn js-modal-toggle" fill="#fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                 <path d="M0 0h24v24H0z" fill="none"/>
@@ -59,38 +58,61 @@ describe(`Modal > Initialisation`, () => {
 
 });
 
-// describe(`Accessibility`, () => {});
-
 
 describe(`Modal > Mouse events`, () => {
 
     beforeAll(init);
 
     it('should attach the handleClick eventListener to DOMElement click event to toggle documentElement className', () => {
-		ModalSet[0].toggles[0].click();
-        expect(Array.from(ModalSet[0].node.classList)).toContain(defaults.onClassName);
-        ModalSet[0].toggles[0].click();
-        Array.from(ModalItem[0].node.classList).toContain(defaults.onClassName);
+		ModalSet[0].getState().toggles[0].click();
+        expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+        ModalSet[0].getState().toggles[0].click();
+        expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
 	});
 
-	// it('should pass an invokable callback as an option', () => {
-	// 	ModalItemSetting[0].settings.should.have.property('callback').Function();
+});
+
+describe(`Modal > Keyboard events`, () => {
+
+    beforeAll(init);
+
+    it('should attach the keydown eventListener to DOMElement to toggle documentElement className for space bar', () => {
+        const space = new window.KeyboardEvent('keydown', { keyCode: 32, bubbles: true });
+		ModalSet[0].getState().toggles[0].dispatchEvent(space);
+        expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+		ModalSet[0].getState().toggles[0].dispatchEvent(space);
+        expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
+    });
+    
+    it('should attach the keydown eventListener to DOMElement to toggle documentElement className for enter key', () => {
+        const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
+		ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+        expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+		ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+        expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
+    });
+    
+    it('should attach the keydown eventListener to DOMElement to close modal on escape key press', () => {
+        const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
+        const escape = new window.KeyboardEvent('keydown', { keyCode: 27, bubbles: true });
+
+		ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+        expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+		document.dispatchEvent(escape);
+        expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
+	});
+
+    // tab events not changing activeElement in JSDOM
+    // it('should trap tab in the modal until it is closed', () => {
+    //     const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true });
+    //     const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
+
+	// 	ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+    //     // expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+	// 	// document.dispatchEvent(tab);
+    //     // document.dispatchEvent(tab);
+    //     console.log(document.activeElement.innerHTML);
+    //     // expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
 	// });
-
-	it('should change sibling buttons aria expanded attribute', () => {
-		ModalSet[0].toggles[0].click();
-		expect(ModalSet[0].node.getAttribute('aria-hidden')).toEqual(false);
-	});
-
-
-    // it('should add keyboard event listener for the enter key to each tab', () => {
-    //     const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
-    //     const left = new window.KeyboardEvent('keydown', { keyCode: 37, bubbles: true });
-
-    //     TabSet[0].getState().tabs[0].dispatchEvent(right);
-    //     expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('true');
-    //     TabSet[0].getState().tabs[1].dispatchEvent(left);
-    //     expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
-    // });
 
 });
