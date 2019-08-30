@@ -8,24 +8,24 @@ For page-level state toggling (e.g. an off-canvas menu)
 HTML
 ```
 <button class="js-toggle-btn">Menu</button>
-<nav class="js-toggle" data-toggle="js-toggle-btn">...</nav>
+<nav id="primawry-navigation" aria-label="Main navigation" class="js-toggle" data-toggle="js-toggle-btn">...</nav>
 ```
 
 JS
 ```
-npm i -S storm-toggle
+npm i -S @stormid/toggle
 ```
 either using es6 import
 ```
-import Toggle from 'storm-toggle';
+import Toggle from '@stormid/toggle';
 
 Toggle.init('.js-toggle');
 ```
 aynchronous browser loading (use the .standalone version in the /dist folder)
 ```
-import Load from 'storm-load';
+import Load from '@stormid/load';
 
-Load('/content/js/async/storm-toggle.standalone.js')
+Load('/content/js/async/toggle.js')
     .then(() => {
         Toggle.init('.js-toggle');
     });
@@ -38,7 +38,7 @@ HTML
 ```
 <div class="parent">
     <button class="js-toggle__btn"></a>
-    <div class="js-toggle__local" data-toggle="js-toggle__btn"></div>
+    <div id="child" class="js-toggle__local" data-toggle="js-toggle__btn"></div>
 </div>
 ```
 
@@ -47,7 +47,7 @@ CSS
 .child {
     display: none
 }
-.parent.active .child {
+.parent.is--active .child {
     display: static;
 }
 ```

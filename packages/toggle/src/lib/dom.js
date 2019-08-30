@@ -11,7 +11,7 @@ export const initUI = Store => () => {
     toggles.forEach(toggle => {
         if(toggle.tagName !== 'BUTTON') toggle.setAttribute('role', 'button');
         const id = node.getAttribute('id');
-        if(!id) throw console.warn(`${node} should have an id.`);
+        if(!id) throw console.warn(`The toggle target should have an id.`);
         toggle.setAttribute('aria-controls', id);
         toggle.setAttribute('aria-expanded', 'false');
         TRIGGER_EVENTS.forEach(ev => {
@@ -62,7 +62,7 @@ export const startToggleLifecycle = Store => () => {
  */
 export const findToggles = node => {
     const toggles = node.getAttribute('data-toggle') && [].slice.call(document.querySelectorAll('.' + node.getAttribute('data-toggle')));
-    if(!toggles) throw console.warn(`Toggle cannot be initialised, no buttons found for ${node}. Does it have a data-toggle attribute that identifies toggle buttons?`);
+    if(!toggles) console.warn(`Toggle cannot be initialised, no buttons found for ${node}. Does it have a data-toggle attribute that identifies toggle buttons?`);
     return toggles;
 };
 
@@ -98,7 +98,7 @@ export const keyListener = Store => e => {
     switch(e.keyCode){
         case 27:
             e.preventDefault();
-            startToggleCycle(Store);
+            startToggleLifecycle(Store);
         break;
         case 9:
             trapTab(Store, e);
@@ -119,7 +119,7 @@ const trapTab = (Store, e) => {
     const focusedIndex = focusableChildren.indexOf(document.activeElement);
     if(e.shiftKey && focusedIndex === 0) {
         e.preventDefault();
-        focusableChildren[this.focusableChildren.length - 1].focus();
+        focusableChildren[focusableChildren.length - 1].focus();
     } else {
         if(!e.shiftKey && focusedIndex === focusableChildren.length - 1) {
             e.preventDefault();
@@ -139,7 +139,6 @@ const trapTab = (Store, e) => {
  */
 export const proxyListener = Store => e => {
     const { node, toggles } = Store.getState();
-
     if(!node.contains(e.target) && !toggles.reduce((acc, toggle) => {
             if(toggle === e.target|| toggle.contains(e.target)) acc = true;
             return acc;
