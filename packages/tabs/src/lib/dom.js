@@ -12,7 +12,7 @@ import { KEYCODES } from './constants';
  * @return Object, tabs (Array of HTMLElement tab links), panels (Array of HTMLElement panel links)
  */
  export const findTabsAndPanels = (node, settings) => {
-     const tabs = Array.from(node.querySelectorAll(settings.tabSelector));
+     const tabs = [].slice.call(node.querySelectorAll(settings.tabSelector));
      const panels = tabs.map(tab => document.getElementById(tab.getAttribute('href').substr(1)) || console.warn(`Tab panel for ${tab}`));
      return { tabs, panels }
 };

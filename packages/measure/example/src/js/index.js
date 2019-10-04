@@ -4,7 +4,7 @@ import Measure from '../../../src';
 window.addEventListener('DOMContentLoaded', () => {
 
     //Collect custom dimensions using preferred mechanism, e.g. read from DOM node, script tag with Array/Object/JSON
-    const customDimensionNodes = Array.from(document.querySelectorAll('[name^=custom-dimension-]'));
+    const customDimensionNodes = [].slice.call(document.querySelectorAll('[name^=custom-dimension-]'));
     let custom = customDimensionNodes.length !== 0 
                         ? customDimensionNodes.reduce((custom, el) => {
                             custom.push({
@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         }, [])
                         : [];
 
-    const customMetricNodes = Array.from(document.querySelectorAll('[name^=custom-metric-]'));
+    const customMetricNodes = [].slice.call(document.querySelectorAll('[name^=custom-metric-]'));
     custom = customMetricNodes.length !== 0
                     ? customMetricNodes.reduce((custom, el) => {
                         custom.push({
