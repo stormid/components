@@ -7,7 +7,9 @@ import {
     getGroupValidityState,
     reduceGroupValidityState,
     resolveRealTimeValidationEvent,
-    reduceErrorMessages
+    reduceErrorMessages,
+    removeUnvalidatableGroups,
+    assembleValidationGroup
 } from '../validator';
 import {
     clearErrors,
@@ -77,18 +79,42 @@ const validate = Store => e => {
  * Adds a custom validation method to the validation model, used via the API
  * Dispatches add validation method to store to update the validators in a group
  * 
- * @param groupName [String] The name attribute shared by the DOm nodes in the group
+ * @param groupName [String] The name attribute shared by the DOM nodes in the group
  * @param method [Function] The validation method (function that returns true or false) that us called on the group
  * @param message [String] Te error message displayed if the validation method returns false
  * 
  */
-const addMethod = (groupName, method, message) => {
+const addMethod = Store => (groupName, method, message) => {
     if((groupName === undefined || method === undefined || message === undefined) || !Store.getState()[groupName] && document.getElementsByName(groupName).length === 0)
         return console.warn('Custom validation method cannot be added.');
 
-    Store.dispatch(ACTIONS.ADD_VALIDATION_METHOD, {groupName, validator: {type: 'custom', method, message}});
+    Store.dispatch(ACTIONS.ADD_VALIDATION_METHOD, { groupName, validator: { type: 'custom', method, message }});
 };
 
+/**
+ * Adds a group to the validation model, used via the API
+ * Dispatches add group method to store 
+ * 
+ * @param nodes [Array], nodes comprising the group
+ * 
+ */
+const addGroup = Store => nodes => {
+    const groups = removeUnvalidatableGroups(nodes.reduce(assembleValidationGroup, {}));
+    if(!Object.keys(groups)) return console.warn('Group cannot be added.');
+
+    Store.dispatch(ACTIONS.ADD_GROUP, groups);
+};
+
+/**
+ * Removes a group to the validation model, used via the API
+ * Dispatches remove group method to store 
+ * 
+ * @param groupName, nodes comprising the group
+ * 
+ */
+const removeGroup = Store => groupName => {
+    Store.dispatch(ACTIONS.REMOVE_GROUP, groupName);
+};
 
 /**
  * Starts real-time validation on each group, adding an eventListener to each field 
@@ -152,6 +178,8 @@ export default (form, settings = {}) => {
     return {
         getState: Store.getState,
         validate: validate(Store),
-        addMethod
+        addMethod: addMethod(Store),
+        addGroup: addGroup(Store),
+        removeGroup: removeGroup(Store)
     }
 };

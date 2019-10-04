@@ -31,6 +31,7 @@ describe('Validate > Unit > DOM > createErrorTextNode', () => {
         expect(serverErrorNode.textContent).toEqual('This field is required');
         expect(document.querySelector('[data-valmsg-for="group1"]').classList.contains(DOTNET_CLASSNAMES.ERROR)).toEqual(true);
     });
+    
 });
 
 

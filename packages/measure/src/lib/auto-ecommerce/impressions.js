@@ -1,7 +1,7 @@
 import { DATA_ATTRIBUTES } from './constants';
 
 export default __m => {
-    const nodes = Array.from(document.querySelectorAll(`[${DATA_ATTRIBUTES.IMPRESSION}]`));
+    const nodes = [].slice.call(document.querySelectorAll(`[${DATA_ATTRIBUTES.IMPRESSION}]`));
     if(nodes.length === 0) return;
     let listed = {};
     let unlisted = [];

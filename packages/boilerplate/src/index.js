@@ -13,7 +13,7 @@ const init = (selector, options) => {
 	const nodes = [].slice.call(document.querySelectorAll(selector));
 
 	//no DOM nodes found, return with warning
-	if(nodes.length === 0) return console.warn(`Boilerplate not initialised, no elements found for selector '${selector}'`);
+	if(nodes.length === 0) return void console.warn(`Boilerplate not initialised, no elements found for selector '${selector}'`);
     
 	//return array of objects, one for each DOM node found
 	return nodes.map(node => Object.create(factory({ 
