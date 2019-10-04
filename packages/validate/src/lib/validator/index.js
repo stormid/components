@@ -232,6 +232,7 @@ export const getInitialState = (form, settings) => {
         form,
         settings,
         errorNodes: {},
+        submit: settings.submit || form.submit,
         realTimeValidation: false,
         groups: removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
                         .reduce(assembleValidationGroup, {}))
