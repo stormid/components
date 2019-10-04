@@ -2,7 +2,7 @@ import { DATA_ATTRIBUTES } from './constants';
 import { composeAction } from './shared';
 
 export default __m => {
-    const nodes = Array.from(document.querySelectorAll(`[${DATA_ATTRIBUTES.DETAIL}]`));
+    const nodes = [].slice.call(document.querySelectorAll(`[${DATA_ATTRIBUTES.DETAIL}]`));
     if(nodes.length === 0) return;
     
     for(let node of nodes){
