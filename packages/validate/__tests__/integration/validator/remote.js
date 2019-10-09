@@ -1,7 +1,7 @@
 import mock from 'xhr-mock';
 import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
-describe('Validate > Integration > validator > remote', async () => {
+describe('Validate > Integration > validator > remote', () => {
     
     beforeEach(() => mock.setup());
 
