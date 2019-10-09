@@ -24,6 +24,19 @@ export default {
             groups: Object.assign({}, state.groups, nextGroup)
         });
     },
+    [ACTIONS.ADD_GROUP]: (state, data) => {
+        return Object.assign({}, state, {
+            groups: Object.assign({}, state.groups, data)
+        });
+    },
+    [ACTIONS.REMOVE_GROUP]: (state, groupName) => {
+        return Object.assign({}, state, {
+            groups: Object.keys(state.groups).reduce((acc, group) => {
+                if(group !== groupName) acc[group] = state.groups[group];
+                return acc;
+            }, {})
+        });
+    },
     [ACTIONS.ADD_VALIDATION_METHOD]: (state, data) => {
         const nextGroup = Object.assign({}, 
                             state.groups[data.groupName] 

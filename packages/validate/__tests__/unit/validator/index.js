@@ -13,8 +13,8 @@ import MESSAGES from '../../../src/lib/constants/messages';
 //resolveParam
 describe('Validate > Unit > Validator > resolveParam', () => {
     it('should return a param Object indexed by second part of param name and String value', async () => {
-			expect.assertions(1);
-      document.body.innerHTML = `<input
+		expect.assertions(1);
+      	document.body.innerHTML = `<input
         id="group1"
         name="group1"
         data-val="true"
@@ -338,6 +338,7 @@ describe('Validate > Unit > Validator > getInitialState', () => {
 
 		expect(getInitialState(form, {})).toEqual({
 			form: form,
+			submit: form.submit,
 			settings: {},
 			errorNodes: {},
       		realTimeValidation: false,
@@ -364,6 +365,7 @@ describe('Validate > Unit > Validator > getInitialState', () => {
 
 		expect(getInitialState(form, { preSubmitHook: true })).toEqual({
 			form: form,
+			submit: form.submit,
 			settings: { preSubmitHook: true },
 			errorNodes: {},
       		realTimeValidation: false,

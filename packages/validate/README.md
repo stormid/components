@@ -1,7 +1,6 @@
-# Storm Validate
-[![npm version](https://badge.fury.io/js/@storm/validate.svg)](https://badge.fury.io/js/@storm/validate)
+# Validate
 
-Light, depenendency-free client-side form validation library to support .NET MVC (core) unobtrusive validation (using data-val attributes) and HTML5 attribute-based constraint validation.
+Client-side form validation library to support .NET MVC (core) unobtrusive validation using data-val attributes and HTML5 attribute-based constraint validation.
 
 ## Usage
 HTML
@@ -33,9 +32,9 @@ let validator = Validate.init('form');
 
 1. addMethod - to add a custom validation method:
 ```
-var validator = Validate.init('.my-form');
+const validators = Validate.init('.my-form');
 
-validator.addMethod(
+validators[0].addMethod(
     'MyFieldName', //input/input group name
     (value, fields, params) => { //validation method
         return value === 'test'; //must return boolean
@@ -46,10 +45,33 @@ validator.addMethod(
 
 2. validate - to manually trigger validation on the whole form:
 ```
-var validator = Validate.init('.my-form');
+const validators = Validate.init('.my-form');
 
-validator.validate();
+validators[0].validate();
 ```
+
+3. addGroup - add an input or input validation group
+```
+const validators = Validate.init('.my-form');
+const fieldsArray = Array.from(document.querySelector('.new-fields'))
+
+//add by passing an array of fields
+//if these fields span multiple groups they will be collected into the correct validation groups internally by the validator
+validators[0].addGroup(fieldsArray);
+```
+
+4. removeGroup - remove a validation group
+```
+const validators = Validate.init('.my-form');
+const fieldsArray = Array.from(document.querySelectorAll([name=new-fields]))
+
+//add by passing an array of fields
+validators[0].addGroup(fieldsArray);
+
+//remove by passing the name of a group
+validators[0].removeGroup('new-fields');
+```
+
 
 ## Tests
 ```
@@ -57,9 +79,7 @@ npm t
 ```
 
 ## Browser support
-This is module has both es6 and es5 distributions. The es6 version should be used in a workflow that transpiles.
-
-The es5 version depends upon Object.assign, Promises and element.classList so all evergreen browsers are supported out of the box, ie9+ is supported with polyfills. ie8+ will work with even more polyfills for Array functions and eventListeners.
+This is module has both es6 and UMD distributions. It depends upon Object.assign, element.classList, and Promises so all evergreen browsers are supported out of the box, ie8+ is supported with polyfills.
 
 ## Dependencies
 None
