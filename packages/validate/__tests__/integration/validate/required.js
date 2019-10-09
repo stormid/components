@@ -12,7 +12,7 @@ describe('Validate > Integration > validate > required', () => {
     //submit form
 
     it('should validate a form based on the HTML5 required validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
-        expect.assertions(7);
+        expect.assertions(6);
         document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
             <input
@@ -36,9 +36,6 @@ describe('Validate > Integration > validate > required', () => {
         expect(label.lastChild.nodeName).toEqual('SPAN');
         expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
         expect(label.lastChild.textContent).toEqual(MESSAGES.required());
-
-        //focus on first invalid field
-        expect(document.activeElement).toEqual(input);
     });
 
     it('should validate a form based on the HTML5 required validator returning true if valid', async () => {
@@ -59,7 +56,7 @@ describe('Validate > Integration > validate > required', () => {
     });
 
     it('should validate a form based on the data-val required validator returning false, staring realTimeValidation, ', async () => {
-        expect.assertions(7);
+        expect.assertions(6);
         document.body.innerHTML = `<form class="form">
             <label for="group2">group1</label>
             <input
@@ -84,8 +81,6 @@ describe('Validate > Integration > validate > required', () => {
         expect(input.nextElementSibling.nodeName).toEqual('SPAN');
         expect(input.nextElementSibling.className).toEqual(DOTNET_CLASSNAMES.ERROR);
         expect(input.nextElementSibling.textContent).toEqual('Required error message');
-        //focus on first invalid field
-        expect(document.activeElement).toEqual(input);
         
     });
 
