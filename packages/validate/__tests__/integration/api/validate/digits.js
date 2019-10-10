@@ -1,7 +1,7 @@
-import Validate from '../../../src';
-import { DOTNET_CLASSNAMES } from '../../../src/lib/constants';
+import Validate from '../../../../src';
+import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 
-describe('Validate > Integration > validate > digits', () => {
+describe('Validate > Integration > api > validate > digits', () => {
     //return boolean validityState
     //start realtimevalidation
     //render errors

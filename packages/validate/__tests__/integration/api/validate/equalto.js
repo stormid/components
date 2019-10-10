@@ -1,10 +1,12 @@
-import { validate, assembleValidationGroup } from '../../../src/lib/validator';
+import Validate from '../../../../src';
+import { validate, assembleValidationGroup } from '../../../../src/lib/validator';
+import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 
-describe('Validate > Integration > validate > equalto', () => {
+describe('Validate > Integration >  api > validate > equalto', () => {
     
     it('should validate a form based on the HTML5 email validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
-        expect.assertions(1);
-        document.body.innerHTML = `<input
+        expect.assertions(6);
+        document.body.innerHTML = `<form class="form"><input
                 id="Email"
                 name="Email"
                 value="example@stormid.com" />
@@ -12,14 +14,15 @@ describe('Validate > Integration > validate > equalto', () => {
                 id="ConfirmEmail"
                 name="ConfirmEmail"
                 value="example@stormid.com" />
+            <label id="DoubleConfirmEmail-label" for="DoubleConfirmEmail">DoubleConfirmEmail</label>
             <input data-val="true" 
                 data-val-equalto="Equalto error message"
                 data-val-equalto-other="Email,ConfirmEmail"
                 id="DoubleConfirmEmail"
                 name="DoubleConfirmEmail"
-                value="not.the.same.email.address@stormid.com" />`;
+                value="not.the.same.email.address@stormid.com" /></form>`;
         const input = document.querySelector('#DoubleConfirmEmail')
-        const label = document.getElementById('group1-label');
+        const label = document.getElementById('DoubleConfirmEmail-label');
         const validator = Validate.init('form')[0];
         const validityState = await validator.validate();
         // //validityState
@@ -31,7 +34,7 @@ describe('Validate > Integration > validate > equalto', () => {
         //render error message
         expect(label.lastChild.nodeName).toEqual('SPAN');
         expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual(MESSAGES.email());
+        expect(label.lastChild.textContent).toEqual('Equalto error message');
     });
 
     it('should validate a form based on the HTML5 email validator returning true if valid', async () => {
@@ -44,6 +47,7 @@ describe('Validate > Integration > validate > equalto', () => {
                 id="ConfirmEmail"
                 name="ConfirmEmail"
                 value="" />
+            <label id="DoubleConfirmEmail-label" for="DoubleConfirmEmail">DoubleConfirmEmail</label>
             <input data-val="true" 
                 data-val-equalto="Equalto error message"
                 data-val-equalto-other="Email,ConfirmEmail"
@@ -53,48 +57,6 @@ describe('Validate > Integration > validate > equalto', () => {
         const input = document.querySelector('#DoubleConfirmEmail');
         const group = assembleValidationGroup({}, input)['DoubleConfirmEmail'];
 		expect(validate(group, group.validators[0])).toEqual(false);
-    });
-
-    it('should validate a form based on the data-val email validator returning false, staring realTimeValidation', async () => {
-        expect.assertions(1);
-        document.body.innerHTML = `<input
-                id="Email"
-                name="Email"
-                value="example@stormid.com" />
-            <input
-                id="ConfirmEmail"
-                name="ConfirmEmail"
-                value="example@stormid.com" />
-            <input data-val="true" 
-                data-val-equalto="Equalto error message"
-                data-val-equalto-other="Email,ConfirmEmail"
-                id="DoubleConfirmEmail"
-                name="DoubleConfirmEmail"
-                value="example@stormid.com" />`;
-        const input = document.querySelector('#DoubleConfirmEmail');
-        const group = assembleValidationGroup({}, input)['DoubleConfirmEmail'];
-		expect(validate(group, group.validators[0])).toEqual(true);
-    });
-
-    it('should validate a form based on the data-val email validator returning true if valid', async () => {
-        expect.assertions(1);
-        document.body.innerHTML = `<input
-                id="Email"
-                name="Email"
-                value="example@stormid.com" />
-            <input
-                id="ConfirmEmail"
-                name="ConfirmEmail"
-                value="example@stormid.com" />
-            <input data-val="true" 
-                data-val-equalto="Equalto error message"
-                data-val-equalto-other="Email,ConfirmEmail"
-                id="DoubleConfirmEmail"
-                name="DoubleConfirmEmail"
-                value="" />`;
-        const input = document.querySelector('#DoubleConfirmEmail');
-        const group = assembleValidationGroup({}, input)['DoubleConfirmEmail'];
-		expect(validate(group, group.validators[0])).toEqual(true);
     });
 
 });

@@ -1,8 +1,8 @@
-import Validate from '../../../src';
-import { DOTNET_CLASSNAMES } from '../../../src/lib/constants';
-import MESSAGES from '../../../src/lib/constants/messages';
+import Validate from '../../../../src';
+import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
+import MESSAGES from '../../../../src/lib/constants/messages';
 
-describe('Validate > Integration > validate > email', () => {
+describe('Validate > Integration >  api > validate > email', () => {
     //return boolean validityState
     //start realtimevalidation
     //render errors

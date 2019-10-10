@@ -1,7 +1,7 @@
 import Validate from '../../../../src';
 import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 
-describe('Validate > Integration >  api > validate > dateISO', () => {
+describe('Validate > Integration >  api > validate > length', () => {
     //return boolean validityState
     //start realtimevalidation
     //render errors
@@ -10,19 +10,21 @@ describe('Validate > Integration >  api > validate > dateISO', () => {
     //return boolean validityState
     //submit form
 
-    it('should validate a form based on the data-val dateISO validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
+    it('should validate a form based on the data-val length validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if a field is outwith the min and max length range', async () => {
         expect.assertions(6);
         document.body.innerHTML = `<form class="form">
-            <label id="group1-1-label" for="group1-1">group1</label>
+            <label id="group1-1-label" for="group1">group1</label>
             <input
-                id="group1-1"
+                id="group1"
                 name="group1"
                 data-val="true"
-                data-val-dateISO="DateISO error message"
-                value="12/12/12"
+                data-val-length="Length error message"
+                data-val-length-min="2"
+                data-val-length-max="8"
+                value="Value is too long"
                 type="text" />
         </form>`;        
-        const input = document.getElementById('group1-1');
+        const input = document.getElementById('group1');
         const label = document.getElementById('group1-1-label');
         const validator = Validate.init('form')[0];
         const validityState = await validator.validate();
@@ -34,10 +36,10 @@ describe('Validate > Integration >  api > validate > dateISO', () => {
         // // render error message
         expect(label.lastChild.nodeName).toEqual('SPAN');
         expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual('DateISO error message');
+        expect(label.lastChild.textContent).toEqual('Length error message');
     });
 
-    it('should validate a form based on the data-val dateISO validator returning true if valid', async () => {
+    it('should validate a form based on the data-val length validator returning true if within the min and max length range', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
@@ -45,8 +47,10 @@ describe('Validate > Integration >  api > validate > dateISO', () => {
                 id="group1-1"
                 name="group1"
                 data-val="true"
-                data-val-dateISO="DateISO error message"
-                value="2019-05-14"
+                data-val-length="Length error message"
+                data-val-length-min="2"
+                data-val-length-max="8"
+                value="Pass"
                 type="text" />
         </form>`;
         const validator = Validate.init('form')[0];
