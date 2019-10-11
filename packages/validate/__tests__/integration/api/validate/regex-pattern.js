@@ -2,11 +2,11 @@ import Validate from '../../../../src';
 import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 import MESSAGES from '../../../../src/lib/constants/messages';
 
-describe('Validate > Integration > validator > API > regex/pattern', () => {
+describe('Validate > Integration > api > validate > regex/pattern', () => {
     it('should validate a form based on the HTML5 pattern validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if the value does not match', async () => {
         expect.assertions(6);
         document.body.innerHTML = `<form class="form">
-            <label id="group1-label" for="group1">DoubleConfirmEmail</label>
+            <label id="group1-label" for="group1">Label</label>
             <input
                 id="group1"
                 name="group1"
@@ -73,7 +73,7 @@ describe('Validate > Integration > validator > API > regex/pattern', () => {
             expect(validityState).toEqual(true);
     });
 
-    it('should validate a form based on the data-val number validator returning true if valid', async () => {
+    it('should validate a form based on the HTML5 remote validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if the remote validation returns an error', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">group1</label>

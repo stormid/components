@@ -286,7 +286,9 @@ export const getGroupValidityState = group => {
             } else {
                 if(hasError) resolve(false);
                 else validate(group, validator)
-                        .then(res => { 
+                        .then(res => {
+                            if(res === 'true') resolve(true);
+                            if(res === 'false') resolve(false);
                             resolve(res);
                         })
                         .catch(err => console.log(err));
