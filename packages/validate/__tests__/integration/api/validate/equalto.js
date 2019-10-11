@@ -4,7 +4,7 @@ import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 
 describe('Validate > Integration >  api > validate > equalto', () => {
     
-    it('should validate a form based on the data-val equalto validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
+    it('should validate a form based on the data-val equalto validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
         expect.assertions(6);
         document.body.innerHTML = `<form class="form"><input
                 id="Email"

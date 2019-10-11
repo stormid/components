@@ -3,7 +3,7 @@ import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 
 describe('Validate > Integration >  api > validate > equalto', () => {
     
-    it('should validate a form based on the data-val range validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if the value is out of range', async () => {
+    it('should validate a form based on the data-val range validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if the value is out of range', async () => {
         expect.assertions(6);
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">Label</label>
@@ -51,7 +51,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
         expect(validityState).toEqual(true);
     });
 
-    it('should validate a form based on the data-val range validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if the value <= min with no max', async () => {
+    it('should validate a form based on the data-val range validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if the value <= min with no max', async () => {
         expect.assertions(6);
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">DoubleConfirmEmail</label>
@@ -98,7 +98,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
         expect(validityState).toEqual(true);
     });
 
-    it('should validate a form based on the data-val range validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if the value > max with no min', async () => {
+    it('should validate a form based on the data-val range validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if the value > max with no min', async () => {
         expect.assertions(6);
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">DoubleConfirmEmail</label>

@@ -4,7 +4,7 @@ import MESSAGES from '../../../../src/lib/constants/messages';
 
 describe('Validate > Integration > api > validate > max', () => {
     
-    it('should validate a form based on the HTML5 max validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
+    it('should validate a form based on the HTML5 max validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
         expect.assertions(6);
         document.body.innerHTML = `<form class="form">
         <label id="group1-label" for="group1">group1</label>
@@ -58,7 +58,7 @@ describe('Validate > Integration > api > validate > max', () => {
             expect(label.lastChild.textContent).toEqual('Max error message');
     });
 
-    it('should validate a form based on the data-val max validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
+    it('should validate a form based on the data-val max validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">group1</label>

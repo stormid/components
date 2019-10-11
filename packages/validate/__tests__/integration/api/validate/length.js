@@ -10,7 +10,7 @@ describe('Validate > Integration >  api > validate > length', () => {
     //return boolean validityState
     //submit form
 
-    it('should validate a form based on the data-val length validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if a field is outwith the min and max length range', async () => {
+    it('should validate a form based on the data-val length validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is outwith the min and max length range', async () => {
         expect.assertions(6);
         document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1">group1</label>

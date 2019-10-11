@@ -84,7 +84,7 @@ describe('Validate > Integration > api > validate > remote', () => {
         expect(label.lastChild.textContent).toEqual('Error message from API');
     });
     
-    it('should validate a form based on the HTML5 remote validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if the remote validation returns an error via a GET request', async () => {
+    it('should validate a form based on the HTML5 remote validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if the remote validation returns an error via a GET request', async () => {
         expect.assertions(6);
  
         mock.get('/api/validate?group1=Failure&group2=Value%202', {
