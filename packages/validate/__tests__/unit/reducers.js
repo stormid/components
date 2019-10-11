@@ -278,3 +278,88 @@ describe('Validate > Unit > Reducers > Add validation method', () => {
         });
     });
 });
+
+//Add group
+describe('Validate > Unit > Reducers > Add group', () => {
+    it('should add a new validation group', async () => {
+        expect.assertions(1);
+        const validatorFn = (value, fields, param) => false;
+        const state = {
+            groups: {
+                group1: {
+                    fields: [document.createElement('input')],
+                    validators: [],
+                    errorMessages: ['This field is required'],
+                    valid: false
+                },
+                group2: {
+                    fields: [document.createElement('input')],
+                    validators: [],
+                    valid: false
+                }
+            }
+        };
+        const newGroup = {
+            group3: {
+                fields: [document.createElement('input')],
+                validators: [],
+                valid: false
+            }
+        };
+        const output = Reducers[ACTIONS.ADD_GROUP](state, newGroup);
+        expect(output).toEqual({
+            groups: {
+                group1: {
+                    fields: [document.createElement('input')],
+                    validators: [],
+                    errorMessages: ['This field is required'],
+                    valid: false
+                },
+                group2: {
+                    fields: [document.createElement('input')],
+                    validators: [],
+                    valid: false
+                },
+                group3: {
+                    fields: [document.createElement('input')],
+                    validators: [],
+                    valid: false
+                }
+            }
+        });
+    });
+});
+
+//Remove group
+describe('Validate > Unit > Reducers > Remove group', () => {
+    it('should remove a validation group', async () => {
+        expect.assertions(1);
+        const validatorFn = (value, fields, param) => false;
+        const state = {
+            groups: {
+                group1: {
+                    fields: [document.createElement('input')],
+                    validators: [],
+                    errorMessages: ['This field is required'],
+                    valid: false
+                },
+                group2: {
+                    fields: [document.createElement('input')],
+                    validators: [],
+                    valid: false
+                }
+            }
+        };
+        const output = Reducers[ACTIONS.REMOVE_GROUP](state, 'group2');
+        expect(output).toEqual({
+            groups: {
+                group1: {
+                    fields: [document.createElement('input')],
+                    validators: [],
+                    errorMessages: ['This field is required'],
+                    valid: false
+                }
+            }
+        });
+    });
+});
