@@ -53,7 +53,7 @@ export default {
     remote: (group, params) => new Promise((resolve, reject) => {
         const value = extractValueFromGroup(group);
         fetch((params.type !== 'get' ? params.url : `${params.url}?${group.fields[0].name}=${value}&${resolveGetParams(params.additionalfields)}`), {
-            method: params.type.toUpperCase(),
+            method: params.type && params.type.toUpperCase() || 'POST',
             body: params.type !== 'get' 
                 ? JSON.stringify({ [group.fields[0].name]: value })
                 : resolveGetParams(params.additionalfields),
