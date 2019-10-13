@@ -9,9 +9,9 @@ const init = () => {
              <div class="js-boilerplate-three test-4"></div>`;
 
     basic = Component.init('.js-boilerplate');
-    withCallback = Component.init.call(Component, '.js-boilerplate-two', {
+    withCallback = Component.init('.js-boilerplate-two', {
       callback(){
-        this.node.classList.toggle('callback-test');
+        this.classList.toggle('callback-test');
       }
     });
 };
@@ -77,6 +77,12 @@ describe('Boilerplate > Options', () => {
     expect(withCallback[0].settings.callback).not.toBeNull();
     expect(basic[0].settings.callback).toBeNull();
 
+  });
+
+  it('should be execute a callback passed in options', () => {
+    expect(withCallback[0].node.classList).not.toContain('callback-test');
+    withCallback[0].node.click();
+    expect(withCallback[0].node.classList).toContain('callback-test');
   });
 
 });
