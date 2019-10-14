@@ -1,66 +1,49 @@
 
-# Component Name
+# Scroll points
 
-[![npm version](https://badge.fury.io/js/storm-component-boilerplate.svg)](https://badge.fury.io/js/storm-component-boilerplate)
-
-This is a **boilerplate for developing UI components** by **StormId**, used in production in conjunction with our project scaffold.
-
-Before use make sure to grep for “@stormid/component-boilerplate” and replace every occurrence as well as updating your tests, readme and example.
+Trigger className changes and callbacks when an element scrolls into view using IntersectionObservers.
 
 ## Usage
 HTML
 ```
-<div class="js-boilerplate"></div>
+<div class="js-scroll-point"></div>
 ```
 
 JS
 ```
 npm i -S component-boilerplate
 ```
-either using es6 import
-```
-import Boilerplate from '@stormid/component-boilerplate';
+import ScrollPoints from '@stormid/scroll-points';
 
-Boilerplate.init('.js-boilerplate');
-```
-asynchronous browser loading (use the .standalone version in the /dist folder) using the global name (Storm + capitalised package name)
-```
-import Load from 'storm-load';
-
-Load('https://unpkg.com/stormid/umd/@stormid/component-boilerplate.js')
-    .then(() => {
-        ComponentBoilerplate.init('.js-boilerplate');
-    });
+ScrollPoints.init('.js-scroll-point');
 ```
 
 ## Options
 ```
 {
-    callback: null
-}
+	root: null, //element that is used as the viewport for checking visiblity of the target
+	rootMargin: '0px 0px 0px 0px', //margin around the root, px or percentage valules
+	threshold: 0, //Either a single number or an array of numbers which indicate at what percentage of the target's visibility the observer's callback should be executed
+	callback: false, //function executed when scrolled into view
+	className: 'is--scrolled-in', //className added when scrolled into view
+	unload: true //only callback once
+};
 ```
 
 e.g.
 ```
-Boilerplate.init('.js-selector', {
-    callback(){
-        console.log(this);
-    }
+ScrollPoints.init('.js-scroll-point', {
+    rootMargin: '50% 0 0 0'
 });
 ```
 
 ## Tests
 ```
-npm test
+npm t
 ```
 
 ## Browser support
-This is module has both es6 and es5 distributions. The es6 version should be used in a workflow that transpiles.
-
-The es5 version depends upon Object.assign, element.classList, and Promises so all evergreen browsers are supported out of the box, ie9+ is supported with polyfills. ie8+ will work with even more polyfills for Array functions and eventListeners.
-
-## Dependencies
-None
+Depends on Object.assign and the [IntersectioObserver API](https://caniuse.com/#feat=intersectionobserver), IE11 will require polyfills.
 
 ## License
 MIT

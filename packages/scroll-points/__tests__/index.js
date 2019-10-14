@@ -34,15 +34,6 @@ describe(`Initialisation`, () => {
 
     });
 
-    it('should attach the handleClick eventListener to DOMElement click event to toggle className', () => {
-
-        basic[0].node.click();
-        expect(basic[0].node.classList).toContain('clicked');
-        basic[0].node.click();
-        expect(basic[0].node.classList).not.toContain('clicked');
-
-    });
-
      it('should initialisation with different settings if different options are passed', () => {
 
         expect(basic[0].settings.callback).not.toEqual(withCallback[0].settings.callback);
@@ -50,20 +41,6 @@ describe(`Initialisation`, () => {
     }); 
 
 });
-
-describe('Component API', () => {
-
-  it('should trigger the handleClick function toggling the className', () => {
-
-    basic[0].handleClick.call(basic[0].node);
-    expect(basic[0].node.classList).toContain('clicked');
-    basic[0].handleClick.call(basic[0].node);
-    expect(basic[0].node.classList).not.toContain('clicked');
-
-   });
-
-});
-
 
 describe('Options', () => {
 
