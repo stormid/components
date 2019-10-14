@@ -15,24 +15,15 @@ JS
 ```
 npm i -S @stormid/toggle
 ```
-either using es6 import
 ```
 import Toggle from '@stormid/toggle';
 
 Toggle.init('.js-toggle');
 ```
-aynchronous browser loading (use the .standalone version in the /dist folder)
-```
-import Load from '@stormid/load';
 
-Load('/content/js/async/toggle.js')
-    .then(() => {
-        Toggle.init('.js-toggle');
-    });
-```
 
 ### Local toggle
-To encapsulate a toggle state within part of the document (e.g. show/hide buttons)
+To localise a toggle state to part of the document (e.g. show/hide panel)
 
 HTML
 ```
@@ -86,14 +77,6 @@ Options can also be set on an instance by adding data-attributes to the toggle e
 ```
 npm t
 ```
-
-## Browser support
-This is module has both es6 and es5 distributions.
-
-The es5 version depends upon Object.assign so all evergreen browsers are supported out of the box, ie9+ is supported with polyfills. ie8+ will work with even more polyfils for Array functions and eventListeners.
-
-## Dependencies
-None
 
 ## License
 MIT
