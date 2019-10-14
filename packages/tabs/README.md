@@ -21,20 +21,10 @@ JS
 ```
 npm i -S @stormid/tabs
 ```
-either using es6 import
 ```
 import Tabs from '@stormid/tabs';
 
 Tabs.init('.js-tabs');
-```
-aynchronous browser loading (use the .standalone version in the /dist folder)
-```
-import Load from '@stormid/load;
-
-Load('/content/js/async/tabs.standalone.js')
-    .then(() => {
-        Tabs.init('.js-tabs');
-    });
 ```
 
 ## Options
@@ -56,12 +46,6 @@ Tabs.init('.js-tabs', { updateURL: false });
 ```
 npm t
 ```
-
-## Browser support
-This is module has both es6 and UMD distributions. It depends upon Object.assign, element.classList, and Promises so all evergreen browsers are supported out of the box, ie9+ is supported with polyfills. ie8+ will work with even more polyfills for Array functions and eventListeners.
-
-## Dependencies
-None
 
 ## License
 MIT

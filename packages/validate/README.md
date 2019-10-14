@@ -25,7 +25,7 @@ npm i -S @storm/validate
 ```
 import Validate from '@storm/validate';
 
-let validator = Validate.init('form');
+const validator = Validate.init('form');
 
 ```
 ## API
@@ -77,12 +77,6 @@ validators[0].removeGroup('new-fields');
 ```
 npm t
 ```
-
-## Browser support
-This is module has both es6 and UMD distributions. It depends upon Object.assign, element.classList, and Promises so all evergreen browsers are supported out of the box, ie8+ is supported with polyfills.
-
-## Dependencies
-None
 
 ## License
 MIT
