@@ -34,7 +34,7 @@ const init = () => {
 };
 
 
-describe(`Privacy banner > cookies > accept`, () => {
+describe(`Cookie banner > cookies > accept`, () => {
     beforeAll(init);
 
     it('Sets a cookie based on accept button', async () => {
@@ -44,7 +44,7 @@ describe(`Privacy banner > cookies > accept`, () => {
 
 });
 
-describe(`Privacy banner > cookies > update`, () => {
+describe(`Cookie banner > cookies > update`, () => {
     beforeAll(init);
 
     it('Sets a cookie based on preferences form', async () => {

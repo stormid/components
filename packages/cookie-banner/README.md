@@ -1,8 +1,6 @@
-# Storm Cookie banner
+# Cookie banner
 
 Cookie banner that can categorise cookies and conditionally invoke cookie-reliant functionality based on user-consent.
-
-[![npm version](https://badge.fury.io/js/@storm/cookie-banner.svg)](https://badge.fury.io/js/@storm/cookie-banner)
 
 
 ## Usage
@@ -12,18 +10,17 @@ Cookies category names can be any valid String.
 
 JS
 ```
-npm i -S @storm/cookie-banner
+npm i -S @stormid/cookie-banner
 ```
-Using es6 import
 ```
-import CookieBanner from '@storm/cookie-banner';
+import CookieBanner from '@stormid/cookie-banner';
 
 CookieBanner.init({
     types: {
-        'necessary': {
+        'performance': {
             fns: [
                 model => { 
-                    //function that depends upon or creates a 'necessary' cookie
+                    //function that depends upon or creates a 'performance' cookie
                  }
             ]
         },
@@ -41,54 +38,86 @@ CookieBanner.init({
 ## Options
 ```
 {
-	name: 'CookiePreferences',
-	path: '/',
-	domain: '',
-	secure: true,
-	expiry: 365,
-	types: {
-		'necessary': {
-			checked: true,
-			disabled: true,
-			fns: []
-		}
-	},
-	policyURL: '/cookie-policy',
+	name: '.CookiePreferences', //name of the preferences cookie
+	path: '', //path of the preferences cookie
+	domain: window.location.hostname === 'localhost' ? '' : `.${removeSubdomain(window.location.hostname)}`, //domain of the preferences cookie, defaults to .<root-domain>
+	secure: true, //preferences cookie secure
+	expiry: 365, //preferences cookie expiry
+	types: {}, //types of cookie-dependent functionality 
+	necessary: [], //cookie-dependent functionality that will always execute, for convenience only
+	policyURL: '/cookie-policy', //URL to cookie policy page (location of cookie consent form)
 	classNames: {
-		banner: 'preferences-banner',
-		btn: 'preferences-banner__btn',
-		field: 'preferences-banner__field',
-		updateBtnContainer: 'preferences-banner__update',
-		updateBtn: 'preferences-banner__update-btn'
+		banner: 'privacy-banner',
+		acceptBtn: 'privacy-banner__accept',
+		submitBtn: 'privacy-banner__submit',
+		field: 'privacy-banner__field',
+		form: 'privacy-banner__form',
+		fieldset: 'privacy-banner__fieldset',
+		legend: 'privacy-banner__legend',
+		formContainer: 'privacy-banner__form-container',
+		formMessage: 'privacy-banner__form-msg',
+		title: 'privacy-banner__form-title',
+		description: 'privacy-banner__form-description'
 	},
-	updateBtnTemplate(model){
-		return `<button class="${model.classNames.updateBtn}">Update cookie preferences</button>`
-	},
+	savedMessage: 'Your settings have been saved.', //displayed after consent form update 
 	bannerTemplate(model){
-		return `<section role="dialog" aria-live="polite" aria-label="Cookie consent" aria-describedby="preferences-banner__desc" class="${model.classNames.banner}">
-			<div class="preferences-content">
+		return `<section role="dialog" aria-live="polite" aria-label="You privacy" class="${model.classNames.banner}">
+			<div class="privacy-content">
 				<div class="wrap">
 					<div class="row">
 						<!--googleoff: all-->
-						<div id="preferences-banner__desc">
-							<div class="preferences-banner__heading">This website uses cookies.</div>
-							<p class="preferences-banner__text">We use cookies to analyse our traffic and to provide social media features. You can choose which categories of cookies you consent to, or accept our recommended settings.
-							<a class="preferences-banner__link" rel="noopener noreferrer nofollow" href="${model.policyURL}"> Find out more about the cookies we use.</a></p>
-							<ul class="preferences-banner__list">
-								${Object.keys(model.types).map(type => `<li class="preferences-banner__list-item">
-									<input id="preferences-banner__${type.split(' ')[0].replace(' ', '-')}" class="${model.classNames.field}" value="${type}" type="checkbox"${model.types[type].checked ? ` checked` : ''}${model.types[type].disabled ? ` disabled` : ''}>
-									<label class="preferences-banner__label" for="preferences-banner__${type.split(' ')[0].replace(' ', '-')}">
-										${type.substr(0, 1).toUpperCase()}${type.substr(1)} cookies
-									</label>  
-								</li>`).join('')}
-							</ul>
-						</div>
-						<button class="${model.classNames.btn}">OK</button>
+						<div class="privacy-banner__title">Cookies</div>
+						<p>We use cookies to improve your experience on our site and show you personalised advertising.</p>
+						<p>Find out more from our <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="/privacy-policy">privacy policy</a> and <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="${model.policyURL}">cookie policy</a>.</p>
+						<button class="btn btn--primary ${model.classNames.acceptBtn}">Accept and close</button>
+						<a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="${model.policyURL}">Your options</a>
 						<!--googleon: all-->
 					</div>
 				</div>
 			</div>
 		</section>`;
+	},
+	messageTemplate(model){
+		return `<div class="${model.settings.classNames.formMessage}" aria-role="alert">${model.settings.savedMessage}</div>`
+	},
+	formTemplate(model){
+		return `<form class="${model.settings.classNames.form}" novalidate>
+				${Object.keys(model.settings.types).map(type => `<fieldset class="${model.settings.classNames.fieldset}">
+				<legend class="${model.settings.classNames.legend}">
+					<span class="${model.settings.classNames.title}">${model.settings.types[type].title}</span>
+					<span class="${model.settings.classNames.description}">${model.settings.types[type].description}</span>
+				</legend>
+				<div class="form-row">
+					<div class="relative">
+						<label class="privacy-banner__label">
+							<input
+								class="${model.settings.classNames.field}"
+								type="radio"
+								name="privacy-${type.split(' ')[0].replace(' ', '-')}"
+								value="1"
+								${model.consent[type] === 1 ? ` checked` : ''}>
+							<span class="privacy-banner__label-text">I am OK with this</span>
+							<span class="privacy-banner__label-description">${model.settings.types[type].labels.yes}</span>
+						</label>    
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="relative">
+						<label class="privacy-banner__label">
+							<input
+								class="${model.settings.classNames.field}"
+								type="radio"
+								name="privacy-${type.split(' ')[0].replace(' ', '-')}"
+								value="0"
+								${model.consent[type] === 0 ? ` checked` : ''}>
+							<span class="privacy-banner__label-text">No thank you</span>
+							<span class="privacy-banner__label-description">${model.settings.types[type].labels.no}</span>
+						</label>    
+					</div>
+				</div>
+			</fieldset>`).join('')}
+			<button class="${model.settings.classNames.submitBtn}"${Object.keys(model.consent).length === 0 ? ` disabled` : ''}>Save my settings</button>
+		</form>`;
 	}
 }
 ```
@@ -97,14 +126,6 @@ CookieBanner.init({
 ```
 npm t
 ```
-
-## Browser support
-This is module has both es6 and es5 distributions. The es6 version should be used in a workflow that transpiles.
-
-The es5 version depends unpon Object.assign so all evergreen browsers are supported out of the box, ie9+ is supported with polyfills. ie8+ will work with even more polyfils for Array functions and eventListeners.
-
-## Dependencies
-None
 
 ## License
 MIT

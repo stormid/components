@@ -5,6 +5,7 @@ import { createStore } from './store';
 import { initialState } from './reducers';
 
 export default settings => {
+    /* istanbul ignore next */
     if(!cookiesEnabled()) return;
     
     const Store = createStore();

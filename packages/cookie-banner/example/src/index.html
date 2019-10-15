@@ -43,7 +43,11 @@
             padding:20px;
             margin-bottom:40px;
         }
-        .preferences-banner {
+        .privacy-banner__title {
+            font-size:1.2rem;
+            margin-bottom: 12px;
+        }
+        .privacy-banner {
             position: fixed;
             bottom: 0;
             left:0;
@@ -52,25 +56,33 @@
             /* border-top:1px solid #191919; */
             box-shadow: 0 1px 3px 1px rgba(60,64,67,.2), 0 2px 8px 4px rgba(60,64,67,.1)
         }
-        .preferences-banner__list {
+        .privacy-banner__list {
             list-style: none;
             margin-bottom: 24px;
         }
-        .preferences-banner__btn {
+        .privacy-banner__btn {
             background-color:#191919;
             padding:8px 16px;
             color: #fff;
             border:0 none;
             cursor: pointer;
         }
-        .preferences-banner__btn:hover {
+        .privacy-banner__btn:hover {
             background-color: blue
         }
     </style>
   </head>
   <body>
     <div class="container">
-        <div class="preferences-banner__update"></div>
+        <div class="privacy-banner__update"></div>
+        <div class="">
+            <h1>Cookies</h1>
+            <p>Cookies are a common feature used on almost all websites. A cookie is a small text file that is downloaded onto a device to allow a website to recognise it and to store some information about your preferences.</p>
+            <p>We use cookies for different reasons, including for managing your shopping cart, measuring your visits on our sites, recognising and remembering your preferences and showing you personalised ads. Learn more about cookies and how we use them.</p>
+            <div class="privacy-banner__form-container"></div>
+
+
+        </div>
     </div>
   </body>
 </html>

@@ -34,7 +34,7 @@ const init = () => {
 };
 
 
-describe(`Privacy banner > DOM > render`, () => {
+describe(`Cookie banner > DOM > render`, () => {
     beforeAll(init);
 
     it('It should render the banner', async () => {
@@ -42,7 +42,7 @@ describe(`Privacy banner > DOM > render`, () => {
     });
 });
 
-describe(`Privacy banner > DOM > accessibility`, () => {
+describe(`Cookie banner > DOM > accessibility`, () => {
     beforeAll(init);
     it('The banner should be a dialog', async () => {
         expect(document.querySelector(`.${defaults.classNames.banner}`).getAttribute('role')).toEqual('dialog');
@@ -58,7 +58,7 @@ describe(`Privacy banner > DOM > accessibility`, () => {
     
 });
 
-describe(`Privacy banner > DOM > interactions`, () => {
+describe(`Cookie banner > DOM > interactions`, () => {
     beforeAll(init);
     
     it('Hides the banner', async () => {

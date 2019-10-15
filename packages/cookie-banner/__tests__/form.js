@@ -1,6 +1,12 @@
 import CookieBanner from '../src';
 import defaults from '../src/lib/defaults';
 
+export const dispatchSyntheticEvent = (node, eventType) => {
+    let event = document.createEvent('Event');
+    event.initEvent(eventType, true, true);
+    node.dispatchEvent(event);
+};
+
 const init = () => {
     // Set up our document body
     document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
@@ -34,7 +40,7 @@ const init = () => {
 };
 
 
-describe(`Privacy banner > DOM > form > render`, () => {
+describe(`Cookie banner > DOM > form > render`, () => {
     beforeAll(init);
 
     it('Should render the form', async () => {
@@ -50,7 +56,31 @@ describe(`Privacy banner > DOM > form > render`, () => {
     //titles, descriptions, labels
 })
 
-describe(`Privacy banner > DOM > form interactions`, () => {
+describe(`Cookie banner > DOM > form > render`, () => {    
+    document.body.innerHTML = `<div></div>`;
+    CookieBanner.init({
+        types: { 
+            'test': {
+                title: 'Test title',
+                description: 'Test description',
+                labels: {
+                    yes: 'Pages you visit and actions you take will be measured and used to improve the service',
+                    no: 'Pages you visit and actions you take will not be measured and used to improve the service'
+                },
+                fns: [
+                    () => { }
+                ]
+            }
+        }
+    });
+
+    it('Should return if there is no form container', async () => {
+        expect(document.querySelector(`.${defaults.classNames.form}`)).not.toBeNull();
+    });
+
+})
+
+describe(`Cookie banner > DOM > form interactions`, () => {
     beforeAll(init);
     
     it('Submit button should be disabled', async () => {
@@ -61,13 +91,15 @@ describe(`Privacy banner > DOM > form interactions`, () => {
         const fields = Array.from(document.querySelectorAll(`.${defaults.classNames.field}`));
 
         fields[0].checked = true;
+        dispatchSyntheticEvent(fields[0], 'change');//for JSDOM
         expect(document.querySelector(`.${defaults.classNames.submitBtn}`).getAttribute('disabled')).not.toBeNull();
 
         fields[2].checked = true;
-        expect(document.querySelector(`.${defaults.classNames.submitBtn}`).getAttribute('disabled')).toEqual('');
+        dispatchSyntheticEvent(fields[2], 'change');//for JSDOM
+        expect(document.querySelector(`.${defaults.classNames.submitBtn}`).getAttribute('disabled')).toEqual(null);
     });
 
-    it('Submit button should set the cookie and hide te banner', async () => {
+    it('Submit button should set the cookie and hide the banner', async () => {
         document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
         
         expect(document.cookie).toEqual(`${defaults.name}={"test":1,"performance":1}`);
