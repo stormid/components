@@ -1,6 +1,5 @@
 import { callback } from '../src/lib/factory';
 import defaults from '../src/lib/defaults';
-import { JestEnvironment } from '@jest/environment';
 
 describe('Scroll points > unit > callback', () => {
 

@@ -1,0 +1,29 @@
+export const findSpies = nodes => nodes.map(node => {
+    if (!node.hash || !document.querySelector(node.hash)) return null;
+    
+    return {
+        node,
+        target: document.querySelector(node.hash),
+        // parent: node.parentNode.tagName.toLowerCase() === 'li' ? node.parentNode : null,
+    };
+});
+
+export const setActive = spy => state => {
+    const { settings } = state;
+    spy.node.classList.add(settings.activeClassName);
+};
+
+export const unsetActive = spy => state => {
+    const { settings } = state;
+    spy.node.classList.remove(settings.activeClassName);
+};
+
+export const unsetAllActive = state => {
+    const { settings, spies } = state;
+    spies.map(spy => spy.node.classList.remove(settings.activeClassName));
+};
+
+export const findActive = state => {
+    const { settings, active } = state;
+    if(active.length > 0) active[0].node.classList.add(settings.activeClassName);
+};
