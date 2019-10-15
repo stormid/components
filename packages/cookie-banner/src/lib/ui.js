@@ -1,60 +1,87 @@
-import { composeUpdateUIModel, shouldReturn, writeCookie, deleteCookies } from './utils';
+import { shouldReturn, writeCookie, groupValueReducer, deleteCookies } from './utils';
 import { TRIGGER_EVENTS } from './constants';
 import { apply } from './consent';
-import { setConsent, updateConsent } from './reducers';
+import { updateConsent } from './reducers';
 
 export const initBanner = Store => state => {
-    document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(composeUpdateUIModel(state)));
-    const fields = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.field}`));
+    document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
-    const btn = document.querySelector(`.${state.settings.classNames.btn}`);
+    const acceptBtn = document.querySelector(`.${state.settings.classNames.acceptBtn}`);
 
     TRIGGER_EVENTS.forEach(ev => {
-        btn.addEventListener(ev, e => {
+        acceptBtn.addEventListener(ev, e => {
             if(shouldReturn(e)) return;
 
-            const consent = fields.reduce((acc, field) => { return acc[field.value] = field.checked, acc }, {});
             Store.update(
-                setConsent,
-                { consent },
-                !consent.performance 
-                ? [
-                    deleteCookies,
+                updateConsent,
+                Object.keys(state.settings.types).reduce((acc, type) => {
+                    acc[type] = 1;
+                    return acc;
+                }, {}),
+                [
                     writeCookie,
-                    () => {
-                        window.setTimeout(() => location.reload(), 60);
-                    }
-                ]
-                : [
-                    writeCookie,
-                    apply(state.consent.performance ? 'remain' : 'remove'),
-                    () => { 
-                        banner.parentNode.removeChild(banner);
-                        initUpdateBtn(Store)(state)
-                    }
+                    apply(Store),
+                    removeBanner(banner),
+                    initForm(Store)
                 ]
             );
         });
     });
 };
 
-export const initUpdateBtn = Store => state => {
-    const updateBtnContainer = document.querySelector(`.${state.settings.classNames.updateBtnContainer}`);
-    if(!updateBtnContainer) return;
-    const updateBtn = document.querySelector(`.${state.settings.classNames.updateBtn}`);
-    if(updateBtn) updateBtn.removeAttribute('disabled');
-    else updateBtnContainer.innerHTML = state.settings.updateBtnTemplate(state.settings);
-    const handler = e => {
-        if(shouldReturn(e)) return;
-        Store.update(updateConsent, {}, [ initBanner(Store), () => { 
-            e.target.setAttribute('disabled', 'disabled');
-            TRIGGER_EVENTS.forEach(ev => {
-                e.target.removeEventListener(ev, handler);
-            });
-        }]);
-    };
+const removeBanner = banner => () => (banner && banner.parentNode) && banner.parentNode.removeChild(banner);
 
-    TRIGGER_EVENTS.forEach(ev => {
-        document.querySelector(`.${state.settings.classNames.updateBtn}`).addEventListener(ev, handler);
+export const initForm = Store => state => {
+    const formContainer = document.querySelector(`.${state.settings.classNames.formContainer}`);
+    if(!formContainer) return;
+
+    formContainer.innerHTML = state.settings.formTemplate(state);
+
+    const form = document.querySelector(`.${state.settings.classNames.form}`);
+    const banner = document.querySelector(`.${state.settings.classNames.banner}`);
+    const button = document.querySelector(`.${state.settings.classNames.submitBtn}`);
+    const groups = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.field}`)).reduce((groups, field) => {
+        const groupName = field.getAttribute('name').replace('privacy-', '');
+        if(groups[groupName]) groups[groupName].push(field);
+        else groups[groupName] = [field];
+        return groups;
+    }, {});
+
+    const extractConsent = () => Object.keys(groups).reduce((acc, key) => {
+        const value = groups[key].reduce(groupValueReducer, '');
+        if(value) acc[key] = parseInt(value);
+        return acc;
+    }, {});
+
+    const enableButton = e => {
+        if(Object.keys(extractConsent()).length !== Object.keys(groups).length) return;
+        button.removeAttribute('disabled');
+        form.removeEventListener('change', enableButton);
+    };
+    button.hasAttribute('disabled') && form.addEventListener('change', enableButton);
+    
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        Store.update(
+            updateConsent,
+            extractConsent(),
+            [
+                deleteCookies,
+                writeCookie,
+                apply(Store),
+                removeBanner(banner),
+                renderMessage(button)
+            ]
+        );
     });
+};
+
+export const renderMessage = button => state => {
+    button.insertAdjacentHTML('afterend', state.settings.messageTemplate(state));
+    button.setAttribute('disabled', 'disabled');
+    /* istanbul ignore next */
+    window.setTimeout(() => {
+        button.parentNode.removeChild(button.nextElementSibling);
+        button.removeAttribute('disabled');
+    }, 3000);
 };

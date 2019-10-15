@@ -8,7 +8,7 @@ const init = () => {
     
 };
 
-describe(`Privacy banner > state > init`, () => {
+describe(`Cookie banner > state > init`, () => {
     beforeAll(init);
 
     it('Should return the Store.getState method from init', async () => {
@@ -27,7 +27,7 @@ describe(`Privacy banner > state > init`, () => {
 
 });
 
-describe(`Privacy banner > state > update/reducers`, () => {
+describe(`Cookie banner > state > update/reducers`, () => {
     beforeAll(init);
 
     it('initialState should set the initial state based on options', async () => {
