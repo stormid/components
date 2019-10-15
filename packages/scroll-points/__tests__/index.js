@@ -1,77 +1,80 @@
-import Component from '../src';
+import ScrollPoints from '../src';
 
 let basic, withCallback;
 const init = () => {
-    // Set up our document body
-    document.body.innerHTML = `<div class="js-boilerplate test"></div>
-             <div class="js-boilerplate test-2"></div>
-             <div class="js-boilerplate-two test-3"></div>`;
+	window.IntersectionObserver = jest.fn(function(cb) {
+	  this.observe = () => {};
+	  this.entries = [{ isIntersecting: true }];
+	});
 
-    basic = Component.init('.js-boilerplate');
-    withCallback = Component.init.call(Component, '.js-boilerplate-two', {
-      callback(){
-        this.node.classList.toggle('callback-test');
-      }
-    });
+	// Set up our document body
+	document.body.innerHTML = `<div class="js-scroll-point test"></div>
+			 <div class="js-scroll-point test-2"></div>
+			 <div class="js-scroll-point-two test-3"></div>`;
+
+	basic = ScrollPoints.init('.js-scroll-point');
+	withCallback = ScrollPoints.init('.js-scroll-point-two', {
+	  callback(){
+		// this.node.classList.toggle('callback-test');
+	  }
+	});
 };
 
-describe(`Initialisation`, () => {
-    
-    beforeAll(init);
+describe(`Scroll points > Initialisation`, () => {
 
+	beforeAll(init);
 
-    it('should return array of length 2', async () => {
-      expect(basic.length).toEqual(2);
-    });
+	it('should return array of length 2', async () => {
+	  expect(basic.length).toEqual(2);
+	});
 
-    it('each array item should be an object with DOMElement, settings, init, and  handleClick properties', () => {
+	it('should return undefined if no nodes match the init selector', async () => {
+	  expect(ScrollPoints.init('.not-found')).toEqual(undefined);
+	});
 
-        expect(basic[0]).not.toBeNull();
-        expect(basic[0].node).not.toBeNull();
-        expect(basic[0].settings).not.toBeNull();
-        expect(basic[0].init).not.toBeNull();
-        expect(basic[0].handleClick).not.toBeNull();
+	it('each array item should be an object with DOMElement, settings, init, and  handleClick properties', () => {
+		expect(basic[0]).not.toBeNull();
+		expect(basic[0].node).not.toBeNull();
+		expect(basic[0].settings).not.toBeNull();
+		expect(basic[0].init).not.toBeNull();
+		expect(basic[0].handleClick).not.toBeNull();
+	});
 
-    });
-
-    it('should attach the handleClick eventListener to DOMElement click event to toggle className', () => {
-
-        basic[0].node.click();
-        expect(basic[0].node.classList).toContain('clicked');
-        basic[0].node.click();
-        expect(basic[0].node.classList).not.toContain('clicked');
-
-    });
-
-     it('should initialisation with different settings if different options are passed', () => {
-
-        expect(basic[0].settings.callback).not.toEqual(withCallback[0].settings.callback);
-    
-    }); 
+	it('should initialisation with different settings if different options are passed', () => {
+		expect(basic[0].settings.callback).not.toEqual(withCallback[0].settings.callback);    
+	});
+	
 
 });
 
-describe('Component API', () => {
+describe(`Scroll points > IntersectionObserver > observe`, () => {
+	let observe;
+  	beforeAll(() => {
+		observe = jest.fn();
+		window.IntersectionObserver = jest.fn(function(cb) {
+			this.observe = observe;
+			this.entries = [{ isIntersecting: true }];
+		});
+		// Set up our document body
+		document.body.innerHTML = `<div class="js-scroll-point test"></div>
+				<div class="js-scroll-point test-2"></div>
+				<div class="js-scroll-point-two test-3"></div>`;
 
-  it('should trigger the handleClick function toggling the className', () => {
+		basic = ScrollPoints.init('.js-scroll-point');
+  	});
 
-    basic[0].handleClick.call(basic[0].node);
-    expect(basic[0].node.classList).toContain('clicked');
-    basic[0].handleClick.call(basic[0].node);
-    expect(basic[0].node.classList).not.toContain('clicked');
-
-   });
+	it('creates an observer on the node', () => {
+		const node = document.querySelector('.js-scroll-point');
+		expect(observe).toBeCalledWith(node);
+	});
 
 });
 
+describe('Scroll points > Options', () => {
 
-describe('Options', () => {
-
-  it('should be passed in options', () => {
-    
-    expect(withCallback[0].settings.callback).not.toBeNull();
-    expect(basic[0].settings.callback).toBeNull();
-
-  });
+	it('should be passed in options', () => {    
+		expect(withCallback[0].settings.callback).not.toBeNull();
+		expect(basic[0].settings.callback).toEqual(false);
+	});
 
 });
