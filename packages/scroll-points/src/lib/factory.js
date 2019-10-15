@@ -1,8 +1,8 @@
-const callback = ({ settings, node }) => (entries, observer) => {
+export const callback = ({ settings, node }) => (entries, observer) => {
 	if(entries[0].isIntersecting) {
 		node.classList.add(settings.className);
 		if(settings.callback && typeof settings.callback === "function") settings.callback.call({ settings, node });
-		if(settings.unload) observer.unobserve(node);
+		if(settings.unload) observer.disconnect(node);
 	}
 };
 
