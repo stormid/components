@@ -41,13 +41,8 @@ export const DOTNET_PARAMS = {
     length: ['length-min', 'length-max'],
     stringlength: ['length-max'],
     range: ['range-min', 'range-max'],
-<<<<<<< Updated upstream
     min: ['min-min'],
     max:  ['max-max'],
-=======
-    min: ['min-min'],?
-    max:  ['max-max'],?
->>>>>>> Stashed changes
     minlength: ['minlength-min'],
     maxlength: ['maxlength-max'],
     regex: ['regex-pattern'],
