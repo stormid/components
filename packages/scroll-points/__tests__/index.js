@@ -32,12 +32,11 @@ describe(`Scroll points > Initialisation`, () => {
 	  expect(ScrollPoints.init('.not-found')).toEqual(undefined);
 	});
 
-	it('each array item should be an object with DOMElement, settings, init, and  handleClick properties', () => {
+	it('each array item should be an object with the expected properties', () => {
 		expect(basic[0]).not.toBeNull();
 		expect(basic[0].node).not.toBeNull();
 		expect(basic[0].settings).not.toBeNull();
 		expect(basic[0].init).not.toBeNull();
-		expect(basic[0].handleClick).not.toBeNull();
 	});
 
 	it('should initialisation with different settings if different options are passed', () => {

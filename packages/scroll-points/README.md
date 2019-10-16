@@ -22,7 +22,7 @@ ScrollPoints.init('.js-scroll-point');
 ```
 {
 	root: null, //element that is used as the viewport for checking visiblity of the target
-	rootMargin: '0px 0px 0px 0px', //margin around the root, px or percentage valules
+	rootMargin: '0px 0px 0px 0px', //margin around the root, px or percentage values
 	threshold: 0, //Either a single number or an array of numbers which indicate at what percentage of the target's visibility the observer's callback should be executed
 	callback: false, //function executed when scrolled into view
 	className: 'is--scrolled-in', //className added when scrolled into view
