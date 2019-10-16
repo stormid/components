@@ -3,10 +3,6 @@ import { createStore } from '../src/lib/store';
 describe(`Scroll spy > Store`, () => {
 
     const Store = createStore();
-    let effect = false;
-    const sideEffect = state => {
-        effect = !effect;
-    };
 
     it('createStore should return an Object with an API', async () => {
       expect(Store).not.toBeNull();
@@ -32,8 +28,9 @@ describe(`Scroll spy > Store`, () => {
     });
 
     it('should have a dispatch function that invokes any side effect functions passed after the state change, with new state as only argument', async () => {
+        const sideEffect = jest.fn();
         Store.dispatch({}, [sideEffect]);
-        expect(effect).toEqual(true);
+        expect(sideEffect).toBeCalled;
     });
 
 

@@ -1,5 +1,5 @@
 export const findSpies = nodes => nodes.map(node => {
-    if (!node.hash || !document.querySelector(node.hash)) return null;
+    if (!node.hash || !document.querySelector(node.hash)) return void console.warn('Node is missing a href hash  or the hash target id does not exist');
     
     return {
         node,

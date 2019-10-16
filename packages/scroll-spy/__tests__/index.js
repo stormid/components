@@ -13,6 +13,7 @@ const init = () => {
                 <a class="js-scroll-spy" href="#section1">Section 1</a>
                 <a class="js-scroll-spy" href="#section2">Section 2</a>
                 <a class="js-scroll-spy" href="#section3">Section 3</a>
+                <a class="js-scroll-spy" href="no-hash">No hash</a>
                 <a class="js-scroll-spy-two" href="#section4">Section 3</a>
             </nav>
         </header>
@@ -40,6 +41,27 @@ const init = () => {
 	  }
 	});
 };
+
+describe(`Scroll Spy > Initialisation`, () => {
+
+	beforeAll(init);
+
+	it('should return undefined if no nodes match the init selector', async () => {
+	  expect(ScrollSpy.init('.not-found')).toEqual(undefined);
+	});
+
+	it('should return an object with the expected properties', () => {
+		expect(basic).not.toBeNull();
+		expect(basic.getState().spies).not.toBeNull();
+		expect(basic.getState().settings).not.toBeNull();
+		expect(basic.getState()).not.toBeNull();
+	});
+
+	it('should initialisation with different settings if different options are passed', () => {
+		expect(basic.getState().settings.callback).not.toEqual(withCallback.getState().settings.callback);    
+	});
+
+});
 
 describe(`Scroll Spy > Initialisation`, () => {
 
