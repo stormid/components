@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { sanitize } from '../utils';
 
 export const overlay = () => {
