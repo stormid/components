@@ -2,7 +2,7 @@ import { TRIGGER_EVENTS, KEY_CODES } from './constants';
 import { getFocusableChildren } from './utils';
 
 export const initTriggers = Store => state => {
-    const { items, settings, keyListener } = state;
+    const { items, settings } = state;
     
     items.map((item, i) => {
         if(!item.trigger) return;
@@ -55,7 +55,7 @@ const loadImages = Store => i => {
 };
 
 const initUI = Store => state => {
-    const { settings, items } = Store.getState();
+    const { settings, items, keyListener } = Store.getState();
     const container = document.body.appendChild(settings.templates.overlay());
     const buttons = items.length > 2 ? settings.templates.buttons : '';
     container.insertAdjacentHTML('beforeend', settings.templates.overlayInner(buttons(), items.map(settings.templates.details).map(settings.templates.item).join('')));
@@ -97,7 +97,7 @@ const writeImage = (state, i) => {
 };
 
 const initUIButtons = Store => state => {
-    const { dom, current, items, keyListener, lastFocused } = Store.getState();
+    const { dom, current, items, lastFocused } = Store.getState();
     const closeBtn = dom.overlay.querySelector('.js-modal-gallery__close');
     TRIGGER_EVENTS.forEach(ev => {
         closeBtn.addEventListener(ev, e => {
@@ -127,17 +127,17 @@ export const keyListener = Store => e => {
     if(!isOpen) return;
     switch (e.keyCode) {
         case KEY_CODES.ESC:
-            e.preventDefault();
+            console.log('esc');
             close(Store)
             break;
         case KEY_CODES.TAB:
             trapTab(Store, e);
             break;
         case KEY_CODES.LEFT:
-            previous();
+            previous(Store);
             break;
         case KEY_CODES.RIGHT:
-            next();
+            next(Store);
             break;
         default:
             break;
@@ -190,6 +190,7 @@ const previous = Store => {
     const next = current === 0 ? dom.items.length - 1 : current - 1;
     Store.dispatch({ current: next }, [        
         () => dom.items[current].classList.remove('is--active'),
+        () => dom.items[next].classList.add('is--active'),
         load(Store),
         writeTotals
      ]);
@@ -200,6 +201,7 @@ const next = Store => {
     const next = current === 0 ? dom.items.length - 1 : current - 1;
     Store.dispatch({ current: next }, [
         () => dom.items[current].classList.remove('is--active'),
+        () => dom.items[next].classList.add('is--active'),
         load(Store),
         writeTotals
     ]);
