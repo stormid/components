@@ -54,11 +54,11 @@ const loadImages = Store => i => {
 
 };
 
-const initUI = Store => state => {
+export const initUI = Store => state => {
     const { settings, items, keyListener } = Store.getState();
     const container = document.body.appendChild(settings.templates.overlay());
-    const buttons = items.length > 2 ? settings.templates.buttons : '';
-    container.insertAdjacentHTML('beforeend', settings.templates.overlayInner(buttons(), items.map(settings.templates.details).map(settings.templates.item).join('')));
+    const buttons = items.length > 2 ? settings.templates.buttons() : '';
+    container.insertAdjacentHTML('beforeend', settings.templates.overlayInner(buttons, items.map(settings.templates.details).map(settings.templates.item).join('')));
     
     const domItems = [].slice.call(container.querySelectorAll('.js-modal-gallery__item'));
     const domTotals = container.querySelector('.js-gallery-totals');
@@ -75,7 +75,6 @@ const initUI = Store => state => {
         toggle(Store),
         writeTotals
     ]);
-
 };
 
 const load = Store => state => {
@@ -127,7 +126,6 @@ export const keyListener = Store => e => {
     if(!isOpen) return;
     switch (e.keyCode) {
         case KEY_CODES.ESC:
-            console.log('esc');
             close(Store)
             break;
         case KEY_CODES.TAB:
@@ -161,9 +159,9 @@ const trapTab = (Store, e) => {
 const toggle = Store => state => {
     const { dom, current, isOpen, items, settings } = Store.getState();
     dom.overlay.classList.toggle('is--active');
-    dom.overlay.setAttribute('aria-hidden', isOpen);
+    dom.overlay.setAttribute('aria-hidden', !isOpen);
     dom.overlay.setAttribute('tabindex', isOpen ? '0' : '-1');
-    isOpen && dom.items[current].classList.add('is--active');
+    isOpen !== null && dom.items[current].classList.add('is--active');
     if(dom.focusableChildren && dom.focusableChildren.length > 0) window.setTimeout(() => { dom.focusableChildren[0].focus(); }, 0);
 
     settings.fullscreen && toggleFullScreen(state);
@@ -185,7 +183,7 @@ const toggleFullScreen = ({ isOpen, dom}) => {
     }
 };
 
-const previous = Store => {
+export const previous = Store => {
     const { current, dom } = Store.getState();
     const next = current === 0 ? dom.items.length - 1 : current - 1;
     Store.dispatch({ current: next }, [        
@@ -196,9 +194,9 @@ const previous = Store => {
      ]);
 };
 
-const next = Store => {
+export const next = Store => {
     const { current, dom } = Store.getState();
-    const next = current === 0 ? dom.items.length - 1 : current - 1;
+    const next = current === dom.items.length - 1 ? 0 : current + 1;
     Store.dispatch({ current: next }, [
         () => dom.items[current].classList.remove('is--active'),
         () => dom.items[next].classList.add('is--active'),
@@ -207,13 +205,13 @@ const next = Store => {
     ]);
 };
 
-const close = Store => {
+export const close = Store => {
     const { keyListener, lastFocused, dom, current } = Store.getState();
     Store.dispatch({ current: null, isOpen: false }, [
         () => document.removeEventListener('keydown', keyListener),
         () => { if(lastFocused) lastFocused.focus() },
-        () => dom.items[current].classList.remove('is--active'),
-        toggle(Store),
+        // () => dom.items[current].classList.remove('is--active'),
+        // toggle(Store),
         () => dom.overlay.parentNode.removeChild(dom.overlay)
     ]);
 };

@@ -44,7 +44,9 @@ export const item = details => `<div class="modal-gallery__item js-modal-gallery
                                     ${details}
                                 </div>`;
 
-export const details = item => `<div class="modal-gallery__details">
-                                    <h1 class="modal-gallery__title">${sanitize(item.title)}</h1>
-                                    <div class="modal-gallery__description">${sanitize(item.description)}</div>
-                                </div>`;
+export const details = item => item.title || item.description 
+                                ? `<div class="modal-gallery__details">
+                                    ${item.title ? `<h1 class="modal-gallery__title">${sanitize(item.title)}</h1>` : ``}
+                                    ${item.description ? `<div class="modal-gallery__description">${sanitize(item.description)}</div>` : ``}
+                                </div>`
+                                : '';
