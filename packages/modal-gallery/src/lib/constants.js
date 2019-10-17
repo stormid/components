@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export const KEY_CODES = {
     TAB: 9,
     ESC: 27,

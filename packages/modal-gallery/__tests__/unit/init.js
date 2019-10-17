@@ -3,10 +3,10 @@ import ModalGallery from '../../src';
 describe(`Modal Gallery > Init > gallery`, () => {
 
 	it('should return an Object when passed a DOM selector matching links', async () => {
-		 document.body.innerHTML = `<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w">
+		 document.body.innerHTML = `<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w" data-sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px">
 			<img src="//placehold.it/200x200" alt="">
 		</a>
-		<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 2" data-description="Description 2" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w">
+		<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 2" data-description="Description 2" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w" data-sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px">
 			<img src="//placehold.it/200x200" alt="">
 		</a>`;
 		const gallery = ModalGallery.init('.js-modal-gallery');
@@ -25,6 +25,21 @@ describe(`Modal Gallery > Init > gallery`, () => {
 		expect(ModalGallery.init('')).toBeUndefined();
 	});
 
+	it('should return an Object with minimal possible options when passed a DOM selector matching links', async () => {
+		document.body.innerHTML = `<a class="js-modal-gallery" href="//placehold.it/500x500">
+			<img src="//placehold.it/200x200" alt="">
+		</a>
+		<a class="js-modal-gallery" href="//placehold.it/500x500">
+			<img src="//placehold.it/200x200" alt="">
+		</a>`;
+		const gallery = ModalGallery.init('.js-modal-gallery');
+		expect(gallery).not.toBeUndefined();
+		expect(gallery.getState).not.toBeUndefined();
+		expect(gallery.getState().items.length).toEqual(2);
+		expect(gallery.getState().isOpen).toEqual(false);
+		expect(gallery.getState().current).toEqual(null);
+	});
+
 });
 
 describe(`Modal Gallery > Init > single`, () => {
@@ -39,11 +54,22 @@ describe(`Modal Gallery > Init > single`, () => {
 		const gallery = ModalGallery.init('.js-modal-gallery', { single: true });
 		expect(gallery).not.toBeUndefined();
 		expect(gallery.length).toEqual(2);
-		// expect(gallery.getState).not.toBeUndefined();
 	});
 
 	it('should return undefined when passed a DOM selector gthat does not match links', async () => {
 		expect(ModalGallery.init('.js-not-found', { single: true })).toBeUndefined();
+	});
+
+	it('should return an Object with minimal possible options when passed a DOM selector matching links', async () => {
+		document.body.innerHTML = `<a class="js-modal-gallery" href="//placehold.it/500x500">
+			<img src="//placehold.it/200x200" alt="">
+		</a>
+		<a class="js-modal-gallery" href="//placehold.it/500x500">
+			<img src="//placehold.it/200x200" alt="">
+		</a>`;
+		const gallery = ModalGallery.init('.js-modal-gallery', { single: true });
+		expect(gallery).not.toBeUndefined();
+		expect(gallery.length).toEqual(2);
 	});
 	
 
@@ -82,8 +108,6 @@ describe(`Modal Gallery > Init > gallery from code`, () => {
 
 /*
 return {
-				trigger: el,
-				src: el.getAttribute('href'),
 				srcset: el.getAttribute('data-srcset') || null,
 				sizes: el.getAttribute('data-sizes') || null,
 				title: el.getAttribute('data-title') || '',
