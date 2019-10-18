@@ -27,8 +27,6 @@ const loadImage = Store => (item, i) => {
             const { imageCache } = Store.getState();
             imageCache[i] = img;
             Store.dispatch({ imageCache });
-            // this.imageCache[i] = img;
-            // write to DOM?
             writeImage(Store.getState(), i);
         };
         img.onload = loaded;
@@ -85,7 +83,7 @@ const load = Store => state => {
 
 const writeImage = (state, i) => {
     const { dom, settings, items } = state;
-
+    if(!dom) return;
     const imageContainer = dom.items[i].querySelector('.js-modal-gallery__img-container');
     const imageClassName = settings.scrollable ? 'modal-gallery__img modal-gallery__img--scrollable' : 'modal-gallery__img';
     const srcsetAttribute = dom.items[i].srcset ? ` srcset="${dom.items[i].srcset}"` : '';
