@@ -3,8 +3,7 @@ export const KEY_CODES = {
     TAB: 9,
     ESC: 27,
     LEFT: 37,
-    RIGHT: 39,
-    ENTER: 13
+    RIGHT: 39
 };
 
 export const TRIGGER_EVENTS = ['ontouchstart' in window ? 'touchstart' : 'click', 'keydown' ];

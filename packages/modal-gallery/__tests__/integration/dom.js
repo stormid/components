@@ -1,3 +1,4 @@
+import ModalGallery from '../../src';
 import { initUI, next, previous, close } from '../../src/lib/dom';
 import { createStore } from '../../src/lib/store';
 import defaults from '../../src/lib/defaults/';
@@ -167,13 +168,56 @@ describe(`Modal Gallery > DOM > close`, () => {
 
 });
 
-// const close = Store => {
-//     const { keyListener, lastFocused, dom, current } = Store.getState();
-//     Store.dispatch({ current: null, isOpen: false }, [
-//         () => document.removeEventListener('keydown', keyListener),
-//         () => { if(lastFocused) lastFocused.focus() },
-//         () => dom.items[current].classList.remove('is--active'),
-//         toggle(Store),
-//         () => dom.overlay.parentNode.removeChild(dom.overlay)
-//     ]);
-// };
+describe(`Modal Gallery > accessibility > buttons`, () => {
+
+    it('should navigate to the previous item on previous button press', () => {
+        document.body.innerHTML = `<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w">
+            <img src="//placehold.it/200x200" alt="">
+        </a>
+        <ul hidden>
+            <li class="gallery__item">
+                <a class="js-modal-gallery" href="//placehold.it/300x500" data-title="Image 2" data-description="Description 2" data-srcset="http://placehold.it/500x800 800w, http://placehold.it/300x500 320w">
+                    <img src="//placehold.it/200x200" alt="">
+                </a>
+            </li>
+            <li class="gallery__item">
+                <a class="js-modal-gallery" href="//placehold.it/300x300" data-title="Image 3" data-description="Description 3" data-srcset="http://placehold.it/500x500 800w, http://placehold.it/300x300 320w">
+                    <img src="//placehold.it/200x200" alt="">
+                </a>
+            </li>
+        </ul>`;
+
+        const Gallery = ModalGallery.init('.js-modal-gallery');
+        Gallery.getState().items[1].trigger.click();
+        expect(Gallery.getState().current).toEqual(1);
+        Gallery.getState().dom.overlay.querySelector('.js-modal-gallery__previous').click();
+        expect(Gallery.getState().current).toEqual(0);
+    
+    });
+
+
+    it('should navigate to the next item on next button press', () => {
+        document.body.innerHTML = `<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w">
+            <img src="//placehold.it/200x200" alt="">
+        </a>
+        <ul hidden>
+            <li class="gallery__item">
+                <a class="js-modal-gallery" href="//placehold.it/300x500" data-title="Image 2" data-description="Description 2" data-srcset="http://placehold.it/500x800 800w, http://placehold.it/300x500 320w">
+                    <img src="//placehold.it/200x200" alt="">
+                </a>
+            </li>
+            <li class="gallery__item">
+                <a class="js-modal-gallery" href="//placehold.it/300x300" data-title="Image 3" data-description="Description 3" data-srcset="http://placehold.it/500x500 800w, http://placehold.it/300x300 320w">
+                    <img src="//placehold.it/200x200" alt="">
+                </a>
+            </li>
+        </ul>`;
+
+        const Gallery = ModalGallery.init('.js-modal-gallery');
+        Gallery.getState().items[0].trigger.click();
+        expect(Gallery.getState().current).toEqual(0);
+        Gallery.getState().dom.overlay.querySelector('.js-modal-gallery__next').click();
+        expect(Gallery.getState().current).toEqual(1);
+    
+    });
+});

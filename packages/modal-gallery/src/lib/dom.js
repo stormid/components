@@ -144,9 +144,11 @@ const trapTab = (Store, e) => {
     const { dom } = Store.getState();
     const focusedIndex = dom.focusableChildren.indexOf(document.activeElement);
     if(e.shiftKey && focusedIndex === 0) {
+        /* istanbul ignore next */
         e.preventDefault();
         dom.focusableChildren[dom.focusableChildren.length - 1].focus();
     } else {
+        /* istanbul ignore next */
         if(!e.shiftKey && focusedIndex === dom.focusableChildren.length - 1) {
             e.preventDefault();
             dom.focusableChildren[0].focus();
@@ -172,11 +174,16 @@ const writeTotals = ({ dom, current, items, settings }) => {
 const toggleFullScreen = ({ isOpen, dom}) => {
     if(isOpen){
         dom.overlay.requestFullscreen && dom.overlay.requestFullscreen();
+        /* istanbul ignore next */
         dom.overlay.webkitRequestFullscreen && dom.overlay.webkitRequestFullscreen();
+        /* istanbul ignore next */
         dom.overlay.mozRequestFullScreen && dom.overlay.mozRequestFullScreen();
     } else {
+        /* istanbul ignore next */
         document.exitFullscreen && document.exitFullscreen();
+        /* istanbul ignore next */
         document.mozCancelFullScreen && document.mozCancelFullScreen();
+        /* istanbul ignore next */
         document.webkitExitFullscreen && document.webkitExitFullscreen();
     }
 };
