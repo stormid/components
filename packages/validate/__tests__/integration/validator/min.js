@@ -24,7 +24,7 @@ describe('Validate > Integration > validator > min', () => {
             data-val-min="Min error message"
             data-val-min-min="5"
             value="3"
-			type="text">`;
+			type="number">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input)['group1'];
 		expect(validate(group, group.validators[0])).toEqual(false);
@@ -38,7 +38,7 @@ describe('Validate > Integration > validator > min', () => {
             name="group1"
             min="5"
             value="6"
-			type="text">`;
+			type="number">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input)['group1'];
 		expect(validate(group, group.validators[0])).toEqual(true);
@@ -53,7 +53,7 @@ describe('Validate > Integration > validator > min', () => {
             data-val-min="Min error message"
             data-val-min-min="5"
             value="6"
-			type="text">`;
+			type="number">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input)['group1'];
 		expect(validate(group, group.validators[0])).toEqual(true);
@@ -66,7 +66,7 @@ describe('Validate > Integration > validator > min', () => {
             name="group1"
             min="5"
             value="Not a number"
-			type="text">`;
+			type="number">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input)['group1'];
 		expect(validate(group, group.validators[0])).toEqual(false);
@@ -81,7 +81,7 @@ describe('Validate > Integration > validator > min', () => {
             data-val-min="Min error message"
             data-val-min-min="5"
             value="Not a number"
-			type="text">`;
+			type="number">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input)['group1'];
 		expect(validate(group, group.validators[0])).toEqual(false);
@@ -94,7 +94,7 @@ describe('Validate > Integration > validator > min', () => {
             name="group1"
             min="5"
             value=""
-			type="text">`;
+			type="number">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input)['group1'];
 		expect(validate(group, group.validators[0])).toEqual(true);
@@ -109,7 +109,7 @@ describe('Validate > Integration > validator > min', () => {
             data-val-min="Min error message"
             data-val-min-min="5"
             value=""
-			type="text">`;
+			type="number">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input)['group1'];
 		expect(validate(group, group.validators[0])).toEqual(true);
