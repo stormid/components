@@ -1,12 +1,12 @@
 import Validation from '../../src';
-import messages from '../../src/lib/constants/messages';
+import defaults from '../../src/lib/defaults';
 
 let validators;
 const setUpDOM = () => {
 	// Set up our document body
 	document.body.innerHTML = `<form class="form" method="post" action="">
 		<label for="group1-1">Text (required, min 2 characters, max 8 characters)</label>
-		<input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="${messages.required()}" data-val-length-min="2" data-val-length-max="8" type="text">
+		<input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="${defaults.messages.required()}" data-val-length-min="2" data-val-length-max="8" type="text">
 		<span class="text-danger field-validation-valid" data-valmsg-for="group1" data-valmsg-replace="true"></span>
   	</form>`;
 };
@@ -45,9 +45,9 @@ describe('Validate > Initialisation', () => {
 		expect(validators[0].getState().realTimeValidation).toEqual(false);
 	  });
 	  
-	it('should create an empty settings property of the validator state if no options are passed', async () => {
+	it('should have the default settings in state if no options are passed', async () => {
         expect.assertions(1);
-		expect(validators[0].getState().settings).toEqual({});
+		expect(validators[0].getState().settings).toEqual(defaults);
 	});
 
 	it('should create a groups property of the validator state', async () => {
@@ -73,7 +73,7 @@ describe('Validate > Initialisation', () => {
 	it('validator state group validators should consist of a type, a message, and optional params', async () => {
         expect.assertions(5);
 		expect(validators[0].getState().groups['group1'].validators[0].type).toEqual('required');
-		expect(validators[0].getState().groups['group1'].validators[0].message).toEqual(messages.required());
+		expect(validators[0].getState().groups['group1'].validators[0].message).toEqual(defaults.messages.required());
 		expect(validators[0].getState().groups['group1'].validators[1].type).toEqual('length');
 		expect(validators[0].getState().groups['group1'].validators[1].message).toEqual('Please enter between 2 and 8 characters');
   		expect(validators[0].getState().groups['group1'].validators[1].params).toEqual({ min: '2', max: '8' });
@@ -111,7 +111,7 @@ describe('Validate > Initialisation > novalidate', () => {
         expect.assertions(1);
 		document.body.innerHTML = `<form class="form" method="post" action="" novalidate>
 			<label for="group1-1">Text (required, min 2 characters, max 8 characters)</label>
-			<input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="${messages.required()}" data-val-length-min="2" data-val-length-max="8" type="text">
+			<input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="${defaults.messages.required()}" data-val-length-min="2" data-val-length-max="8" type="text">
 			<span class="text-danger field-validation-valid" data-valmsg-for="group1" data-valmsg-replace="true"></span>
 		</form>`;
 		const validators = await Validation.init('.form');

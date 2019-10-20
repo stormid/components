@@ -8,7 +8,7 @@ import {
 	removeUnvalidatableGroups,
 	getInitialState
 } from '../../../src/lib/validator';
-import MESSAGES from '../../../src/lib/constants/messages';
+import defaults from '../../../src/lib/defaults';
 
 //resolveParam
 describe('Validate > Unit > Validator > resolveParam', () => {
@@ -191,7 +191,7 @@ describe('Validate > Unit > Validator > extractErrorMessage', () => {
 		const MESSAGE = 'This field is required';
 		const validator = { message: MESSAGE };
 		
-		expect(extractErrorMessage(validator)).toEqual(MESSAGE);
+		expect(extractErrorMessage(defaults.messages, validator)).toEqual(MESSAGE);
 	});
 
 	it('should return an error message based on constants and params given a validator without an error message', async () => {
@@ -223,20 +223,20 @@ describe('Validate > Unit > Validator > extractErrorMessage', () => {
 			params: { min: 2 }
 		};
 		
-		expect(extractErrorMessage(requiredValidator)).toEqual(MESSAGES.required());
-		expect(extractErrorMessage(emailValidator)).toEqual(MESSAGES.email());
-		expect(extractErrorMessage(patternValidator)).toEqual(MESSAGES.pattern());
-		expect(extractErrorMessage(URLValidator)).toEqual(MESSAGES.url());
-		expect(extractErrorMessage(dateValidator)).toEqual(MESSAGES.date());
-		expect(extractErrorMessage(dateISOValidator)).toEqual(MESSAGES.dateISO());
-		expect(extractErrorMessage(numberValidator)).toEqual(MESSAGES.number());
-		expect(extractErrorMessage(digitsValidator)).toEqual(MESSAGES.digits());
-		expect(extractErrorMessage(equalToValidator)).toEqual(MESSAGES.equalto());
-		expect(extractErrorMessage(remoteValidator)).toEqual(MESSAGES.remote());
-		expect(extractErrorMessage(maxValidator)).toEqual(MESSAGES.max(maxValidator.params));
-		expect(extractErrorMessage(minValidator)).toEqual(MESSAGES.min(minValidator.params));
-		expect(extractErrorMessage(maxLengthValidator)).toEqual(MESSAGES.maxlength(maxLengthValidator.params));
-		expect(extractErrorMessage(minLengthValidator)).toEqual(MESSAGES.minlength(minLengthValidator.params));
+		expect(extractErrorMessage(defaults.messages, requiredValidator)).toEqual(defaults.messages.required());
+		expect(extractErrorMessage(defaults.messages, emailValidator)).toEqual(defaults.messages.email());
+		expect(extractErrorMessage(defaults.messages, patternValidator)).toEqual(defaults.messages.pattern());
+		expect(extractErrorMessage(defaults.messages, URLValidator)).toEqual(defaults.messages.url());
+		expect(extractErrorMessage(defaults.messages, dateValidator)).toEqual(defaults.messages.date());
+		expect(extractErrorMessage(defaults.messages, dateISOValidator)).toEqual(defaults.messages.dateISO());
+		expect(extractErrorMessage(defaults.messages, numberValidator)).toEqual(defaults.messages.number());
+		expect(extractErrorMessage(defaults.messages, digitsValidator)).toEqual(defaults.messages.digits());
+		expect(extractErrorMessage(defaults.messages, equalToValidator)).toEqual(defaults.messages.equalto());
+		expect(extractErrorMessage(defaults.messages, remoteValidator)).toEqual(defaults.messages.remote());
+		expect(extractErrorMessage(defaults.messages, maxValidator)).toEqual(defaults.messages.max(maxValidator.params));
+		expect(extractErrorMessage(defaults.messages, minValidator)).toEqual(defaults.messages.min(minValidator.params));
+		expect(extractErrorMessage(defaults.messages, maxLengthValidator)).toEqual(defaults.messages.maxlength(maxLengthValidator.params));
+		expect(extractErrorMessage(defaults.messages, minLengthValidator)).toEqual(defaults.messages.minlength(minLengthValidator.params));
 	});
 
 });
@@ -338,7 +338,6 @@ describe('Validate > Unit > Validator > getInitialState', () => {
 
 		expect(getInitialState(form, {})).toEqual({
 			form: form,
-			submit: false,
 			settings: {},
 			errorNodes: {},
       		realTimeValidation: false,
@@ -365,7 +364,6 @@ describe('Validate > Unit > Validator > getInitialState', () => {
 
 		expect(getInitialState(form, { preSubmitHook: true })).toEqual({
 			form: form,
-			submit: false,
 			settings: { preSubmitHook: true },
 			errorNodes: {},
       		realTimeValidation: false,

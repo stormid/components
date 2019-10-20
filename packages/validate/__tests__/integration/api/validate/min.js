@@ -1,6 +1,6 @@
 import Validate from '../../../../src';
 import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
-import MESSAGES from '../../../../src/lib/constants/messages';
+import defaults from '../../../../src/lib/defaults';
 
 describe('Validate > Integration > api > validate > min', () => {
     
@@ -27,7 +27,7 @@ describe('Validate > Integration > api > validate > min', () => {
         // // render error message
         expect(label.lastChild.nodeName).toEqual('SPAN');
         expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual(MESSAGES.min({min: 2 }));
+        expect(label.lastChild.textContent).toEqual(defaults.messages.min({min: 2 }));
     });
 
     it('should validate a form based on the data-val min validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {

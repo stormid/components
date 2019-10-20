@@ -1,5 +1,4 @@
 import methods from './methods';
-import messages from '../constants/messages';
 import {
     isCheckable,
     isSelect,
@@ -181,7 +180,7 @@ export const assembleValidationGroup = (acc, input) => {
  * @return message [String] error message
  * 
  */ 
-export const extractErrorMessage = validator => validator.message || messages[validator.type](validator.params !== undefined ? validator.params : null);
+export const extractErrorMessage = (messages, validator) => validator.message || messages[validator.type](validator.params !== undefined ? validator.params : null);
 
 /**
  * Curried function that returns a reducer that reduces the resolved response from an array of validation Promises performed against a group
@@ -194,7 +193,7 @@ export const reduceErrorMessages = (group, state) => (acc, validity, j) => {
     return validity === true 
                 ? acc 
                 : [...acc, typeof validity === 'boolean' 
-                            ? extractErrorMessage(state.groups[group].validators[j])
+                            ? extractErrorMessage(state.settings.messages, state.groups[group].validators[j])
                             : validity];
 };
 
@@ -232,7 +231,6 @@ export const getInitialState = (form, settings) => {
         form,
         settings,
         errorNodes: {},
-        submit: settings.submit || false,
         realTimeValidation: false,
         groups: removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
                         .reduce(assembleValidationGroup, {}))

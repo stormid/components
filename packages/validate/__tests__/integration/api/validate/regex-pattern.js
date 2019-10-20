@@ -1,6 +1,6 @@
 import Validate from '../../../../src';
 import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
-import MESSAGES from '../../../../src/lib/constants/messages';
+import defaults from '../../../../src/lib/defaults';
 
 describe('Validate > Integration > api > validate > regex/pattern', () => {
     it('should validate a form based on the HTML5 pattern validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if the value does not match', async () => {
@@ -26,7 +26,7 @@ describe('Validate > Integration > api > validate > regex/pattern', () => {
         // // render error message
         expect(label.lastChild.nodeName).toEqual('SPAN');
         expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual(MESSAGES.pattern());
+        expect(label.lastChild.textContent).toEqual(defaults.messages.pattern());
     });
 
     it('should validate a form based on the data-val regex validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {

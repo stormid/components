@@ -1,6 +1,6 @@
 import Validate from '../../../../src';
 import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
-import MESSAGES from '../../../../src/lib/constants/messages';
+import defaults from '../../../../src/lib/defaults';
 
 describe('Validate > Integration >  api > validate > email', () => {
     //return boolean validityState
@@ -34,7 +34,7 @@ describe('Validate > Integration >  api > validate > email', () => {
         //render error message
         expect(label.lastChild.nodeName).toEqual('SPAN');
         expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual(MESSAGES.email());
+        expect(label.lastChild.textContent).toEqual(defaults.messages.email());
     });
 
     it('should validate a form based on the HTML5 email validator returning true if valid', async () => {
