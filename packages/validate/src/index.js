@@ -1,4 +1,5 @@
 import factory from './lib/factory';
+import defaults from './lib/defaults';
 
 const init = (candidate, opts) => {
 	let els;
@@ -10,7 +11,7 @@ const init = (candidate, opts) => {
 	
 	return els.reduce((acc, el) => {
 		if(!el.hasAttribute('novalidate')) {
-			acc.push(Object.create(factory(el, opts)));
+			acc.push(Object.create(factory(el, { ...defaults, ...opts })));
 			el.setAttribute('novalidate', 'novalidate');
 		}
 		return acc;

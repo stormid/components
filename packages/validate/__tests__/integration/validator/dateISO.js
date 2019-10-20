@@ -16,7 +16,7 @@ describe('Validate > Integration > validator > dateISO', () => {
 		expect(validate(group, group.validators[0])).toEqual(false);
     });
 
-    it('should return the validityState false for data-val dateISO validator with non-spec date', async () => {
+    it('should return the validityState true for data-val dateISO validator with an on-spec date', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"
@@ -29,5 +29,6 @@ describe('Validate > Integration > validator > dateISO', () => {
         const group = assembleValidationGroup({}, input)['group1'];
 		expect(validate(group, group.validators[0])).toEqual(true);
     });
-    
 });
+
+//YYYY-MM-DDTHH:MM:SS

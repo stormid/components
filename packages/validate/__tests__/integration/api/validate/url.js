@@ -1,6 +1,6 @@
 import Validate from '../../../../src';
 import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
-import MESSAGES from '../../../../src/lib/constants/messages';
+import defaults from '../../../../src/lib/defaults';
 
 describe('Validate > Integration >  api > validate > url', () => {
     //html5 spec regex approximation:
@@ -29,7 +29,7 @@ describe('Validate > Integration >  api > validate > url', () => {
         //render error message
         expect(label.lastChild.nodeName).toEqual('SPAN');
         expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual(MESSAGES.url());
+        expect(label.lastChild.textContent).toEqual(defaults.messages.url());
     });
 
     it('should validate a form based on the HTML5 url validator returning true if valid', async () => {

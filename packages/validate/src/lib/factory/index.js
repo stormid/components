@@ -48,8 +48,8 @@ const validate = Store => e => {
                     if(e && e.target) {
                         if(Store.getState().settings.preSubmitHook) {
                             Store.getState().settings.preSubmitHook();
-                            window.setTimeout(() => {(Store.getState().submit || Store.getState().form.submit)(); }, PREHOOK_DELAY);
-                        } else (Store.getState().submit || Store.getState().form.submit)();
+                            window.setTimeout(() => {(Store.getState().settings.submit || Store.getState().form.submit)(); }, PREHOOK_DELAY);
+                        } else (Store.getState().settings.submit || Store.getState().form.submit)();
                     }               
                     buttonValueNode && cleanupButtonValueNode(buttonValueNode);
                     return res(true);
