@@ -19,6 +19,23 @@ describe('Validate > Integration > normalise-validators > required', () => {
 		]);
     });
 
+  	it('should return the correct validation model for HTML5 required with a custom error message', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<input
+			id="group1"
+            name="group1"
+            data-val-required="Required error message"
+            required
+			type="text">`;
+		const input = document.querySelector('#group1');
+		expect(normaliseValidators(input)).toEqual([
+			{ 
+               type: 'required',
+                message: 'Required error message'
+            }
+		]);
+    });
+
     it('should return the correct validation model for HTML5 required', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input

@@ -225,7 +225,7 @@ If this element is not present a span is appended to the label for the field wit
 
 
 ### Error messages
-.Net error messages are extracted from data-val-[validator-type] data attributes.
+.Net error messages are extracted from data-val-[validator-type] data attributes, and apply to both HTML5 and .Net validators.
 
 Fields without data-val error messages will show the default messages for the failed validator (see options below).
 
