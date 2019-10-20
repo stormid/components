@@ -11,7 +11,9 @@ npm i -S @storm/validate
 ```
 import Validate from '@storm/validate';
 
-const validator = Validate.init('form:not([novalidate])');
+//returns an array of instances for every selector matched
+//also support passing an element as the first argument
+const [ validator ] = Validate.init('form:not([novalidate])');
 ```
 
 HTML
@@ -251,11 +253,12 @@ Fields without data-val error messages will show the default messages for the fa
 
 ## API
 
-1. addMethod - to add a custom validation method:
+### addMethod
+Add a custom validation method:
 ```
-const validators = Validate.init('.my-form');
+const [ validators ] = Validate.init('.my-form');
 
-validators[0].addMethod(
+validators.addMethod(
     'MyFieldName', //input/input group name
     (value, fields, params) => { //validation method
         return value === 'test'; //must return boolean
@@ -264,33 +267,36 @@ validators[0].addMethod(
 );
 ```
 
-2. validate - to manually trigger validation on the whole form, returns a promise:
+### validate
+Manually trigger validation on the whole form, returns a promise:
 ```
-const validators = Validate.init('.my-form');
+const [ validators ] = Validate.init('.my-form');
 
-await validators[0].validate();
+await validators.validate();
 ```
 
-3. addGroup - add an input or input validation group
+### addGroup
+add an input or input validation group
 ```
-const validators = Validate.init('.my-form');
+const [ validators ] = Validate.init('.my-form');
 const fieldsArray = Array.from(document.querySelector('.new-fields'))
 
 //add by passing an array of fields
 //if these fields span multiple groups they will be collected into the correct validation groups internally by the validator
-validators[0].addGroup(fieldsArray);
+validators.addGroup(fieldsArray);
 ```
 
-4. removeGroup - remove a validation group
+### removeGroup
+remove a validation group
 ```
-const validators = Validate.init('.my-form');
+const [ validators ] = Validate.init('.my-form');
 const fieldsArray = Array.from(document.querySelectorAll([name=new-fields]))
 
 //add by passing an array of fields
-validators[0].addGroup(fieldsArray);
+validators.addGroup(fieldsArray);
 
 //remove by passing the name of a group
-validators[0].removeGroup('new-fields');
+validators.removeGroup('new-fields');
 ```
 
 
