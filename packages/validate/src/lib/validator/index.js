@@ -70,7 +70,16 @@ export const extractDataValValidators = input => DOTNET_ADAPTORS.reduce((validat
                                                             ],
                                                         []);
 
-      
+/**
+ * Looks for a data-val attribute matching the validator type and returns the value
+ * 
+ * @param input [DOM node]
+ * @param type [String]
+ * 
+ * @return [Object] Error message or empty
+ */
+const resolveMessages = (input, type) => input.getAttribute(`data-val-${type}`) ? { message: input.getAttribute(`data-val-${type}`) } : {};
+
 /**
  * Checks attributes on an input to generate an array of validators the attributes describe
  * 
@@ -81,25 +90,25 @@ export const extractDataValValidators = input => DOTNET_ADAPTORS.reduce((validat
 export const extractAttrValidators = input => {
     let validators = [];
     if(input.hasAttribute('required') && input.getAttribute('required') !== 'false'){
-        validators.push({ type: 'required'} )
+        validators.push({ type: 'required', ...resolveMessages(input, 'required') } )
     }
-    if(input.getAttribute('type') === 'email') validators.push({type: 'email'});
-    if(input.getAttribute('type') === 'url') validators.push({type: 'url'});
-    if(input.getAttribute('type') === 'number') validators.push({type: 'number'});
+    if(input.getAttribute('type') === 'email') validators.push({ type: 'email', ...resolveMessages(input, 'email') });
+    if(input.getAttribute('type') === 'url') validators.push({ type: 'url', ...resolveMessages(input, 'url') });
+    if(input.getAttribute('type') === 'number') validators.push({ type: 'number', ...resolveMessages(input, 'number') });
     if((input.getAttribute('minlength') && input.getAttribute('minlength') !== 'false')){
-        validators.push({ type: 'minlength', params: { min: input.getAttribute('minlength') } });
+        validators.push({ type: 'minlength', params: { min: input.getAttribute('minlength')}, ...resolveMessages(input, 'minlength') });
     }
     if((input.getAttribute('maxlength') && input.getAttribute('maxlength') !== 'false')){
-        validators.push({ type: 'maxlength', params: { max: input.getAttribute('maxlength') } });
+        validators.push({ type: 'maxlength', params: { max: input.getAttribute('maxlength')}, ...resolveMessages(input, 'maxlength') });
     }
     if((input.getAttribute('min') && input.getAttribute('min') !== 'false')){
-        validators.push({ type: 'min', params: { min: input.getAttribute('min') } });
+        validators.push({ type: 'min', params: { min: input.getAttribute('min')}, ...resolveMessages(input, 'min') });
     }
     if((input.getAttribute('max') && input.getAttribute('max') !== 'false')){
-        validators.push({ type: 'max', params: { max: input.getAttribute('max') } });
+        validators.push({ type: 'max', params: { max: input.getAttribute('max')}, ...resolveMessages(input, 'max') });
     }
     if((input.getAttribute('pattern') && input.getAttribute('pattern') !== 'false')){
-        validators.push({ type: 'pattern', params: { regex: input.getAttribute('pattern') } });
+        validators.push({ type: 'pattern', params: { regex: input.getAttribute('pattern')}, ...resolveMessages(input, 'pattern') });
     }
     return validators;
 };

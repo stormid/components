@@ -20,6 +20,26 @@ describe('Validate > Integration > normalise-vaidators > max', () => {
 		]);
     });
 
+  	it('should return the correct validation model for HTML5 max with a custom error message', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<input
+			id="group1"
+            name="group1"
+            max="8"
+            data-val-max="Max error message"
+			type="text">`;
+		const input = document.querySelector('#group1');
+		expect(normaliseValidators(input)).toEqual([
+			{ 
+                type: 'max',
+                params: { 
+                    max: "8"
+                },
+                message: 'Max error message'
+            }
+		]);
+    });
+
      it('should return the correct validation model for data-val max', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
