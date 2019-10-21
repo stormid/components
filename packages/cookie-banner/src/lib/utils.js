@@ -17,9 +17,9 @@ export const writeCookie = state => {
     document.cookie = [
         `${state.settings.name}=${JSON.stringify(state.consent)};`,
         `expires=${(new Date(new Date().getTime() + (state.settings.expiry*24*60*60*1000))).toGMTString()};`,
-        state.settings.path ? `path=${state.settings.path}` : '',
-        state.settings.domain ? `domain=${state.settings.domain}` : '',
-        state.settings.samesite ? `SameSite=${state.settings.samesite}` : '',
+        state.settings.path ? `path=${state.settings.path};` : '',
+        state.settings.domain ? `domain=${state.settings.domain};` : '',
+        state.settings.samesite ? `SameSite=${state.settings.samesite};` : '',
         state.settings.secure ? `secure` : ''
     ].join('');
 }
