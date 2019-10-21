@@ -49,7 +49,10 @@ const validate = Store => e => {
                         if(Store.getState().settings.preSubmitHook) {
                             Store.getState().settings.preSubmitHook();
                             window.setTimeout(() => {(Store.getState().settings.submit || Store.getState().form.submit)(); }, PREHOOK_DELAY);
-                        } else (Store.getState().settings.submit || Store.getState().form.submit)();
+                        } else {
+                            if(Store.getState().settings.submit) Store.getState().settings.submit();
+                            else Store.getState().form.submit();
+                        }
                     }               
                     buttonValueNode && cleanupButtonValueNode(buttonValueNode);
                     return res(true);
