@@ -44,10 +44,8 @@ npm t
 ```
 
 ## Browser support
-This is module has both es6 and UMD distributions.
 
 ## Dependencies
-None
 
 ## License
 MIT

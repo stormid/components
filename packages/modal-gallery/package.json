@@ -13,12 +13,15 @@
   },
   "main": "dist/index.js",
   "source": "src/index.js",
+  "module": "dist/index.modern.mjs",
+  "unpkg": "dist/indexx.umd.js",
   "browser": "dist/index.umd.js",
   "keywords": [
     "stormid",
     "component",
     "ui",
-    "modal"
+    "modal",
+    "gallery"
   ],
   "scripts": {
     "build": "npx microbundle --name ModalGallery",

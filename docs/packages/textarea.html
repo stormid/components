@@ -152,5 +152,26 @@
         </svg>
     </a>
     <article class="markdown-body entry-content"><h1>Textarea</h1>
+<p>Auto-resizing textarea</p>
+<h2>Usage</h2>
+<p>JS</p>
+<pre><code>npm i -S @stormid/textarea
+</code></pre>
+<pre><code>import Textarea from '@stormid/textarea';
+
+Textarea.init('textarea');
+</code></pre>
+<h2>Options</h2>
+<pre><code>{
+    events: [
+        'input' //default textarea resize event
+    ]
+}
+</code></pre>
+<h2>Tests</h2>
+<pre><code>npm t
+</code></pre>
+<h2>License</h2>
+<p>MIT</p>
 </body>
 </html>

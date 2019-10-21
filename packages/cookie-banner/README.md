@@ -1,12 +1,11 @@
 # Cookie banner
 
-Cookie banner that can categorise cookies and conditionally invoke cookie-reliant functionality based on user-consent.
-
+GDPR compliant cookie banner that can categorise cookies and conditionally invoke cookie reliant functionality based on user consent.
 
 ## Usage
 Cookie management works by categorising cookies and the functions that initialise them, encapsulating them in a configuration object.
 
-Cookies category names can be any valid String.
+Cookies category names ('types') can be any valid String.
 
 JS
 ```
