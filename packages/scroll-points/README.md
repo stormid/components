@@ -13,6 +13,7 @@ JS
 ```
 npm i -S component-boilerplate
 ```
+```
 import ScrollPoints from '@stormid/scroll-points';
 
 ScrollPoints.init('.js-scroll-point');
@@ -43,7 +44,7 @@ npm t
 ```
 
 ## Browser support
-Depends on Object.assign and the [IntersectioObserver API](https://caniuse.com/#feat=intersectionobserver), IE11 will require polyfills.
+Depends on Object.assign and the [IntersectionObserver API](https://caniuse.com/#feat=intersectionobserver), IE11 will require polyfills.
 
 ## License
 MIT

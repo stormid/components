@@ -160,35 +160,31 @@
 <p>JS</p>
 <pre><code>npm i -S component-boilerplate
 </code></pre>
-<p>import ScrollPoints from ‘@stormid/scroll-points’;</p>
-<p>ScrollPoints.init(’.js-scroll-point’);</p>
-<pre><code>
-## Options
-</code></pre>
-<p>{
-root: null, //element that is used as the viewport for checking visiblity of the target
-rootMargin: ‘0px 0px 0px 0px’, //margin around the root, px or percentage values
-threshold: 0, //Either a single number or an array of numbers which indicate at what percentage of the target’s visibility the observer’s callback should be executed
-callback: false, //function executed when scrolled into view
-className: ‘is–scrolled-in’, //className added when scrolled into view
-unload: true //only callback once
-};</p>
-<pre><code>
-e.g.
-</code></pre>
-<p>ScrollPoints.init(’.js-scroll-point’, {
-rootMargin: ‘50% 0 0 0’
-});</p>
-<pre><code>
-## Tests
-</code></pre>
-<p>npm t</p>
-<pre><code>
-## Browser support
-Depends on Object.assign and the [IntersectioObserver API](https://caniuse.com/#feat=intersectionobserver), IE11 will require polyfills.
+<pre><code>import ScrollPoints from '@stormid/scroll-points';
 
-## License
-MIT
+ScrollPoints.init('.js-scroll-point');
 </code></pre>
+<h2>Options</h2>
+<pre><code>{
+	root: null, //element that is used as the viewport for checking visiblity of the target
+	rootMargin: '0px 0px 0px 0px', //margin around the root, px or percentage values
+	threshold: 0, //Either a single number or an array of numbers which indicate at what percentage of the target's visibility the observer's callback should be executed
+	callback: false, //function executed when scrolled into view
+	className: 'is--scrolled-in', //className added when scrolled into view
+	unload: true //only callback once
+};
+</code></pre>
+<p>e.g.</p>
+<pre><code>ScrollPoints.init('.js-scroll-point', {
+    rootMargin: '50% 0 0 0'
+});
+</code></pre>
+<h2>Tests</h2>
+<pre><code>npm t
+</code></pre>
+<h2>Browser support</h2>
+<p>Depends on Object.assign and the <a href="https://caniuse.com/#feat=intersectionobserver">IntersectionObserver API</a>, IE11 will require polyfills.</p>
+<h2>License</h2>
+<p>MIT</p>
 </body>
 </html>
