@@ -152,28 +152,18 @@
         </svg>
     </a>
     <article class="markdown-body entry-content"><h1>Component Name</h1>
-<p><a href="https://badge.fury.io/js/storm-component-boilerplate"><img src="https://badge.fury.io/js/storm-component-boilerplate.svg" alt="npm version"></a></p>
-<p>This is a <strong>boilerplate for developing UI components</strong> by <strong>StormId</strong>, used in production in conjunction with our project scaffold.</p>
-<p>Before use make sure to grep for “@stormid/component-boilerplate” and replace every occurrence as well as updating your tests, readme and example.</p>
+<p>This is a <strong>boilerplate for developing UI components</strong> by <strong>StormId</strong>.</p>
+<p>Before use make sure to grep for “@stormid/boilerplate” and replace every occurrence as well as deleting and re-initing .git and updating the package.json.</p>
 <h2>Usage</h2>
 <p>HTML</p>
 <pre><code>&lt;div class=&quot;js-boilerplate&quot;&gt;&lt;/div&gt;
 </code></pre>
 <p>JS</p>
-<pre><code>npm i -S component-boilerplate
+<pre><code>npm i -S @stormid/boilerplate
 </code></pre>
-<p>either using es6 import</p>
-<pre><code>import Boilerplate from '@stormid/component-boilerplate';
+<pre><code>import Boilerplate from '@stormid/boilerplate';
 
 Boilerplate.init('.js-boilerplate');
-</code></pre>
-<p>asynchronous browser loading (use the .standalone version in the /dist folder) using the global name (Storm + capitalised package name)</p>
-<pre><code>import Load from 'storm-load';
-
-Load('https://unpkg.com/stormid/umd/@stormid/component-boilerplate.js')
-    .then(() =&gt; {
-        ComponentBoilerplate.init('.js-boilerplate');
-    });
 </code></pre>
 <h2>Options</h2>
 <pre><code>{
@@ -188,11 +178,10 @@ Load('https://unpkg.com/stormid/umd/@stormid/component-boilerplate.js')
 });
 </code></pre>
 <h2>Tests</h2>
-<pre><code>npm test
+<pre><code>npm t
 </code></pre>
 <h2>Browser support</h2>
-<p>This is module has both es6 and es5 distributions. The es6 version should be used in a workflow that transpiles.</p>
-<p>The es5 version depends upon Object.assign, element.classList, and Promises so all evergreen browsers are supported out of the box, ie9+ is supported with polyfills. ie8+ will work with even more polyfills for Array functions and eventListeners.</p>
+<p>This is module has both es6 and UMD distributions.</p>
 <h2>Dependencies</h2>
 <p>None</p>
 <h2>License</h2>

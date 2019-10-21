@@ -13,14 +13,16 @@
   },
   "main": "dist/index.js",
   "source": "src/index.js",
+  "module": "dist/index.modern.mjs",
+  "unpkg": "dist/indexx.umd.js",
   "browser": "dist/index.umd.js",
   "keywords": [
     "stormid",
-    "boilerplate",
+    "skip",
     "component"
   ],
   "scripts": {
-    "build": "npx microbundle --name ComponentBoilerplate",
+    "build": "npx microbundle --name Skip",
     "test": "node_modules/.bin/jest --coverage",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",
