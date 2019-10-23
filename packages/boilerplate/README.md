@@ -5,6 +5,7 @@ This is a **boilerplate for developing UI components** by **StormId**.
 
 Before use make sure to grep for “@stormid/boilerplate” and replace every occurrence as well as deleting and re-initing .git and updating the package.json.
 
+---
 
 ## Usage
 HTML
@@ -29,7 +30,7 @@ Boilerplate.init('.js-boilerplate');
 }
 ```
 
-e.g.
+Example
 ```
 Boilerplate.init('.js-selector', {
     callback(){

@@ -9,7 +9,7 @@
  */
 export default {
 	onClassName: 'is--active',
-    mainSelector: 'main',
+    // mainSelector: 'main',
     toggleSelectorAttribute: 'data-modal-toggle',
     callback: false,
     delay: 0
