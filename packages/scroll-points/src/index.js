@@ -13,11 +13,7 @@ const init = (selector, options) => {
 	const nodes = [].slice.call(document.querySelectorAll(selector));
 
 	//no DOM nodes found, return with warning
-<<<<<<< Updated upstream
 	if(nodes.length === 0) return void console.warn(`Scroll points not initialised for selector '${selector}'`);
-=======
-	if(nodes.length === 0) return void console.warn(`Scroll points not initialised for selector '${sel}'`);
->>>>>>> Stashed changes
     
 	//return array of objects, one for each DOM node found
 	return nodes.map(node => Object.create(factory({ 
