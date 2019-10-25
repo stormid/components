@@ -50,4 +50,19 @@ describe('Validate > Integration > normalise-validators > required', () => {
             }
 		]);
     });
+
+    it('should return the correct validation model for HTML5 required from aria-required', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<input
+			id="group1"
+            name="group1"
+            aria-required="true"
+			type="text">`;
+		const input = document.querySelector('#group1');
+		expect(normaliseValidators(input)).toEqual([
+			{ 
+                type: 'required'
+            }
+		]);
+    });
 });

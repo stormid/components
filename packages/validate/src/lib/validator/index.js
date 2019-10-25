@@ -88,7 +88,7 @@ const resolveMessages = (input, type) => input.getAttribute(`data-val-${type}`) 
  */
 export const extractAttrValidators = input => {
     let validators = [];
-    if(input.hasAttribute('required') && input.getAttribute('required') !== 'false'){
+    if((input.hasAttribute('required') || input.hasAttribute('aria-required')) && (input.getAttribute('required') !== 'false' || input.getAttribute('aria-required') !== 'false')){
         validators.push({ type: 'required', ...resolveMessages(input, 'required') } )
     }
     if(input.getAttribute('type') === 'email') validators.push({ type: 'email', ...resolveMessages(input, 'email') });
