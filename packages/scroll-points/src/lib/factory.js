@@ -14,5 +14,5 @@ export default ({ settings, node }) => {
 	});
 	observer.observe(node);
 
-	return { settings, node };
+	return { node };
 };

@@ -10,10 +10,7 @@ export const initTriggers = Store => state => {
             item.trigger.addEventListener(ev, e => {
                 if((e.keyCode && e.keyCode !== KEY_CODES.ENTER) || (e.which && e.which === 3)) return;
                 e.preventDefault();
-                Store.dispatch(
-                    { current: i, isOpen: true },
-                    [ initUI(Store) ]
-                );
+                open(Store)(i);
             });
         });
     });
@@ -219,4 +216,11 @@ export const close = Store => {
         // toggle(Store),
         () => dom.overlay.parentNode.removeChild(dom.overlay)
     ]);
+};
+
+export const open = Store => (i = 0) => {
+     Store.dispatch(
+        { current: i, isOpen: true },
+        [ initUI(Store) ]
+    );
 };

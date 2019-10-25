@@ -3,8 +3,9 @@
 
 Auto-resizing textarea
 
-## Usage
+---
 
+## Usage
 JS
 ```
 npm i -S @stormid/textarea
@@ -21,6 +22,15 @@ Textarea.init('textarea');
     events: [
         'input' //default textarea resize event
     ]
+}
+```
+
+## API
+Each instance returned from init exposes the interface
+```
+{
+    node, DOMElement, the text area
+    resize, Function to trigger resize
 }
 ```
 

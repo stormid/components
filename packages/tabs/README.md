@@ -2,6 +2,8 @@
 
 Accessible tabs for multi-panelled content areas.
 
+---
+
 ## Usage
 HTML
 ```
@@ -37,9 +39,12 @@ Tabs.init('.js-tabs');
 }
 ```
 
-e.g.
+## API
+Each instance returned from init exposes the interface
 ```
-Tabs.init('.js-tabs', { updateURL: false });
+{
+    getState, a Function that returns the current state Object
+}
 ```
 
 ## Tests

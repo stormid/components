@@ -1,6 +1,6 @@
 module.exports = `(function(iframe, buttons, activeClass){
     var TRIGGER_KEYCODES = [13, 32];
-    (window.PointerEvent ? ['pointerdown', 'keydown'] : ['ontouchstart' in window ? 'touchstart' : 'click', 'keydown' ]).forEach(function(ev){
+    ['ontouchstart' in window ? 'touchstart' : 'click', 'keydown' ].forEach(function(ev){
         buttons.forEach(function(button){
             button.addEventListener(ev, function(e){
                 if(!!e.keyCode && !~TRIGGER_KEYCODES.indexOf(e.keyCode)) return;

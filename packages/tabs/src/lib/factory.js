@@ -21,7 +21,6 @@ export default ({ node, settings }) => {
     }, [ initUI(Store), open ]);
 
     return { 
-        node,
         getState: Store.getState
     }
 }; 

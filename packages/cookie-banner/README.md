@@ -1,11 +1,15 @@
 # Cookie banner
 
-GDPR compliant cookie banner that can categorise cookies and conditionally invoke cookie reliant functionality based on user consent.
+GDPR compliant cookie banner that can categorise cookies and conditionally invoke cookie reliant functionality based on user consent. Renders a cookie banner and a consent form based on configuration settings.
+
+---
 
 ## Usage
 Cookie management works by categorising cookies and the functions that initialise them, encapsulating them in a configuration object.
 
 Cookies category names ('types') can be any valid String.
+
+The cookie banner renders itself if no preference cookies are set. The consent form renders into a DOMElement with a particular className that can be set in the options (classNames.formContainer).
 
 JS
 ```
@@ -33,14 +37,16 @@ CookieBanner.init({
         }
     }
 });
+```
 
 ## Options
 ```
 {
 	name: '.CookiePreferences', //name of the preferences cookie
-	path: '', //path of the preferences cookie
+	path: '/', //path of the preferences cookie
 	domain: window.location.hostname === 'localhost' ? '' : `.${removeSubdomain(window.location.hostname)}`, //domain of the preferences cookie, defaults to .<root-domain>
 	secure: true, //preferences cookie secure
+	samesite: 'lax', //preferences cookie samesite lax
 	expiry: 365, //preferences cookie expiry
 	types: {}, //types of cookie-dependent functionality 
 	necessary: [], //cookie-dependent functionality that will always execute, for convenience only
@@ -53,7 +59,7 @@ CookieBanner.init({
 		form: 'privacy-banner__form',
 		fieldset: 'privacy-banner__fieldset',
 		legend: 'privacy-banner__legend',
-		formContainer: 'privacy-banner__form-container',
+		formContainer: 'privacy-banner__form-container', //where the form is rendered
 		formMessage: 'privacy-banner__form-msg',
 		title: 'privacy-banner__form-title',
 		description: 'privacy-banner__form-description'
@@ -63,15 +69,13 @@ CookieBanner.init({
 		return `<section role="dialog" aria-live="polite" aria-label="You privacy" class="${model.classNames.banner}">
 			<div class="privacy-content">
 				<div class="wrap">
-					<div class="row">
-						<!--googleoff: all-->
-						<div class="privacy-banner__title">Cookies</div>
-						<p>We use cookies to improve your experience on our site and show you personalised advertising.</p>
-						<p>Find out more from our <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="/privacy-policy">privacy policy</a> and <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="${model.policyURL}">cookie policy</a>.</p>
-						<button class="btn btn--primary ${model.classNames.acceptBtn}">Accept and close</button>
-						<a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="${model.policyURL}">Your options</a>
-						<!--googleon: all-->
-					</div>
+					<!--googleoff: all-->
+					<div class="privacy-banner__title">Cookies</div>
+					<p>We use cookies to improve your experience on our site and show you personalised advertising.</p>
+					<p>Find out more from our <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="/privacy-policy">privacy policy</a> and <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="${model.policyURL}">cookie policy</a>.</p>
+					<button class="btn btn--primary ${model.classNames.acceptBtn}">Accept and close</button>
+					<a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="${model.policyURL}">Your options</a>
+					<!--googleon: all-->
 				</div>
 			</div>
 		</section>`;
@@ -118,6 +122,14 @@ CookieBanner.init({
 			<button class="${model.settings.classNames.submitBtn}"${Object.keys(model.consent).length === 0 ? ` disabled` : ''}>Save my settings</button>
 		</form>`;
 	}
+}
+```
+
+## API
+The Object returned from init exposes the interface
+```
+{
+    getState, a Function that returns the current state Object
 }
 ```
 

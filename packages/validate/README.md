@@ -2,6 +2,7 @@
 
 Client-side form validation library to support .NET MVC (core) validation using data-val attributes as a drop-in replacement for jQuery validate, and HTML5 attribute-based constraint validation.
 
+---
 
 ## Usage
 JS
@@ -252,6 +253,15 @@ Fields without data-val error messages will show the default messages for the fa
 ```
 
 ## API
+Each instance returned from init exposes the interface
+```
+{
+    validate
+    addMethod
+    addGroup
+    removeGroup
+}
+```
 
 ### addMethod
 Add a custom validation method:

@@ -1,5 +1,5 @@
 import { createStore } from './store';
-import { initTriggers, keyListener } from './dom';
+import { initTriggers, keyListener, open } from './dom';
 
 /* 
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
@@ -19,6 +19,7 @@ export default ({ items, settings }) => {
     }, [ initTriggers(Store) ]);
 
     return {
-        getState: Store.getState
+        getState: Store.getState,
+        open: open(Store)
     }
 }; 

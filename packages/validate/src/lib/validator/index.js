@@ -12,7 +12,6 @@ import {
     DOTNET_ERROR_SPAN_DATA_ATTRIBUTE,
     DOM_SELECTOR_PARAMS
 } from '../constants';
-import { reject } from 'q';
 
 /**
  * Resolve validation parameter to a string or array of DOM nodes

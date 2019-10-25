@@ -3,6 +3,8 @@
 
 Trigger className changes and callbacks when an element scrolls into view using IntersectionObservers.
 
+---
+
 ## Usage
 HTML
 ```
@@ -29,13 +31,6 @@ ScrollPoints.init('.js-scroll-point');
 	className: 'is--scrolled-in', //className added when scrolled into view
 	unload: true //only callback once
 };
-```
-
-e.g.
-```
-ScrollPoints.init('.js-scroll-point', {
-    rootMargin: '50% 0 0 0'
-});
 ```
 
 ## Tests

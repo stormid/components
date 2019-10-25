@@ -54,6 +54,7 @@
             background: var(--light-grey-1);
             color: #333333;
             font: 100%/1.4 "AvenirNextLTW01-Regular", Helvetica, "Lucida Grande", sans-serif;
+            font-display: swap;
         }
         h1 {
             font-size: var(--font-size-peta);
@@ -74,16 +75,14 @@
         p {
             margin-bottom:calc(var(--baseline)/2);
         }
-        p:nth-of-type(2) {
-            font-size: 1.3rem;
-        }
-        p:nth-of-type(2):after{
+        hr {
             content:'';
             display:block;
             width:70px;
             height:4px;
             background-color:#28CBD0;
             margin-top:30px;
+            border: 0 none;
         }
         .entry-content {
             overflow: none;
@@ -144,7 +143,7 @@
     </style>
 </head>
 <body>
-    <a href="https://github.com/mjbp/components/packages/modal-gallery" target="_blank" class="github-corner" aria-label="View source on Github">
+    <a href="https://github.com/mjbp/components/tree/master/packages/modal-gallery" target="_blank" class="github-corner" aria-label="View source on Github">
         <svg width="60" height="60" viewBox="0 0 250 250" style="fill:#000; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
         <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
         <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
@@ -152,5 +151,142 @@
         </svg>
     </a>
     <article class="markdown-body entry-content"><h1>Modal Gallery</h1>
+<p>Modal image gallery</p>
+<hr>
+<h2>Usage</h2>
+<p>A modal gallery can be created with DOM elements, or programmatically created from a JS Object.</p>
+<p>From HTML</p>
+<pre><code>&lt;ul&gt;
+    &lt;li&gt;
+        &lt;a class=&quot;js-modal-gallery&quot; href=&quot;//placehold.it/500x500&quot; data-title=&quot;Image 1&quot; data-description=&quot;Description 1&quot; data-srcset=&quot;//placehold.it/800x800 800w, //placehold.it/500x500 320w&quot;&gt;Image one&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;a class=&quot;js-modal-gallery&quot; href=&quot;//placehold.it/300x800&quot; data-title=&quot;Image 2&quot; data-description=&quot;Description 2&quot; data-srcset=&quot;//placehold.it/500x800 800w, //placehold.it/300x500 320w&quot;&gt;Image two&lt;/a
+    &gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>JS</p>
+<pre><code>npm i -S @stormid/modal-gallery
+</code></pre>
+<pre><code>import Gallery from '@stormid/modal-gallery';
+
+Gallery.init('.js-modal-gallery');
+</code></pre>
+<p>Example minimal CSS</p>
+<pre><code>.modal-gallery__outer {
+    display: none;
+    opacity: 0;
+    position: fixed;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background-color: rgba(0,0,0,.9);
+    transition: opacity 500ms ease;
+}
+.modal-gallery__outer.is--active {
+    display: block;
+    opacity: 1;
+}
+.modal-gallery__img-container {
+    text-align:center;
+}
+.modal-gallery__img {
+    margin:80px auto 0 auto;
+    max-width:80%;
+    max-height: 80vh;
+}
+.modal-gallery__item {
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    opacity:0;
+    visibility:hidden;
+}
+.modal-gallery__item.is--active {
+    opacity:1;
+    visibility:visible;
+}
+.modal-gallery__next {
+    position: fixed;
+    bottom:50%;
+    right:25px;
+}
+.modal-gallery__previous {
+    position: fixed;
+    bottom:50%;
+    left:25px;
+}
+.modal-gallery__close {
+    position: fixed;
+    top:15px;
+    right:25px;
+}
+.modal-gallery__close:hover svg,
+.modal-gallery__previous:hover svg,
+.modal-gallery__next:hover svg{
+    opacity:.8
+}
+.modal-gallery__total {
+    position: absolute;
+    bottom:25px;
+    right:25px;
+    color:#fff
+}
+.modal-gallery__details {
+    position: fixed;
+    bottom:0;
+    left:120px;
+    right:120px;
+    padding:0 0 40px 0;
+    color:#fff;
+}
+</code></pre>
+<p>To create from a JS Object and triggered from any DOM event</p>
+<pre><code>import ModalGallery from 'storm-modal-gallery';
+
+const gallery = ModalGallery.init([
+    {
+        src: '//placehold.it/500x500',
+        srcset:'//placehold.it/800x800 800w, //placehold.it/500x500 320w',
+        title: 'Image 1',
+        description: 'Description 1'
+    },
+    {
+        src: '//placehold.it/300x800',
+        srcset:'//placehold.it/500x800 800w, //placehold.it/300x500 320w',
+        title: 'Image 2',
+        description: 'Description 2'
+    }
+]);
+
+//e.g. Open the gallery at the second item (index 1) by clicking on a button with the className 'js-modal-gallery__trigger'
+document.querySelector('.js-modal-gallery__trigger').addEventListener('click', () =&gt; gallery.open(1));
+</code></pre>
+<h2>Options</h2>
+<pre><code>{
+    fullscreen: false, //show gallery in fullscreen
+    preload: false, //preload all images
+    totals: true,   //show totals
+    scrollable: false, //modal is scrollable
+    single: false, //single image or gallery
+}
+</code></pre>
+<h2>API</h2>
+<p>Each instance returned from init exposes the interface</p>
+<pre><code>{
+    getState, a Function that returns the current state Object
+    open, a Function that opens the modal gallery
+}
+</code></pre>
+<h2>Tests</h2>
+<pre><code>npm t
+</code></pre>
+<h2>License</h2>
+<p>MIT</p>
 </body>
 </html>
