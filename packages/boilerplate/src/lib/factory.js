@@ -19,5 +19,5 @@ const handleClick = settings => function handler(e){
  */
 export default ({ settings, node }) => {
 	node.addEventListener('click', handleClick(settings).bind(node), false);
-	return { settings, node, handleClick: handleClick(settings) };
+	return { node, click: handleClick(settings) };
 }; 

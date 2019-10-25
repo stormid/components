@@ -3,8 +3,9 @@
 
 Hide CSS outline on mouse interactions, show on keyboard interactions. Until [:focus-visible](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible) has broader browser support.
 
-## Usage
+---
 
+## Usage
 JS
 ```
 npm i -S @stormid/outliner

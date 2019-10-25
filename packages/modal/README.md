@@ -2,6 +2,8 @@
 
 Accessible modal dialog.
 
+---
+
 ## Usage
 HTML
 ```
@@ -40,14 +42,12 @@ Modal.init('.js-modal');
 }
 ```
 
-e.g.
+## API
+Each instance returned from init exposes the interface
 ```
-Modal.init('.js-modal', {
-    callback(){
-        //this refers to the current state Object
-        console.log(this);
-    }
-});
+{
+    getState, a Function that returns the current state Object
+}
 ```
 
 ## Tests

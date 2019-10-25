@@ -39,6 +39,15 @@ Boilerplate.init('.js-selector', {
 });
 ```
 
+## API
+Each instance returned from init exposes the interface
+```
+{
+    node, DOMNode augmented by init
+    click, trigger the handleClick method
+}
+```
+
 ## Tests
 ```
 npm t

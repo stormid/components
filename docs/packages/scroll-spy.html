@@ -153,6 +153,7 @@
     <article class="markdown-body entry-content"><h1>Scroll Spy</h1>
 <p>Use the IntersectionObserver API to check when a section of the document is in view and update an associated DOM node.</p>
 <p>Useful for automated scroll position related navigation state management.</p>
+<hr>
 <h2>Example usage</h2>
 <p>HTML</p>
 <pre><code>&lt;header&gt;
@@ -189,6 +190,12 @@ ScrollSpy.init('.js-scroll-spy');
     activeClassName: 'is--active', //className added when in view
 	callback: null, //function executed when intersecting view
 	single: true // boolean to indicate whether a single or multiple spies can be active at once
+}
+</code></pre>
+<h2>API</h2>
+<p>Each instance returned from init exposes the interface</p>
+<pre><code>{
+    getState, a Function that returns the current state Object
 }
 </code></pre>
 <h2>Tests</h2>

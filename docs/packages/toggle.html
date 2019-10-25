@@ -152,6 +152,7 @@
     </a>
     <article class="markdown-body entry-content"><h1>Toggle</h1>
 <p>Accessible DOM state toggling for off-canvas and show/hide UI patterns.</p>
+<hr>
 <h2>Usage</h2>
 <p>For page-level state toggling (e.g. an off-canvas menu)</p>
 <p>HTML</p>
@@ -204,6 +205,15 @@ Toggle.init('.js-toggle');
     &lt;button class=&quot;js-toggle__btn&quot;&gt;&lt;/a&gt;
     &lt;div class=&quot;js-toggle__local&quot; data-toggle=&quot;js-toggle__btn&quot; data-start-open=&quot;true&quot;&gt;&lt;/div&gt;
 &lt;/div&gt;
+</code></pre>
+<h2>API</h2>
+<p>Each instance returned from init exposes the interface</p>
+<pre><code>{
+    node, DOMElement, the text area
+    startToggle, a Function that starts the toggle lifecycle with prehook, toggle, and postHook
+    toggle, a Function that just executes the toggle
+    getState, a Function that returns the current state Object
+}
 </code></pre>
 <h2>Tests</h2>
 <pre><code>npm t

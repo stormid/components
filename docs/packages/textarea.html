@@ -152,6 +152,7 @@
     </a>
     <article class="markdown-body entry-content"><h1>Textarea</h1>
 <p>Auto-resizing textarea</p>
+<hr>
 <h2>Usage</h2>
 <p>JS</p>
 <pre><code>npm i -S @stormid/textarea
@@ -165,6 +166,13 @@ Textarea.init('textarea');
     events: [
         'input' //default textarea resize event
     ]
+}
+</code></pre>
+<h2>API</h2>
+<p>Each instance returned from init exposes the interface</p>
+<pre><code>{
+    node, DOMElement, the text area
+    resize, Function to trigger resize
 }
 </code></pre>
 <h2>Tests</h2>

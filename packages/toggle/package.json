@@ -14,7 +14,7 @@
   "main": "dist/index.js",
   "source": "src/index.js",
   "module": "dist/index.modern.mjs",
-  "unpkg": "dist/indexx.umd.js",
+  "unpkg": "dist/index.umd.js",
   "browser": "dist/index.umd.js",
   "keywords": [
     "stormid",

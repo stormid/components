@@ -4,6 +4,7 @@ Use the IntersectionObserver API to check when a section of the document is in v
 
 Useful for automated scroll position related navigation state management.
 
+---
 
 ## Example usage
 HTML
@@ -47,6 +48,15 @@ ScrollSpy.init('.js-scroll-spy');
     activeClassName: 'is--active', //className added when in view
 	callback: null, //function executed when intersecting view
 	single: true // boolean to indicate whether a single or multiple spies can be active at once
+}
+```
+
+
+## API
+Each instance returned from init exposes the interface
+```
+{
+    getState, a Function that returns the current state Object
 }
 ```
 

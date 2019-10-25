@@ -152,6 +152,7 @@
     </a>
     <article class="markdown-body entry-content"><h1>Scroll points</h1>
 <p>Trigger className changes and callbacks when an element scrolls into view using IntersectionObservers.</p>
+<hr>
 <h2>Usage</h2>
 <p>HTML</p>
 <pre><code>&lt;div class=&quot;js-scroll-point&quot;&gt;&lt;/div&gt;
@@ -172,11 +173,6 @@ ScrollPoints.init('.js-scroll-point');
 	className: 'is--scrolled-in', //className added when scrolled into view
 	unload: true //only callback once
 };
-</code></pre>
-<p>e.g.</p>
-<pre><code>ScrollPoints.init('.js-scroll-point', {
-    rootMargin: '50% 0 0 0'
-});
 </code></pre>
 <h2>Tests</h2>
 <pre><code>npm t

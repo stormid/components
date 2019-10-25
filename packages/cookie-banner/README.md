@@ -125,6 +125,14 @@ CookieBanner.init({
 }
 ```
 
+## API
+The Object returned from init exposes the interface
+```
+{
+    getState, a Function that returns the current state Object
+}
+```
+
 ## Tests
 ```
 npm t

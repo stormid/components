@@ -2,6 +2,8 @@
 
 Accessible DOM state toggling for off-canvas and show/hide UI patterns.
 
+---
+
 ## Usage
 For page-level state toggling (e.g. an off-canvas menu)
 
@@ -72,6 +74,16 @@ Options can also be set on an instance by adding data-attributes to the toggle e
 </div>
 ```
 
+## API
+Each instance returned from init exposes the interface
+```
+{
+    node, DOMElement, the text area
+    startToggle, a Function that starts the toggle lifecycle with prehook, toggle, and postHook
+    toggle, a Function that just executes the toggle
+    getState, a Function that returns the current state Object
+}
+```
 
 ## Tests
 ```

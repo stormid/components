@@ -129,7 +129,6 @@ const gallery = ModalGallery.init([
 document.querySelector('.js-modal-gallery__trigger').addEventListener('click', () => gallery.open(1));
 ```
 
-
 ## Options
 ```
 {
@@ -138,6 +137,15 @@ document.querySelector('.js-modal-gallery__trigger').addEventListener('click', (
     totals: true,   //show totals
     scrollable: false, //modal is scrollable
     single: false, //single image or gallery
+}
+```
+
+## API
+Each instance returned from init exposes the interface
+```
+{
+    getState, a Function that returns the current state Object
+    open, a Function that opens the modal gallery
 }
 ```
 

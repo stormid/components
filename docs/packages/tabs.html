@@ -152,6 +152,7 @@
     </a>
     <article class="markdown-body entry-content"><h1>Tabs</h1>
 <p>Accessible tabs for multi-panelled content areas.</p>
+<hr>
 <h2>Usage</h2>
 <p>HTML</p>
 <pre><code>&lt;div class=&quot;js-tabs tabs&quot;&gt;
@@ -180,8 +181,11 @@ Tabs.init('.js-tabs');
     activeIndex: 0 //index of initially active tab
 }
 </code></pre>
-<p>e.g.</p>
-<pre><code>Tabs.init('.js-tabs', { updateURL: false });
+<h2>API</h2>
+<p>Each instance returned from init exposes the interface</p>
+<pre><code>{
+    getState, a Function that returns the current state Object
+}
 </code></pre>
 <h2>Tests</h2>
 <pre><code>npm t

@@ -152,6 +152,7 @@
     </a>
     <article class="markdown-body entry-content"><h1>Validate</h1>
 <p>Client-side form validation library to support .NET MVC (core) validation using data-val attributes as a drop-in replacement for jQuery validate, and HTML5 attribute-based constraint validation.</p>
+<hr>
 <h2>Usage</h2>
 <p>JS</p>
 <pre><code>npm i -S @storm/validate
@@ -315,6 +316,14 @@ const [ validator ] = Validate.init('form:not([novalidate])');
 }
 </code></pre>
 <h2>API</h2>
+<p>Each instance returned from init exposes the interface</p>
+<pre><code>{
+    validate
+    addMethod
+    addGroup
+    removeGroup
+}
+</code></pre>
 <h3>addMethod</h3>
 <p>Add a custom validation method:</p>
 <pre><code>const [ validators ] = Validate.init('.my-form');
