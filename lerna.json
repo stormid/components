@@ -2,5 +2,14 @@
   "packages": [
     "packages/*"
   ],
+  "command": {
+    "publish": {
+      "ignoreChanges": ["*.md"],
+      "message": "chore(release): publish"
+    },
+    "version": {
+      "allowBranch": "master"
+    }
+  },
   "version": "independent"
 }
