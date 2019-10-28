@@ -1,6 +1,6 @@
 import { createStore } from '../store';
 import { ACTIONS, PREHOOK_DELAY } from '../constants';
-import { isSubmitButton, hasNameValue } from '../validator/utils';
+import { isSubmitButton, hasNameValue, hasFormactionValue } from '../validator/utils';
 import { 
     getInitialState,
     getValidityState,
@@ -40,25 +40,36 @@ const validate = Store => e => {
     return new Promise(res => {
         getValidityState(Store.getState().groups)
             .then(validityState => {
+                //TO DO
+                //#79
+                //Split and imorove testabliity
                 if([].concat(...validityState).reduce(reduceGroupValidityState, true)){
+                    
                     let buttonValueNode = false;
+                    let cachedAction = false;
+                    const submit = () => {
+                        if(Store.getState().settings.submit) Store.getState().settings.submit();
+                        else Store.getState().form.submit();
+                    };
                     if(isSubmitButton(document.activeElement) && hasNameValue(document.activeElement)) {
                         buttonValueNode = createButtonValueNode(document.activeElement, Store.getState().form);
+                    }
+                    if(isSubmitButton(document.activeElement) && hasFormactionValue(document.activeElement)) {
+                        cachedAction = Store.getState().form.getAttribute('action');
+                        Store.getState().form.setAttribute('action', document.activeElement.getAttribute('formaction'));
                     }
                     if(e && e.target) {
                         if(Store.getState().settings.preSubmitHook) {
                             Store.getState().settings.preSubmitHook();
-                            window.setTimeout(() => {(Store.getState().settings.submit || Store.getState().form.submit)(); }, PREHOOK_DELAY);
-                        } else {
-                            if(Store.getState().settings.submit) Store.getState().settings.submit();
-                            else Store.getState().form.submit();
-                        }
+                            window.setTimeout(submit, PREHOOK_DELAY);
+                        } else submit();
                     }               
                     buttonValueNode && cleanupButtonValueNode(buttonValueNode);
+                    cachedAction && Store.getState().form.setAttribute('action', cachedAction);
                     return res(true);
                 }
 
-                Store.getState().realTimeValidation === false && startRealTimeValidation(Store);
+                if(Store.getState().realTimeValidation === false) startRealTimeValidation(Store);
 
                 Store.dispatch(
                     ACTIONS.VALIDATION_ERRORS,
