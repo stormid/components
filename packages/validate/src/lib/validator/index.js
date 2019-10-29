@@ -256,6 +256,9 @@ export const reduceGroupValidityState = (acc, curr) => {
     return acc; 
 };
 
+
+export const isFormValid = validityState => [].concat(...validityState).reduce(reduceGroupValidityState, true);
+
 /**
  * Aggregates validation promises for all groups into a single promise
  * 
