@@ -5,7 +5,7 @@ import {
 }  from '../dom';
 import { PREHOOK_DELAY } from '../constants';
 
-export const executePostValidation = Store => {
+export const postValidation = (event, res, Store) => {
     let buttonValueNode = false;
     let cachedAction = false;
     const submit = () => {
@@ -19,7 +19,7 @@ export const executePostValidation = Store => {
         cachedAction = Store.getState().form.getAttribute('action');
         Store.getState().form.setAttribute('action', document.activeElement.getAttribute('formaction'));
     }
-    if(e && e.target) {
+    if(event && event.target) {
         if(Store.getState().settings.preSubmitHook) {
             Store.getState().settings.preSubmitHook();
             window.setTimeout(submit, PREHOOK_DELAY);
