@@ -1,8 +1,9 @@
 import { ACTIONS } from '../constants';
 import {
     getGroupValidityState,
-    resolveRealTimeValidationEvent
-} from '../validator';
+    resolveRealTimeValidationEvent,
+    reduceGroupValidityState
+} from './';
 import {
     clearError,
     renderError
