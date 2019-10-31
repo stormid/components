@@ -9,8 +9,6 @@ import { postValidation } from '../validator/post-validation';
 import { realTimeValidation } from '../validator/real-time-validation';
 import {
     clearErrors,
-    clearError,
-    renderError,
     renderErrors,
     focusFirstInvalidField
 }  from '../dom';
