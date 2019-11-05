@@ -24,7 +24,7 @@ export const postValidation = (event, res, Store) => {
             Store.getState().settings.preSubmitHook();
             window.setTimeout(submit, PREHOOK_DELAY);
         } else submit();
-    }               
+    }
     buttonValueNode && cleanupButtonValueNode(buttonValueNode);
     cachedAction && Store.getState().form.setAttribute('action', cachedAction);
     return res(true);
