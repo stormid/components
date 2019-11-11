@@ -129,7 +129,7 @@ export const initUI = Store => ({ dialog, toggles }) => {
                 e.preventDefault();
                 Store.dispatch({ 
                     isOpen: !Store.getState().isOpen,
-                    lastFocused: Store.getState().isOpen ? Store.getState().lastFocused : document.activeElement
+                    lastFocused: Store.getState().isOpen ? Store.getState().lastFocused : tgl
                 }, [ change(Store) ]);
             });
         });
