@@ -33,7 +33,7 @@ export const initUI = Store => ({ tabs, panels }) => {
         panels[i].setAttribute('hidden', 'hidden');
         panels[i].setAttribute('tabindex', '-1');
         initListeners(tab, i, Store);
-        if(!panels[i].firstElementChild || panels[i].firstElementChild.hasAttribute('tabindex')) return;
+        if (!panels[i].firstElementChild || panels[i].firstElementChild.hasAttribute('tabindex')) return;
         panels[i].firstElementChild.setAttribute('tabindex', '-1');
     });
 };

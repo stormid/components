@@ -2,9 +2,6 @@ export const createStore = () => {
     //shared centralised validator state
     let state = {};
 
-    //uncomment for debugging by writing state history to window
-    // window.__validator_history__ = [];
-
     //state getter
     const getState = () => state;
 
@@ -19,10 +16,9 @@ export const createStore = () => {
      */
     const dispatch = (nextState, effects) => {
         state = nextState ? ({ ...state, ...nextState }) : state;
-        //uncomment for debugging by writing state history to window
-        // window.__validator_history__.push(state), console.log(window.__validator_history__);
-        if(!effects) return;
-        effects.forEach(effect => { effect(state); });
+        
+        if (!effects) return;
+        effects.forEach(effect => effect(state));
     };
 
     return { dispatch, getState };

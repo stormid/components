@@ -29,17 +29,17 @@ describe(`Boilerplate > Initialisation`, () => {
     });
   
 
-    it('each instances should be an object with DOMElement, settings, init, and  handleClick properties', () => {
+    it('each instances should be an object with DOMElement, settings, init, and  click properties', () => {
 
         expect(basic[0]).not.toBeNull();
         expect(basic[0].node).not.toBeNull();
         expect(basic[0].settings).not.toBeNull();
         expect(basic[0].init).not.toBeNull();
-        expect(basic[0].handleClick).not.toBeNull();
+        expect(basic[0].click).not.toBeNull();
 
     });
 
-    it('should attach the handleClick eventListener to DOMElement of each instance with click eventHandler to toggle className', () => {
+    it('should attach the click eventListener to DOMElement of each instance with click eventHandler to toggle className', () => {
 
         basic[0].node.click();
         expect(basic[0].node.classList).toContain('clicked');
@@ -58,11 +58,11 @@ describe(`Boilerplate > Initialisation`, () => {
 
 describe('Boilerplate > Component API', () => {
 
-  it('should trigger the handleClick function toggling the className', () => {
+  it('should trigger the click function toggling the className', () => {
 
-    basic[0].handleClick.call(basic[0].node);
+    basic[0].click.call(basic[0].node);
     expect(basic[0].node.classList).toContain('clicked');
-    basic[0].handleClick.call(basic[0].node);
+    basic[0].click.call(basic[0].node);
     expect(basic[0].node.classList).not.toContain('clicked');
 
    });

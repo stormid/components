@@ -4,12 +4,12 @@ import { addActive, removeActive } from './reducers';
 
 export const callback = (Store, spy) => (entries, observer) => {
 	const { settings, active } = Store.getState();
-	if(entries[0].isIntersecting) {
-		if(settings.single) Store.dispatch(addActive(Store.getState(), spy), [ unsetAllActive, setActive(spy) ]);
+	if (entries[0].isIntersecting) {
+		if (settings.single) Store.dispatch(addActive(Store.getState(), spy), [ unsetAllActive, setActive(spy) ]);
 		else Store.dispatch(addActive(Store.getState(), spy), [ setActive(spy) ]);
 	} else {
-		if(active.length === 0) return;
-		if(settings.single) Store.dispatch(removeActive(Store.getState(), spy), [ unsetActive(spy), findActive ]);
+		if (active.length === 0) return;
+		if (settings.single) Store.dispatch(removeActive(Store.getState(), spy), [ unsetActive(spy), findActive ]);
 		else Store.dispatch(removeActive(Store.getState(), spy), [ unsetActive(spy) ]);
 	} 
 };
@@ -17,7 +17,7 @@ export const callback = (Store, spy) => (entries, observer) => {
 const initObservers = Store => state => {
 	const { settings, spies } = Store.getState();
 	spies.map(spy => {
-		if(spy === undefined) return;
+		if (spy === undefined) return;
 		const observer = new IntersectionObserver(callback(Store, spy), {
 			root: settings.root,
 			rootMargin: settings.rootMargin,
