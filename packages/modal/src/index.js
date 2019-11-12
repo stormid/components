@@ -3,7 +3,7 @@ import factory from './lib/factory';
 
 /* 
  * Returns an array of objects augmenting DOM elements that match a selector
- * 
+ *
  * @param selector, String, A DOMString containing one or more selectors to match, must be a valid CSS selector string
  * @params options, Object, to be merged with defaults to become the settings property of each returned object, all options can also be set on a node as a data-attrbute
  */
@@ -13,7 +13,7 @@ const init = (selector, options) => {
    const nodes = [].slice.call(document.querySelectorAll(selector));
 
    //no DOM nodes found, return with warning
-   if(nodes.length === 0) return console.warn(`Modal not initialised, no elements found for selector '${selector}'`);
+   if (nodes.length === 0) return console.warn(`Modal not initialised, no elements found for selector '${selector}'`);
    
    //return array of Objects, one for each DOM node found
    //each Object has a prototype consisting of the node (HTMLElement),

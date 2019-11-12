@@ -9,7 +9,7 @@ const create = (items, options) => Object.create(factory({
 export const singles = (src, opts) => {
 	let els = [].slice.call(document.querySelectorAll(src));
 
-	if(!els.length) return void console.warn('Modal Gallery cannot be initialised, no images found');
+	if (!els.length) return void console.warn('Modal Gallery cannot be initialised, no images found');
 
 	return els.map(el => create([{
 		trigger: el,
@@ -24,7 +24,7 @@ export const singles = (src, opts) => {
 export const galleries = (src, opts) => {
 	let items;
 
-	if(typeof src === 'string'){
+	if (typeof src === 'string'){
 		const els = [].slice.call(document.querySelectorAll(src));
 
 		if(!els.length) return void console.warn('Modal Gallery cannot be initialised, no images found');

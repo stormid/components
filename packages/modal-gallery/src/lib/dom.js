@@ -14,7 +14,7 @@ export const initTriggers = Store => state => {
             });
         });
     });
-    if(settings.preload) items.map(loadImage(Store));
+    if (settings.preload) items.map(loadImage(Store));
 };
 
 const loadImage = Store => (item, i) => {
@@ -38,8 +38,8 @@ const loadImages = Store => i => {
     const { imageCache, items, dom } = Store.getState();
     const indexes = [i];
 
-    if(items.length > 1) indexes.push(i === 0 ? items.length - 1 : i - 1);
-    if(items.length > 2) indexes.push(i === items.length - 1 ? 0 : i + 1);
+    if (items.length > 1) indexes.push(i === 0 ? items.length - 1 : i - 1);
+    if (items.length > 2) indexes.push(i === items.length - 1 ? 0 : i + 1);
     indexes.forEach(idx => {
         if(imageCache[idx] === undefined) {
             dom.items[idx].classList.add('loading');

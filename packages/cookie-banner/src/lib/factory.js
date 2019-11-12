@@ -6,7 +6,7 @@ import { initialState } from './reducers';
 
 export default settings => {
     /* istanbul ignore next */
-    if(!cookiesEnabled()) return;
+    if (!cookiesEnabled()) return;
     
     const Store = createStore();
     const cookies = readCookie(settings);
