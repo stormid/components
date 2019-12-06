@@ -27,16 +27,22 @@ Each package is available for use on npm. See [the docs](https://stormid.github.
 
 Install [lerna](https://www.npmjs.com/package/lerna) to use the Lerna CLI.
 
+Package tasks
 
-| Task                         | Command                                      |
-| ---------------------------- | -------------------------------------------- |
-| Run the example app | lerna run --scope PACKAGE_NAME dev --stream |
-| Output the example app in prod mode | lerna run --scope PACKAGE_NAME prod --stream |
-| Run tests | lerna run --scope PACKAGE_NAME test --stream |
-| Build the package for distribution | lerna run --scope PACKAGE_NAME build --stream |
+| Task                                | Command                                       |
+| ----------------------------------- | --------------------------------------------- |
+| Run the example app                 | lerna run --scope PACKAGE_NAME dev --stream   |
+| Output the example app in prod mode | lerna run --scope PACKAGE_NAME prod --stream  |
+| Run tests                           | lerna run --scope PACKAGE_NAME test --stream  |
+| Build the package for distribution  | lerna run --scope PACKAGE_NAME build --stream |
 
+Monorepo tasks
+
+| Task                                                                                | Command                                                                    |
+| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Build the docs                                                                      | npm run gh-pages                                                           |
+| [Lerna changed](https://github.com/lerna/lerna/tree/master/commands/changed#readme) | list of packages that would be the subjects of the next version or publish |
+| [Lerna version](https://github.com/lerna/lerna/tree/master/commands/version#readme) | Bump version of packages changed since the last release                    |
+| [Lerna publish](https://github.com/lerna/lerna/tree/master/commands/publish#readme) | Publish packages in the current project                                    |
 
 The full list of Lerna commands is listed in the [docs](https://github.com/lerna/lerna#readme).
-
-
-<!-- notes on contributing -->

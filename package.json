@@ -3,12 +3,12 @@
   "private": false,
   "scripts": {
     "gh-pages": "node tools/gh-pages/render",
-    "update": "npm outdated && lerna exec --no-bail -- npm outdated"
+    "prepublish": "npm run gh-pages -s"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.4",
-    "@babel/node": "^7.6.3",
-    "@babel/preset-env": "^7.6.3",
+    "@babel/core": "^7.7.4",
+    "@babel/node": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
@@ -20,8 +20,8 @@
     "markdown-it": "^8.4.2",
     "microbundle": "^0.11.0",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.9",
+    "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0",
-    "xhr-mock": "^2.4.1"
+    "xhr-mock": "^2.5.1"
   }
 }
