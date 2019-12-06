@@ -1,7 +1,7 @@
 
 # Scroll points
 
-Trigger className changes and callbacks when an element scrolls into view using IntersectionObservers.
+Trigger className changes and callbacks based on element intersecting the viewport using IntersectionObservers. 
 
 ---
 
@@ -13,7 +13,7 @@ HTML
 
 JS
 ```
-npm i -S component-boilerplate
+npm i @stormid/scroll-points
 ```
 ```
 import ScrollPoints from '@stormid/scroll-points';

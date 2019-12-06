@@ -8,7 +8,7 @@ Hide CSS outline on mouse interactions, show on keyboard interactions. Until [:f
 ## Usage
 JS
 ```
-npm i -S @stormid/outliner
+npm i @stormid/outliner
 ```
 ```
 import '@stormid/outliner';

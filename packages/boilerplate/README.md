@@ -15,7 +15,7 @@ HTML
 
 JS
 ```
-npm i -S @stormid/boilerplate
+npm i @stormid/boilerplate
 ```
 ```
 import Boilerplate from '@stormid/boilerplate';

@@ -11,6 +11,7 @@
   "bugs": {
     "url": "https://github.com/stormid/components/issues"
   },
+  "private": false,
   "main": "dist/index.js",
   "source": "src/index.js",
   "module": "dist/index.modern.mjs",
@@ -30,7 +31,7 @@
     "test": "node_modules/.bin/jest --coverage",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",
-    "release": "npm run -s build && npm t && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+    "prepublish": "npm run -s build"
   },
   "jest": {
     "testURL": "http://localhost"

@@ -1,6 +1,6 @@
 # Modal Gallery
 
-Modal image gallery
+Accessible modal image gallery
 
 ---
 
@@ -22,7 +22,7 @@ From HTML
 
 JS
 ```
-npm i -S @stormid/modal-gallery
+npm i @stormid/modal-gallery
 ```
 ```
 import Gallery from '@stormid/modal-gallery';

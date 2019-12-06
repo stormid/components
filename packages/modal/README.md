@@ -1,6 +1,6 @@
 # Modal
 
-Accessible modal dialog.
+Accessible modal dialog
 
 ---
 
@@ -24,7 +24,7 @@ HTML
 
 JS
 ```
-npm i -S @stormid/modal
+npm i @stormid/modal
 ```
 ```
 import Modal from '@stormid/modal';

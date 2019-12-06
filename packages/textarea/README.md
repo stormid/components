@@ -8,7 +8,7 @@ Auto-resizing textarea
 ## Usage
 JS
 ```
-npm i -S @stormid/textarea
+npm i @stormid/textarea
 ```
 ```
 import Textarea from '@stormid/textarea';

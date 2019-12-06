@@ -31,7 +31,7 @@ HTML
 
 JS
 ```
-npm i -S @stormid/scroll-spy
+npm i @stormid/scroll-spy
 ```
 ```
 import ScrollSpy from '@stormid/scroll-spy';

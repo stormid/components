@@ -1,6 +1,6 @@
 # Toggle
 
-Accessible DOM state toggling for off-canvas and show/hide UI patterns.
+Accessible DOM state toggling for off-canvas and show/hide UI patterns
 
 ---
 
@@ -15,7 +15,7 @@ HTML
 
 JS
 ```
-npm i -S @stormid/toggle
+npm i @stormid/toggle
 ```
 ```
 import Toggle from '@stormid/toggle';

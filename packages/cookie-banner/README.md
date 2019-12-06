@@ -13,7 +13,7 @@ The cookie banner renders itself if no preference cookies are set. The consent f
 
 JS
 ```
-npm i -S @stormid/cookie-banner
+npm i @stormid/cookie-banner
 ```
 ```
 import CookieBanner from '@stormid/cookie-banner';

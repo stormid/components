@@ -7,7 +7,7 @@ Ensure fragment identifier links (e.g. 'skip to content') focus on their target 
 ## Usage
 JS
 ```
-npm i -S @stormid/skip 
+npm i @stormid/skip 
 ```
 ```
 import '@stormid/skip';

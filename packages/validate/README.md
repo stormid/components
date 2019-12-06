@@ -14,7 +14,7 @@ Client-side form validation library to support .NET validation using data-val at
 ## Usage
 JS
 ```
-npm i -S @storm/validate
+npm i @storm/validate
 ```
 ```
 import Validate from '@storm/validate';

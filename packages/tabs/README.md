@@ -1,6 +1,6 @@
 # Tabs
 
-Accessible tabs for multi-panelled content areas.
+Accessible tabbed panelled content areas
 
 ---
 
@@ -21,7 +21,7 @@ HTML
 
 JS
 ```
-npm i -S @stormid/tabs
+npm i @stormid/tabs
 ```
 ```
 import Tabs from '@stormid/tabs';
