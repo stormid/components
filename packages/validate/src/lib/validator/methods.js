@@ -31,11 +31,11 @@ export default {
     digits: regexMethod(DIGITS_REGEX),
     minlength: paramMethod(
         'minlength',
-        params => (acc, input) => (acc = Array.isArray(input.value) ? input.value.length >= +params.min : +input.value.length >= +params.min, acc)
+        params => (acc, input) => (acc = +input.value.length >= +params.min, acc)
     ),
     maxlength: paramMethod(
         'maxlength',
-        params => (acc, input) => (acc = Array.isArray(input.value) ? input.value.length <= +params.max : +input.value.length <= +params.max, acc)
+        params => (acc, input) => (acc = +input.value.length <= +params.max, acc)
     ),
     equalto: paramMethod('equalto', params => (acc, input) => {
         return acc = params.other.reduce((subgroupAcc, subgroup) => {

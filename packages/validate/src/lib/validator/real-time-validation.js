@@ -2,7 +2,8 @@ import { ACTIONS } from '../constants';
 import {
     getGroupValidityState,
     resolveRealTimeValidationEvent,
-    reduceGroupValidityState
+    reduceGroupValidityState,
+    reduceErrorMessages
 } from './';
 import {
     clearError,
@@ -19,21 +20,24 @@ import {
  * dispatched to the store to update state and render the error
  * 
  */
-export const realTimeValidation = Store => {
+export const initRealTimeValidation = Store => {
     const handler = groupName => () => {
-        if(!Store.getState().groups[groupName].valid) {
-            Store.dispatch(ACTIONS.CLEAR_ERROR, groupName, [clearError(groupName)]);
+        const { groups } = Store.getState();
+        
+        if (!groups[groupName].valid) {
+            Store.dispatch(ACTIONS.CLEAR_ERROR, groupName, [ clearError(groupName) ]);
         }
-        getGroupValidityState(Store.getState().groups[groupName])
+        getGroupValidityState(groups[groupName])
             .then(res => {
-                if(!res.reduce(reduceGroupValidityState, true)) {
+                if (!res.reduce(reduceGroupValidityState, true)) {
+                    console.log('re-rednering errors');
                     Store.dispatch(
                         ACTIONS.VALIDATION_ERROR,
                         {
                             group: groupName,
                             errorMessages: res.reduce(reduceErrorMessages(groupName, Store.getState()), [])
                         },
-                        [renderError(groupName)]
+                        [ renderError(groupName) ]
                     );
                 }
             });

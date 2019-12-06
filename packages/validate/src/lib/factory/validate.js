@@ -6,7 +6,7 @@ import {
     reduceErrorMessages
 } from '../validator';
 import { postValidation } from '../validator/post-validation';
-import { realTimeValidation } from '../validator/real-time-validation';
+import { initRealTimeValidation } from '../validator/real-time-validation';
 import {
     clearErrors,
     renderErrors,
@@ -29,19 +29,21 @@ export const validate = Store => event => {
     Store.dispatch(ACTIONS.CLEAR_ERRORS, null, [clearErrors]);
 
     return new Promise(resolve => {
-        getValidityState(Store.getState().groups)
+        const state = Store.getState();
+        const { groups, realTimeValidation } = state;
+        getValidityState(groups)
             .then(validityState => {
-                if(isFormValid(validityState)) return postValidation(event, resolve, Store);
+                if (isFormValid(validityState)) return postValidation(event, resolve, Store);
 
-                if(Store.getState().realTimeValidation === false) realTimeValidation(Store);
+                if (realTimeValidation === false) initRealTimeValidation(Store);
 
                 Store.dispatch(
                     ACTIONS.VALIDATION_ERRORS,
-                    Object.keys(Store.getState().groups)
+                    Object.keys(groups)
                         .reduce((acc, group, i) => {                                         
                             return acc[group] = {
                                 valid: validityState[i].reduce(reduceGroupValidityState, true),
-                                errorMessages: validityState[i].reduce(reduceErrorMessages(group, Store.getState()), [])
+                                errorMessages: validityState[i].reduce(reduceErrorMessages(group, state), [])
                             }, acc;
                         }, {}),
                     [renderErrors, focusFirstInvalidField]
