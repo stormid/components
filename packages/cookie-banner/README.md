@@ -20,21 +20,32 @@ import CookieBanner from '@stormid/cookie-banner';
 
 CookieBanner.init({
     types: {
-        'performance': {
-            fns: [
-                model => { 
-                    //function that depends upon or creates a 'performance' cookie
-                 }
-            ]
-        },
-        'advertising and marketing': {
-            checked: false,
-            fns: [
-                model => { 
-                    //function that depends upon or creates an 'Advertising and marketing' cookie
-                }
-            ]
-        }
+		'performance': {
+			title: 'Set your yerformance preferences',
+			description: 'Performance cookies are used to measure the performance of our website and make improvements. Your personal data is not identified.',
+			labels: {
+				yes: 'Pages you visit and actions you take will be measured and used to improve the service',
+				no: 'Pages you visit and actions you take will not be measured and used to improve the service'
+			},
+			fns: [
+				model => { 
+					//function that depends upon or creates a 'performance' cookie
+				}
+			]
+		},
+		'ads': {
+			title: 'Set your personalised ads preferences',
+			description: 'We work with advertising partners to show you ads for our products and services across the web.  You can choose whether we collect and share that data with our partners below. ',
+			labels: {
+				yes: 'Our partners might serve you ads knowing you have visited our website',
+				no: 'Our partners will still serve you ads, but they will not know you have visited out website'
+			},
+			fns: [
+				model => { 
+					//function that depends upon or creates a 'performance' cookie
+				}
+			]
+		}
     }
 });
 ```
