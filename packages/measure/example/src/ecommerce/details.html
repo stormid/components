@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+	<head>
+    <title>Storm ID - Ecommerce Details</title>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: sans-serif;
+        }
+		body {
+        	font:100%/1.4 "AvenirNextLTW01-Regular", Helvetica, "Lucida Grande", sans-serif;
+		}
+		.container {
+			margin:48px auto;
+			max-width: 960px;
+			padding:0 24px;
+		}
+		h1 {
+			font-size: 1rem;
+			margin:0 0 24px 0;
+			padding:4px;
+		}
+		.product {
+            display: block;
+            max-width:500px;
+            text-align: left;
+			text-decoration: none;
+			margin-bottom:24px;
+        }
+        .product:after {
+            content:'';
+            display: block;
+            height:0;
+            padding-bottom:56%;
+            background-color:#f1f1f1;
+		}
+		.btn {
+			display: inline-block;
+			padding:4px 8px;
+			background-color:blue;
+			color:#fff;
+			text-decoration: none;
+			font-size: .875rem
+		}
+        .form {
+            background-color:#fafafa;
+            padding:24px 48px 12px 24px;
+            max-width: 350px;
+            margin-bottom: 24px;
+            font-size: .875rem;
+        }
+        .input-group {
+            margin-bottom: 12px;
+        }
+        .label {
+            display: inline-block;
+            width:70px
+        }
+    </style>
+</head>
+<body>
+    <div class="container"
+        data-measure-add
+        data-measure-detail
+        data-measure-item='{"name": "Google t-shirt","id": "115","category": "T-shirts","price": "19.00"}'>
+        <div class="product">
+            <h1>Google t-shirt</h1>
+        </div>
+        <div class="form">
+            <div class="input-group">
+                <label class="label" for="quantity">Quantity</label>
+                <select id="quantity" class="input" name="quantity">
+                    <option value="2" selected>2</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label class="label" for="variant">Colour</label>
+                <select id="variant" class="input" name="variant">
+                    <option value="black" selected>Black</option>
+                </select>
+            </div>
+        </div>
+        
+		<a class="btn" href="/ecommerce/basket.html">Add to basket</a>
+	</div>
+</body>
+</html>
