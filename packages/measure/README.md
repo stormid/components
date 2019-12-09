@@ -39,6 +39,11 @@ Each instance returned from init exposes the interface
 }
 ```
 
+## Pageviews
+
+## Events
+
+##E-commerce
 
 ## Automatic measurement
 
