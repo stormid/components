@@ -45,7 +45,7 @@ This library supports HTML5 attirbute constraints and the data-val attributes ge
 - [Equalto](#equalto)
 - [Remote](#remote)
 
-
+---
 
 ### Required
 The field must have a value. Checkboxes are treated as non-nullable in required validation.

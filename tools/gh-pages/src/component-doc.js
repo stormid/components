@@ -55,6 +55,20 @@ module.exports = (content, package) => require('./doctype')(`<html lang="en">
             font: 100%/1.4 "AvenirNextLTW01-Regular", Helvetica, "Lucida Grande", sans-serif;
             font-display: swap;
         }
+        a {
+            color: #333;
+            text-decoration:underline;
+        }
+        a:hover {
+            text-decoration:none;
+        }
+        ul {
+            padding-left:var(--gutter);
+            margin-bottom: var(--baseline);
+        }
+        li {
+            list-style: disc outside;
+        }
         h1 {
             font-size: var(--font-size-peta);
             font-family: var(--font-family-default);
@@ -79,8 +93,9 @@ module.exports = (content, package) => require('./doctype')(`<html lang="en">
             display:block;
             width:70px;
             height:4px;
-            background-color:#28CBD0;
-            margin-top:30px;
+            background-color:var(--light-grey-3);
+            margin-top:var(--baseline);
+            margin-bottom: var(--baseline);
             border: 0 none;
         }
         .entry-content {
