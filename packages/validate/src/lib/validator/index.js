@@ -3,7 +3,7 @@ import {
     isCheckable,
     isSelect,
     isFile,
-    DOMNodesFromCommaList,
+    domNodesFromCommaList,
     groupIsHidden
 } from './utils';
 import {
@@ -24,7 +24,7 @@ import {
 export const resolveParam = (param, input) => {
     let value = input.getAttribute(`data-val-${param}`);
     return ({
-                [param.split('-')[1]]: !!~DOM_SELECTOR_PARAMS.indexOf(param) ? DOMNodesFromCommaList(value, input): value
+                [param.split('-')[1]]: !!~DOM_SELECTOR_PARAMS.indexOf(param) ? domNodesFromCommaList(value, input): value
             })
 };
 

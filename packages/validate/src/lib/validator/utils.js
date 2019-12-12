@@ -33,7 +33,7 @@ export const resolveGetParams = nodeArrays => nodeArrays.map((nodes) => {
     return `${encodeURIComponent(nodes[0].getAttribute('name'))}=${encodeURIComponent(extractValueFromGroup(nodes))}`;
 }).join('&');
 
-export const DOMNodesFromCommaList = list => list.split(',')
+export const domNodesFromCommaList = list => list.split(',')
                                                 .map(item => {
                                                     // const resolvedSelector = escapeAttributeValue(appendStatePrefix(item, getStatePrefix(input.getAttribute('name'))));
                                                     return [].slice.call(document.querySelectorAll(`[name=${escapeAttributeValue(item)}]`));
@@ -42,7 +42,7 @@ export const DOMNodesFromCommaList = list => list.split(',')
 export const escapeAttributeValue = value => value.replace(/([!"#$%&'()*+,./:;<=>?@\[\\\]^`{|}~])/g, "\\$1");
 
 /*
- * Only require below functions and resolvedSelector in DOMNodesFromCommaList if supporting *. params
+ * Only require below functions and resolvedSelector in domNodesFromCommaList if supporting *. params
  */
 // const getStatePrefix = fieldName => fieldName.substr(0, fieldName.lastIndexOf('.') + 1);
 

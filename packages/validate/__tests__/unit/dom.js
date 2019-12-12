@@ -1,4 +1,4 @@
-import { 
+import {
     h,
     createErrorTextNode,
     focusFirstInvalidField,
@@ -7,17 +7,17 @@ import {
 import { DOTNET_CLASSNAMES } from '../../src/lib/constants';
 
 describe('Validate > Unit > DOM > h', () => {
-  	it('should return a DOM node for given vNode arguments', async () => {
+    it('should return a DOM node for given vNode arguments', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<div class="test">Lorem ipsum</div>`;
         expect(h('div', { class: 'test' }, 'Lorem ipsum')).toEqual(document.body.firstElementChild);
     });
-})
+});
 
 //createErrorTextNode
 describe('Validate > Unit > DOM > createErrorTextNode', () => {
 
-  	it('should append a child text node to a group serverErrorNode for a given invalid group', async () => {
+    it('should append a child text node to a group serverErrorNode for a given invalid group', async () => {
         expect.assertions(2);
         document.body.innerHTML = `<form class="form" method="post" action="">
             <label for="group1-1">Text (required, min 2 characters, max 8 characters)</label>
@@ -25,7 +25,7 @@ describe('Validate > Unit > DOM > createErrorTextNode', () => {
             <span class="text-danger field-validation-valid" data-valmsg-for="group1" data-valmsg-replace="true"></span>
         </form>`;
         const serverErrorNode = document.querySelector('[data-valmsg-for="group1"]');
-        const mockGroup = { serverErrorNode }
+        const mockGroup = { serverErrorNode };
         const errorMessage = 'This field is required';
         createErrorTextNode(mockGroup, errorMessage);
         expect(serverErrorNode.textContent).toEqual('This field is required');
