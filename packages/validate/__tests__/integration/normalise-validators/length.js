@@ -14,12 +14,12 @@ describe('Validate > Integration > normalise-vaidators > length', () => {
             type="text">`;
         const input = document.querySelector('#group1');
         expect(normaliseValidators(input)).toEqual([
-            { 
+            {
                 type: 'length',
                 message: 'Length error message',
                 params: {
-                    min: "2",
-                    max: "8"
+                    min: '2',
+                    max: '8'
                 }
             }
         ]);

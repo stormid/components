@@ -39,9 +39,9 @@ describe('Validate > Integration > api > validate > number', () => {
                 value="100"
                 type="number">
             </form>`;
-            const validator = Validate.init('form')[0];
-            const validityState = await validator.validate();
-            expect(validityState).toEqual(true);
+        const validator = Validate.init('form')[0];
+        const validityState = await validator.validate();
+        expect(validityState).toEqual(true);
     });
 
     it('should validate a form based on the data-val number validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
@@ -83,9 +83,9 @@ describe('Validate > Integration > api > validate > number', () => {
                 value="100"
                 type="number">
             </form>`;
-            const validator = Validate.init('form')[0];
-            const validityState = await validator.validate();
-            expect(validityState).toEqual(true);
+        const validator = Validate.init('form')[0];
+        const validityState = await validator.validate();
+        expect(validityState).toEqual(true);
     });
 
 });

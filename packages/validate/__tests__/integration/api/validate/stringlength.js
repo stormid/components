@@ -15,7 +15,7 @@ describe('Validate > Integration >  api > validate > stringlength', () => {
                 data-val-length-max="8"
                 value="Value is too long"
                 type="text" />
-        </form>`;        
+        </form>`;
         const input = document.getElementById('group1');
         const label = document.getElementById('group1-1-label');
         const validator = Validate.init('form')[0];

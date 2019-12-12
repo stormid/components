@@ -17,7 +17,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 value="9"
                 type="text">
         </form>`;
-        const input = document.querySelector('#group1')
+        const input = document.querySelector('#group1');
         const label = document.getElementById('group1-label');
         const validator = Validate.init('form')[0];
         const validityState = await validator.validate();
@@ -64,7 +64,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 value="7"
                 type="text">
         </form>`;
-        const input = document.querySelector('#group1')
+        const input = document.querySelector('#group1');
         const label = document.getElementById('group1-label');
         const validator = Validate.init('form')[0];
         const validityState = await validator.validate();
@@ -111,7 +111,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 value="9"
                 type="text">
         </form>`;
-        const input = document.querySelector('#group1')
+        const input = document.querySelector('#group1');
         const label = document.getElementById('group1-label');
         const validator = Validate.init('form')[0];
         const validityState = await validator.validate();

@@ -14,7 +14,7 @@ describe('Validate > Integration > api > validate > minlength', () => {
             minlength="3"
             value="No"
 			type="text">
-        </form>`;   
+        </form>`;
         const input = document.getElementById('group1');
         const label = document.getElementById('group1-label');
         const validator = Validate.init('form')[0];
@@ -43,19 +43,19 @@ describe('Validate > Integration > api > validate > minlength', () => {
                 value="No"
                 type="text">
             </form>`;
-            const input = document.getElementById('group1');
-            const label = document.getElementById('group1-label');
-            const validator = Validate.init('form')[0];
-            const validityState = await validator.validate();
-            expect(validityState).toEqual(false);
-            // realtimeValidation start
-            expect(validator.getState().realTimeValidation).toEqual(true);
-            // // focus on first invalid node
-            expect(document.activeElement).toEqual(input);
-            // // render error message
-            expect(label.lastChild.nodeName).toEqual('SPAN');
-            expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-            expect(label.lastChild.textContent).toEqual('Minlength error message');
+        const input = document.getElementById('group1');
+        const label = document.getElementById('group1-label');
+        const validator = Validate.init('form')[0];
+        const validityState = await validator.validate();
+        expect(validityState).toEqual(false);
+        // realtimeValidation start
+        expect(validator.getState().realTimeValidation).toEqual(true);
+        // // focus on first invalid node
+        expect(document.activeElement).toEqual(input);
+        // // render error message
+        expect(label.lastChild.nodeName).toEqual('SPAN');
+        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
+        expect(label.lastChild.textContent).toEqual('Minlength error message');
     });
 
     it('should validate a form based on the HTML5 minlength validator returning true if valid', async () => {
@@ -69,9 +69,9 @@ describe('Validate > Integration > api > validate > minlength', () => {
                 value="Fine"
                 type="text">
             </form>`;
-            const validator = Validate.init('form')[0];
-            const validityState = await validator.validate();
-            expect(validityState).toEqual(true);
+        const validator = Validate.init('form')[0];
+        const validityState = await validator.validate();
+        expect(validityState).toEqual(true);
     });
 
     it('should validate a form based on the data-val minlength validator returning true if valid', async () => {
@@ -87,9 +87,9 @@ describe('Validate > Integration > api > validate > minlength', () => {
                 value="Fine"
                 type="text">
             </form>`;
-            const validator = Validate.init('form')[0];
-            const validityState = await validator.validate();
-            expect(validityState).toEqual(true);
+        const validator = Validate.init('form')[0];
+        const validityState = await validator.validate();
+        expect(validityState).toEqual(true);
     });
 
 });

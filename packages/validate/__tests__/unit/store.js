@@ -6,22 +6,22 @@ beforeAll(() => {
 });
 //createStore
 describe('Validate > Unit > Store > createStore', () => {
-  	it('should create a store object with dispatch and get functions', async () => {
+    it('should create a store object with dispatch and get functions', async () => {
         expect.assertions(5);
         expect(Store).not.toBeUndefined();
         expect(Store.dispatch).not.toBeUndefined();
-        expect(typeof Store.dispatch == 'function').toEqual(true);
+        expect(typeof Store.dispatch === 'function').toEqual(true);
         expect(Store.getState).not.toBeUndefined();
-        expect(typeof Store.getState == 'function').toEqual(true);
+        expect(typeof Store.getState === 'function').toEqual(true);
     });
-})
+});
 
 //getState
 describe('Validate > Unit > Store > getState', () => {
     it('should return the state object', async () => {
         expect.assertions(1);
         expect(Store.getState()).toEqual({});
-  });
+    });
 });
 
 //dispatch
@@ -58,4 +58,4 @@ describe('Validate > Unit > Store > dispatch', () => {
         expect(flag).toEqual(true);
         expect(Store.getState()).toEqual(priorState);
     });
-})
+});

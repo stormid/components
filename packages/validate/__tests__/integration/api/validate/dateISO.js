@@ -21,7 +21,7 @@ describe('Validate > Integration >  api > validate > dateISO', () => {
                 data-val-dateISO="DateISO error message"
                 value="12/12/12"
                 type="text" />
-        </form>`;        
+        </form>`;
         const input = document.getElementById('group1-1');
         const label = document.getElementById('group1-1-label');
         const validator = Validate.init('form')[0];

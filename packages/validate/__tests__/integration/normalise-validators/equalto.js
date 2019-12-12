@@ -2,7 +2,7 @@ import { normaliseValidators } from '../../../src/lib/validator';
 
 describe('Validate > Integration > normalise-validators > equalto', () => {
 
-  	it('should return the correct validation model for data-val equalto', async () => {
+    it('should return the correct validation model for data-val equalto', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
             id="Email"
@@ -22,11 +22,11 @@ describe('Validate > Integration > normalise-validators > equalto', () => {
         const firstTarget = document.querySelector('#Email');
         const secondTarget = document.querySelector('#ConfirmEmail');
         expect(normaliseValidators(input)).toEqual([
-            { 
+            {
                 type: 'equalto',
                 message: 'Equalto error message',
                 params: {
-                    'other':  [[firstTarget],[secondTarget]]
+                    other: [[firstTarget], [secondTarget]]
                 }
             }
         ]);

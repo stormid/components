@@ -42,19 +42,19 @@ describe('Validate > Integration > api > validate > regex/pattern', () => {
                 value="fail"
                 type="text">
             </form>`;
-            const input = document.getElementById('group1');
-            const label = document.getElementById('group1-label');
-            const validator = Validate.init('form')[0];
-            const validityState = await validator.validate();
-            expect(validityState).toEqual(false);
-            // realtimeValidation start
-            expect(validator.getState().realTimeValidation).toEqual(true);
-            // // focus on first invalid node
-            expect(document.activeElement).toEqual(input);
-            // // render error message
-            expect(label.lastChild.nodeName).toEqual('SPAN');
-            expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-            expect(label.lastChild.textContent).toEqual('Regex error message');
+        const input = document.getElementById('group1');
+        const label = document.getElementById('group1-label');
+        const validator = Validate.init('form')[0];
+        const validityState = await validator.validate();
+        expect(validityState).toEqual(false);
+        // realtimeValidation start
+        expect(validator.getState().realTimeValidation).toEqual(true);
+        // // focus on first invalid node
+        expect(document.activeElement).toEqual(input);
+        // // render error message
+        expect(label.lastChild.nodeName).toEqual('SPAN');
+        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
+        expect(label.lastChild.textContent).toEqual('Regex error message');
     });
     
     it('should validate a form based on the HTML5 number validator returning true if valid', async () => {
@@ -68,9 +68,9 @@ describe('Validate > Integration > api > validate > regex/pattern', () => {
                 value="pass"
                 type="text">
             </form>`;
-            const validator = Validate.init('form')[0];
-            const validityState = await validator.validate();
-            expect(validityState).toEqual(true);
+        const validator = Validate.init('form')[0];
+        const validityState = await validator.validate();
+        expect(validityState).toEqual(true);
     });
 
     it('should validate a form based on the HTML5 remote validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if the remote validation returns an error', async () => {
@@ -86,9 +86,9 @@ describe('Validate > Integration > api > validate > regex/pattern', () => {
                 value="pass"
                 type="text">
             </form>`;
-            const validator = Validate.init('form')[0];
-            const validityState = await validator.validate();
-            expect(validityState).toEqual(true);
+        const validator = Validate.init('form')[0];
+        const validityState = await validator.validate();
+        expect(validityState).toEqual(true);
     });
 
 });

@@ -12,7 +12,7 @@ describe('Validate > Integration > normalise-vaidators > dateISO', () => {
             type="text">`;
         const input = document.querySelector('#group1');
         expect(normaliseValidators(input)).toEqual([
-            { 
+            {
                 type: 'dateISO',
                 message: 'DateISO error message'
             }
