@@ -11,7 +11,7 @@ describe('Validate > Integration > normalise-vaidators > max', () => {
             type="text">`;
         const input = document.querySelector('#group1');
         expect(normaliseValidators(input)).toEqual([
-            { 
+            {
                 type: 'max',
                 params: {
                     max: '8'

@@ -25,10 +25,10 @@
   ],
   "scripts": {
     "build": "npx microbundle --name Boilerplate",
-    "test": "node_modules/.bin/jest --coverage",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",
-    "prepublish": "npm run -s build"
+    "prepublish": "npm run -s build",
+    "test": "node_modules/.bin/jest --coverage"
   },
   "jest": {
     "testURL": "http://localhost"

@@ -1,4 +1,4 @@
-import { validate, assembleValidationGroup } from '../../../src/lib/validator';
+import { validate } from '../../../src/lib/validator';
 
 describe('Validate > Integration > validator > custom', () => {
 
@@ -11,17 +11,17 @@ describe('Validate > Integration > validator > custom', () => {
 			type="email">`;
         const input = document.querySelector('#group1');
         const group = {
-            valid:  false,
+            valid: false,
             fields: [input],
-            validators: [ 
-                { 
+            validators: [
+                {
                     type: 'custom',
                     method(value, fields) {
-                        return value === 'yes'
+                        return value === 'yes';
                     }
                 }]
         };
-		expect(validate(group, group.validators[0])).toEqual(false);
+        expect(validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for custom validator that fails', async () => {
@@ -33,17 +33,17 @@ describe('Validate > Integration > validator > custom', () => {
 			type="email">`;
         const input = document.querySelector('#group1');
         const group = {
-            valid:  false,
+            valid: false,
             fields: [input],
-            validators: [ 
-                { 
+            validators: [
+                {
                     type: 'custom',
                     method(value, fields) {
-                        return value === 'no'
+                        return value === 'no';
                     }
                 }]
         };
-		expect(validate(group, group.validators[0])).toEqual(true);
+        expect(validate(group, group.validators[0])).toEqual(true);
     });
 
 });

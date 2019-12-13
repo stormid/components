@@ -17,11 +17,11 @@ export const findDialog = node => node.querySelector('[role=dialog]') || console
  */
 export const findToggles = (node, settings) => {
     const toggles = node.getAttribute(settings.toggleSelectorAttribute) && [].slice.call(document.querySelectorAll('.' + node.getAttribute(settings.toggleSelectorAttribute)));
-    if(!toggles) console.warn(`Modal cannot be initialised, no modal toggle elements found. Does the modal have a ${settings.toggleSelectorAttribute} attribute that identifies toggle buttons?`);
+    if (!toggles) console.warn(`Modal cannot be initialised, no modal toggle elements found. Does the modal have a ${settings.toggleSelectorAttribute} attribute that identifies toggle buttons?`);
     return toggles;
-}
+};
 
- /* 
+/* 
   * Returns an Array of HTMLElements selected from parentNode based on whitelist FOCUSABLE_ELEMENTS constant
   *
   * @param node, HTMLElement, node to be toggled
@@ -53,16 +53,14 @@ export const keyListener = Store => event => {
  *
  * @param state, Object, the current state or model of the instance
  */
-const trapTab = state => event =>{
+const trapTab = state => event => {
     const focusedIndex = state.focusableChildren.indexOf(document.activeElement);
     if (event.shiftKey && focusedIndex === 0) {
         event.preventDefault();
         state.focusableChildren[state.focusableChildren.length - 1].focus();
-    } else {
-        if(!event.shiftKey && focusedIndex === state.focusableChildren.length - 1) {
-            event.preventDefault();
-            state.focusableChildren[0].focus();
-        }
+    } else if (!event.shiftKey && focusedIndex === state.focusableChildren.length - 1) {
+        event.preventDefault();
+        state.focusableChildren[0].focus();
     }
 };
 
@@ -82,7 +80,7 @@ const open = state => {
     document.addEventListener('keydown', state.keyListener);
     toggle(state);
     const focusFn = () => state.focusableChildren.length > 0 && state.focusableChildren[0].focus();
-    if(state.settings.delay) window.setTimeout(focusFn, state.settings.delay);
+    if (state.settings.delay) window.setTimeout(focusFn, state.settings.delay);
     else focusFn();
 };
 
@@ -105,7 +103,7 @@ const close = state => {
 export const change = Store => state => {
     if (state.isOpen) open(state);
     else close(state);
-	typeof state.settings.callback === 'function' &&  state.settings.callback.call(state);
+    typeof state.settings.callback === 'function' &&  state.settings.callback.call(state);
 };
 
 /*
@@ -120,14 +118,14 @@ export const initUI = Store => ({ dialog, toggles }) => {
     if (
         !dialog.getAttribute('aria-label') &&
         (!dialog.getAttribute('aria-labelledby') || !document.querySelector(`#${dialog.getAttribute('aria-labelledby')}`))
-        ) console.warn(`The modal dialog should have an aria-labelledby attribute that matches the id of an element that contains text, or an aria-label attribute.`);
+    ) console.warn(`The modal dialog should have an aria-labelledby attribute that matches the id of an element that contains text, or an aria-label attribute.`);
     //check aria-labelledby= an id in the dialog
     toggles.forEach(tgl => {
         TRIGGER_EVENTS.forEach(event => {
             tgl.addEventListener(event, e => {
-                if(!!e.keyCode && !~KEYCODES.indexOf(e.keyCode) || (e.which && e.which === 3)) return;
+                if (!!e.keyCode && !~KEYCODES.indexOf(e.keyCode) || (e.which && e.which === 3)) return;
                 e.preventDefault();
-                Store.dispatch({ 
+                Store.dispatch({
                     isOpen: !Store.getState().isOpen,
                     lastFocused: Store.getState().isOpen ? Store.getState().lastFocused : tgl
                 }, [ change(Store) ]);

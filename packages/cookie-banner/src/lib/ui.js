@@ -49,7 +49,7 @@ export const initForm = Store => state => {
 
     const extractConsent = () => Object.keys(groups).reduce((acc, key) => {
         const value = groups[key].reduce(groupValueReducer, '');
-        if (value) acc[key] = parseInt(value);
+        if (value) acc[key] = parseInt(value, 10);
         return acc;
     }, {});
 

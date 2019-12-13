@@ -7,8 +7,8 @@
  * @param e, Event, DOM event passed in eventListener
  */
 const handleClick = ({ callback }) => function handler(e){
-	this.classList.toggle('clicked');
-	if (callback && callback.call) callback.call(this);
+    this.classList.toggle('clicked');
+    if (callback && callback.call) callback.call(this);
 };
 
 /*
@@ -18,6 +18,6 @@ const handleClick = ({ callback }) => function handler(e){
  * @param node, HTMLElement, DOM node to be augmented
  */
 export default ({ settings, node }) => {
-	node.addEventListener('click', handleClick(settings).bind(node), false);
-	return { settings, node, click: handleClick(settings) };
+    node.addEventListener('click', handleClick(settings).bind(node), false);
+    return { settings, node, click: handleClick(settings) };
 };

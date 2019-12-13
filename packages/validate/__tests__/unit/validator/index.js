@@ -211,12 +211,6 @@ describe('Validate > Unit > Validator > extractErrorMessage', () => {
 // can do better here, factory > validate function in need of refactor
 //
 //extractErrorMessage
-// describe('Validate > Unit > Validator > reduceErrorMessages', () => {
-// it('should return an empty array given an array of validation responses with no errors', async () => {
-// 	expect.assertions(1);
-
-// 	});
-// });
 
 
 describe('Validate > Unit > Validator > removeUnvalidatableGroups', () => {

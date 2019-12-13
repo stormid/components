@@ -30,7 +30,6 @@ export const initRealTimeValidation = Store => {
         getGroupValidityState(groups[groupName])
             .then(res => {
                 if (!res.reduce(reduceGroupValidityState, true)) {
-                    console.log('re-rednering errors');
                     Store.dispatch(
                         ACTIONS.VALIDATION_ERROR,
                         {
@@ -50,9 +49,9 @@ export const initRealTimeValidation = Store => {
         //;_; can do better?
         const equalToValidator = Store.getState().groups[groupName].validators.filter(validator => validator.type === 'equalto');
         
-        if(equalToValidator.length > 0){
+        if (equalToValidator.length > 0){
             equalToValidator[0].params.other.forEach(subgroup => {
-                subgroup.forEach(item => { 
+                subgroup.forEach(item => {
                     item.addEventListener('blur', handler(groupName));
                 });
             });

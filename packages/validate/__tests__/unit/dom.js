@@ -40,17 +40,9 @@ describe('Validate > Unit > DOM > createErrorTextNode', () => {
  */
 
 //clearError
-// describe('Validate > Unit > DOM > clearError', () => {
-// });
-//clearError
-// describe('Validate > Unit > DOM > clearErrors', () => {
-// });
+//clearErrors
 //renderErrors
-// describe('Validate > Unit > DOM > renderErrors', () => {
-// });
 //renderError
-// describe('Validate > Unit > DOM > renderError', () => {
-// });
 
 //focusFirstInvalidField
 describe('Validate > Unit > DOM > focusFirstInvalidField', () => {

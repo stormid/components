@@ -14,9 +14,9 @@ describe('Scroll spy > factory > callback', () => {
             getState() { return state; },
             dispatch: dispatchMock
         };
-        const spy = {node: {}, target: {}};
+        const spy = { node: {}, target: {} };
         const entries = [{ isIntersecting: false }];
-        const observer = { disconnect: () => {}};
+        const observer = { disconnect: () => {} };
         callback(storeMock, spy)(entries, observer);
         expect(dispatchMock).not.toBeCalled();
         expect(storeMock.getState()).toEqual(state);
@@ -35,7 +35,7 @@ describe('Scroll spy > factory > callback', () => {
             dispatch: dispatchMock
         };
         const entries = [{ isIntersecting: true }];
-        const observer = { disconnect: () => {}};
+        const observer = { disconnect: () => {} };
         callback(storeMock, spy2)(entries, observer);
         expect(dispatchMock).toBeCalled();
     });
@@ -47,7 +47,7 @@ describe('Scroll spy > factory > callback', () => {
         const Store = createStore();
         Store.dispatch({ spies: [spy], settings: defaults, active: [] });
         const entries = [{ isIntersecting: true }];
-        const observer = { disconnect: () => {}};
+        const observer = { disconnect: () => {} };
         callback(Store, spy)(entries, observer);
         expect(Store.getState().active).toEqual([spy]);
         expect(node.classList.contains(defaults.activeClassName)).toEqual(true);
@@ -60,9 +60,9 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.dispatch({ spies: [spy], settings:defaults, active: [spy] });
+        Store.dispatch({ spies: [spy], settings: defaults, active: [spy] });
         const entries = [{ isIntersecting: true }];
-        const observer = { disconnect: () => {}};
+        const observer = { disconnect: () => {} };
         callback(Store, spy2)(entries, observer);
         expect(Store.getState().active).toEqual([spy, spy2]);
         expect(node.classList.contains(defaults.activeClassName)).toEqual(false);
@@ -78,7 +78,7 @@ describe('Scroll spy > factory > callback', () => {
         const Store = createStore();
         Store.dispatch({ spies: [spy], settings: Object.assign({}, defaults, { single: false }), active: [spy] });
         const entries = [{ isIntersecting: true }];
-        const observer = { disconnect: () => {}};
+        const observer = { disconnect: () => {} };
         callback(Store, spy2)(entries, observer);
         expect(Store.getState().active).toEqual([spy, spy2]);
         expect(node.classList.contains(defaults.activeClassName)).toEqual(true);
@@ -92,7 +92,7 @@ describe('Scroll spy > factory > callback', () => {
         const Store = createStore();
         Store.dispatch({ spies: [spy], settings: defaults, active: [spy] });
         const entries = [{ isIntersecting: false }];
-        const observer = { disconnect: () => {}};
+        const observer = { disconnect: () => {} };
         callback(Store, spy)(entries, observer);
         expect(Store.getState().active).toEqual([]);
         expect(node.classList.contains(defaults.activeClassName)).toEqual(false);
@@ -105,9 +105,9 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.dispatch({ spies: [spy, spy2], settings:defaults, active: [spy, spy2] });
+        Store.dispatch({ spies: [spy, spy2], settings: defaults, active: [spy, spy2] });
         const entries = [{ isIntersecting: false }];
-        const observer = { disconnect: () => {}};
+        const observer = { disconnect: () => {} };
         callback(Store, spy2)(entries, observer);
         expect(Store.getState().active).toEqual([spy]);
         expect(node.classList.contains(defaults.activeClassName)).toEqual(true);
@@ -121,9 +121,9 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.dispatch({ spies: [spy, spy2], settings:Object.assign({}, defaults, {single: false }), defaults, active: [spy, spy2] });
+        Store.dispatch({ spies: [spy, spy2], settings: Object.assign({}, defaults, { single: false }), defaults, active: [spy, spy2] });
         const entries = [{ isIntersecting: false }];
-        const observer = { disconnect: () => {}};
+        const observer = { disconnect: () => {} };
         callback(Store, spy2)(entries, observer);
         expect(Store.getState().active).toEqual([spy]);
         expect(node.classList.contains(defaults.activeClassName)).toEqual(true);

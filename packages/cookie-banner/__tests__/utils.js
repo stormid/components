@@ -1,4 +1,4 @@
-import { groupValueReducer, removeSubdomain } from '../src/lib/utils'
+import { groupValueReducer, removeSubdomain } from '../src/lib/utils';
 
 describe('Cookie > Utils > removeSubdomain', () => {
     it('should return the same vaule for a root domain', async () => {

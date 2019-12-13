@@ -2,13 +2,13 @@ import ScrollSpy from '../src';
 
 let basic, withCallback;
 const init = () => {
-	window.IntersectionObserver = jest.fn(function(cb) {
+    window.IntersectionObserver = jest.fn(function(cb) {
 	  this.observe = () => {};
 	  this.entries = [{ isIntersecting: true }];
-	});
+    });
 
-	// Set up our document body
-	document.body.innerHTML = `<header>
+    // Set up our document body
+    document.body.innerHTML = `<header>
             <nav>
                 <a class="js-scroll-spy" href="#section1">Section 1</a>
                 <a class="js-scroll-spy" href="#section2">Section 2</a>
@@ -34,52 +34,31 @@ const init = () => {
                 Section 4
             </section>`;
 
-	basic = ScrollSpy.init('.js-scroll-spy');
-	withCallback = ScrollSpy.init('.js-scroll-spy-two', {
+    basic = ScrollSpy.init('.js-scroll-spy');
+    withCallback = ScrollSpy.init('.js-scroll-spy-two', {
 	  callback(){
-		// this.node.classList.toggle('callback-test');
+            // this.node.classList.toggle('callback-test');
 	  }
-	});
+    });
 };
 
 describe(`Scroll Spy > Initialisation`, () => {
 
-	beforeAll(init);
+    beforeAll(init);
 
-	it('should return undefined if no nodes match the init selector', async () => {
+    it('should return undefined if no nodes match the init selector', async () => {
 	  expect(ScrollSpy.init('.not-found')).toEqual(undefined);
-	});
+    });
 
-	it('should return an object with the expected properties', () => {
-		expect(basic).not.toBeNull();
-		expect(basic.getState().spies).not.toBeNull();
-		expect(basic.getState().settings).not.toBeNull();
-		expect(basic.getState()).not.toBeNull();
-	});
+    it('should return an object with the expected properties', () => {
+        expect(basic).not.toBeNull();
+        expect(basic.getState().spies).not.toBeNull();
+        expect(basic.getState().settings).not.toBeNull();
+        expect(basic.getState()).not.toBeNull();
+    });
 
-	it('should initialisation with different settings if different options are passed', () => {
-		expect(basic.getState().settings.callback).not.toEqual(withCallback.getState().settings.callback);    
-	});
-
-});
-
-describe(`Scroll Spy > Initialisation`, () => {
-
-	beforeAll(init);
-
-	it('should return undefined if no nodes match the init selector', async () => {
-	  expect(ScrollSpy.init('.not-found')).toEqual(undefined);
-	});
-
-	it('should return an object with the expected properties', () => {
-		expect(basic).not.toBeNull();
-		expect(basic.getState().spies).not.toBeNull();
-		expect(basic.getState().settings).not.toBeNull();
-		expect(basic.getState()).not.toBeNull();
-	});
-
-	it('should initialisation with different settings if different options are passed', () => {
-		expect(basic.getState().settings.callback).not.toEqual(withCallback.getState().settings.callback);    
-	});
+    it('should initialisation with different settings if different options are passed', () => {
+        expect(basic.getState().settings.callback).not.toEqual(withCallback.getState().settings.callback);
+    });
 
 });

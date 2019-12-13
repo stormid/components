@@ -12,7 +12,7 @@ describe('Validate > Integration > validator > remote', () => {
  
         mock.post('/api/validate', {
             status: 201,
-            body: "false"
+            body: 'false'
         });
         document.body.innerHTML = `<input
             id="group1"
@@ -30,7 +30,7 @@ describe('Validate > Integration > validator > remote', () => {
             value="Value 2"
             type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
+        const group = assembleValidationGroup({}, input).group1;
         const res = await validate(group, group.validators[0]);
         expect(res).toEqual('false');
     });
@@ -40,7 +40,7 @@ describe('Validate > Integration > validator > remote', () => {
 
         mock.post('/api/validate', {
             status: 201,
-            body: "true"
+            body: 'true'
         });
         document.body.innerHTML = `<input
             id="group1"
@@ -58,7 +58,7 @@ describe('Validate > Integration > validator > remote', () => {
             value="Value 2"
             type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
+        const group = assembleValidationGroup({}, input).group1;
         const res = await validate(group, group.validators[0]);
         expect(res).toEqual('true');
     });

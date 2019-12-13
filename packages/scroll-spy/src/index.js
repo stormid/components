@@ -9,18 +9,18 @@ import factory from './lib/factory';
  */
 const init = (selector, options) => {
 	
-	//Array.from isnt polyfilled
-	//https://github.com/babel/babel/issues/5682
-	const nodes = [].slice.call(document.querySelectorAll(selector));
+    //Array.from isnt polyfilled
+    //https://github.com/babel/babel/issues/5682
+    const nodes = [].slice.call(document.querySelectorAll(selector));
 
-	//no DOM nodes found, return with warning
-	if (nodes.length === 0) return void console.warn(`Scroll spy not initialised for selector '${selector}'`);
+    //no DOM nodes found, return with warning
+    if (nodes.length === 0) return void console.warn(`Scroll spy not initialised for selector '${selector}'`);
     
-	//return array of objects, one for each DOM node found
-	return Object.create(factory({
-		settings: { ...defaults, ...options },
-		nodes
-	}));
+    //return array of objects, one for each DOM node found
+    return Object.create(factory({
+        settings: { ...defaults, ...options },
+        nodes
+    }));
 };
 
 /*

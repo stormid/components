@@ -9,14 +9,14 @@ export const initUI = Store => () => {
     const { toggles, node } = Store.getState();
 
     toggles.forEach(toggle => {
-        if(toggle.tagName !== 'BUTTON') toggle.setAttribute('role', 'button');
+        if (toggle.tagName !== 'BUTTON') toggle.setAttribute('role', 'button');
         const id = node.getAttribute('id');
-        if(!id) throw console.warn(`The toggle target should have an id.`);
+        if (!id) throw console.warn(`The toggle target should have an id.`);
         toggle.setAttribute('aria-controls', id);
         toggle.setAttribute('aria-expanded', 'false');
         TRIGGER_EVENTS.forEach(ev => {
             toggle.addEventListener(ev, e => {
-                if(!!e.keyCode && !~TRIGGER_KEYCODES.indexOf(e.keyCode) || (e.which && e.which === 3)) return;
+                if (!!e.keyCode && !~TRIGGER_KEYCODES.indexOf(e.keyCode) || (e.which && e.which === 3)) return;
                 e.preventDefault();
                 startToggleLifecycle(Store)();
             });
@@ -30,9 +30,9 @@ export const initUI = Store => () => {
  * @param Store, Object, model or state of the current instance
  */
 export const toggle = Store => () => {
-    Store.dispatch({ 
+    Store.dispatch({
         isOpen: !Store.getState().isOpen },
-        [toggleAttributes, manageFocus(Store), closeProxy(Store)]
+    [toggleAttributes, manageFocus(Store), closeProxy(Store)]
     );
 };
 
@@ -44,13 +44,13 @@ export const toggle = Store => () => {
  */
 export const startToggleLifecycle = Store => () => {
     const { node, toggles, settings, isOpen, classTarget, animatingClass } = Store.getState();
-    (settings.prehook && typeof settings.prehook === 'function') && settings.prehook({ node, toggles, isOpen });		
+    (settings.prehook && typeof settings.prehook === 'function') && settings.prehook({ node, toggles, isOpen });
     classTarget.classList.add(animatingClass);
     const fn = () => {
         toggle(Store)();
         (!!settings.callback && typeof settings.callback === 'function') && settings.callback({ node, toggles, isOpen: Store.getState().isOpen });
     };
-    if(isOpen && +settings.delay > 0) window.setTimeout(fn, +settings.delay);
+    if (isOpen && +settings.delay > 0) window.setTimeout(fn, +settings.delay);
     else fn();
 };
 
@@ -62,7 +62,7 @@ export const startToggleLifecycle = Store => () => {
  */
 export const findToggles = node => {
     const toggles = node.getAttribute('data-toggle') && [].slice.call(document.querySelectorAll('.' + node.getAttribute('data-toggle')));
-    if(!toggles) console.warn(`Toggle cannot be initialised, no buttons found for ${node}. Does it have a data-toggle attribute that identifies toggle buttons?`);
+    if (!toggles) console.warn(`Toggle cannot be initialised, no buttons found for ${node}. Does it have a data-toggle attribute that identifies toggle buttons?`);
     return toggles;
 };
 
@@ -95,13 +95,13 @@ export const toggleAttributes = ({ toggles, isOpen, classTarget, animatingClass,
  * @param Event, document keydown event dispatched from document
  */
 export const keyListener = Store => e => {
-    switch(e.keyCode){
-        case 27:
-            e.preventDefault();
-            startToggleLifecycle(Store);
+    switch (e.keyCode){
+    case 27:
+        e.preventDefault();
+        startToggleLifecycle(Store);
         break;
-        case 9:
-            trapTab(Store, e);
+    case 9:
+        trapTab(Store, e);
         break;
     }
 };
@@ -117,14 +117,12 @@ export const keyListener = Store => e => {
 const trapTab = (Store, e) => {
     const focusableChildren = Store.getState().focusableChildren;
     const focusedIndex = focusableChildren.indexOf(document.activeElement);
-    if(e.shiftKey && focusedIndex === 0) {
+    if (e.shiftKey && focusedIndex === 0) {
         e.preventDefault();
         focusableChildren[focusableChildren.length - 1].focus();
-    } else {
-        if(!e.shiftKey && focusedIndex === focusableChildren.length - 1) {
-            e.preventDefault();
-            focusableChildren[0].focus();
-        }
+    } else if (!e.shiftKey && focusedIndex === focusableChildren.length - 1) {
+        e.preventDefault();
+        focusableChildren[0].focus();
     }
 };
 
@@ -139,10 +137,10 @@ const trapTab = (Store, e) => {
  */
 export const proxyListener = Store => e => {
     const { node, toggles } = Store.getState();
-    if(!node.contains(e.target) && !toggles.reduce((acc, toggle) => {
-            if(toggle === e.target|| toggle.contains(e.target)) acc = true;
-            return acc;
-        }, false)
+    if (!node.contains(e.target) && !toggles.reduce((acc, toggle) => {
+        if (toggle === e.target|| toggle.contains(e.target)) acc = true;
+        return acc;
+    }, false)
     ) toggle(Store)();
 };
 
@@ -154,8 +152,8 @@ export const proxyListener = Store => e => {
  */
 export const closeProxy = Store => () => {
     const { settings, isOpen, focusInListener, clickListener } = Store.getState();
-    if(settings.closeOnBlur) document[`${isOpen ? 'add' : 'remove'}EventListener`]('focusin', focusInListener);
-    if(settings.closeOnClick) document[`${isOpen ? 'add' : 'remove'}EventListener`]('click', clickListener);
+    if (settings.closeOnBlur) document[`${isOpen ? 'add' : 'remove'}EventListener`]('focusin', focusInListener);
+    if (settings.closeOnClick) document[`${isOpen ? 'add' : 'remove'}EventListener`]('click', clickListener);
 };
 
 
@@ -167,22 +165,21 @@ export const closeProxy = Store => () => {
 export const manageFocus = Store => () => {
     const { isOpen, focusableChildren, settings, lastFocused, keyListener } = Store.getState();
 
-    if(!settings.focus || focusableChildren.length === 0) return;
-    if(!isOpen){
+    if (!settings.focus || focusableChildren.length === 0) return;
+    if (!isOpen){
         Store.dispatch({ lastFocused: document.activeElement });
         const focusFn = () => focusableChildren[0].focus();
-        if(settings.delay) window.setTimeout(focusFn, settings.delay);
+        if (settings.delay) window.setTimeout(focusFn, settings.delay);
         else focusFn();
-        if(!settings.trapTab) return;
+        if (!settings.trapTab) return;
         document.removeEventListener('keydown', keyListener);
-    }
-    else {
+    } else {
         settings.trapTab && document.addEventListener('keydown', keyListener);
         const reFocusFn = () => {
             lastFocused && lastFocused.focus();
             Store.dispatch({ lastFocused: false });
         };
-        if(settings.delay) window.setTimeout(reFocusFn, settings.delay);
+        if (settings.delay) window.setTimeout(reFocusFn, settings.delay);
         else reFocusFn();
     }
 };

@@ -8,10 +8,10 @@ describe('Scroll points > unit > callback', () => {
         const node = document.querySelector('.test');
         const settings = defaults;
         const entries = [{ isIntersecting: false }];
-        const observer = { disconnect: () => {}};
-        callback({ settings, node})(entries, observer);
+        const observer = { disconnect: () => {} };
+        callback({ settings, node })(entries, observer);
 
-        expect(node.classList.contains(defaults.className)).toEqual(false);        
+        expect(node.classList.contains(defaults.className)).toEqual(false);
     });
 
     it('should change className if entries[0] is intersecting', () => {
@@ -19,10 +19,10 @@ describe('Scroll points > unit > callback', () => {
         const node = document.querySelector('.test');
         const settings = defaults;
         const entries = [{ isIntersecting: true }];
-        const observer = { disconnect: () => {}};
-        callback({ settings, node})(entries, observer);
+        const observer = { disconnect: () => {} };
+        callback({ settings, node })(entries, observer);
 
-        expect(node.classList.contains(defaults.className)).toEqual(true);        
+        expect(node.classList.contains(defaults.className)).toEqual(true);
     });
 
     it('should invoke callback if intersecting and settings.callback defined', () => {
@@ -31,10 +31,10 @@ describe('Scroll points > unit > callback', () => {
         const node = document.querySelector('.test');
         const settings = Object.assign({}, defaults, { callback: mockCallback });
         const entries = [{ isIntersecting: true }];
-        const observer = { disconnect: () => {}};
-        callback({ settings, node})(entries, observer);
+        const observer = { disconnect: () => {} };
+        callback({ settings, node })(entries, observer);
 
-        expect(mockCallback).toBeCalled();   
+        expect(mockCallback).toBeCalled();
     });
 
     it('should invoke disconnect if intersecting and settings.unload truthy', () => {
@@ -44,11 +44,10 @@ describe('Scroll points > unit > callback', () => {
         const settings = defaults;
         const entries = [{ isIntersecting: true }];
         const observer = { disconnect: mockDisconnect };
-        callback({ settings, node})(entries, observer);
+        callback({ settings, node })(entries, observer);
 
-        expect(mockDisconnect).toBeCalledWith(node);   
+        expect(mockDisconnect).toBeCalledWith(node);
     });
-
 
 
 });

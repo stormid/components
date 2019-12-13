@@ -18,11 +18,11 @@ export const createStore = () => {
      * @param nextState [Object] New slice of state to combine with current state to create next state
      * @param effects [Array] Array of side effect functions to invoke after state update (DOM, operations, cmds...)
      */
-    const dispatch = function(type, nextState, effects) {
+    const dispatch = (type, nextState, effects) => {
         state = nextState ? reducers[type](state, nextState) : state;
         //uncomment for debugging by writing state history to window
         // window.__validator_history__.push({[type]: state}), console.log(window.__validator_history__);
-        if(!effects) return;
+        if (!effects) return;
         effects.forEach(effect => { effect(state); });
     };
 

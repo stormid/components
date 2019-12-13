@@ -11,8 +11,8 @@ describe('Validate > Integration > validator > max', () => {
             value="3"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(false);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState false for data-val max validator with value greater than max', async () => {
@@ -26,8 +26,8 @@ describe('Validate > Integration > validator > max', () => {
             value="3"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(false);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for HTML5 max validator with value less than or equal to max', async () => {
@@ -39,8 +39,8 @@ describe('Validate > Integration > validator > max', () => {
             value="2"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for data-val max validator with value less or equal to max', async () => {
@@ -54,8 +54,8 @@ describe('Validate > Integration > validator > max', () => {
             value="2"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState false for HTML5 max validator with a non-numeric value', async () => {
@@ -67,8 +67,8 @@ describe('Validate > Integration > validator > max', () => {
             value="Not a number"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(false);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState false for data-val max validator with a non-numeric value', async () => {
@@ -82,8 +82,8 @@ describe('Validate > Integration > validator > max', () => {
             value="Not a number"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(false);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for unrequired HTML5 max validator with no value', async () => {
@@ -95,8 +95,8 @@ describe('Validate > Integration > validator > max', () => {
             value=""
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for unrequired data-val max validator with no value', async () => {
@@ -110,8 +110,8 @@ describe('Validate > Integration > validator > max', () => {
             value=""
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(true);
     });
 
 

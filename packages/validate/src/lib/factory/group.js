@@ -10,7 +10,7 @@ import { ACTIONS } from '../constants';
  */
 export const addGroup = Store => nodes => {
     const groups = removeUnvalidatableGroups(nodes.reduce(assembleValidationGroup, {}));
-    if(!Object.keys(groups)) return console.warn('Group cannot be added.');
+    if (!Object.keys(groups)) return console.warn('Group cannot be added.');
 
     Store.dispatch(ACTIONS.ADD_GROUP, groups);
 };

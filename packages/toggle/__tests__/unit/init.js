@@ -16,9 +16,9 @@ const init = () => {
         <div id="target-4" class="js-toggle-local" data-toggle="js-toggle__btn-2" data-start-open="true"></div>`;
 
     Toggles = Toggle.init('.js-toggle', {
-		trapTab: true,
-		closeOnBlur: true,
-		focus: true
+        trapTab: true,
+        closeOnBlur: true,
+        focus: true
     });
     ToggleLocals = Toggle.init('.js-toggle-local', { local: true });
 };
@@ -29,7 +29,7 @@ describe(`Toggle > Init`, () => {
     beforeAll(init);
 
     it('should return array of length 2', async () => {
-      expect(Toggles.length).toEqual(1);
+        expect(Toggles.length).toEqual(1);
     });
 
     it('should return the expected API', () => {
@@ -45,7 +45,7 @@ describe(`Toggle > Init`, () => {
     });
 
     it('should use data attributes as settings, overriding options', () => {
-        expect(ToggleLocals[0].getState().settings.startOpen).toEqual("true");
+        expect(ToggleLocals[0].getState().settings.startOpen).toEqual('true');
         expect(ToggleLocals[0].getState().isOpen).toEqual(true);
     });
 

@@ -8,7 +8,7 @@
  * @property delay, Number
  */
 export default {
-	onClassName: 'is--active',
+    onClassName: 'is--active',
     // mainSelector: 'main',
     toggleSelectorAttribute: 'data-modal-toggle',
     callback: false,

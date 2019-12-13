@@ -9,8 +9,8 @@ describe('Validate > Integration > validator > number', () => {
             value="not.a.number"
 			type="number">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(false);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for HTML5 number validator with a number', async () => {
@@ -26,11 +26,11 @@ describe('Validate > Integration > validator > number', () => {
             value="-99"
 			type="number">`;
         const input1 = document.querySelector('#group1');
-        const group1 = assembleValidationGroup({}, input1)['group1'];
+        const group1 = assembleValidationGroup({}, input1).group1;
         const input2 = document.querySelector('#group2');
-        const group2 = assembleValidationGroup({}, input2)['group2'];
-		expect(validate(group1, group1.validators[0])).toEqual(true);
-		expect(validate(group2, group2.validators[0])).toEqual(true);
+        const group2 = assembleValidationGroup({}, input2).group2;
+        expect(validate(group1, group1.validators[0])).toEqual(true);
+        expect(validate(group2, group2.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for non-required empty HTML5 number validator field', async () => {
@@ -41,8 +41,8 @@ describe('Validate > Integration > validator > number', () => {
             value=""
 			type="number">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState false for data-val number validator with non-number', async () => {
@@ -55,8 +55,8 @@ describe('Validate > Integration > validator > number', () => {
             value="not.a.number"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(false);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for data-val number validator with a number', async () => {
@@ -75,11 +75,11 @@ describe('Validate > Integration > validator > number', () => {
             value="-99"
 			type="text">`;
         const input1 = document.querySelector('#group1');
-        const group1 = assembleValidationGroup({}, input1)['group1'];
+        const group1 = assembleValidationGroup({}, input1).group1;
         const input2 = document.querySelector('#group2');
-        const group2 = assembleValidationGroup({}, input2)['group2'];
-		expect(validate(group1, group1.validators[0])).toEqual(true);
-		expect(validate(group2, group2.validators[0])).toEqual(true);
+        const group2 = assembleValidationGroup({}, input2).group2;
+        expect(validate(group1, group1.validators[0])).toEqual(true);
+        expect(validate(group2, group2.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for non-required empty data-val number validator field', async () => {
@@ -92,8 +92,8 @@ describe('Validate > Integration > validator > number', () => {
             value=""
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(true);
     });
 
 });

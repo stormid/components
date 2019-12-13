@@ -44,7 +44,7 @@ describe(`Modal > Initialisation`, () => {
     beforeAll(init);
 
     it('should return array of length 2', () => {
-      expect(ModalSet.length).toEqual(2);
+        expect(ModalSet.length).toEqual(2);
     });
 
     it('should return the expected API', () => {
@@ -64,11 +64,11 @@ describe(`Modal > Mouse events`, () => {
     beforeAll(init);
 
     it('should attach the handleClick eventListener to DOMElement click event to toggle documentElement className', () => {
-		ModalSet[0].getState().toggles[0].click();
+        ModalSet[0].getState().toggles[0].click();
         expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
         ModalSet[0].getState().toggles[0].click();
         expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
-	});
+    });
 
 });
 
@@ -78,17 +78,17 @@ describe(`Modal > Keyboard events`, () => {
 
     it('should attach the keydown eventListener to DOMElement to toggle documentElement className for space bar', () => {
         const space = new window.KeyboardEvent('keydown', { keyCode: 32, bubbles: true });
-		ModalSet[0].getState().toggles[0].dispatchEvent(space);
+        ModalSet[0].getState().toggles[0].dispatchEvent(space);
         expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
-		ModalSet[0].getState().toggles[0].dispatchEvent(space);
+        ModalSet[0].getState().toggles[0].dispatchEvent(space);
         expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
     });
     
     it('should attach the keydown eventListener to DOMElement to toggle documentElement className for enter key', () => {
         const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
-		ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+        ModalSet[0].getState().toggles[0].dispatchEvent(enter);
         expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
-		ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+        ModalSet[0].getState().toggles[0].dispatchEvent(enter);
         expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
     });
     
@@ -96,23 +96,23 @@ describe(`Modal > Keyboard events`, () => {
         const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
         const escape = new window.KeyboardEvent('keydown', { keyCode: 27, bubbles: true });
 
-		ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+        ModalSet[0].getState().toggles[0].dispatchEvent(enter);
         expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
-		document.dispatchEvent(escape);
+        document.dispatchEvent(escape);
         expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
-	});
+    });
 
     // tab events not changing activeElement in JSDOM
     // it('should trap tab in the modal until it is closed', () => {
     //     const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true });
     //     const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
 
-	// 	ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+    // 	ModalSet[0].getState().toggles[0].dispatchEvent(enter);
     //     // expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
-	// 	// document.dispatchEvent(tab);
+    // 	// document.dispatchEvent(tab);
     //     // document.dispatchEvent(tab);
     //     console.log(document.activeElement.innerHTML);
     //     // expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
-	// });
+    // });
 
 });

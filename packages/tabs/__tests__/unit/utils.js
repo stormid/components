@@ -1,6 +1,6 @@
 import { getActiveIndexByHash } from '../../src/lib/utils';
 
-const init = () => {    
+const init = () => {
     document.body.innerHTML = `<div class="js-tabs tabs">
         <nav class="tabs__nav">
             <a id="tab-1" class="tabs__nav-link js-tabs__link" href="#panel-1">Tab 1</a>
@@ -24,7 +24,7 @@ const init = () => {
 describe(`Tabs > utils > getActiveIndexByHash`, () => {
     beforeAll(init);
     
-    it('should return the index of a tab with an id matching the hash', async () => {     
+    it('should return the index of a tab with an id matching the hash', async () => {
         delete global.window.location;
         global.window = Object.create(window);
         global.window.location = {
@@ -37,7 +37,7 @@ describe(`Tabs > utils > getActiveIndexByHash`, () => {
         expect(getActiveIndexByHash(panels)).toEqual(1);
     });
 
-    it('should return undefined if no hash is present on window location', async () => {     
+    it('should return undefined if no hash is present on window location', async () => {
         delete global.window.location;
         global.window = Object.create(window);
         global.window.location = {
@@ -49,7 +49,7 @@ describe(`Tabs > utils > getActiveIndexByHash`, () => {
         expect(getActiveIndexByHash(panels)).toEqual(undefined);
     });
 
-    it('should return undefined if hash does not match id of any tabs', async () => {     
+    it('should return undefined if hash does not match id of any tabs', async () => {
         delete global.window.location;
         global.window = Object.create(window);
         global.window.location = {

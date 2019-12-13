@@ -25,5 +25,5 @@ export const unsetAllActive = state => {
 
 export const findActive = state => {
     const { settings, active } = state;
-    if(active.length > 0) active[0].node.classList.add(settings.activeClassName);
+    if (active.length > 0) active[0].node.classList.add(settings.activeClassName);
 };

@@ -21,5 +21,5 @@ export default ({ items, settings }) => {
     return {
         getState: Store.getState,
         open: open(Store)
-    }
-}; 
+    };
+};

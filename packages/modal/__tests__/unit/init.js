@@ -1,6 +1,6 @@
 import Modal from '../../src';
 
-let ModalSet, ModalErrorSet
+let ModalSet;
 
 const init = () => {
     // Set up our document body
@@ -46,7 +46,6 @@ const init = () => {
     </div>`;
 
     ModalSet = Modal.init('.js-modal');
-    ModalErrorSet = Modal.init('.js-modal-error');
     
 };
 
@@ -56,7 +55,7 @@ describe(`Modal > Init`, () => {
     beforeAll(init);
 
     it('should return array of length 1', async () => {
-      expect(ModalSet.length).toEqual(2);
+        expect(ModalSet.length).toEqual(2);
     });
 
     it('should return the expected API', () => {

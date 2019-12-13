@@ -20,7 +20,7 @@ export default ({ node, settings }) => {
         panels
     }, [ initUI(Store), open ]);
 
-    return { 
+    return {
         getState: Store.getState
-    }
-}; 
+    };
+};

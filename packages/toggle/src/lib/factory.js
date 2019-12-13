@@ -37,10 +37,10 @@ export default ({ node, settings }) => {
     }]);
 
 
-    return { 
+    return {
         node,
         startToggle: startToggleLifecycle(Store),
         toggle: toggle(Store),
         getState: Store.getState
-    }
-}; 
+    };
+};
