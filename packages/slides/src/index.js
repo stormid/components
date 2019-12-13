@@ -1,17 +1,30 @@
 import defaults from './lib/defaults';
-import componentPrototype from './lib/component-prototype';
+import factory from './lib/factory';
 
-const init = (sel, opts) => {
-	let els = [].slice.call(document.querySelectorAll(sel));
+/* 
+ * Returns an array of objects augmenting DOM elements that match a selector
+ *
+ * @param selector, String, A DOMString containing one or more selectors to match, must be a valid CSS selector string
+ * @params options, Object, to be merged with defaults to become the settings property of each returned object, all options can also be set on a node as a data-attrbute
+ */
+const init = (selector, options) => {
+    //Array.from isnt polyfilled
+    //https://github.com/babel/babel/issues/5682
+    const nodes = [].slice.call(document.querySelectorAll(selector));
 
-	if(!els.length) throw new Error('Slides not initialised, no augmentable elements found');
-    
-	return els.map((el) => {
-		return Object.assign(Object.create(componentPrototype), {
-			node: el,
-			settings: Object.assign({}, defaults, opts)
-		}).init();
-	});
+    //no DOM nodes found, return with warning
+    if (nodes.length === 0) return console.warn(`Slides not initialised, no elements found for selector '${selector}'`);
+   
+    //return array of Objects, one for each DOM node found
+    //each Object has a prototype consisting of the node (HTMLElement),
+    //and a settings property composed from defaults, data-attributes on the node, and options passed to init
+    return nodes.map(node => Object.create(factory({
+        settings: { ...defaults, ...node.dataset, ...options },
+        node
+    })));
 };
 
+/*
+ * Component API
+ */
 export default { init };
