@@ -20,14 +20,14 @@ const init = () => {
     </div>`;
 
     Toggles = Toggle.init('.js-toggle', {
-		trapTab: true,
-		closeOnBlur: true,
-		closeOnClick: true,
-		focus: true
-	});
-	TogglesLocal = Toggle.init('.js-toggle-local', {
-		local: true
-	});
+        trapTab: true,
+        closeOnBlur: true,
+        closeOnClick: true,
+        focus: true
+    });
+    TogglesLocal = Toggle.init('.js-toggle-local', {
+        local: true
+    });
 };
 
 describe(`Toggle > Initialisation`, () => {
@@ -35,7 +35,7 @@ describe(`Toggle > Initialisation`, () => {
     beforeAll(init);
 
     it('should return array of length 2', async () => {
-      expect(Toggles.length).toEqual(2);
+        expect(Toggles.length).toEqual(2);
     });
 
     it('should return the expected API', () => {
@@ -90,7 +90,7 @@ describe('Toggle > Multiple toggle buttons', () => {
 
     it('should change attributes of all toggle buttons when an instance changes state', async () => {
         const togglesExpanded = toggles => toggles.reduce((acc, curr) => {
-            if(curr.getAttribute('aria-expanded') === 'false') acc = false;
+            if (curr.getAttribute('aria-expanded') === 'false') acc = false;
             return acc;
         }, true);
 
@@ -126,7 +126,7 @@ describe('Toggle > Close on click', () => {
 describe('Toggle > Tabbing', () => {
 
     it('should tab to the last focusable child with a shift-tab', async () => {
-        const shiftTab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true, shiftKey: true });        
+        const shiftTab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true, shiftKey: true });
         const focusableChildren = Toggles[0].getState().focusableChildren;
         Toggles[0].toggle();
         focusableChildren[0].dispatchEvent(shiftTab);
@@ -134,7 +134,7 @@ describe('Toggle > Tabbing', () => {
     });
 
     it('should trapTab and return to the first focusable child', async () => {
-        const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true});        
+        const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true });
         const focusableChildren = Toggles[0].getState().focusableChildren;
         focusableChildren[0].dispatchEvent(tab);
         expect(document.activeElement).toEqual(focusableChildren[0]);
@@ -148,7 +148,7 @@ describe('Toggle > Tabbing', () => {
 describe('Toggle > Escape to close', () => {
 
     it('should close open toggles when the escape key is pressed', async () => {
-        const escape = new window.KeyboardEvent('keydown', { keyCode: 27, bubbles: true });      
+        const escape = new window.KeyboardEvent('keydown', { keyCode: 27, bubbles: true });
         Toggles[0].toggle();
         document.dispatchEvent(escape);
         expect(Toggles[0].getState().isOpen).toEqual(true);

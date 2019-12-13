@@ -12,20 +12,21 @@ describe('Validate > Integration > API > addGroup', () => {
                 value=""
                 type="text" />
         </form>`;
-        const form = document.querySelector('.form');
+        // const form = document.querySelector('.form');
         const input = document.querySelector('#group1-1');
-        const validator = Validate.init('form')[0];      
+        const validator = Validate.init('form')[0];
 
         expect(validator.getState().groups).toEqual({});
         input.setAttribute('required', 'required');
         validator.addGroup([input]);
         expect(validator.getState().groups).toEqual({
             group1: {
-            serverErrorNode: false,
-            validators: [{ type: 'required' }],
-            fields: [input],
-            valid: false
-        }});
+                serverErrorNode: false,
+                validators: [{ type: 'required' }],
+                fields: [input],
+                valid: false
+            }
+        });
 
     });
 
@@ -44,9 +45,9 @@ describe('Validate > Integration > API > removeGroup', () => {
                 value=""
                 type="text" />
         </form>`;
-        const form = document.querySelector('.form');
+        // const form = document.querySelector('.form');
         const input = document.querySelector('#group1-1');
-        const validator = Validate.init('form')[0];      
+        const validator = Validate.init('form')[0];
 
         expect(validator.getState().groups).toEqual({
             group1: {
@@ -77,29 +78,30 @@ describe('Validate > Integration > API > addMethod', () => {
                 required
                 type="text" />
         </form>`;
-        const form = document.querySelector('.form');
+        // const form = document.querySelector('.form');
         const input = document.querySelector('#group1-1');
-        const validator = Validate.init('form')[0];      
+        const validator = Validate.init('form')[0];
 
         expect(validator.getState().groups).toEqual({
             group1: {
-            serverErrorNode: false,
-            validators: [{ type: 'required' }],
-            fields: [input],
-            valid: false
-        }});
+                serverErrorNode: false,
+                validators: [{ type: 'required' }],
+                fields: [input],
+                valid: false
+            }
+        });
         const method = () => false;
         const message = 'Custom error';
         validator.addMethod('group1', method, message);
 
         expect(validator.getState().groups).toEqual({
             group1: {
-            serverErrorNode: false,
-            validators: [{ type: 'required' }, { type: 'custom', method, message}],
-            fields: [input],
-            valid: false
-        }});
-
+                serverErrorNode: false,
+                validators: [{ type: 'required' }, { type: 'custom', method, message }],
+                fields: [input],
+                valid: false
+            }
+        });
     });
 
     it('should not add a validation method of parameters are missing', async () => {
@@ -113,28 +115,30 @@ describe('Validate > Integration > API > addMethod', () => {
                 required
                 type="text" />
         </form>`;
-        const form = document.querySelector('.form');
+        // const form = document.querySelector('.form');
         const input = document.querySelector('#group1-1');
-        const validator = Validate.init('form')[0];      
+        const validator = Validate.init('form')[0];
 
         expect(validator.getState().groups).toEqual({
             group1: {
-            serverErrorNode: false,
-            validators: [{ type: 'required' }],
-            fields: [input],
-            valid: false
-        }});
+                serverErrorNode: false,
+                validators: [{ type: 'required' }],
+                fields: [input],
+                valid: false
+            }
+        });
         const method = () => false;
         const message = 'Custom error';
 
         validator.addMethod(undefined, method, message);
         expect(validator.getState().groups).toEqual({
             group1: {
-            serverErrorNode: false,
-            validators: [{ type: 'required' }],
-            fields: [input],
-            valid: false
-        }});
+                serverErrorNode: false,
+                validators: [{ type: 'required' }],
+                fields: [input],
+                valid: false
+            }
+        });
 
     });
 

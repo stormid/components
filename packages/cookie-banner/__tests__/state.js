@@ -14,7 +14,7 @@ describe(`Cookie banner > state > init`, () => {
     it('Should return the Store.getState method from init', async () => {
         const Store = CookieBanner.init({ types: {} });
 
-        expect(Store.getState).not.toBeUndefined;
+        expect(Store.getState).not.toBeUndefined();
 
     });
 
@@ -31,7 +31,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
     beforeAll(init);
 
     it('initialState should set the initial state based on options', async () => {
-        const types = { 
+        const types = {
             test: {
                 title: 'Test title',
                 description: 'Test description',
@@ -75,7 +75,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
                     () => { }
                 ]
             }
-        }
+        };
         const state = { types };
         const data = { test: 1, test2: 0 };
         expect(updateConsent(state, data)).toEqual({
@@ -108,7 +108,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
             }
         };
         const state = { settings: { types }, consent: { test: 1, test2: 0 } };
-        const data = { 
+        const data = {
             test: {
                 executed: true,
                 title: 'Test title',

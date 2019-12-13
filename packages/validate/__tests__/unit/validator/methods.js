@@ -19,7 +19,7 @@ describe('Validate > Unit > Validator > methods > required', () => {
         expect(Methods.required(group)).toEqual(false);
     });
 
-    it('should return false for group containing a single empty field', () => {
+    it('should return true for a group with a single required field wuith a value', () => {
         document.body.innerHTML = `<form><input name="field" id="field" value="Test" required /></form>`;
         const group = { fields: [document.querySelector('#field')] };
         expect(Methods.required(group)).toEqual(true);
@@ -752,11 +752,11 @@ describe('Validate > Unit > Validator > methods > remote', () => {
 
     afterEach(() => mock.teardown());
 
-    it('should return false for when the remote validation returns "false"', async () => {
+    it('should return false for when the remote validation returns \'false\'', async () => {
 
         mock.post('/api/validate', {
             status: 201,
-            body: "false"
+            body: 'false'
         });
 
         document.body.innerHTML = `<form><input type="number" name="field" id="field" value="" /></form>`;
@@ -768,14 +768,14 @@ describe('Validate > Unit > Validator > methods > remote', () => {
             url: '/api/validate'
         };
         const res = await Methods.remote(group, params);
-        expect(res).toEqual("false");
+        expect(res).toEqual('false');
     });
 
     it('should return false for when the remote validation returns "false"', async () => {
 
         mock.post('/api/validate', {
             status: 201,
-            body: "true"
+            body: 'true'
         });
 
         document.body.innerHTML = `<form><input type="number" name="field" id="field" value="" /></form>`;
@@ -787,7 +787,7 @@ describe('Validate > Unit > Validator > methods > remote', () => {
             url: '/api/validate'
         };
         const res = await Methods.remote(group, params);
-        expect(res).toEqual("true");
+        expect(res).toEqual('true');
     });
 
 
@@ -808,7 +808,7 @@ describe('Validate > Unit > Validator > methods > custom', () => {
     
     it('should return false when the custom validation function return false', () => {
         document.body.innerHTML = `<form><input name="field" id="field" value="No" /></form>`;
-        const group = { 
+        const group = {
             validators: [],
             fields: [document.querySelector('#field')]
         };
@@ -818,7 +818,7 @@ describe('Validate > Unit > Validator > methods > custom', () => {
     
     it('should return true when the custom validation function return true', () => {
         document.body.innerHTML = `<form><input name="field" id="field" value="Contrived validator" /></form>`;
-        const group = { 
+        const group = {
             validators: [],
             fields: [document.querySelector('#field')]
         };

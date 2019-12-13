@@ -11,10 +11,10 @@ import { KEYCODES } from './constants';
  * @param settings, Object, settings of the 
  * @return Object, tabs (Array of HTMLElement tab links), panels (Array of HTMLElement panel links)
  */
- export const findTabsAndPanels = (node, settings) => {
-     const tabs = [].slice.call(node.querySelectorAll(settings.tabSelector));
-     const panels = tabs.map(tab => document.getElementById(tab.getAttribute('href').substr(1)) || console.warn(`Tab panel for ${tab}`));
-     return { tabs, panels }
+export const findTabsAndPanels = (node, settings) => {
+    const tabs = [].slice.call(node.querySelectorAll(settings.tabSelector));
+    const panels = tabs.map(tab => document.getElementById(tab.getAttribute('href').substr(1)) || console.warn(`Tab panel for ${tab}`));
+    return { tabs, panels };
 };
  
 /*
@@ -22,7 +22,7 @@ import { KEYCODES } from './constants';
  * 
  * @param Store, Object, model or state of the current instance
  */
-export const initUI = Store => ({ tabs, panels }) => { 
+export const initUI = Store => ({ tabs, panels }) => {
     tabs[0].parentNode.setAttribute('role', 'tablist');
     tabs.forEach((tab, i) => {
         tab.setAttribute('role', 'tab');
@@ -45,26 +45,26 @@ const getNextIndex = ({ activeIndex, tabs }) => activeIndex === tabs.length - 1 
 const initListeners = (tab, nextIndex, Store) => {
     tab.addEventListener('keydown', e => {
         switch (e.keyCode) {
-            case KEYCODES.LEFT:
-                Store.dispatch({ activeIndex: getPreviousIndex(Store.getState()) }, [change(Store.getState().activeIndex)]);
-                break;
-            case KEYCODES.DOWN:
-                e.preventDefault();
-                e.stopPropagation();
-                Store.getState().panels[Store.getState().activeIndex].focus();
-                break;
-            case KEYCODES.RIGHT:
-                Store.dispatch({ activeIndex: getNextIndex(Store.getState()) }, [change(Store.getState().activeIndex)]);
-                break;
-            case KEYCODES.ENTER:
-                Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [change(Store.getState().activeIndex)]);
-                break;
-            case KEYCODES.SPACE:
-                e.preventDefault();
-                Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [change(Store.getState().activeIndex)]);
-                break;
-            default:
-                break;
+        case KEYCODES.LEFT:
+            Store.dispatch({ activeIndex: getPreviousIndex(Store.getState()) }, [change(Store.getState().activeIndex)]);
+            break;
+        case KEYCODES.DOWN:
+            e.preventDefault();
+            e.stopPropagation();
+            Store.getState().panels[Store.getState().activeIndex].focus();
+            break;
+        case KEYCODES.RIGHT:
+            Store.dispatch({ activeIndex: getNextIndex(Store.getState()) }, [change(Store.getState().activeIndex)]);
+            break;
+        case KEYCODES.ENTER:
+            Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [change(Store.getState().activeIndex)]);
+            break;
+        case KEYCODES.SPACE:
+            e.preventDefault();
+            Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [change(Store.getState().activeIndex)]);
+            break;
+        default:
+            break;
         }
     });
     tab.addEventListener('click', e => {
@@ -73,7 +73,7 @@ const initListeners = (tab, nextIndex, Store) => {
     }, false);
 };
 
-const change = previousActiveIndex => state => {    
+const change = previousActiveIndex => state => {
     close(state, previousActiveIndex);
     open(state);
     window.setTimeout(() => { state.tabs[state.activeIndex].focus(); }, 16);

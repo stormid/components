@@ -9,9 +9,9 @@ describe(`Modal Gallery > Store`, () => {
     };
 
     it('createStore should return an Object with an API', async () => {
-      expect(Store).not.toBeNull();
-      expect(Store.getState).not.toBeNull();
-      expect(Store.dispatch).not.toBeNull();
+        expect(Store).not.toBeNull();
+        expect(Store.getState).not.toBeNull();
+        expect(Store.dispatch).not.toBeNull();
     });
 
     it('should have a getState function that returns a private state Object', async () => {
@@ -20,7 +20,7 @@ describe(`Modal Gallery > Store`, () => {
     });
 
     it('should have a dispatch function that updates state', async () => {
-        const nextState = { isOpen: true }
+        const nextState = { isOpen: true };
         Store.dispatch(nextState);
         expect(Store.getState()).toEqual(nextState);
     });

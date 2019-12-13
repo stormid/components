@@ -13,7 +13,7 @@ describe('Validate > Integration > api > validate > remote', () => {
  
         mock.post('/api/validate', {
             status: 201,
-            body: "false"
+            body: 'false'
         });
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">Label</label>
@@ -54,7 +54,7 @@ describe('Validate > Integration > api > validate > remote', () => {
  
         mock.post('/api/validate', {
             status: 201,
-            body: "Error message from API"
+            body: 'Error message from API'
         });
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">Label</label>
@@ -89,7 +89,7 @@ describe('Validate > Integration > api > validate > remote', () => {
  
         mock.get('/api/validate?group1=Failure&group2=Value%202', {
             status: 201,
-            body: "false"
+            body: 'false'
         });
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">Label</label>
@@ -130,7 +130,7 @@ describe('Validate > Integration > api > validate > remote', () => {
 
         mock.post('/api/validate', {
             status: 201,
-            body: "true"
+            body: 'true'
         });
         document.body.innerHTML = `<form class="form">
         <label id="group1-label" for="group1">Label</label>
@@ -143,9 +143,9 @@ describe('Validate > Integration > api > validate > remote', () => {
             data-val-remote-url="/api/validate"
             value="Pass"
             type="text"></form>`;
-            const validator = Validate.init('form')[0];
-            const validityState = await validator.validate();
-            expect(validityState).toEqual(true);
+        const validator = Validate.init('form')[0];
+        const validityState = await validator.validate();
+        expect(validityState).toEqual(true);
     });
       
 });

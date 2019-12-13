@@ -11,9 +11,9 @@ describe('Validate > Integration > assembleValidationGroup > required', () => {
             type="text">`;
         const input = document.querySelector('#group1-1');
         const group = [input].reduce(assembleValidationGroup, {});
-		expect(group).toEqual({
-            'group1': {
-                valid:  false,
+        expect(group).toEqual({
+            group1: {
+                valid: false,
                 validators: [{ type: 'required' }],
                 fields: [input],
                 serverErrorNode: false
@@ -32,8 +32,8 @@ describe('Validate > Integration > validator > required', () => {
             value=""
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(false);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for HTML5 required validator with a value', async () => {
@@ -45,8 +45,8 @@ describe('Validate > Integration > validator > required', () => {
             value="Test"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState false for data-val required validator with no value', async () => {
@@ -59,8 +59,8 @@ describe('Validate > Integration > validator > required', () => {
             value=""
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(false);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for data-val required validator with a value', async () => {
@@ -73,7 +73,7 @@ describe('Validate > Integration > validator > required', () => {
             value="Test"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(true);
     });
 });

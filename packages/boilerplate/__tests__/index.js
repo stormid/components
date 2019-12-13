@@ -10,9 +10,9 @@ const init = () => {
 
     basic = Component.init('.js-boilerplate');
     withCallback = Component.init('.js-boilerplate-two', {
-      callback(){
-        this.classList.toggle('callback-test');
-      }
+        callback(){
+            this.classList.toggle('callback-test');
+        }
     });
 };
 
@@ -21,11 +21,11 @@ describe(`Boilerplate > Initialisation`, () => {
     beforeAll(init);
 
     it('should return two instances for a selector matching two DOMElements', async () => {
-      expect(basic.length).toEqual(2);
+        expect(basic.length).toEqual(2);
     });
 
     it('should return undefined if no DOMElements are matched', async () => {
-      expect(Component.init('.js-unfound')).toEqual(undefined);
+        expect(Component.init('.js-unfound')).toEqual(undefined);
     });
   
 
@@ -48,41 +48,41 @@ describe(`Boilerplate > Initialisation`, () => {
 
     });
 
-     it('should initialisation with different settings if different options are passed', () => {
+    it('should initialisation with different settings if different options are passed', () => {
 
         expect(basic[0].settings.callback).not.toEqual(withCallback[0].settings.callback);
     
-    }); 
+    });
 
 });
 
 describe('Boilerplate > Component API', () => {
 
-  it('should trigger the click function toggling the className', () => {
+    it('should trigger the click function toggling the className', () => {
 
-    basic[0].click.call(basic[0].node);
-    expect(basic[0].node.classList).toContain('clicked');
-    basic[0].click.call(basic[0].node);
-    expect(basic[0].node.classList).not.toContain('clicked');
+        basic[0].click.call(basic[0].node);
+        expect(basic[0].node.classList).toContain('clicked');
+        basic[0].click.call(basic[0].node);
+        expect(basic[0].node.classList).not.toContain('clicked');
 
-   });
+    });
 
 });
 
 
 describe('Boilerplate > Options', () => {
 
-  it('should be passed in options', () => {
+    it('should be passed in options', () => {
     
-    expect(withCallback[0].settings.callback).not.toBeNull();
-    expect(basic[0].settings.callback).toBeNull();
+        expect(withCallback[0].settings.callback).not.toBeNull();
+        expect(basic[0].settings.callback).toBeNull();
 
-  });
+    });
 
-  it('should be execute a callback passed in options', () => {
-    expect(withCallback[0].node.classList).not.toContain('callback-test');
-    withCallback[0].node.click();
-    expect(withCallback[0].node.classList).toContain('callback-test');
-  });
+    it('should be execute a callback passed in options', () => {
+        expect(withCallback[0].node.classList).not.toContain('callback-test');
+        withCallback[0].node.click();
+        expect(withCallback[0].node.classList).toContain('callback-test');
+    });
 
 });

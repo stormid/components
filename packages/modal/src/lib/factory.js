@@ -30,5 +30,5 @@ export default ({ node, settings }) => {
 
     return {
         getState: Store.getState
-    }
+    };
 };

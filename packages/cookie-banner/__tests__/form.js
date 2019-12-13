@@ -1,7 +1,7 @@
 import CookieBanner from '../src';
 import defaults from '../src/lib/defaults';
 
-export const dispatchSyntheticEvent = (node, eventType) => {
+const dispatchSyntheticEvent = (node, eventType) => {
     let event = document.createEvent('Event');
     event.initEvent(eventType, true, true);
     node.dispatchEvent(event);
@@ -10,10 +10,10 @@ export const dispatchSyntheticEvent = (node, eventType) => {
 const init = () => {
     // Set up our document body
     document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
-    CookieBanner.init({ 
+    CookieBanner.init({
         secure: false,
-        types: { 
-            'test': {
+        types: {
+            test: {
                 title: 'Test title',
                 description: 'Test description',
                 labels: {
@@ -24,7 +24,7 @@ const init = () => {
                     () => { }
                 ]
             },
-            'performance': {
+            performance: {
                 title: 'Performance preferences',
                 description: 'Performance cookies are used to measure the performance of our website and make improvements. Your personal data is not identified.',
                 labels: {
@@ -54,13 +54,13 @@ describe(`Cookie banner > DOM > form > render`, () => {
         expect(fields.length).toEqual(4);
     });
     //titles, descriptions, labels
-})
+});
 
-describe(`Cookie banner > DOM > form > render`, () => {    
+describe(`Cookie banner > DOM > form > not render`, () => {
     document.body.innerHTML = `<div></div>`;
     CookieBanner.init({
-        types: { 
-            'test': {
+        types: {
+            test: {
                 title: 'Test title',
                 description: 'Test description',
                 labels: {
@@ -78,7 +78,7 @@ describe(`Cookie banner > DOM > form > render`, () => {
         expect(document.querySelector(`.${defaults.classNames.form}`)).not.toBeNull();
     });
 
-})
+});
 
 describe(`Cookie banner > DOM > form interactions`, () => {
     beforeAll(init);

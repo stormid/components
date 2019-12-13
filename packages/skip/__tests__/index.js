@@ -11,38 +11,38 @@ const init = () => {
 };
 
 const dispatchHashChange = () => {
-  const event = document.createEvent('Event');
-  event.initEvent('hashchange', true, true);
-  window.dispatchEvent(event);
+    const event = document.createEvent('Event');
+    event.initEvent('hashchange', true, true);
+    window.dispatchEvent(event);
 };
 
 describe(`Initialisation`, () => {
     
-  beforeAll(init);
+    beforeAll(init);
 
-  it('should attach a hashchange eventListener', () => {
+    it('should attach a hashchange eventListener', () => {
     
-    window.location.hash = '#content';
-    dispatchHashChange(); // otherwise not picked up by JSDOM
+        window.location.hash = '#content';
+        dispatchHashChange(); // otherwise not picked up by JSDOM
 
-    expect(document.activeElement).toEqual(document.getElementById('content'));
-  });
+        expect(document.activeElement).toEqual(document.getElementById('content'));
+    });
   
-  it('should ignore any hashes that do not match element ids', () => {
+    it('should ignore any hashes that do not match element ids', () => {
     
-    window.location.hash = '#not-matched';
-    dispatchHashChange(); // otherwise not picked up by JSDOM
-    expect(document.activeElement).toEqual(document.getElementById('content'));
+        window.location.hash = '#not-matched';
+        dispatchHashChange(); // otherwise not picked up by JSDOM
+        expect(document.activeElement).toEqual(document.getElementById('content'));
   
-  });
+    });
   
-  it('should find any ids matching the new hash and focus on them', () => {
+    it('should find any ids matching the new hash and focus on them', () => {
   
-    window.location.hash = '#test-2';
-    dispatchHashChange(); // otherwise not picked up by JSDOM
-    expect(document.activeElement).toEqual(document.getElementById('test-2'));
+        window.location.hash = '#test-2';
+        dispatchHashChange(); // otherwise not picked up by JSDOM
+        expect(document.activeElement).toEqual(document.getElementById('test-2'));
   
-  });
+    });
 
 });
 

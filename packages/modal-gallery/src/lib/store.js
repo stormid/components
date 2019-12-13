@@ -17,7 +17,7 @@ export const createStore = () => {
     const dispatch = (nextState, effects) => {
         state = nextState ? ({ ...state, ...nextState }) : state;
         
-        if(!effects) return;
+        if (!effects) return;
         effects.forEach(effect => effect(state));
     };
 

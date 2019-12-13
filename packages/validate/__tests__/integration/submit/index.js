@@ -13,14 +13,14 @@ describe('Validate > Integration > Submit', () => {
             <button type="submit">Submit</button>
         </form>`;
 
-        const form = document.querySelector('form');
-        const button = document.querySelector('button');
+        // const form = document.querySelector('form');
+        // const button = document.querySelector('button');
         const submit = jest.fn();
         const [ validator ] = Validate.init(document.querySelector('form'), { submit });
-        await validator.validate({ target: true, preventDefault(){} })
+        await validator.validate({ target: true, preventDefault(){} });
         // button.click();
-		expect(validator.getState().settings.submit).toEqual(submit);
-		expect(submit).toBeCalled();
+        expect(validator.getState().settings.submit).toEqual(submit);
+        expect(submit).toBeCalled();
 
     });
 
@@ -39,14 +39,14 @@ describe('Validate > Integration > preSubmitHook', () => {
             <button type="submit">Submit</button>
         </form>`;
 
-        const form = document.querySelector('form');
-        const button = document.querySelector('button');
+        // const form = document.querySelector('form');
+        // const button = document.querySelector('button');
         const preSubmitHook = jest.fn();
         const [ validator ] = Validate.init(document.querySelector('form'), { preSubmitHook });
 
-        await validator.validate({ target: true, preventDefault(){} })
-		expect(validator.getState().settings.preSubmitHook).toEqual(preSubmitHook);
-		expect(preSubmitHook).toBeCalled();
+        await validator.validate({ target: true, preventDefault(){} });
+        expect(validator.getState().settings.preSubmitHook).toEqual(preSubmitHook);
+        expect(preSubmitHook).toBeCalled();
 
     });
 

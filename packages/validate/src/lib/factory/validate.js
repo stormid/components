@@ -1,5 +1,5 @@
 import { ACTIONS } from '../constants';
-import { 
+import {
     getValidityState,
     reduceGroupValidityState,
     isFormValid,
@@ -12,6 +12,7 @@ import {
     renderErrors,
     focusFirstInvalidField
 }  from '../dom';
+
 /**
  * Returns a function that extracts the validityState of the entire form
  * can be used as a form submit eventListener or via the API
@@ -40,17 +41,15 @@ export const validate = Store => event => {
                 Store.dispatch(
                     ACTIONS.VALIDATION_ERRORS,
                     Object.keys(groups)
-                        .reduce((acc, group, i) => {                                         
-                            return acc[group] = {
-                                valid: validityState[i].reduce(reduceGroupValidityState, true),
-                                errorMessages: validityState[i].reduce(reduceErrorMessages(group, state), [])
-                            }, acc;
-                        }, {}),
+                        .reduce((acc, group, i) => (acc[group] = {
+                            valid: validityState[i].reduce(reduceGroupValidityState, true),
+                            errorMessages: validityState[i].reduce(reduceErrorMessages(group, state), [])
+                        }, acc), {}),
                     [renderErrors, focusFirstInvalidField]
                 );
 
                 return resolve(false);
             })
-            .catch(err => console.warn(err))
+            .catch(err => console.warn(err));
     });
 };

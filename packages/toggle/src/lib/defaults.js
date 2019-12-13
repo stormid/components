@@ -13,13 +13,13 @@
  * @property closeOnClick, Boolean, the toggled element should close when a non-child element is clicked
  */
 export default {
-	delay: 0,
-	startOpen: false,
-	local: false,
-	prehook: false,
-	callback: false,
-	focus: true,
-	trapTab: false,
-	closeOnBlur: false,
-	closeOnClick: false
+    delay: 0,
+    startOpen: false,
+    local: false,
+    prehook: false,
+    callback: false,
+    focus: true,
+    trapTab: false,
+    closeOnBlur: false,
+    closeOnClick: false
 };

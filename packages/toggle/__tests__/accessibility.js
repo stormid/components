@@ -1,6 +1,7 @@
 import Toggle from '../src';
 
-let Toggles, TogglesLocal;
+let Toggles;
+// let TogglesLocal;
 
 const init = () => {
     // Set up our document body
@@ -16,13 +17,13 @@ const init = () => {
     </div>`;
 
     Toggles = Toggle.init('.js-toggle', {
-		trapTab: true,
-		closeOnBlur: true,
-		focus: true
-	});
-	TogglesLocal = Toggle.init('.js-toggle-local', {
-		local: true
-	});
+        trapTab: true,
+        closeOnBlur: true,
+        focus: true
+    });
+    // TogglesLocal = Toggle.init('.js-toggle-local', {
+    //     local: true
+    // });
 };
 
 describe(`Toggle > Accessibility`, () => {

@@ -5,10 +5,10 @@ export const initTriggers = Store => state => {
     const { items, settings } = state;
     
     items.map((item, i) => {
-        if(!item.trigger) return;
+        if (!item.trigger) return;
         TRIGGER_EVENTS.map(ev => {
             item.trigger.addEventListener(ev, e => {
-                if((e.keyCode && e.keyCode !== KEY_CODES.ENTER) || (e.which && e.which === 3)) return;
+                if ((e.keyCode && e.keyCode !== KEY_CODES.ENTER) || (e.which && e.which === 3)) return;
                 e.preventDefault();
                 open(Store)(i);
             });
@@ -28,8 +28,8 @@ const loadImage = Store => (item, i) => {
         };
         img.onload = loaded;
         img.src = item.src;
-        if(img.complete) loaded();
-    } catch(e) {
+        if (img.complete) loaded();
+    } catch (e) {
         console.warn(e);
     }
 };
@@ -41,7 +41,7 @@ const loadImages = Store => i => {
     if (items.length > 1) indexes.push(i === 0 ? items.length - 1 : i - 1);
     if (items.length > 2) indexes.push(i === items.length - 1 ? 0 : i + 1);
     indexes.forEach(idx => {
-        if(imageCache[idx] === undefined) {
+        if (imageCache[idx] === undefined) {
             dom.items[idx].classList.add('loading');
             loadImage(Store)(items[idx], idx);
         }
@@ -74,13 +74,13 @@ export const initUI = Store => state => {
 
 const load = Store => state => {
     const { imageCache, items, current } = Store.getState();
-    if(imageCache.length === items.length) imageCache.map((img, i) => { writeImage(state, i); });
+    if (imageCache.length === items.length) imageCache.map((img, i) => { writeImage(state, i); });
     else loadImages(Store)(current);
 };
 
 const writeImage = (state, i) => {
     const { dom, settings, items } = state;
-    if(!dom) return;
+    if (!dom) return;
     const imageContainer = dom.items[i].querySelector('.js-modal-gallery__img-container');
     const imageClassName = settings.scrollable ? 'modal-gallery__img modal-gallery__img--scrollable' : 'modal-gallery__img';
     const srcsetAttribute = dom.items[i].srcset ? ` srcset="${dom.items[i].srcset}"` : '';
@@ -91,26 +91,26 @@ const writeImage = (state, i) => {
 };
 
 const initUIButtons = Store => state => {
-    const { dom, current, items, lastFocused } = Store.getState();
+    const { dom } = Store.getState();
     const closeBtn = dom.overlay.querySelector('.js-modal-gallery__close');
     TRIGGER_EVENTS.forEach(ev => {
         closeBtn.addEventListener(ev, e => {
-            if((e.keyCode && e.keyCode !== KEY_CODES.ENTER) || (e.which && e.which === 3)) return;
-            close(Store);            
+            if ((e.keyCode && e.keyCode !== KEY_CODES.ENTER) || (e.which && e.which === 3)) return;
+            close(Store);
         });
     });
 
     const previousBtn = dom.overlay.querySelector('.js-modal-gallery__previous');
     const nextBtn = dom.overlay.querySelector('.js-modal-gallery__next');
-    if(!previousBtn && !nextBtn) return;
+    if (!previousBtn && !nextBtn) return;
 
     TRIGGER_EVENTS.forEach(ev => {
         previousBtn && previousBtn.addEventListener(ev, e => {
-            if(e.keyCode && e.keyCode !== KEY_CODES.ENTER) return;
+            if (e.keyCode && e.keyCode !== KEY_CODES.ENTER) return;
             previous(Store);
         });
         nextBtn && nextBtn.addEventListener(ev, e => {
-            if(e.keyCode && e.keyCode !== KEY_CODES.ENTER) return;
+            if (e.keyCode && e.keyCode !== KEY_CODES.ENTER) return;
             next(Store);
         });
     });
@@ -118,58 +118,57 @@ const initUIButtons = Store => state => {
 
 export const keyListener = Store => e => {
     const { isOpen } = Store.getState();
-    if(!isOpen) return;
+    if (!isOpen) return;
     switch (e.keyCode) {
-        case KEY_CODES.ESC:
-            close(Store)
-            break;
-        case KEY_CODES.TAB:
-            trapTab(Store, e);
-            break;
-        case KEY_CODES.LEFT:
-            previous(Store);
-            break;
-        case KEY_CODES.RIGHT:
-            next(Store);
-            break;
-        default:
-            break;
+    case KEY_CODES.ESC:
+        close(Store);
+        break;
+    case KEY_CODES.TAB:
+        trapTab(Store, e);
+        break;
+    case KEY_CODES.LEFT:
+        previous(Store);
+        break;
+    case KEY_CODES.RIGHT:
+        next(Store);
+        break;
+    default:
+        break;
     }
 };
 
 const trapTab = (Store, e) => {
     const { dom } = Store.getState();
     const focusedIndex = dom.focusableChildren.indexOf(document.activeElement);
-    if(e.shiftKey && focusedIndex === 0) {
+    if (e.shiftKey && focusedIndex === 0) {
         /* istanbul ignore next */
         e.preventDefault();
         dom.focusableChildren[dom.focusableChildren.length - 1].focus();
-    } else {
-        /* istanbul ignore next */
-        if(!e.shiftKey && focusedIndex === dom.focusableChildren.length - 1) {
-            e.preventDefault();
-            dom.focusableChildren[0].focus();
-        }
     }
-}
+    /* istanbul ignore next */
+    if (!e.shiftKey && focusedIndex === dom.focusableChildren.length - 1) {
+        e.preventDefault();
+        dom.focusableChildren[0].focus();
+    }
+};
 
 const toggle = Store => state => {
-    const { dom, current, isOpen, items, settings } = Store.getState();
+    const { dom, current, isOpen, settings } = Store.getState();
     dom.overlay.classList.toggle('is--active');
     dom.overlay.setAttribute('aria-hidden', !isOpen);
     dom.overlay.setAttribute('tabindex', isOpen ? '0' : '-1');
     isOpen !== null && dom.items[current].classList.add('is--active');
-    if(dom.focusableChildren && dom.focusableChildren.length > 0) window.setTimeout(() => { dom.focusableChildren[0].focus(); }, 0);
+    if (dom.focusableChildren && dom.focusableChildren.length > 0) window.setTimeout(() => { dom.focusableChildren[0].focus(); }, 0);
 
     settings.fullscreen && toggleFullScreen(state);
 };
 
 const writeTotals = ({ dom, current, items, settings }) => {
-    if(settings.totals) dom.totals.innerHTML = `${current + 1}/${items.length}`;
-}
+    if (settings.totals) dom.totals.innerHTML = `${current + 1}/${items.length}`;
+};
 
-const toggleFullScreen = ({ isOpen, dom}) => {
-    if(isOpen){
+const toggleFullScreen = ({ isOpen, dom }) => {
+    if (isOpen){
         dom.overlay.requestFullscreen && dom.overlay.requestFullscreen();
         /* istanbul ignore next */
         dom.overlay.webkitRequestFullscreen && dom.overlay.webkitRequestFullscreen();
@@ -188,12 +187,12 @@ const toggleFullScreen = ({ isOpen, dom}) => {
 export const previous = Store => {
     const { current, dom } = Store.getState();
     const next = current === 0 ? dom.items.length - 1 : current - 1;
-    Store.dispatch({ current: next }, [        
+    Store.dispatch({ current: next }, [
         () => dom.items[current].classList.remove('is--active'),
         () => dom.items[next].classList.add('is--active'),
         load(Store),
         writeTotals
-     ]);
+    ]);
 };
 
 export const next = Store => {
@@ -208,10 +207,10 @@ export const next = Store => {
 };
 
 export const close = Store => {
-    const { keyListener, lastFocused, dom, current } = Store.getState();
+    const { keyListener, lastFocused, dom } = Store.getState();
     Store.dispatch({ current: null, isOpen: false }, [
         () => document.removeEventListener('keydown', keyListener),
-        () => { if(lastFocused) lastFocused.focus() },
+        () => { if (lastFocused) lastFocused.focus(); },
         // () => dom.items[current].classList.remove('is--active'),
         // toggle(Store),
         () => dom.overlay.parentNode.removeChild(dom.overlay)
@@ -219,7 +218,7 @@ export const close = Store => {
 };
 
 export const open = Store => (i = 0) => {
-     Store.dispatch(
+    Store.dispatch(
         { current: i, isOpen: true },
         [ initUI(Store) ]
     );

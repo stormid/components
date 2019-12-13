@@ -50,7 +50,7 @@ describe(`Tabs > Initialisation`, () => {
     beforeAll(init);
 
     it('should return array of length 1', async () => {
-      expect(TabSet.length).toEqual(2);
+        expect(TabSet.length).toEqual(2);
     });
 
     it('should return the expected API', () => {
@@ -61,7 +61,7 @@ describe(`Tabs > Initialisation`, () => {
 
     it('should create instance with different options based on node data-attributes from same init function', () => {
         expect(TabSet[0].getState().settings.activeIndex).not.toEqual(TabSet[1].getState().settings.activeIndex);
-        expect(TabSet[1].getState().settings.activeIndex).toEqual("1");
+        expect(TabSet[1].getState().settings.activeIndex).toEqual('1');
     });
 
 });
@@ -132,7 +132,7 @@ describe(`Tabs > Accessibility > keyboard events`, () => {
 
 describe(`Tabs > mouse events`, () => {
     it('should click event listener for each tab', () => {
-        const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+        const click = new MouseEvent('click', { bubbles: true, cancelable: true });
 
         TabSet[0].getState().tabs[2].dispatchEvent(click);
         expect(TabSet[0].getState().tabs[2].getAttribute('aria-selected')).toEqual('true');

@@ -14,8 +14,8 @@ describe('Validate > Integration > validator > length', () => {
             value="Value is too long"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(false);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for data-val length validator with value within the min and max length range', async () => {
@@ -30,8 +30,8 @@ describe('Validate > Integration > validator > length', () => {
             value="Pass"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for unrequired data-val length validator with no value', async () => {
@@ -46,8 +46,8 @@ describe('Validate > Integration > validator > length', () => {
             value=""
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(true);
     });
 
 });

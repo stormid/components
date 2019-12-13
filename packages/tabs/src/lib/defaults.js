@@ -8,7 +8,7 @@
  * @property active, Number, index of initially active tab
  */
 export default {
-	tabSelector: '.js-tabs__link',
+    tabSelector: '.js-tabs__link',
     activeClass: 'is--active',
     updateURL: true,
     activeIndex: 0

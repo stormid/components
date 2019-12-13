@@ -12,8 +12,8 @@ describe('Validate > Integration > validator > dateISO', () => {
             value="12/12/12"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(false);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for data-val dateISO validator with an on-spec date', async () => {
@@ -26,8 +26,8 @@ describe('Validate > Integration > validator > dateISO', () => {
             value="2019-05-14"
 			type="text">`;
         const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input)['group1'];
-		expect(validate(group, group.validators[0])).toEqual(true);
+        const group = assembleValidationGroup({}, input).group1;
+        expect(validate(group, group.validators[0])).toEqual(true);
     });
 });
 

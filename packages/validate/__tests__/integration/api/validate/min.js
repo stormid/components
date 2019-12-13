@@ -14,7 +14,7 @@ describe('Validate > Integration > api > validate > min', () => {
             min="2"
             value="1"
 			type="number">
-        </form>`;   
+        </form>`;
         const input = document.getElementById('group1');
         const label = document.getElementById('group1-label');
         const validator = Validate.init('form')[0];
@@ -27,7 +27,7 @@ describe('Validate > Integration > api > validate > min', () => {
         // // render error message
         expect(label.lastChild.nodeName).toEqual('SPAN');
         expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual(defaults.messages.min({min: 2 }));
+        expect(label.lastChild.textContent).toEqual(defaults.messages.min({ min: 2 }));
     });
 
     it('should validate a form based on the data-val min validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
@@ -43,19 +43,19 @@ describe('Validate > Integration > api > validate > min', () => {
                 value="1"
                 type="number">
             </form>`;
-            const input = document.getElementById('group1');
-            const label = document.getElementById('group1-label');
-            const validator = Validate.init('form')[0];
-            const validityState = await validator.validate();
-            expect(validityState).toEqual(false);
-            // realtimeValidation start
-            expect(validator.getState().realTimeValidation).toEqual(true);
-            // // focus on first invalid node
-            expect(document.activeElement).toEqual(input);
-            // // render error message
-            expect(label.lastChild.nodeName).toEqual('SPAN');
-            expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-            expect(label.lastChild.textContent).toEqual('Min error message');
+        const input = document.getElementById('group1');
+        const label = document.getElementById('group1-label');
+        const validator = Validate.init('form')[0];
+        const validityState = await validator.validate();
+        expect(validityState).toEqual(false);
+        // realtimeValidation start
+        expect(validator.getState().realTimeValidation).toEqual(true);
+        // // focus on first invalid node
+        expect(document.activeElement).toEqual(input);
+        // // render error message
+        expect(label.lastChild.nodeName).toEqual('SPAN');
+        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
+        expect(label.lastChild.textContent).toEqual('Min error message');
     });
 
     it('should validate a form based on the HTML5 min validator returning true if valid', async () => {
@@ -69,9 +69,9 @@ describe('Validate > Integration > api > validate > min', () => {
                 value="2"
                 type="number">
             </form>`;
-            const validator = Validate.init('form')[0];
-            const validityState = await validator.validate();
-            expect(validityState).toEqual(true);
+        const validator = Validate.init('form')[0];
+        const validityState = await validator.validate();
+        expect(validityState).toEqual(true);
     });
 
     it('should validate a form based on the data-val min validator returning true if valid', async () => {
@@ -87,9 +87,9 @@ describe('Validate > Integration > api > validate > min', () => {
                 value="2"
                 type="number">
             </form>`;
-            const validator = Validate.init('form')[0];
-            const validityState = await validator.validate();
-            expect(validityState).toEqual(true);
+        const validator = Validate.init('form')[0];
+        const validityState = await validator.validate();
+        expect(validityState).toEqual(true);
     });
 
 });

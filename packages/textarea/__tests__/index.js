@@ -1,7 +1,7 @@
 import Textarea from '../src';
 
 global.MutationObserver = class {
-    constructor(callback) {}
+    // constructor(callback) {}
     disconnect() {}
     observe(element, initObject) {}
 };
@@ -21,7 +21,7 @@ describe(`Textarea > init`, () => {
     beforeAll(init);
 
     it('should return array of length 1', async () => {
-      expect(Textareas.length).toEqual(1);
+        expect(Textareas.length).toEqual(1);
     });
 
     it('should return the expected API', () => {

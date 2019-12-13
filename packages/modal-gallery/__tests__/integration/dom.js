@@ -19,10 +19,10 @@ describe(`Modal Gallery > DOM > initUI`, () => {
         initUI(Store)(Store.getState());
         const overlay = document.querySelector('.js-modal-gallery__inner');
         const domItems = [].slice.call(overlay.querySelectorAll('.js-modal-gallery__item'));
-        expect(overlay).not.toBeNull;
+        expect(overlay).not.toBeNull();
         expect(Store.getState().dom.overlay.classList.contains('is--active')).toEqual(true);
         expect(Store.getState().dom.overlay.getAttribute('aria-hidden')).toEqual('false');
-        expect(domItems).not.toBeNull;
+        expect(domItems).not.toBeNull();
         expect(domItems.length).toEqual(1);
     });
     
@@ -46,7 +46,7 @@ describe(`Modal Gallery > DOM > next`, () => {
             keyListener: jest.fn()
         });
 
-        initUI(Store)(Store.getState());        
+        initUI(Store)(Store.getState());
         next(Store);
 
         expect(Store.getState().current).toEqual(1);
@@ -71,7 +71,7 @@ describe(`Modal Gallery > DOM > next`, () => {
             keyListener: jest.fn()
         });
 
-        initUI(Store)(Store.getState());        
+        initUI(Store)(Store.getState());
         next(Store);
 
         expect(Store.getState().current).toEqual(0);
@@ -100,7 +100,7 @@ describe(`Modal Gallery > DOM > previous`, () => {
             keyListener: jest.fn()
         });
 
-        initUI(Store)(Store.getState());        
+        initUI(Store)(Store.getState());
         previous(Store);
 
         expect(Store.getState().current).toEqual(0);
@@ -125,7 +125,7 @@ describe(`Modal Gallery > DOM > previous`, () => {
             keyListener: jest.fn()
         });
 
-        initUI(Store)(Store.getState());        
+        initUI(Store)(Store.getState());
         previous(Store);
 
         expect(Store.getState().current).toEqual(2);
@@ -154,13 +154,13 @@ describe(`Modal Gallery > DOM > close`, () => {
             keyListener: jest.fn()
         });
 
-        initUI(Store)(Store.getState());         
+        initUI(Store)(Store.getState());
         expect(Store.getState().current).toEqual(1);
         expect(Store.getState().dom.items[1].classList.contains('is--active')).toEqual(true);
 
         close(Store);
         const overlay = document.querySelector('.js-modal-gallery__inner');
-        expect(overlay).toBeNull;
+        expect(overlay).toBeNull();
         expect(Store.getState().isOpen).toEqual(false);
         expect(Store.getState().current).toEqual(null);
 

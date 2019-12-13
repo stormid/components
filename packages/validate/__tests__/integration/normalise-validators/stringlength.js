@@ -13,11 +13,11 @@ describe('Validate > Integration > normalise-vaidators > stringlength', () => {
             type="text">`;
         const input = document.querySelector('#group1');
         expect(normaliseValidators(input)).toEqual([
-            { 
+            {
                 type: 'stringlength',
                 message: 'Stringlength error message',
                 params: {
-                    max: "8"
+                    max: '8'
                 }
             }
         ]);

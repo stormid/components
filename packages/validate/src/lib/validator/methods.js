@@ -5,7 +5,7 @@ import {
     NUMBER_REGEX,
     DIGITS_REGEX
 } from '../constants';
-import { 
+import {
     fetch,
     isRequired,
     extractValueFromGroup,
@@ -37,16 +37,14 @@ export default {
         'maxlength',
         params => (acc, input) => (acc = +input.value.length <= +params.max, acc)
     ),
-    equalto: paramMethod('equalto', params => (acc, input) => {
-        return acc = params.other.reduce((subgroupAcc, subgroup) => {
-            if(extractValueFromGroup(subgroup) !== input.value) subgroupAcc = false;
-            return subgroupAcc;
-        }, true), acc;
-    }),
+    equalto: paramMethod('equalto', params => (acc, input) => (acc = params.other.reduce((subgroupAcc, subgroup) => {
+        if (extractValueFromGroup(subgroup) !== input.value) subgroupAcc = false;
+        return subgroupAcc;
+    }, true), acc)),
     pattern: paramMethod('pattern', params => (acc, input) => (acc = RegExp(params.regex).test(input.value), acc)),
     regex: paramMethod('regex', params => (acc, input) => (acc = RegExp(params.pattern).test(input.value), acc)),
-    min: paramMethod('min', params => (acc, input) => (acc = parseInt(input.value) !== NaN && +input.value >= +params.min, acc)),
-    max: paramMethod('max', params => (acc, input) => (acc = parseInt(input.value) !== NaN && +input.value <= +params.max, acc)),
+    min: paramMethod('min', params => (acc, input) => (acc = !isNaN(parseInt(input.value, 10)) && +input.value >= +params.min, acc)),
+    max: paramMethod('max', params => (acc, input) => (acc = !isNaN(parseInt(input.value, 10)) && +input.value <= +params.max, acc)),
     stringlength: paramMethod('stringlength', params => (acc, input) => (acc = +input.value.length <= +params.max, acc)),
     length: paramMethod('length', params => (acc, input) => (acc = (+input.value.length >= +params.min && (params.max === undefined || +input.value.length <= +params.max)), acc)),
     range: paramMethod('range', params => (acc, input) => (acc = ((!shouldValidateByParam(params.min) || +input.value >= +params.min) && (!shouldValidateByParam(params.max) || +input.value <= +params.max)), acc)),
@@ -54,14 +52,14 @@ export default {
         const value = extractValueFromGroup(group);
         fetch((params.type !== 'get' ? params.url : `${params.url}?${group.fields[0].name}=${value}&${resolveGetParams(params.additionalfields)}`), {
             method: params.type && params.type.toUpperCase() || 'POST',
-            body: params.type !== 'get' 
+            body: params.type !== 'get'
                 ? JSON.stringify({ [group.fields[0].name]: value })
                 : resolveGetParams(params.additionalfields),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
             }
         })
-        .then(data => resolve(data));
+            .then(data => resolve(data));
     }),
     custom: (method, group) => isOptional(group)|| method(extractValueFromGroup(group), group.fields)
 };

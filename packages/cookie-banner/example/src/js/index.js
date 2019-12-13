@@ -1,11 +1,11 @@
 import PrivacyBanner from '../../../src';
 import { writeCookie } from '../../../src/lib/utils';
     
-window.addEventListener('DOMContentLoaded', () => {    
+window.addEventListener('DOMContentLoaded', () => {
     window.__pb__ = PrivacyBanner.init({
         secure: false,
-        necessary: [ () => { 
-            console.log('Necessary fn');
+        necessary: [ () => {
+            // console.log('Necessary fn');
             writeCookie({
                 settings: {
                     name: '.Test.NecessaryCookie',
@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         } ],
         types: {
-            'performance': {
+            performance: {
                 title: 'Performance preferences',
                 description: 'Performance cookies are used to measure the performance of our website and make improvements. Your personal data is not identified.',
                 labels: {
@@ -23,8 +23,8 @@ window.addEventListener('DOMContentLoaded', () => {
                     no: 'Pages you visit and actions you take will not be measured and used to improve the service'
                 },
                 fns: [
-                    () => { 
-                        console.log('Performance fn');
+                    () => {
+                        // console.log('Performance fn');
                         writeCookie({
                             settings: {
                                 name: '.Test.PerformanceCookie',
@@ -35,7 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                 ]
             },
-            'ads': {
+            ads: {
                 title: 'Set your personalised ads preferences',
                 description: 'We work with advertising partners to show you ads for our products and services across the web.  You can choose whether we collect and share that data with our partners below. ',
                 labels: {
@@ -43,8 +43,8 @@ window.addEventListener('DOMContentLoaded', () => {
                     no: 'Our partners will still serve you ads, but they will not know you have visited out website'
                 },
                 fns: [
-                    () => { 
-                        console.log('Ads fn');
+                    () => {
+                        // console.log('Ads fn');
                         writeCookie({
                             settings: {
                                 name: '.Test.AdsCookie',

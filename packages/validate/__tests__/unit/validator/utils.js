@@ -1,5 +1,5 @@
 import {
-	isCheckable,
+    isCheckable,
     isFile,
     isSelect,
     isSubmitButton,
@@ -9,7 +9,7 @@ import {
     hasValue,
     groupValueReducer,
     resolveGetParams,
-    DOMNodesFromCommaList,
+    domNodesFromCommaList,
     escapeAttributeValue,
     extractValueFromGroup
 } from '../../../src/lib/validator/utils';
@@ -146,7 +146,7 @@ describe('Validate > Unit > Utils > isRequired', () => {
     it('should return false if the group does not contain a required validator', async () => {
         expect.assertions(1);
         const group = {
-            validators: [{ type: 'range', essage: 'Range error message', params: { min: "2", max: "8" } }]
+            validators: [{ type: 'range', essage: 'Range error message', params: { min: '2', max: '8' } }]
         };
         expect(isRequired(group)).toEqual(false);
     });
@@ -160,7 +160,7 @@ describe('Validate > Unit > Utils > groupIsHidden', () => {
             <input name="fields" id="field-2" type="hidden" />
         </form>`;
         const fields = Array.from(document.querySelectorAll('input'));
-        
+
         expect(groupIsHidden(fields)).toEqual(true);
     });
     it('should return false if the array of fields contains no nodes with type of hidden', async () => {
@@ -170,7 +170,7 @@ describe('Validate > Unit > Utils > groupIsHidden', () => {
             <input name="fields" id="field-2" />
         </form>`;
         const fields = Array.from(document.querySelectorAll('input'));
-        
+
         expect(groupIsHidden(fields)).toEqual(false);
     });
 });
@@ -182,7 +182,7 @@ describe('Validate > Unit > Utils > hasValue', () => {
             <input name="field" id="field" value="Has value" />
         </form>`;
         const field = document.getElementById('field');
-        
+
         expect(hasValue(field)).toEqual(true);
     });
     it('should return false if the field has an empty value', async () => {
@@ -191,7 +191,7 @@ describe('Validate > Unit > Utils > hasValue', () => {
             <input name="field" id="field" value="" />
         </form>`;
         const field = document.getElementById('field');
-        
+
         expect(hasValue(field)).toEqual(false);
     });
     it('should return false if the field has no value attribute', async () => {
@@ -200,7 +200,7 @@ describe('Validate > Unit > Utils > hasValue', () => {
             <input name="field" id="field" />
         </form>`;
         const field = document.getElementById('field');
-        
+
         expect(hasValue(field)).toEqual(false);
     });
 });
@@ -281,8 +281,8 @@ describe('Validate > Unit > Utils > resolveGetParams', () => {
     });
 });
 
-// DOMNodesFromCommaList
-describe('Validate > Unit > Utils > DOMNodesFromCommaList', () => {
+// domNodesFromCommaList
+describe('Validate > Unit > Utils > domNodesFromCommaList', () => {
     it('should return an array of arrays of nodes matching each name in a comma separated String', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -291,7 +291,7 @@ describe('Validate > Unit > Utils > DOMNodesFromCommaList', () => {
         </form>`;
         const field1s = document.querySelector('#field1');
         const field2s = document.querySelector('#field2');
-        expect(DOMNodesFromCommaList('field1,field2')).toEqual([[field1s], [field2s]]);
+        expect(domNodesFromCommaList('field1,field2')).toEqual([[field1s], [field2s]]);
     });
     it('should return an array of empty arrays for a comma separated String that does not select any node name attributes', async () => {
         expect.assertions(1);
@@ -299,14 +299,14 @@ describe('Validate > Unit > Utils > DOMNodesFromCommaList', () => {
             <input name="field1" id="field1" />
             <input name="field2" id="field2" />
         </form>`;
-        expect(DOMNodesFromCommaList('field3,field4')).toEqual([[], []]);
+        expect(domNodesFromCommaList('field3,field4')).toEqual([[], []]);
     });
 });
 
 // escapeAttributeValue
 describe('Validate > Unit > Utils > escapeAttributeValue', () => {
-    it('should escape special characters matching /([!"#$%&\'()*+,./:;<=>?@\[\\\]^`{|}~] in a String', async () => {
-        expect(escapeAttributeValue('<script>alert("Boo")</script>')).toEqual('\\<script\\>alert\\(\\\"Boo\\\"\\)\\<\\/script\\>');
+    it('should escape special characters matching /([!"#$%&\'()*+,./:;<=>?@[\\]^`{|}~] in a String', async () => {
+        expect(escapeAttributeValue('<script>alert("Boo")</script>')).toEqual('\\<script\\>alert\\(\\"Boo\\"\\)\\<\\/script\\>');
     });
 });
 

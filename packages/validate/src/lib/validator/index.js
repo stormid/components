@@ -3,7 +3,7 @@ import {
     isCheckable,
     isSelect,
     isFile,
-    DOMNodesFromCommaList,
+    domNodesFromCommaList,
     groupIsHidden
 } from './utils';
 import {
@@ -24,8 +24,8 @@ import {
 export const resolveParam = (param, input) => {
     let value = input.getAttribute(`data-val-${param}`);
     return ({
-                [param.split('-')[1]]: !!~DOM_SELECTOR_PARAMS.indexOf(param) ? DOMNodesFromCommaList(value, input): value
-            })
+        [param.split('-')[1]]: ~DOM_SELECTOR_PARAMS.indexOf(param) ? domNodesFromCommaList(value, input): value
+    });
 };
 
 /**
@@ -38,13 +38,11 @@ export const resolveParam = (param, input) => {
  * @return validation params [Object] Validation param object containing all validation parameters for an adaptor/validation method
  */
 export const extractParams = (input, adaptor) => DOTNET_PARAMS[adaptor]
-                                            ? { 
-                                                params: DOTNET_PARAMS[adaptor]
-                                                            .reduce((acc, param) => {
-                                                                return input.hasAttribute(`data-val-${param}`) ? Object.assign(acc, resolveParam(param, input)) : acc;
-                                                             }, {})
-                                              }
-                                            : false;
+    ? {
+        params: DOTNET_PARAMS[adaptor]
+            .reduce((acc, param) => input.hasAttribute(`data-val-${param}`) ? Object.assign(acc, resolveParam(param, input)) : acc, {})
+    }
+    : false;
 
 /**
  * Reducer that takes all known .NET MVC adaptors (data-attributes that specify a validation method that should be applied to the node)
@@ -57,17 +55,17 @@ export const extractParams = (input, adaptor) => DOTNET_PARAMS[adaptor]
  *                              message [String] the error message displayed if the validation method returns false
  *                              params [Object] (optional) 
  */
-export const extractDataValValidators = input => DOTNET_ADAPTORS.reduce((validators, adaptor) => 
-                                                            !input.getAttribute(`data-val-${adaptor}`) 
-                                                            ? validators 
-                                                            : [...validators, 
-                                                                Object.assign({
-                                                                    type: adaptor,
-                                                                    message: input.getAttribute(`data-val-${adaptor}`)}, 
-                                                                    extractParams(input, adaptor)
-                                                                )
-                                                            ],
-                                                        []);
+export const extractDataValValidators = input => DOTNET_ADAPTORS.reduce((validators, adaptor) =>
+    !input.getAttribute(`data-val-${adaptor}`)
+        ? validators
+        : [...validators,
+            Object.assign({
+                type: adaptor,
+                message: input.getAttribute(`data-val-${adaptor}`) },
+            extractParams(input, adaptor)
+            )
+        ],
+[]);
 
 /**
  * Looks for a data-val attribute matching the validator type and returns the value
@@ -88,26 +86,26 @@ const resolveMessages = (input, type) => input.getAttribute(`data-val-${type}`) 
  */
 export const extractAttrValidators = input => {
     let validators = [];
-    if((input.hasAttribute('required') || input.hasAttribute('aria-required')) && (input.getAttribute('required') !== 'false' || input.getAttribute('aria-required') !== 'false')){
-        validators.push({ type: 'required', ...resolveMessages(input, 'required') } )
+    if ((input.hasAttribute('required') || input.hasAttribute('aria-required')) && (input.getAttribute('required') !== 'false' || input.getAttribute('aria-required') !== 'false')){
+        validators.push({ type: 'required', ...resolveMessages(input, 'required') } );
     }
-    if(input.getAttribute('type') === 'email') validators.push({ type: 'email', ...resolveMessages(input, 'email') });
-    if(input.getAttribute('type') === 'url') validators.push({ type: 'url', ...resolveMessages(input, 'url') });
-    if(input.getAttribute('type') === 'number') validators.push({ type: 'number', ...resolveMessages(input, 'number') });
-    if((input.getAttribute('minlength') && input.getAttribute('minlength') !== 'false')){
-        validators.push({ type: 'minlength', params: { min: input.getAttribute('minlength')}, ...resolveMessages(input, 'minlength') });
+    if (input.getAttribute('type') === 'email') validators.push({ type: 'email', ...resolveMessages(input, 'email') });
+    if (input.getAttribute('type') === 'url') validators.push({ type: 'url', ...resolveMessages(input, 'url') });
+    if (input.getAttribute('type') === 'number') validators.push({ type: 'number', ...resolveMessages(input, 'number') });
+    if ((input.getAttribute('minlength') && input.getAttribute('minlength') !== 'false')){
+        validators.push({ type: 'minlength', params: { min: input.getAttribute('minlength') }, ...resolveMessages(input, 'minlength') });
     }
-    if((input.getAttribute('maxlength') && input.getAttribute('maxlength') !== 'false')){
-        validators.push({ type: 'maxlength', params: { max: input.getAttribute('maxlength')}, ...resolveMessages(input, 'maxlength') });
+    if ((input.getAttribute('maxlength') && input.getAttribute('maxlength') !== 'false')){
+        validators.push({ type: 'maxlength', params: { max: input.getAttribute('maxlength') }, ...resolveMessages(input, 'maxlength') });
     }
-    if((input.getAttribute('min') && input.getAttribute('min') !== 'false')){
-        validators.push({ type: 'min', params: { min: input.getAttribute('min')}, ...resolveMessages(input, 'min') });
+    if ((input.getAttribute('min') && input.getAttribute('min') !== 'false')){
+        validators.push({ type: 'min', params: { min: input.getAttribute('min') }, ...resolveMessages(input, 'min') });
     }
-    if((input.getAttribute('max') && input.getAttribute('max') !== 'false')){
-        validators.push({ type: 'max', params: { max: input.getAttribute('max')}, ...resolveMessages(input, 'max') });
+    if ((input.getAttribute('max') && input.getAttribute('max') !== 'false')){
+        validators.push({ type: 'max', params: { max: input.getAttribute('max') }, ...resolveMessages(input, 'max') });
     }
-    if((input.getAttribute('pattern') && input.getAttribute('pattern') !== 'false')){
-        validators.push({ type: 'pattern', params: { regex: input.getAttribute('pattern')}, ...resolveMessages(input, 'pattern') });
+    if ((input.getAttribute('pattern') && input.getAttribute('pattern') !== 'false')){
+        validators.push({ type: 'pattern', params: { regex: input.getAttribute('pattern') }, ...resolveMessages(input, 'pattern') });
     }
     return validators;
 };
@@ -138,10 +136,10 @@ const pattern = input => (validators = [])  => (input.getAttribute('pattern') &&
  * @param input [DOM node]
  * 
  * @return validators [Array]
- */  
-export const normaliseValidators = input => input.getAttribute('data-val') === 'true' 
-                                            ? extractDataValValidators(input)
-                                            : extractAttrValidators(input);
+ */
+export const normaliseValidators = input => input.getAttribute('data-val') === 'true'
+    ? extractDataValValidators(input)
+    : extractAttrValidators(input);
 
 /**
  * Calls a validation method against an input group
@@ -151,10 +149,10 @@ export const normaliseValidators = input => input.getAttribute('data-val') === '
  * 
  * @returns validityState [Boolean]
  * 
- */  
-export const validate = (group, validator) => validator.type === 'custom' 
-                                              ? methods['custom'](validator.method, group)
-                                              : methods[validator.type](group, validator.params);
+ */
+export const validate = (group, validator) => validator.type === 'custom'
+    ? methods.custom(validator.method, group)
+    : methods[validator.type](group, validator.params);
 
 /**
  * Reducer constructing an validation Object for a group of DOM nodes
@@ -167,17 +165,17 @@ export const validate = (group, validator) => validator.type === 'custom'
  *                            fields [Array] DOM nodes in the group
  *                            serverErrorNode [DOM node] .NET MVC server-rendered error message span
  * 
- */  
+ */
 export const assembleValidationGroup = (acc, input) => {
     let name = input.getAttribute('name');
-    if(!name) return console.warn('Missing name attribute'), acc;
-    return acc[name] = acc[name] ? Object.assign(acc[name], { fields: [...acc[name].fields, input]})
-                                 : {
-                                        valid:  false,
-                                        validators: normaliseValidators(input),
-                                        fields: [input],
-                                        serverErrorNode: document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}="${input.getAttribute('name')}"]`) || false
-                                    }, acc;
+    if (!name) return console.warn('Missing name attribute'), acc;
+    return acc[name] = acc[name] ? Object.assign(acc[name], { fields: [...acc[name].fields, input] })
+        : {
+            valid: false,
+            validators: normaliseValidators(input),
+            fields: [input],
+            serverErrorNode: document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}="${input.getAttribute('name')}"]`) || false
+        }, acc;
 };
 
 /**
@@ -187,7 +185,7 @@ export const assembleValidationGroup = (acc, input) => {
  * 
  * @return message [String] error message
  * 
- */ 
+ */
 export const extractErrorMessage = (messages, validator) => validator.message || messages[validator.type](validator.params !== undefined ? validator.params : null);
 
 /**
@@ -196,14 +194,12 @@ export const extractErrorMessage = (messages, validator) => validator.message ||
  * 
  * @return error messages [Array]
  * 
- */ 
-export const reduceErrorMessages = (group, state) => (acc, validity, j) => {
-    return validity === true 
-                ? acc 
-                : [...acc, typeof validity === 'boolean' 
-                            ? extractErrorMessage(state.settings.messages, state.groups[group].validators[j])
-                            : validity];
-};
+ */
+export const reduceErrorMessages = (group, state) => (acc, validity, j) => validity === true
+    ? acc
+    : [...acc, typeof validity === 'boolean'
+        ? extractErrorMessage(state.settings.messages, state.groups[group].validators[j])
+        : validity];
 
 /**
  * From all groups found in the current form, thosethat do not require validation (have no assocated validators) are removed
@@ -212,12 +208,12 @@ export const reduceErrorMessages = (group, state) => (acc, validity, j) => {
  * 
  * @return groups [Object] name-indexed object consisting of all validatable groups
  * 
- */ 
+ */
 export const removeUnvalidatableGroups = groups => {
     let validationGroups = {};
 
-    for(let group in groups){
-        if(groups[group].validators.length > 0 && !groupIsHidden(groups[group].fields)){
+    for (let group in groups){
+        if (groups[group].validators.length > 0 && !groupIsHidden(groups[group].fields)){
             validationGroups[group] = groups[group];
         }
     }
@@ -233,27 +229,25 @@ export const removeUnvalidatableGroups = groups => {
  * 
  * @return state [Object] consisting of groups [Object] name-indexed validation groups
  * 
- */ 
-export const getInitialState = (form, settings) => {
-    return {
-        form,
-        settings,
-        errorNodes: {},
-        realTimeValidation: false,
-        groups: removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
-                        .reduce(assembleValidationGroup, {}))
-    }
-};
+ */
+export const getInitialState = (form, settings) => ({
+    form,
+    settings,
+    errorNodes: {},
+    realTimeValidation: false,
+    groups: removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
+        .reduce(assembleValidationGroup, {}))
+});
 
 /**
  * Reducer run against an array of resolved validation promises to set the overall validityState of a group
  * 
  * @return validityState [Boolean] 
  * 
- */ 
+ */
 export const reduceGroupValidityState = (acc, curr) => {
-    if(curr !== true) acc = false;
-    return acc; 
+    if (curr !== true) acc = false;
+    return acc;
 };
 
 
@@ -267,12 +261,10 @@ export const isFormValid = validityState => [].concat(...validityState).reduce(r
  * @return validation results [Promise] aggregated promise
  * 
  */
-export const getValidityState = groups => {
-    return Promise.all(
-        Object.keys(groups)
-            .map(group => getGroupValidityState(groups[group]))
-        );
-};
+export const getValidityState = groups => Promise.all(
+    Object.keys(groups)
+        .map(group => getGroupValidityState(groups[group]))
+);
 
 /**
  * Aggregates all of the validation promises for a single group into a single promise
@@ -284,26 +276,24 @@ export const getValidityState = groups => {
  */
 export const getGroupValidityState = group => {
     let hasError = false;
-	return Promise.all(group.validators.map(validator => {
-        return new Promise((resolve, reject) => {
-            if(validator.type !== 'remote'){
-                if(validate(group, validator)) resolve(true);
-                else {
-                    hasError = true;
-                    resolve(false);
-                }
-            } else {
-                if(hasError) resolve(false);
-                else validate(group, validator)
-                        .then(res => {
-                            if(res === 'true') resolve(true);
-                            if(res === 'false') resolve(false);
-                            resolve(res);
-                        })
-                        .catch(err => console.log(err));
+    return Promise.all(group.validators.map(validator => new Promise((resolve, reject) => {
+        if (validator.type !== 'remote'){
+            if (validate(group, validator)) resolve(true);
+            else {
+                hasError = true;
+                resolve(false);
             }
-        });
-    }));
+        } else if (hasError) resolve(false);
+        else {
+            validate(group, validator)
+                .then(res => {
+                    if (res === 'true') resolve(true);
+                    if (res === 'false') resolve(false);
+                    resolve(res);
+                })
+                .catch(err => console.warn(err));
+        }
+    })));
 };
 
 /**

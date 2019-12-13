@@ -21,7 +21,7 @@ export const createStore = () => {
         state = nextState ? ({ ...state, ...nextState }) : state;
         //uncomment for debugging by writing state history to window
         // window.__validator_history__.push(state), console.log(window.__validator_history__);
-        if(!effects) return;
+        if (!effects) return;
         effects.forEach(effect => { effect(state); });
     };
 

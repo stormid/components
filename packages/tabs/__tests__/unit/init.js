@@ -33,7 +33,7 @@ describe(`Tabs > init`, () => {
     beforeAll(init);
 
     it('should return array of length 1', async () => {
-      expect(TabSet.length).toEqual(1);
+        expect(TabSet.length).toEqual(1);
     });
 
     it('should return the expected API', () => {
@@ -65,7 +65,7 @@ describe(`Tabs > init`, () => {
             </section>
         </div>`;
 
-        TabSet = Tabs.init('.js-tabs', { activeIndex: "2" });
+        TabSet = Tabs.init('.js-tabs', { activeIndex: '2' });
 
         expect(TabSet[0].getState().activeIndex).toEqual(2);
     });

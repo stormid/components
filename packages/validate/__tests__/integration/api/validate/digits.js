@@ -21,7 +21,7 @@ describe('Validate > Integration > api > validate > digits', () => {
                 data-val-digits="Digits error message"
                 value="Not a digit"
                 type="text" />
-        </form>`;        
+        </form>`;
         const input = document.getElementById('group1');
         const label = document.getElementById('group1-1-label');
         const validator = Validate.init('form')[0];

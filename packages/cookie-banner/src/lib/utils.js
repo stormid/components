@@ -21,15 +21,15 @@ export const writeCookie = state => {
         state.settings.samesite ? `SameSite=${state.settings.samesite};` : '',
         state.settings.secure ? `secure` : ''
     ].join('');
-}
+};
 
 export const readCookie = settings => {
     const cookie = document.cookie.split('; ')
-                    .map(part => ({ 
-                        name: part.split('=')[0],
-                        value: part.split('=')[1]
-                    }))
-                    .filter(part => part.name === settings.name)[0];
+        .map(part => ({
+            name: part.split('=')[0],
+            value: part.split('=')[1]
+        }))
+        .filter(part => part.name === settings.name)[0];
     return cookie !== undefined ? cookie : false;
 };
 
@@ -45,7 +45,7 @@ const updateCookie = state => model => document.cookie = [
 export const deleteCookies = state => {
     document.cookie
         .split('; ')
-        .map(part => ({ 
+        .map(part => ({
             name: part.split('=')[0],
             value: part.split('=')[1],
             expiry: 'Thu, 01 Jan 1970 00:00:01 GMT'
@@ -71,9 +71,9 @@ export const isCheckable = field => (/radio|checkbox/i).test(field.type);
 const hasValue = input => (input.value !== undefined && input.value !== null && input.value.length > 0);
 
 export const groupValueReducer = (acc, input) => {
-    if(!isCheckable(input) && hasValue(input)) acc = input.value;
-    if(isCheckable(input) && input.checked) {
-        if(Array.isArray(acc)) acc.push(input.value)
+    if (!isCheckable(input) && hasValue(input)) acc = input.value;
+    if (isCheckable(input) && input.checked) {
+        if (Array.isArray(acc)) acc.push(input.value);
         else acc = [input.value];
     }
     return acc;
