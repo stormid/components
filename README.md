@@ -40,8 +40,9 @@ Monorepo tasks
 
 | Task                                                                                | Command                                                                    |
 | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Build the docs                                                                      | npm run gh-pages                                                           |
-| [Lerna changed](https://github.com/lerna/lerna/tree/master/commands/changed#readme) | list of packages that would be the subjects of the next version or publish |
+| Build the docs                                                                      | npm run gh-pages            
+| Lint all packages                                                                      | npm run lint -- --fix     |
+| [Lerna changed](https://github.com/lerna/lerna/tree/master/commands/changed#readme) | List of packages that would be the subjects of the next version or publish |
 | [Lerna version](https://github.com/lerna/lerna/tree/master/commands/version#readme) | Bump version of packages changed since the last release                    |
 | [Lerna publish](https://github.com/lerna/lerna/tree/master/commands/publish#readme) | Publish packages in the current project                                    |
 
