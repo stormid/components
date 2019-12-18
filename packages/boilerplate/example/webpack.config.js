@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const pkg = require('../package.json');
 
 module.exports = {
-    entry: './example/src/js/index.js',
+    entry: './example/src/js/index.ts',
     output: {
         filename: 'app.js',
         path: path.resolve(__dirname, './build')
@@ -20,7 +20,13 @@ module.exports = {
         })
     ],
     module: {
-        rules: [{
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: 'babel-loader',
+                exclude: /node_modules/,
+            },
+            {
             test: /\.js$/,
             exclude: /(node_modules|bower_components)/,
             use: {

@@ -25,6 +25,7 @@
   ],
   "scripts": {
     "build": "npx microbundle --name Boilerplate",
+    "check-types": "tsc",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",
     "prepublish": "npm run -s build",

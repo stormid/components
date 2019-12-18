@@ -1,5 +1,6 @@
 import defaults from './lib/defaults';
-import factory from './lib/factory';
+import factory, { Boilerplate } from './lib/factory';
+
 
 /*
  * Returns an array of objects augmenting DOM elements that match a selector
@@ -7,7 +8,7 @@ import factory from './lib/factory';
  * @param selector, String, A DOMString containing one or more selectors to match, must be a valid CSS selector string
  * @params options, Object, to be merged with defaults to become the settings propery of each returned object
  */
-const init = (selector, options) => {
+const init = (selector: string, options?: object ): Boilerplate[] => {
     //Array.from isnt polyfilled
     //https://github.com/babel/babel/issues/5682
     const nodes = [].slice.call(document.querySelectorAll(selector));
@@ -16,7 +17,7 @@ const init = (selector, options) => {
     if (nodes.length === 0) return void console.warn(`Boilerplate not initialised, no elements found for selector '${selector}'`);
     
     //return array of objects, one for each DOM node found
-    return nodes.map(node => Object.create(factory({
+    return nodes.map((node: HTMLElement) => Object.create(factory({
         settings: { ...defaults, ...options },
         node
     })));

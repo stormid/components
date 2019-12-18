@@ -6,7 +6,7 @@
  * 
  * @param e, Event, DOM event passed in eventListener
  */
-const handleClick = ({ callback }) => function handler(e){
+const handleClick = ({ callback }: { callback: Function }):Function  => function handler(e:MouseEvent):void{
     this.classList.toggle('clicked');
     if (callback && callback.call) callback.call(this);
 };
@@ -17,7 +17,12 @@ const handleClick = ({ callback }) => function handler(e){
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
  * @param node, HTMLElement, DOM node to be augmented
  */
-export default ({ settings, node }) => {
+export interface Boilerplate {
+    settings: object;
+    node: HTMLElement;
+    click: Function;
+}
+export default ({ settings, node }: { settings: { callback: Function }, node: HTMLElement }):Boilerplate => {
     node.addEventListener('click', handleClick(settings).bind(node), false);
     return { settings, node, click: handleClick(settings) };
 };
