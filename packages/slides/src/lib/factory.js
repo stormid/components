@@ -1,6 +1,6 @@
 import createStore from './store';
-import { findSlides } from './shared';
-import { setCurrent, initUI }  from './dom';
+import { findSlides, autoplay } from './shared';
+import { setCurrent, initUI, preload }  from './dom';
 
 /* 
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
@@ -16,16 +16,16 @@ export default ({ node, settings }) => {
     if (navItems.length > 0 && navItems.length !== slides.length) return void console.warn('Slide navigation does not match the number of slides.');
 
     Store.dispatch({
+        node,
         slides,
         navItems,
         nextButton: node.querySelector(settings.buttonNextSelector),
         previousButton: node.querySelector(settings.buttonPreviousSelector),
         notification: node.querySelector(settings.liveRegionSelector),
         currentIndex: settings.startIndex
-    }, [ setCurrent, initUI(Store) ]);
+    }, [ setCurrent, initUI(Store), preload(Store), autoplay(Store) ]);
 
     /*
-        this.settings.preload ? this.slides.forEach((slide, i) => { this.loadImage(i); }) : this.loadImages(this.settings.startIndex);
         this.settings.autoPlay ? this.autoPlay(this.settings.slideDuration) : null;
         */
     return {
