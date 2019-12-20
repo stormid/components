@@ -47,13 +47,13 @@ export const parseUrl = url => {
   const pathname = a.pathname.charAt(0) == '/' ? a.pathname : '/' + a.pathname;
 
   return cache[url] = {
+    host,
+    origin,
+    pathname,
+    port,
     hash: a.hash,
-    host: host,
     hostname: a.hostname,
     href: a.href,
-    origin: origin,
-    pathname: pathname,
-    port: port,
     protocol: a.protocol,
     search: a.search,
   };

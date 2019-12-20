@@ -1,5 +1,5 @@
 export const request = url => {
-	if(navigator.sendBeacon) {
+	if (navigator.sendBeacon) {
 		navigator.sendBeacon(url);
 		return;
 	}
@@ -7,5 +7,5 @@ export const request = url => {
 	img.width = 1;
 	img.height = 1;
 	img.src = url;
-    return img
+    return img;
 };

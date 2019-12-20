@@ -7,21 +7,19 @@ export const dimensions = () => [].slice.call(document.querySelectorAll(`[name^=
                                     .reduce(composeDimensions, []);
     
 
-const composeDimensions = (custom, el) => [ 
-    ...custom, 
-    el.hasAttribute(DATA_ATTRIBUTES.CUSTOM) 
+const composeDimensions = (custom, el) => [
+    ...custom,
+    el.hasAttribute(DATA_ATTRIBUTES.CUSTOM)
     ? {
         index: el.getAttribute(DATA_ATTRIBUTES.CUSTOM),
         value: el.getAttribute(DATA_ATTRIBUTES.CONTENT),
         type: 'dimension'
     }
     : {
-        index: el.getAttribute('name').replace(META_NAME_PREFIX, ''),
+        index: el.getAttribute('name').replace(META_NAMES.CUSTOM_PREFIX, ''),
         value: el.getAttribute('content'),
         type: 'dimension'
     }];
-    
-
 
 // export const customMetricNodes = [].slice.call(document.querySelectorAll('[name^=custom-metric-]'));
 // custom = customMetricNodes.length !== 0
@@ -33,4 +31,4 @@ const composeDimensions = (custom, el) => [
 //                     })
 //                     return custom;
 //                 }, custom)
-//                 : custom;        
+//                 : custom;

@@ -6,7 +6,7 @@ export const readCookie = settings => {
 						value: part.split('=')[1]
 					}))
 					.filter(part => part.name === settings.name)[0];
-    return cookie !== undefined ? cookie : false
+    return cookie !== undefined ? cookie : false;
 };
 
 export const writeCookie = data => {

@@ -17,7 +17,7 @@ describe('Measure > shared > data > systemInfo', () => {
 });
 
 describe('Measure > shared > data > documentInfo', () => {
-    const title = 'Test title'
+    const title = 'Test title';
     delete global.window.location;
     global.window = Object.create(window);
     global.window.location = { hostname: 'localhost' };
@@ -60,19 +60,19 @@ describe('Measure > shared > data > download', () => {
        const zipFileLink = { href: '/download/tests.zip' };
        const spreadsheetFileLink = { href: '/download/tests.xls' };
 
-       expect(download(textFileLink, defaults.settings.download))
+       expect(download(textFileLink, defaults.settings.download.types))
         .toEqual({
             regex: /^.+\.(docx?|log|msg|odt|pages|rtf|tex|txt|wpd|wps)$/,
             action: 'Text file'
         });
 
-        expect(download(zipFileLink, defaults.settings.download))
+        expect(download(zipFileLink, defaults.settings.download.types))
         .toEqual({
             regex: /^.+\.(7z|cbr|deb|gz|pkg|rar|rpm|sitx|zipx?)$/,
             action: 'Compressed file'
         });
 
-        expect(download(spreadsheetFileLink, defaults.settings.download))
+        expect(download(spreadsheetFileLink, defaults.settings.download.types))
         .toEqual({
             regex: /^.+\.(xlr|xlsx?|ods)$/,
             action: 'Spreadsheet file'
@@ -87,7 +87,7 @@ describe('Measure > shared > data > download', () => {
 			{
 				regex: /^.+\.(csv|dat|ged|key.*|pps|pptx?|sdf|tar|tax2.+|tsv|vcf|xml)$/,
 				action: 'Data file'
-			},			
+			},
 			{
 				regex: /^.+\.(indd|pct|pdf)$/,
 				action: 'Page layout file'

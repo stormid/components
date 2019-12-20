@@ -9,7 +9,7 @@ import { send, links } from '../protocol';
  */
 export default options => {
 	const Store = createStore();
-	const { settings, parameters} = stateFromOptions(options);
+	const { settings, parameters } = stateFromOptions(options);
 	const { persistent, stack } = parameters;
 
 	Store.dispatch(initial, {
@@ -33,7 +33,7 @@ export default options => {
 				Store.dispatch(add, impression(data, Store.getState()), [ send(Store, 'event') ]);
 			},
 			action(data){
-				console.log(data);
+				// console.log(data);
 				Store.dispatch(add, action(data, Store.getState()), [ send(Store, 'event') ]);
 			}
 		}
