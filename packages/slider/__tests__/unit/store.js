@@ -1,6 +1,6 @@
 import { createStore } from '../../src/lib/store';
 
-describe(`Toggle > Store`, () => {
+describe(`Slider > Store`, () => {
 
     const Store = createStore();
     let effect = false;

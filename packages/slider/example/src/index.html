@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Storm ID</title>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: sans-serif;
+        }
+        html,
+        body {
+            height:100%;
+        }
+        .container {
+            clear:both;
+            overflow:hidden;
+            margin:0 auto;
+            width:80%;
+            max-width:1200px;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="slider">
+        <div id="slider-label">Rating</div>
+        <div class="slider-rail">
+            <div id="idRedValue"
+                    role="slider"
+                    tabindex="0"
+                    class="slider-thumb"
+                    aria-valuemin="0"
+                    aria-valuenow="0"
+                    aria-valuemax="255"
+                    aria-labelledby="slider-label"></div>
+        </div>
+        <div class="slider-value">0</div>
+    </div>
+  </body>
+</html>
