@@ -1,7 +1,43 @@
-
 # Measure
 
 Measurement and analytics library to send data to the [Google Measurement API](https://developers.google.com/analytics/devguides/collection/protocol), a replacement for Google Tag Manager and Google analytics.js.
+
+---
+
+## Measurements
+
+### Pageviews
+
+Data passed on each pageview consists of persistent data sent with every measurement sent and any custom data (dimensions and metrics) passed in the options at [initialisation] (#link to init fn)
+
+#### Persistent data
+
+| Data                          | Source                                                                              | Measurement API parameter | Reference                                                                               |
+| ----------------------------- | ----------------------------------------------------------------------------------- | ------------------------- | --------------------------------------------------------------------------------------- |
+| Tracking ID / Web Property ID | User-defined at initialisation                                                      | tid                       | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#v   |
+| Measurement API version       | Settings (default: 1)                                                               | v                         | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#v   |
+| Anonymize IP                  | Settings (default: 1)                                                               | aip                       | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#aip |
+| Client ID                     | From a 'GA' cookie or a new value saved to a cookie with a value of '\_ga.<<GUID>>' | cid                       | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cid |
+| Screen resolution             | Browser                                                                             | sr                        | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#sr  |
+| Viewport size                 | Browser                                                                             | vp                        | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#vp  |
+| Document encoding             | Browser                                                                             | de                        | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#de  |
+| Screen colours                | Browser                                                                             | sd                        | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#sd  |
+| User language                 | Browser                                                                             | ul                        | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ul  |
+| Document location URL         | Browser                                                                             | dl                        | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dl  |
+| Document hostname             | Browser                                                                             | dh                        | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dh  |
+| Document path                 | Browser                                                                             | dp                        | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dp  |
+| Document title                | Browser                                                                             | dt                        | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dt  |
+
+### Custom data
+Custom dimensions and metrics can be sent with the pageview by passing it as a [configuration option](#link to custom options).
+
+---
+
+### Events
+
+### E-commerce
+
+### Automatic measurement
 
 ---
 
@@ -10,6 +46,7 @@ Measurement and analytics library to send data to the [Google Measurement API](h
 ```
 npm i @stormid/measure
 ```
+
 ```
 import Measure from ' @stormid/measure';
 
@@ -17,7 +54,9 @@ import Measure from ' @stormid/measure';
 Measure.init('UA-111111111-1');
 
 ```
+
 ## Options
+
 ```
 {
     parameters
@@ -27,6 +66,7 @@ Measure.init('UA-111111111-1');
 ```
 
 Default parameters
+
 ```
 {
 	parameters: {
@@ -37,8 +77,9 @@ Default parameters
 ```
 
 Default settings for link click event tracking
+
 ```
-settings: {
+{
     tel: {
         category: 'Telephone Link', // category of the event
         obfuscator(input) { // function to anonymise tel number
@@ -60,7 +101,7 @@ settings: {
     },
     download: {
         category: 'Download', // category of the link click event
-        types: [ // action of the link click event for different types of download 
+        types: [ // action of the link click event for different types of download
             {
                 regex: /^.+\.(docx?|log|msg|odt|pages|rtf|tex|txt|wpd|wps)$/,
                 action: 'Text file'
@@ -143,6 +184,7 @@ settings: {
 ```
 
 ## API
+
 Each instance returned from init exposes the interface
 
 ```
@@ -156,19 +198,12 @@ Each instance returned from init exposes the interface
 }
 ```
 
-## Pageviews
-
-## Events
-
-## E-commerce
-
-## Automatic measurement
-
-
 ## Tests
+
 ```
 npm t
 ```
 
 ## License
+
 MIT
