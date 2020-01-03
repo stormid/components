@@ -31,6 +31,23 @@ Data passed on each pageview consists of persistent data sent with every measure
 ### Custom data
 Custom dimensions and metrics can be sent with the pageview by passing it as a [configuration option](#link to custom options).
 
+For example:
+
+```
+Measure.init('UA-111111111-1', {
+    custom: [{
+        index: 1,
+        value: 'Level 1',
+        type: 'dimension'
+    },
+    {
+        index: 2,
+        value: 100, //custom metric must be numeric
+        type: 'metric'
+    }]
+});
+```
+
 ---
 
 ### Events
