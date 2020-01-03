@@ -35,9 +35,17 @@ Custom dimensions and metrics can be sent with the pageview by passing it as a [
 
 ### Events
 
+With the (default configuration)[#link to default config section] all telephone, email, external and download link clicks are tracked as events. Telephone numbers and email addresses are obfuscated. 
+
+All other events need to be passed to the [library API] (#link to init fn) as required. The library ensures that events are dispatched tothe Google Measurement API before the page is unloaded.
+
+
 ### E-commerce
 
+
 ### Automatic measurement
+In addition the library API, it is possible to send 'automatic' measurements to Google by server-rendering meta tags and data-attributes.
+
 
 ---
 
