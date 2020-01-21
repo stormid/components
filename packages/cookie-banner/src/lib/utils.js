@@ -38,7 +38,7 @@ const updateCookie = state => model => document.cookie = [
     `expires=${model.expiry};`,
     `path=${state.settings.path};`,
     state.settings.domain ? `domain=${state.settings.domain};` : '',
-    state.settings.samesite ? `SameSite=${state.settings.samesite}` : '',
+    state.settings.samesite ? `SameSite=${state.settings.samesite};` : '',
     state.settings.secure ? `secure` : ''
 ].join('');
 
