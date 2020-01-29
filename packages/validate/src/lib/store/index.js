@@ -1,4 +1,5 @@
 import reducers from '../reducers';
+
 export const createStore = () => {
     //shared centralised validator state
     let state = {};

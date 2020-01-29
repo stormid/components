@@ -68,7 +68,7 @@ export const DOTNET_ADAPTORS = [
     'range',
     'equalto',
     // 'password' //-> map to min, nonalphamain, and regex methods
-    'remote',//should be last
+    'remote'//should be last
 ];
 
 //classNames added/updated on .NET MVC error message span

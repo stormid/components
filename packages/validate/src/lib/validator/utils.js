@@ -32,10 +32,10 @@ export const groupValueReducer = (acc, input) => {
 export const resolveGetParams = nodeArrays => nodeArrays.map(nodes => `${encodeURIComponent(nodes[0].getAttribute('name'))}=${encodeURIComponent(extractValueFromGroup(nodes))}`).join('&');
 
 export const domNodesFromCommaList = list => list.split(',')
-    .map(item =>
-    // const resolvedSelector = escapeAttributeValue(appendStatePrefix(item, getStatePrefix(input.getAttribute('name'))));
-        [].slice.call(document.querySelectorAll(`[name=${escapeAttributeValue(item)}]`))
-    );
+    .map(item => {
+        // const resolvedSelector = escapeAttributeValue(appendStatePrefix(item, getStatePrefix(input.getAttribute('name'))));
+        return [].slice.call(document.querySelectorAll(`[name=${escapeAttributeValue(item)}]`));
+    });
 
 export const escapeAttributeValue = value => value.replace(/([!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~])/g, '\\$1');
 

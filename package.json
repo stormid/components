@@ -4,7 +4,7 @@
   "scripts": {
     "gh-pages": "node tools/gh-pages/render",
     "lint": "node_modules/.bin/eslint packages -c .eslintrc --ext js",
-    "prepublish": "npm run gh-pages -s"
+    "prepare": "npm run gh-pages -s"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",

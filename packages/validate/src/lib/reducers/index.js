@@ -1,8 +1,5 @@
 import { ACTIONS, DOTNET_ERROR_SPAN_DATA_ATTRIBUTE } from '../constants';
 
-/**
- * All state/model-modifying operations
- */
 export default {
     [ACTIONS.SET_INITIAL_STATE]: (state, data) => Object.assign({}, state, data),
     [ACTIONS.CLEAR_ERRORS]: state => Object.assign({}, state, {
@@ -14,6 +11,16 @@ export default {
             return acc;
         }, {})
     }),
+    [ACTIONS.CLEAR_ERROR]: (state, data) => {
+        const nextGroup = {};
+        nextGroup[data] = Object.assign({}, state.groups[data], {
+            errorMessages: [],
+            valid: true
+        });
+        return Object.assign({}, state, {
+            groups: Object.assign({}, state.groups, nextGroup)
+        });
+    },
     [ACTIONS.CLEAR_ERROR]: (state, data) => {
         const nextGroup = {};
         nextGroup[data] = Object.assign({}, state.groups[data], {
@@ -58,12 +65,16 @@ export default {
             return acc;
         }, {})
     }),
-    [ACTIONS.VALIDATION_ERROR]: (state, data) => Object.assign({}, state, {
-        groups: Object.assign({}, state.groups, {
-            [data.group]: Object.assign({}, state.groups[data.group], {
-                errorMessages: data.errorMessages,
-                valid: false
+    [ACTIONS.VALIDATION_ERROR]: (state, data) => {
+        return Object.assign({}, state, {
+            groups: Object.assign({}, state.groups, {
+                [data.group]: Object.assign({}, state.groups[data.group], {
+                    errorMessages: data.errorMessages,
+                    valid: false
+                })
             })
-        })
-    })
+        });
+    }
 };
+
+    
