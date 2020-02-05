@@ -12,10 +12,13 @@ Client-side form validation library to support .NET validation using data-val at
 - [API](#api)
 
 ## Usage
-JS
+
+Install the package
 ```
-npm i @storm/validate
+npm i -S @storm/validate
 ```
+
+Initialise the module
 ```
 import Validate from '@storm/validate';
 
@@ -304,7 +307,8 @@ Fields without data-val error messages will show the default messages for the fa
 ```
 
 ## API
-Each instance returned from init exposes the interface
+
+Validate.init returns an array of instances. Each instance exposes the interface
 ```
 {
     validate

@@ -166,130 +166,133 @@
         </svg>
     </a>
     <article class="markdown-body entry-content"><h1 id="cookie-banner">Cookie banner</h1>
-<p>GDPR compliant cookie banner that can categorise cookies and conditionally invoke cookie reliant functionality based on user consent. Renders a cookie banner and a consent form based on configuration settings.</p>
+<p>GDPR compliant cookie banner and consent form. Renders a cookie banner and a consent form based on configuration settings, conditionally invokes cookie-reliant functionality based on user consent.</p>
 <hr>
 <h2 id="usage">Usage</h2>
-<p>Cookie management works by categorising cookies and the functions that initialise them, encapsulating them in a configuration object.</p>
-<p>Cookies category names (‘types’) can be any valid String.</p>
-<p>The cookie banner renders itself if no preference cookies are set. The consent form renders into a DOMElement with a particular className that can be set in the options (classNames.formContainer).</p>
-<p>JS</p>
+<p>Cookie consent is based on categorising cookies and the functions that initialise them, encapsulating them in a configuration object.</p>
+<p>The cookie banner renders itself if no consent preferences are recorded in the browser. The consent form renders into a DOMElement with a particular className configurable options (classNames.formContainer).</p>
+<p>Install the package</p>
 <pre><code>npm i @stormid/cookie-banner
 </code></pre>
+<p>Create a container element for the consent form</p>
+<pre><code>&lt;div class=&quot;privacy-banner__form-container&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>Initialise the module</p>
 <pre><code>import CookieBanner from '@stormid/cookie-banner';
 
 CookieBanner.init({
     types: {
-		'performance': {
-			title: 'Set your yerformance preferences',
-			description: 'Performance cookies are used to measure the performance of our website and make improvements. Your personal data is not identified.',
-			labels: {
-				yes: 'Pages you visit and actions you take will be measured and used to improve the service',
-				no: 'Pages you visit and actions you take will not be measured and used to improve the service'
-			},
-			fns: [
-				model =&gt; { 
-					//function that depends upon or creates a 'performance' cookie
-				}
-			]
-		},
-		'ads': {
-			title: 'Set your personalised ads preferences',
-			description: 'We work with advertising partners to show you ads for our products and services across the web.  You can choose whether we collect and share that data with our partners below. ',
-			labels: {
-				yes: 'Our partners might serve you ads knowing you have visited our website',
-				no: 'Our partners will still serve you ads, but they will not know you have visited out website'
-			},
-			fns: [
-				model =&gt; { 
-					//function that depends upon or creates a 'performance' cookie
-				}
-			]
-		}
+        'performance': {
+            title: 'Performance preferences',
+            description: 'Performance cookies are used to measure the performance of our website and make improvements. Your personal data is not identified.',
+            labels: {
+                yes: 'Pages you visit and actions you take will be measured and used to improve the service',
+                no: 'Pages you visit and actions you take will not be measured and used to improve the service'
+            },
+            fns: [
+                model =&gt; { 
+                    //function that depends upon or creates a 'performance' cookie
+                }
+            ]
+        },
+        'ads': {
+            title: 'Personalised ads preferences',
+            description: 'We work with advertising partners to show you ads for our products and services across the web.  You can choose whether we collect and share that data with our partners below. ',
+            labels: {
+                yes: 'Our partners might serve you ads knowing you have visited our website',
+                no: 'Our partners will still serve you ads, but they will not know you have visited out website'
+            },
+            fns: [
+                model =&gt; { 
+                    //function that depends upon or creates a 'performance' cookie
+                }
+            ]
+        }
     }
 });
 </code></pre>
 <h2 id="options">Options</h2>
 <pre><code>{
-	name: '.CookiePreferences', //name of the preferences cookie
-	path: '/', //path of the preferences cookie
-	domain: window.location.hostname === 'localhost' ? '' : `.${removeSubdomain(window.location.hostname)}`, //domain of the preferences cookie, defaults to .&lt;root-domain&gt;
-	secure: true, //preferences cookie secure
-	samesite: 'lax', //preferences cookie samesite lax
-	expiry: 365, //preferences cookie expiry
-	types: {}, //types of cookie-dependent functionality 
-	necessary: [], //cookie-dependent functionality that will always execute, for convenience only
-	policyURL: '/cookie-policy', //URL to cookie policy page (location of cookie consent form)
-	classNames: {
-		banner: 'privacy-banner',
-		acceptBtn: 'privacy-banner__accept',
-		submitBtn: 'privacy-banner__submit',
-		field: 'privacy-banner__field',
-		form: 'privacy-banner__form',
-		fieldset: 'privacy-banner__fieldset',
-		legend: 'privacy-banner__legend',
-		formContainer: 'privacy-banner__form-container', //where the form is rendered
-		formMessage: 'privacy-banner__form-msg',
-		title: 'privacy-banner__form-title',
-		description: 'privacy-banner__form-description'
-	},
-	savedMessage: 'Your settings have been saved.', //displayed after consent form update 
-	bannerTemplate(model){
-		return `&lt;section role=&quot;dialog&quot; aria-live=&quot;polite&quot; aria-label=&quot;You privacy&quot; class=&quot;${model.classNames.banner}&quot;&gt;
-			&lt;div class=&quot;privacy-content&quot;&gt;
-				&lt;div class=&quot;wrap&quot;&gt;
-					&lt;!--googleoff: all--&gt;
-					&lt;div class=&quot;privacy-banner__title&quot;&gt;Cookies&lt;/div&gt;
-					&lt;p&gt;We use cookies to improve your experience on our site and show you personalised advertising.&lt;/p&gt;
-					&lt;p&gt;Find out more from our &lt;a class=&quot;privacy-banner__link&quot; rel=&quot;noopener noreferrer nofollow&quot; href=&quot;/privacy-policy&quot;&gt;privacy policy&lt;/a&gt; and &lt;a class=&quot;privacy-banner__link&quot; rel=&quot;noopener noreferrer nofollow&quot; href=&quot;${model.policyURL}&quot;&gt;cookie policy&lt;/a&gt;.&lt;/p&gt;
-					&lt;button class=&quot;btn btn--primary ${model.classNames.acceptBtn}&quot;&gt;Accept and close&lt;/button&gt;
-					&lt;a class=&quot;privacy-banner__link&quot; rel=&quot;noopener noreferrer nofollow&quot; href=&quot;${model.policyURL}&quot;&gt;Your options&lt;/a&gt;
-					&lt;!--googleon: all--&gt;
-				&lt;/div&gt;
-			&lt;/div&gt;
-		&lt;/section&gt;`;
-	},
-	messageTemplate(model){
-		return `&lt;div class=&quot;${model.settings.classNames.formMessage}&quot; aria-role=&quot;alert&quot;&gt;${model.settings.savedMessage}&lt;/div&gt;`
-	},
-	formTemplate(model){
-		return `&lt;form class=&quot;${model.settings.classNames.form}&quot; novalidate&gt;
-				${Object.keys(model.settings.types).map(type =&gt; `&lt;fieldset class=&quot;${model.settings.classNames.fieldset}&quot;&gt;
-				&lt;legend class=&quot;${model.settings.classNames.legend}&quot;&gt;
-					&lt;span class=&quot;${model.settings.classNames.title}&quot;&gt;${model.settings.types[type].title}&lt;/span&gt;
-					&lt;span class=&quot;${model.settings.classNames.description}&quot;&gt;${model.settings.types[type].description}&lt;/span&gt;
-				&lt;/legend&gt;
-				&lt;div class=&quot;form-row&quot;&gt;
-					&lt;div class=&quot;relative&quot;&gt;
-						&lt;label class=&quot;privacy-banner__label&quot;&gt;
-							&lt;input
-								class=&quot;${model.settings.classNames.field}&quot;
-								type=&quot;radio&quot;
-								name=&quot;privacy-${type.split(' ')[0].replace(' ', '-')}&quot;
-								value=&quot;1&quot;
-								${model.consent[type] === 1 ? ` checked` : ''}&gt;
-							&lt;span class=&quot;privacy-banner__label-text&quot;&gt;I am OK with this&lt;/span&gt;
-							&lt;span class=&quot;privacy-banner__label-description&quot;&gt;${model.settings.types[type].labels.yes}&lt;/span&gt;
-						&lt;/label&gt;    
-					&lt;/div&gt;
-				&lt;/div&gt;
-				&lt;div class=&quot;form-row&quot;&gt;
-					&lt;div class=&quot;relative&quot;&gt;
-						&lt;label class=&quot;privacy-banner__label&quot;&gt;
-							&lt;input
-								class=&quot;${model.settings.classNames.field}&quot;
-								type=&quot;radio&quot;
-								name=&quot;privacy-${type.split(' ')[0].replace(' ', '-')}&quot;
-								value=&quot;0&quot;
-								${model.consent[type] === 0 ? ` checked` : ''}&gt;
-							&lt;span class=&quot;privacy-banner__label-text&quot;&gt;No thank you&lt;/span&gt;
-							&lt;span class=&quot;privacy-banner__label-description&quot;&gt;${model.settings.types[type].labels.no}&lt;/span&gt;
-						&lt;/label&gt;    
-					&lt;/div&gt;
-				&lt;/div&gt;
-			&lt;/fieldset&gt;`).join('')}
-			&lt;button class=&quot;${model.settings.classNames.submitBtn}&quot;${Object.keys(model.consent).length === 0 ? ` disabled` : ''}&gt;Save my settings&lt;/button&gt;
-		&lt;/form&gt;`;
-	}
+    name: '.CookiePreferences', //name of the cookie set to record user consent
+    path: '/', //path of the preferences cookie
+    domain: window.location.hostname === 'localhost' ? '' : `.${removeSubdomain(window.location.hostname)}`, //domain of the preferences cookie, defaults to .&lt;root-domain&gt;
+    secure: true, //preferences cookie secure
+    samesite: 'lax', //preferences cookie samesite
+    expiry: 365, //preferences cookie expiry in days
+    types: {}, //types of cookie-dependent functionality 
+    necessary: [], //cookie-dependent functionality that will always execute, for convenience only
+    policyURL: '/cookie-policy', //URL to cookie policy page (location of cookie consent form) rendered in the banner
+    classNames: {
+        banner: 'privacy-banner',
+        acceptBtn: 'privacy-banner__accept',
+        submitBtn: 'privacy-banner__submit',
+        field: 'privacy-banner__field',
+        form: 'privacy-banner__form',
+        fieldset: 'privacy-banner__fieldset',
+        legend: 'privacy-banner__legend',
+        formContainer: 'privacy-banner__form-container', //where the form is rendered
+        formMessage: 'privacy-banner__form-msg',
+        title: 'privacy-banner__form-title',
+        description: 'privacy-banner__form-description'
+    },
+    savedMessage: 'Your settings have been saved.', //displayed after consent form update 
+    bannerTemplate(model){
+        return `&lt;section role=&quot;dialog&quot; aria-live=&quot;polite&quot; aria-label=&quot;You privacy&quot; class=&quot;${model.classNames.banner}&quot;&gt;
+            &lt;div class=&quot;privacy-content&quot;&gt;
+                &lt;div class=&quot;wrap&quot;&gt;
+                    &lt;!--googleoff: all--&gt;
+                    &lt;div class=&quot;privacy-banner__title&quot;&gt;Cookies&lt;/div&gt;
+                    &lt;p&gt;We use cookies to improve your experience on our site and show you personalised advertising.&lt;/p&gt;
+                    &lt;p&gt;Find out more from our &lt;a class=&quot;privacy-banner__link&quot; rel=&quot;noopener noreferrer nofollow&quot; href=&quot;/privacy-policy&quot;&gt;privacy policy&lt;/a&gt; and &lt;a class=&quot;privacy-banner__link&quot; rel=&quot;noopener noreferrer nofollow&quot; href=&quot;${model.policyURL}&quot;&gt;cookie policy&lt;/a&gt;.&lt;/p&gt;
+                    &lt;button class=&quot;btn btn--primary ${model.classNames.acceptBtn}&quot;&gt;Accept and close&lt;/button&gt;
+                    &lt;a class=&quot;privacy-banner__link&quot; rel=&quot;noopener noreferrer nofollow&quot; href=&quot;${model.policyURL}&quot;&gt;Your options&lt;/a&gt;
+                    &lt;!--googleon: all--&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;`;
+    },
+    messageTemplate(model){
+        return `&lt;div class=&quot;${model.settings.classNames.formMessage}&quot; aria-role=&quot;alert&quot;&gt;${model.settings.savedMessage}&lt;/div&gt;`
+    },
+    formTemplate(model){
+        return `&lt;form class=&quot;${model.settings.classNames.form}&quot; novalidate&gt;
+                ${Object.keys(model.settings.types).map(type =&gt; `&lt;fieldset class=&quot;${model.settings.classNames.fieldset}&quot;&gt;
+                &lt;legend class=&quot;${model.settings.classNames.legend}&quot;&gt;
+                    &lt;span class=&quot;${model.settings.classNames.title}&quot;&gt;${model.settings.types[type].title}&lt;/span&gt;
+                    &lt;span class=&quot;${model.settings.classNames.description}&quot;&gt;${model.settings.types[type].description}&lt;/span&gt;
+                &lt;/legend&gt;
+                &lt;div class=&quot;form-row&quot;&gt;
+                    &lt;div class=&quot;relative&quot;&gt;
+                        &lt;label class=&quot;privacy-banner__label&quot;&gt;
+                            &lt;input
+                                class=&quot;${model.settings.classNames.field}&quot;
+                                type=&quot;radio&quot;
+                                name=&quot;privacy-${type.split(' ')[0].replace(' ', '-')}&quot;
+                                value=&quot;1&quot;
+                                ${model.consent[type] === 1 ? ` checked` : ''}&gt;
+                            &lt;span class=&quot;privacy-banner__label-text&quot;&gt;I am OK with this&lt;/span&gt;
+                            &lt;span class=&quot;privacy-banner__label-description&quot;&gt;${model.settings.types[type].labels.yes}&lt;/span&gt;
+                        &lt;/label&gt;    
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;form-row&quot;&gt;
+                    &lt;div class=&quot;relative&quot;&gt;
+                        &lt;label class=&quot;privacy-banner__label&quot;&gt;
+                            &lt;input
+                                class=&quot;${model.settings.classNames.field}&quot;
+                                type=&quot;radio&quot;
+                                name=&quot;privacy-${type.split(' ')[0].replace(' ', '-')}&quot;
+                                value=&quot;0&quot;
+                                ${model.consent[type] === 0 ? ` checked` : ''}&gt;
+                            &lt;span class=&quot;privacy-banner__label-text&quot;&gt;No thank you&lt;/span&gt;
+                            &lt;span class=&quot;privacy-banner__label-description&quot;&gt;${model.settings.types[type].labels.no}&lt;/span&gt;
+                        &lt;/label&gt;    
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/fieldset&gt;`).join('')}
+            &lt;button class=&quot;${model.settings.classNames.submitBtn}&quot;${Object.keys(model.consent).length === 0 ? ` disabled` : ''}&gt;Save my settings&lt;/button&gt;
+        &lt;/form&gt;`;
+    }
 }
 </code></pre>
 <h2 id="api">API</h2>

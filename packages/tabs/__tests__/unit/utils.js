@@ -1,19 +1,19 @@
 import { getActiveIndexByHash } from '../../src/lib/utils';
 
 const init = () => {
-    document.body.innerHTML = `<div class="js-tabs tabs">
+    document.body.innerHTML = `<div role="tablist" data-active-index="1">
         <nav class="tabs__nav">
-            <a id="tab-1" class="tabs__nav-link js-tabs__link" href="#panel-1">Tab 1</a>
-            <a id="tab-2" class="tabs__nav-link js-tabs__link" href="#panel-2">Tab 2</a>
-            <a id="tab-3" class="tabs__nav-link js-tabs__link" href="#panel-3">Tab 3</a>
+            <a id="tab-1" class="tabs__nav-link js-tabs__link" href="#panel-1" role="tab">Tab 1</a>
+            <a id="tab-2" class="tabs__nav-link js-tabs__link" href="#panel-2" role="tab">Tab 2</a>
+            <a id="tab-3" class="tabs__nav-link js-tabs__link" href="#panel-3" role="tab">Tab 3</a>
         </nav>
-        <section id="panel-1" class="tabs__section">Panel 1</section>
-        <section id="panel-2" class="tabs__section" hidden>
+        <section id="panel-1" class="tabs__section" role="tabpanel">Panel 1</section>
+        <section id="panel-2" class="tabs__section" role="tabpanel" hidden>
                 <p>Panel 2</p>
                 <p><a href="/">Test link</a></p>
                 <p><a href="/">Test link</a></p>
         </section>
-        <section id="panel-3" class="tabs__section" hidden>
+        <section id="panel-3" class="tabs__section" role="tabpanel" hidden>
             <p>Panel 3</p>
             <p><a href="/">Test link</a></p>
             <p><a href="/">Test link</a></p>

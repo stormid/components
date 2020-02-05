@@ -6,6 +6,11 @@ Accessible modal image gallery
 
 ## Usage
 
+Install the package
+```
+npm i -S @stormid/modal-gallery
+```
+
 A modal gallery can be created with DOM elements, or programmatically created from a JS Object.
 
 From HTML
@@ -20,17 +25,14 @@ From HTML
 </ul>
 ```
 
-JS
-```
-npm i @stormid/modal-gallery
-```
+Initialise the module
 ```
 import Gallery from '@stormid/modal-gallery';
 
 Gallery.init('.js-modal-gallery');
 ```
 
-Example minimal CSS
+Example MVP CSS
 ```
 .modal-gallery__outer {
     display: none;
@@ -106,11 +108,12 @@ Example minimal CSS
 }
 ```
 
-To create from a JS Object and triggered from any DOM event
-```
-import ModalGallery from 'storm-modal-gallery';
 
-const gallery = ModalGallery.init([
+To create from a JavaScript Object
+```
+import Gallery from '@stormid/modal-gallery';
+
+const gallery = Gallery.init([
     {
         src: '//placehold.it/500x500',
         srcset:'//placehold.it/800x800 800w, //placehold.it/500x500 320w',
@@ -130,6 +133,7 @@ document.querySelector('.js-modal-gallery__trigger').addEventListener('click', (
 ```
 
 ## Options
+
 ```
 {
     fullscreen: false, //show gallery in fullscreen
@@ -141,7 +145,8 @@ document.querySelector('.js-modal-gallery__trigger').addEventListener('click', (
 ```
 
 ## API
-Each instance returned from init exposes the interface
+
+ModalGallery.init returns an array of instances. Each instance exposes the interface
 ```
 {
     getState, a Function that returns the current state Object

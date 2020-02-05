@@ -2,12 +2,11 @@
 
 Use the IntersectionObserver API to check when a section of the document is in view and update an associated DOM node.
 
-Useful for automated scroll position related navigation state management.
+Useful for scroll position-related navigation state management.
 
 ---
 
 ## Example usage
-HTML
 ```
 <header>
     <nav aria-label="mMain navigation">
@@ -29,10 +28,12 @@ HTML
 </main>
 ```
 
-JS
+Install the package
 ```
-npm i @stormid/scroll-spy
+npm i -S @stormid/scroll-spy
 ```
+
+Initialise the module
 ```
 import ScrollSpy from '@stormid/scroll-spy';
 
@@ -51,9 +52,9 @@ ScrollSpy.init('.js-scroll-spy');
 }
 ```
 
-
 ## API
-Each instance returned from init exposes the interface
+
+ScrollSpy.init returns an array of instances. Each instance exposes the interface
 ```
 {
     getState, a Function that returns the current state Object

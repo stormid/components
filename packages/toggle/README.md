@@ -1,22 +1,24 @@
 # Toggle
 
-Accessible DOM state toggling for off-canvas and show/hide UI patterns
+Accessible DOM state toggling for off-canvas and show/hide UI patterns using aria-expanded.
 
 ---
 
 ## Usage
 For page-level state toggling (e.g. an off-canvas menu)
 
-HTML
+Create a target and related button(s) in HTML
 ```
 <button class="js-toggle-btn">Menu</button>
-<nav id="primawry-navigation" aria-label="Main navigation" class="js-toggle" data-toggle="js-toggle-btn">...</nav>
+<nav id="primary-navigation" aria-label="Main navigation" class="js-toggle" data-toggle="js-toggle-btn">...</nav>
 ```
 
-JS
+Install the package
 ```
-npm i @stormid/toggle
+npm i -S @stormid/toggle
 ```
+
+Initialise the module
 ```
 import Toggle from '@stormid/toggle';
 
@@ -27,7 +29,7 @@ Toggle.init('.js-toggle');
 ### Local toggle
 To localise a toggle state to part of the document (e.g. show/hide panel)
 
-HTML
+Create a target and related button(s) in HTML
 ```
 <div class="parent">
     <button class="js-toggle__btn"></a>
@@ -35,7 +37,7 @@ HTML
 </div>
 ```
 
-CSS
+Example MVP CSS
 ```
 .child {
     display: none
@@ -75,7 +77,8 @@ Options can also be set on an instance by adding data-attributes to the toggle e
 ```
 
 ## API
-Each instance returned from init exposes the interface
+
+Toggle.init returns an array of instances. Each instance exposes the interface
 ```
 {
     node, DOMElement, the text area

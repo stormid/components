@@ -166,16 +166,16 @@
         </svg>
     </a>
     <article class="markdown-body entry-content"><h1 id="component-name">Component Name</h1>
-<p>This is a <strong>boilerplate for developing UI components</strong> by <strong>StormId</strong>.</p>
-<p>Before use make sure to grep for “@stormid/boilerplate” and replace every occurrence as well as deleting and re-initing .git and updating the package.json.</p>
+<p>This is a <strong>boilerplate for developing UI components</strong> by <strong>Storm Id</strong>.</p>
 <hr>
 <h2 id="usage">Usage</h2>
-<p>HTML</p>
+<p>Create a container element in HTML</p>
 <pre><code>&lt;div class=&quot;js-boilerplate&quot;&gt;&lt;/div&gt;
 </code></pre>
-<p>JS</p>
-<pre><code>npm i @stormid/boilerplate
+<p>Install the package</p>
+<pre><code>npm i -S @stormid/boilerplate
 </code></pre>
+<p>Initialise the module</p>
 <pre><code>import Boilerplate from '@stormid/boilerplate';
 
 Boilerplate.init('.js-boilerplate');
@@ -185,7 +185,7 @@ Boilerplate.init('.js-boilerplate');
     callback: null
 }
 </code></pre>
-<p>Example</p>
+<p>For example</p>
 <pre><code>Boilerplate.init('.js-selector', {
     callback(){
         console.log(this);
@@ -193,7 +193,7 @@ Boilerplate.init('.js-boilerplate');
 });
 </code></pre>
 <h2 id="api">API</h2>
-<p>Each instance returned from init exposes the interface</p>
+<p>Boilerplate.init returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
     node, DOMNode augmented by init
     click, trigger the handleClick method
