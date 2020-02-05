@@ -1,22 +1,22 @@
 
 # Component Name
 
-This is a **boilerplate for developing UI components** by **StormId**.
-
-Before use make sure to grep for “@stormid/boilerplate” and replace every occurrence as well as deleting and re-initing .git and updating the package.json.
+This is a **boilerplate for developing UI components** by **Storm Id**.
 
 ---
 
 ## Usage
-HTML
+Create a container element in HTML
 ```
 <div class="js-boilerplate"></div>
 ```
 
-JS
+Install the package
 ```
-npm i @stormid/boilerplate
+npm i -S @stormid/boilerplate
 ```
+
+Initialise the module
 ```
 import Boilerplate from '@stormid/boilerplate';
 
@@ -30,7 +30,7 @@ Boilerplate.init('.js-boilerplate');
 }
 ```
 
-Example
+For example
 ```
 Boilerplate.init('.js-selector', {
     callback(){
@@ -40,7 +40,7 @@ Boilerplate.init('.js-selector', {
 ```
 
 ## API
-Each instance returned from init exposes the interface
+Boilerplate.init returns an array of instances. Each instance exposes the interface
 ```
 {
     node, DOMNode augmented by init

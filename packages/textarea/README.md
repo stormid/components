@@ -6,10 +6,13 @@ Auto-resizing textarea
 ---
 
 ## Usage
-JS
+
+Install the package
 ```
-npm i @stormid/textarea
+npm i -S @stormid/textarea
 ```
+
+Initialise the module
 ```
 import Textarea from '@stormid/textarea';
 
@@ -26,7 +29,8 @@ Textarea.init('textarea');
 ```
 
 ## API
-Each instance returned from init exposes the interface
+
+Textarea.init returns an array of instances. Each instance exposes the interface
 ```
 {
     node, DOMElement, the text area

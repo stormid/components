@@ -6,15 +6,17 @@ Trigger className changes and callbacks based on element intersecting the viewpo
 ---
 
 ## Usage
-HTML
+Add the selector to the DOMElement you wish to become a scroll-point
 ```
 <div class="js-scroll-point"></div>
 ```
 
-JS
+Install the package
 ```
-npm i @stormid/scroll-points
+npm i -S @stormid/scroll-points
 ```
+
+Initialise the module
 ```
 import ScrollPoints from '@stormid/scroll-points';
 

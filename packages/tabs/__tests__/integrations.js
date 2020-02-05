@@ -4,45 +4,44 @@ let TabSet;
 
 const init = () => {
     // Set up our document body
-    document.body.innerHTML = `<div class="js-tabs tabs">
-    <nav class="tabs__nav">
-        <a id="tab-1" class="tabs__nav-link js-tabs__link" href="#panel-1">Tab 1</a>
-        <a id="tab-2" class="tabs__nav-link js-tabs__link" href="#panel-2">Tab 2</a>
-        <a id="tab-3" class="tabs__nav-link js-tabs__link" href="#panel-3">Tab 3</a>
-    </nav>
-    <section id="panel-1" class="tabs__section">Panel 1</section>
-    <section id="panel-2" class="tabs__section" hidden>
-            <p>Panel 2</p>
+    document.body.innerHTML = `<div role="tablist">
+        <nav class="tabs__nav">
+            <a id="tab-1" class="tabs__nav-link js-tabs__link" href="#panel-1" role="tab">Tab 1</a>
+            <a id="tab-2" class="tabs__nav-link js-tabs__link" href="#panel-2" role="tab">Tab 2</a>
+            <a id="tab-3" class="tabs__nav-link js-tabs__link" href="#panel-3" role="tab">Tab 3</a>
+        </nav>
+        <section id="panel-1" class="tabs__section" role="tabpanel">Panel 1</section>
+        <section id="panel-2" class="tabs__section" role="tabpanel" hidden>
+                <p>Panel 2</p>
+                <p><a href="/">Test link</a></p>
+                <p><a href="/">Test link</a></p>
+        </section>
+        <section id="panel-3" class="tabs__section" role="tabpanel" hidden>
+            <p>Panel 3</p>
             <p><a href="/">Test link</a></p>
             <p><a href="/">Test link</a></p>
-    </section>
-    <section id="panel-3" class="tabs__section" hidden>
-        <p>Panel 3</p>
-        <p><a href="/">Test link</a></p>
-        <p><a href="/">Test link</a></p>
-    </section>
-</div>
+        </section>
+    </div>
+    <div role="tablist" data-active-index="1">
+        <nav class="tabs__nav">
+            <a id="tab-4" class="tabs__nav-link js-tabs__link" href="#panel-4" role="tab">Tab 4</a>
+            <a id="tab-5" class="tabs__nav-link js-tabs__link" href="#panel-5" role="tab">Tab 5</a>
+            <a id="tab-6" class="tabs__nav-link js-tabs__link" href="#panel-6" role="tab">Tab 6</a>
+        </nav>
+        <section id="panel-4" class="tabs__section" role="tabpanel">Panel 4</section>
+        <section id="panel-5" class="tabs__section" role="tabpanel" hidden>
+                <p>Panel 5</p>
+                <p><a href="/">Test link</a></p>
+                <p><a href="/">Test link</a></p>
+        </section>
+        <section id="panel-6" class="tabs__section" role="tabpanel" hidden>
+            <p>Panel 6</p>
+            <p><a href="/">Test link</a></p>
+            <p><a href="/">Test link</a></p>
+        </section>
+    </div>`;
 
-<div class="js-tabs tabs" data-active-index="1">
-    <nav class="tabs__nav">
-        <a id="tab-4" class="tabs__nav-link js-tabs__link" href="#panel-4">Tab 4</a>
-        <a id="tab-5" class="tabs__nav-link js-tabs__link" href="#panel-5">Tab 5</a>
-        <a id="tab-6" class="tabs__nav-link js-tabs__link" href="#panel-6">Tab 6</a>
-    </nav>
-    <section id="panel-4" class="tabs__section">Panel 4</section>
-    <section id="panel-5" class="tabs__section" hidden>
-            <p>Panel 5</p>
-            <p><a href="/">Test link</a></p>
-            <p><a href="/">Test link</a></p>
-    </section>
-    <section id="panel-6" class="tabs__section" hidden>
-        <p>Panel 6</p>
-        <p><a href="/">Test link</a></p>
-        <p><a href="/">Test link</a></p>
-    </section>
-</div>`;
-
-    TabSet = Tabs.init('.js-tabs');
+    TabSet = Tabs.init('[role=tablist]');
 };
 
 describe(`Tabs > Initialisation`, () => {

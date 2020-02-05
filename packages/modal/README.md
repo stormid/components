@@ -5,7 +5,8 @@ Accessible modal dialog
 ---
 
 ## Usage
-HTML
+
+Create a modal dialog and button(s) to toggle in HTML
 ```
 <button class="js-modal-toggle">Open modal</button>
 <div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle">
@@ -22,10 +23,12 @@ HTML
 </div>
 ```
 
-JS
+Install the package
 ```
-npm i @stormid/modal
+npm i -S @stormid/modal
 ```
+
+Inititialise the module
 ```
 import Modal from '@stormid/modal';
 
@@ -43,7 +46,7 @@ Modal.init('.js-modal');
 ```
 
 ## API
-Each instance returned from init exposes the interface
+Modal.init returns an array of instances. Each instance exposes the interface
 ```
 {
     getState, a Function that returns the current state Object
