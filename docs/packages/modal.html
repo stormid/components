@@ -169,11 +169,11 @@
 <p>Accessible modal dialog</p>
 <hr>
 <h2 id="usage">Usage</h2>
-<p>HTML</p>
+<p>Create a modal dialog and button(s) to toggle in HTML</p>
 <pre><code>&lt;button class=&quot;js-modal-toggle&quot;&gt;Open modal&lt;/button&gt;
 &lt;div id=&quot;modal-1&quot; class=&quot;js-modal modal&quot; data-modal-toggle=&quot;js-modal-toggle&quot;&gt;
     &lt;div class=&quot;modal__inner&quot; role=&quot;dialog&quot; aria-modal=&quot;true&quot; aria-labelledby=&quot;modal-label&quot;&gt;
-        &lt;h1 id=&quot;modal-label&quot;&gt;Modal title&lt;/h1&gt;
+        &lt;h2 id=&quot;modal-label&quot;&gt;Modal title&lt;/h2&gt;
         ...
         &lt;button class=&quot;modal__close-btn js-modal-toggle&quot; aria-label=&quot;close&quot;&gt;
             &lt;svg focusable=&quot;false&quot; fill=&quot;#fff&quot; height=&quot;24&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;24&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&gt;
@@ -184,9 +184,10 @@
     &lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
-<p>JS</p>
-<pre><code>npm i @stormid/modal
+<p>Install the package</p>
+<pre><code>npm i -S @stormid/modal
 </code></pre>
+<p>Inititialise the module</p>
 <pre><code>import Modal from '@stormid/modal';
 
 Modal.init('.js-modal');
@@ -200,7 +201,7 @@ Modal.init('.js-modal');
 }
 </code></pre>
 <h2 id="api">API</h2>
-<p>Each instance returned from init exposes the interface</p>
+<p>Modal.init returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
     getState, a Function that returns the current state Object
 }

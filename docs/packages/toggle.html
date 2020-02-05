@@ -166,30 +166,31 @@
         </svg>
     </a>
     <article class="markdown-body entry-content"><h1 id="toggle">Toggle</h1>
-<p>Accessible DOM state toggling for off-canvas and show/hide UI patterns</p>
+<p>Accessible DOM state toggling for off-canvas and show/hide UI patterns using aria-expanded.</p>
 <hr>
 <h2 id="usage">Usage</h2>
 <p>For page-level state toggling (e.g. an off-canvas menu)</p>
-<p>HTML</p>
+<p>Create a target and related button(s) in HTML</p>
 <pre><code>&lt;button class=&quot;js-toggle-btn&quot;&gt;Menu&lt;/button&gt;
 &lt;nav id=&quot;primary-navigation&quot; aria-label=&quot;Main navigation&quot; class=&quot;js-toggle&quot; data-toggle=&quot;js-toggle-btn&quot;&gt;...&lt;/nav&gt;
 </code></pre>
-<p>JS</p>
-<pre><code>npm i @stormid/toggle
+<p>Install the package</p>
+<pre><code>npm i -S @stormid/toggle
 </code></pre>
+<p>Initialise the module</p>
 <pre><code>import Toggle from '@stormid/toggle';
 
 Toggle.init('.js-toggle');
 </code></pre>
 <h3 id="local-toggle">Local toggle</h3>
 <p>To localise a toggle state to part of the document (e.g. show/hide panel)</p>
-<p>HTML</p>
+<p>Create a target and related button(s) in HTML</p>
 <pre><code>&lt;div class=&quot;parent&quot;&gt;
     &lt;button class=&quot;js-toggle__btn&quot;&gt;&lt;/a&gt;
     &lt;div id=&quot;child&quot; class=&quot;js-toggle__local&quot; data-toggle=&quot;js-toggle__btn&quot;&gt;&lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
-<p>CSS</p>
+<p>Example MVP CSS</p>
 <pre><code>.child {
     display: none
 }
@@ -222,7 +223,7 @@ Toggle.init('.js-toggle');
 &lt;/div&gt;
 </code></pre>
 <h2 id="api">API</h2>
-<p>Each instance returned from init exposes the interface</p>
+<p>Toggle.init returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
     node, DOMElement, the text area
     startToggle, a Function that starts the toggle lifecycle with prehook, toggle, and postHook

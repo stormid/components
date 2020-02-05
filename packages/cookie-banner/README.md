@@ -1,13 +1,14 @@
 # Cookie banner
 
-GDPR compliant cookie banner and consent form. Renders a cookie banner and a consent form based on configuration settings, conditionally invokes cookie-reliant functionality based on user consent. 
+GDPR compliant cookie banner and consent form. Renders a cookie banner and a consent form based on configuration settings, and conditionally invokes cookie-reliant functionality based on user consent. 
 
 ---
 
 ## Usage
-Cookie consent is based on categorising cookies and the functions that initialise them, encapsulating them in a configuration object.
+Cookie consent is based on categorising cookies and the functions that initialise them, dsribing them in a configuration object passed into the module at initialisition.
 
 The cookie banner renders itself if no consent preferences are recorded in the browser. The consent form renders into a DOMElement with a particular className configurable options (classNames.formContainer).
+
 
 Install the package
 ```
@@ -19,7 +20,7 @@ Create a container element for the consent form
 <div class="privacy-banner__form-container"></div>
 ```
 
-Initialise the module
+Initialise the module (example configuration shown below)
 ```
 import CookieBanner from '@stormid/cookie-banner';
 

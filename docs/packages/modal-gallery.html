@@ -169,6 +169,9 @@
 <p>Accessible modal image gallery</p>
 <hr>
 <h2 id="usage">Usage</h2>
+<p>Install the package</p>
+<pre><code>npm i -S @stormid/modal-gallery
+</code></pre>
 <p>A modal gallery can be created with DOM elements, or programmatically created from a JS Object.</p>
 <p>From HTML</p>
 <pre><code>&lt;ul&gt;
@@ -180,14 +183,12 @@
     &gt;&lt;/li&gt;
 &lt;/ul&gt;
 </code></pre>
-<p>JS</p>
-<pre><code>npm i @stormid/modal-gallery
-</code></pre>
+<p>Initialise the module</p>
 <pre><code>import Gallery from '@stormid/modal-gallery';
 
 Gallery.init('.js-modal-gallery');
 </code></pre>
-<p>Example minimal CSS</p>
+<p>Example MVP CSS</p>
 <pre><code>.modal-gallery__outer {
     display: none;
     opacity: 0;
@@ -261,10 +262,10 @@ Gallery.init('.js-modal-gallery');
     color:#fff;
 }
 </code></pre>
-<p>To create from a JS Object and triggered from any DOM event</p>
-<pre><code>import ModalGallery from 'storm-modal-gallery';
+<p>To create from a JavaScript Object</p>
+<pre><code>import Gallery from '@stormid/modal-gallery';
 
-const gallery = ModalGallery.init([
+const gallery = Gallery.init([
     {
         src: '//placehold.it/500x500',
         srcset:'//placehold.it/800x800 800w, //placehold.it/500x500 320w',
@@ -292,7 +293,7 @@ document.querySelector('.js-modal-gallery__trigger').addEventListener('click', (
 }
 </code></pre>
 <h2 id="api">API</h2>
-<p>Each instance returned from init exposes the interface</p>
+<p>ModalGallery.init returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
     getState, a Function that returns the current state Object
     open, a Function that opens the modal gallery

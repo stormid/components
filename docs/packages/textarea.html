@@ -169,9 +169,10 @@
 <p>Auto-resizing textarea</p>
 <hr>
 <h2 id="usage">Usage</h2>
-<p>JS</p>
-<pre><code>npm i @stormid/textarea
+<p>Install the package</p>
+<pre><code>npm i -S @stormid/textarea
 </code></pre>
+<p>Initialise the module</p>
 <pre><code>import Textarea from '@stormid/textarea';
 
 Textarea.init('textarea');
@@ -184,7 +185,7 @@ Textarea.init('textarea');
 }
 </code></pre>
 <h2 id="api">API</h2>
-<p>Each instance returned from init exposes the interface</p>
+<p>Textarea.init returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
     node, DOMElement, the text area
     resize, Function to trigger resize

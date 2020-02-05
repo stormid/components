@@ -166,18 +166,18 @@
         </svg>
     </a>
     <article class="markdown-body entry-content"><h1 id="cookie-banner">Cookie banner</h1>
-<p>GDPR compliant cookie banner and consent form. Renders a cookie banner and a consent form based on configuration settings, conditionally invokes cookie-reliant functionality based on user consent.</p>
+<p>GDPR compliant cookie banner and consent form. Renders a cookie banner and a consent form based on configuration settings, and conditionally invokes cookie-reliant functionality based on user consent.</p>
 <hr>
 <h2 id="usage">Usage</h2>
-<p>Cookie consent is based on categorising cookies and the functions that initialise them, encapsulating them in a configuration object.</p>
+<p>Cookie consent is based on categorising cookies and the functions that initialise them, dsribing them in a configuration object passed into the module at initialisition.</p>
 <p>The cookie banner renders itself if no consent preferences are recorded in the browser. The consent form renders into a DOMElement with a particular className configurable options (classNames.formContainer).</p>
 <p>Install the package</p>
-<pre><code>npm i @stormid/cookie-banner
+<pre><code>npm i -S @stormid/cookie-banner
 </code></pre>
 <p>Create a container element for the consent form</p>
 <pre><code>&lt;div class=&quot;privacy-banner__form-container&quot;&gt;&lt;/div&gt;
 </code></pre>
-<p>Initialise the module</p>
+<p>Initialise the module (example configuration shown below)</p>
 <pre><code>import CookieBanner from '@stormid/cookie-banner';
 
 CookieBanner.init({

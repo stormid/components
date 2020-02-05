@@ -167,10 +167,9 @@
     </a>
     <article class="markdown-body entry-content"><h1 id="scroll-spy">Scroll Spy</h1>
 <p>Use the IntersectionObserver API to check when a section of the document is in view and update an associated DOM node.</p>
-<p>Useful for automated scroll position related navigation state management.</p>
+<p>Useful for scroll position-related navigation state management.</p>
 <hr>
 <h2 id="example-usage">Example usage</h2>
-<p>HTML</p>
 <pre><code>&lt;header&gt;
     &lt;nav aria-label=&quot;mMain navigation&quot;&gt;
         &lt;a class=&quot;js-scroll-spy&quot; href=&quot;#section1&quot;&gt;Section 1&lt;/a&gt;
@@ -190,9 +189,10 @@
     &lt;/section&gt;
 &lt;/main&gt;
 </code></pre>
-<p>JS</p>
-<pre><code>npm i @stormid/scroll-spy
+<p>Install the package</p>
+<pre><code>npm i -S @stormid/scroll-spy
 </code></pre>
+<p>Initialise the module</p>
 <pre><code>import ScrollSpy from '@stormid/scroll-spy';
 
 ScrollSpy.init('.js-scroll-spy');
@@ -208,7 +208,7 @@ ScrollSpy.init('.js-scroll-spy');
 }
 </code></pre>
 <h2 id="api">API</h2>
-<p>Each instance returned from init exposes the interface</p>
+<p>ScrollSpy.init returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
     getState, a Function that returns the current state Object
 }
