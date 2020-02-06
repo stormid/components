@@ -1,6 +1,6 @@
 {
   "name": "@stormid/toggle",
-  "version": "0.1.0",
+  "version": "1.0.0-rc.1",
   "description": "Accessible DOM state toggling",
   "author": "stormid",
   "license": "MIT",
@@ -24,7 +24,7 @@
     "toggle"
   ],
   "scripts": {
-    "build": "npx microbundle --name Toggle",
+    "build": "microbundle --name Toggle",
     "test": "node_modules/.bin/jest --coverage",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",

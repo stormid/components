@@ -1,6 +1,6 @@
 {
   "name": "@stormid/cookie-banner",
-  "version": "0.1.0",
+  "version": "1.0.0-rc.1",
   "description": "GDPR compliant cookie banner",
   "author": "stormid",
   "license": "MIT",
@@ -24,7 +24,7 @@
     "component"
   ],
   "scripts": {
-    "build": "npx microbundle --name CookieBanner",
+    "build": "microbundle --name CookieBanner",
     "test": "node_modules/.bin/jest --coverage",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",

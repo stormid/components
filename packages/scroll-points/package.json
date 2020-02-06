@@ -1,6 +1,6 @@
 {
   "name": "@stormid/scroll-points",
-  "version": "0.1.0",
+  "version": "1.0.0-rc.1",
   "description": "",
   "author": "stormid",
   "license": "MIT",
@@ -24,10 +24,11 @@
     "scrollpoints",
     "component",
     "scrolling",
+    "intersectionobserver",
     "ui"
   ],
   "scripts": {
-    "build": "npx microbundle --name ScrollPoints",
+    "build": "microbundle --name ScrollPoints",
     "test": "node_modules/.bin/jest --coverage",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",

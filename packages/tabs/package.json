@@ -1,6 +1,6 @@
 {
   "name": "@stormid/tabs",
-  "version": "0.1.0",
+  "version": "1.0.0-rc.1",
   "description": "Accessible tabs for multi-panelled content areas.",
   "author": "stormid",
   "license": "MIT",
@@ -22,10 +22,11 @@
     "component",
     "ui",
     "tabs",
+    "tabslist",
     "browser"
   ],
   "scripts": {
-    "build": "npx microbundle --name Tabs",
+    "build": "microbundle --name Tabs",
     "test": "node_modules/.bin/jest --coverage",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",

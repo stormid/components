@@ -1,6 +1,6 @@
 {
   "name": "@stormid/outliner",
-  "version": "0.1.0",
+  "version": "1.0.0-rc.1",
   "description": "Hide CSS outline on mouse interactions, show on keyboard interactions",
   "author": "stormid",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "keyboard"
   ],
   "scripts": {
-    "build": "npx microbundle --name Outliner",
+    "build": "microbundle --name Outliner",
     "test": "node_modules/.bin/jest --coverage",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",

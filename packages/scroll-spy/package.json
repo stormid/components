@@ -1,6 +1,6 @@
 {
   "name": "@stormid/scroll-spy",
-  "version": "0.1.0",
+  "version": "1.0.0-rc.1",
   "description": "",
   "author": "stormid",
   "license": "MIT",
@@ -25,10 +25,11 @@
     "intersection",
     "component",
     "scrolling",
+    "intersectionobserver",
     "ui"
   ],
   "scripts": {
-    "build": "npx microbundle --name ScrollSpy",
+    "build": "microbundle --name ScrollSpy",
     "test": "node_modules/.bin/jest --coverage",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",
