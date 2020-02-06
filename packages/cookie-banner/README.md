@@ -27,6 +27,7 @@ import CookieBanner from '@stormid/cookie-banner';
 CookieBanner.init({
     types: {
         'performance': {
+            suggested: true, //set as pre-checked on consent form as a suggested response
             title: 'Performance preferences',
             description: 'Performance cookies are used to measure the performance of our website and make improvements. Your personal data is not identified.',
             labels: {

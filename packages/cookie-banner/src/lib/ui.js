@@ -31,11 +31,20 @@ export const initBanner = Store => state => {
 
 const removeBanner = banner => () => (banner && banner.parentNode) && banner.parentNode.removeChild(banner);
 
+const suggestedConsent = state => Object.keys(state.consent).length > 0
+    ? state
+    : Object.assign({}, state, {
+        consent: Object.keys(state.settings.types).reduce((acc, type) => {
+            if (state.settings.types[type].suggested) acc[type] = 1;
+            return acc;
+        }, {})
+    });
+
 export const initForm = Store => state => {
     const formContainer = document.querySelector(`.${state.settings.classNames.formContainer}`);
     if (!formContainer) return;
 
-    formContainer.innerHTML = state.settings.formTemplate(state);
+    formContainer.innerHTML = state.settings.formTemplate(suggestedConsent(state));
 
     const form = document.querySelector(`.${state.settings.classNames.form}`);
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);

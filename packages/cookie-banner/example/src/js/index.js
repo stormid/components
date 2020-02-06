@@ -16,6 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
         } ],
         types: {
             performance: {
+                suggested: 1,
                 title: 'Performance preferences',
                 description: 'Performance cookies are used to measure the performance of our website and make improvements. Your personal data is not identified.',
                 labels: {

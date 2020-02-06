@@ -1,5 +1,4 @@
-module.exports = () => {
-    return `* {
+module.exports = () => `* {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
@@ -70,5 +69,4 @@ module.exports = () => {
     }
     .button.is--active {
         border-right: 2px solid #fff;
-    }`
-};
+    }`;

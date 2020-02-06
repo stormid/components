@@ -58,7 +58,7 @@ export default {
 								type="radio"
 								name="privacy-${type.split(' ')[0].replace(' ', '-')}"
 								value="1"
-								${model.consent[type] === 1 ? ` checked` : ''}>
+								${model.consent[type] === 1 ? `checked` : ''}>
 							<span class="privacy-banner__label-text">I am OK with this</span>
 							<span class="privacy-banner__label-description">${model.settings.types[type].labels.yes}</span>
 						</label>    
@@ -72,14 +72,14 @@ export default {
 								type="radio"
 								name="privacy-${type.split(' ')[0].replace(' ', '-')}"
 								value="0"
-								${model.consent[type] === 0 ? ` checked` : ''}>
+								${model.consent[type] === 0 ? `checked` : ''}>
 							<span class="privacy-banner__label-text">No thank you</span>
 							<span class="privacy-banner__label-description">${model.settings.types[type].labels.no}</span>
 						</label>    
 					</div>
 				</div>
 			</fieldset>`).join('')}
-			<button class="${model.settings.classNames.submitBtn}"${Object.keys(model.consent).length === 0 ? ` disabled` : ''}>Save my settings</button>
+			<button class="${model.settings.classNames.submitBtn}"${Object.keys(model.consent).length !== Object.keys(model.settings.types).length ? ` disabled` : ''}>Save my settings</button>
 		</form>`;
     }
 };
