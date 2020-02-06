@@ -1,4 +1,4 @@
-import Validate from '../../../../src';
+import library from '../../../../src';
 import { validate, assembleValidationGroup } from '../../../../src/lib/validator';
 import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 
@@ -23,7 +23,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 value="not.the.same.email.address@stormid.com" /></form>`;
         const input = document.querySelector('#DoubleConfirmEmail');
         const label = document.getElementById('DoubleConfirmEmail-label');
-        const validator = Validate.init('form')[0];
+        const validator = library('form')[0];
         const validityState = await validator.validate();
         // //validityState
         expect(validityState).toEqual(false);

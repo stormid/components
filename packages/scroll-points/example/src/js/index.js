@@ -1,5 +1,5 @@
-import ScrollPoints from '../../../src';
+import scrollPoints from '../../../src';
     
 window.addEventListener('DOMContentLoaded', () => {
-    ScrollPoints.init('.js-scroll-point');
+    scrollPoints('.js-scroll-point');
 });

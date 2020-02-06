@@ -1,4 +1,4 @@
-import Validate from '../../../src/';
+import validate from '../../../src/';
 
 //isSubmitButton
 describe('Validate > Unit > postValidation', () => {
@@ -19,7 +19,7 @@ describe('Validate > Unit > postValidation', () => {
             }
             expect(body).toEqual({ tautology: 'value', continue: '1' });
         });
-        const [ validator ] = Validate.init(document.querySelector('form'), { submit: mockSubmit });
+        const [ validator ] = validate(document.querySelector('form'), { submit: mockSubmit });
         // const submitBtn = document.querySelector('.submit-btn');
         const continueBtn = document.querySelector('.continue-btn');
         continueBtn.focus();
@@ -41,7 +41,7 @@ describe('Validate > Unit > postValidation', () => {
         const mockSubmit = jest.fn(() => {
             expect(form.getAttribute('action')).toEqual('/alternative');
         });
-        const [ validator ] = Validate.init(document.querySelector('form'), { submit: mockSubmit });
+        const [ validator ] = validate(document.querySelector('form'), { submit: mockSubmit });
         // const submitBtn = document.querySelector('.submit-btn');
         const altBtn = document.querySelector('.alt-btn');
         altBtn.focus();
@@ -62,7 +62,7 @@ describe('Validate > Unit > postValidation', () => {
         const form = document.querySelector('form');
         // const mockSubmit = jest.fn();
         const mockPreSubmit = jest.fn();
-        const [ validator ] = Validate.init(document.querySelector('form'), {
+        const [ validator ] = validate(document.querySelector('form'), {
             preSubmitHook: mockPreSubmit
         });
         await validator.validate({

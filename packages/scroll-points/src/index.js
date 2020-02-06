@@ -7,7 +7,7 @@ import factory from './lib/factory';
  * @param selector, String, A DOMString containing one or more selectors to match, must be a valid CSS selector string
  * @params options, Object, to be merged with defaults to become the settings propery of each returned object
  */
-const init = (selector, options) => {
+export default  (selector, options) => {
     //Array.from isnt polyfilled
     //https://github.com/babel/babel/issues/5682
     const nodes = [].slice.call(document.querySelectorAll(selector));
@@ -21,8 +21,3 @@ const init = (selector, options) => {
         node
     })));
 };
-
-/*
- * Component API
- */
-export default { init };

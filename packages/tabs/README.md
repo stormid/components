@@ -27,9 +27,9 @@ npm i -S @stormid/tabs
 
 Initialise the module
 ```
-import Tabs from '@stormid/tabs';
+import tabs from '@stormid/tabs';
 
-Tabs.init('[role=tablist]');
+tabs('[role=tablist]');
 ```
 
 ## Options
@@ -44,7 +44,7 @@ Tabs.init('[role=tablist]');
 
 ## API
 
-Tabs.init returns an array of instances. Each instance exposes the interface
+tabs() returns an array of instances. Each instance exposes the interface
 ```
 {
     getState, a Function that returns the current state Object

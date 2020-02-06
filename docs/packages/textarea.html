@@ -173,9 +173,9 @@
 <pre><code>npm i -S @stormid/textarea
 </code></pre>
 <p>Initialise the module</p>
-<pre><code>import Textarea from '@stormid/textarea';
+<pre><code>import textarea from '@stormid/textarea';
 
-Textarea.init('textarea');
+textarea('textarea');
 </code></pre>
 <h2 id="options">Options</h2>
 <pre><code>{
@@ -185,7 +185,7 @@ Textarea.init('textarea');
 }
 </code></pre>
 <h2 id="api">API</h2>
-<p>Textarea.init returns an array of instances. Each instance exposes the interface</p>
+<p>textarea returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
     node, DOMElement, the text area
     resize, Function to trigger resize

@@ -1,4 +1,4 @@
-import Component from '../src';
+import component from '../src';
 
 let basic, withCallback;
 const init = () => {
@@ -8,8 +8,8 @@ const init = () => {
              <div class="js-boilerplate-two test-3"></div>
              <div class="js-boilerplate-three test-4"></div>`;
 
-    basic = Component.init('.js-boilerplate');
-    withCallback = Component.init('.js-boilerplate-two', {
+    basic = component('.js-boilerplate');
+    withCallback = component('.js-boilerplate-two', {
         callback(){
             this.classList.toggle('callback-test');
         }
@@ -25,16 +25,15 @@ describe(`Boilerplate > Initialisation`, () => {
     });
 
     it('should return undefined if no DOMElements are matched', async () => {
-        expect(Component.init('.js-unfound')).toEqual(undefined);
+        expect(component('.js-unfound')).toEqual(undefined);
     });
   
 
-    it('each instances should be an object with DOMElement, settings, init, and  click properties', () => {
+    it('each instances should be an object with DOMElement, settings, and  click properties', () => {
 
         expect(basic[0]).not.toBeNull();
         expect(basic[0].node).not.toBeNull();
         expect(basic[0].settings).not.toBeNull();
-        expect(basic[0].init).not.toBeNull();
         expect(basic[0].click).not.toBeNull();
 
     });

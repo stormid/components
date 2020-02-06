@@ -1,4 +1,4 @@
-import Validate from '../../../../src';
+import validate from '../../../../src';
 import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 import defaults from '../../../../src/lib/defaults';
 
@@ -24,7 +24,7 @@ describe('Validate > Integration > api > validate > required', () => {
         </form>`;
         const input = document.getElementById('group1-1');
         const label = document.getElementById('group1-1-label');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         // //validityState
         expect(validityState).toEqual(false);
@@ -49,7 +49,7 @@ describe('Validate > Integration > api > validate > required', () => {
                 value="Valid value"
                 type="text" />
         </form>`;
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         // //validityState
         expect(validityState).toEqual(true);
@@ -69,7 +69,7 @@ describe('Validate > Integration > api > validate > required', () => {
                 <span data-valmsg-for="group2" data-valmsg-replace="true" class="${DOTNET_CLASSNAMES.ERROR}"></span>
         </form>`;
         const input = document.getElementById('group2');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         //validityState
         expect(validityState).toEqual(false);
@@ -96,7 +96,7 @@ describe('Validate > Integration > api > validate > required', () => {
                 value="Valid value"
                 type="text" />
         </form>`;
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         // //validityState
         expect(validityState).toEqual(true);

@@ -1,4 +1,4 @@
-import ScrollPoints from '../src';
+import scrollPoints from '../src';
 
 let basic, withCallback;
 const init = () => {
@@ -12,8 +12,8 @@ const init = () => {
 			 <div class="js-scroll-point test-2"></div>
 			 <div class="js-scroll-point-two test-3"></div>`;
 
-    basic = ScrollPoints.init('.js-scroll-point');
-    withCallback = ScrollPoints.init('.js-scroll-point-two', {
+    basic = scrollPoints('.js-scroll-point');
+    withCallback = scrollPoints('.js-scroll-point-two', {
 	  callback(){
             // this.node.classList.toggle('callback-test');
 	  }
@@ -28,15 +28,14 @@ describe(`Scroll points > Initialisation`, () => {
 	  expect(basic.length).toEqual(2);
     });
 
-    it('should return undefined if no nodes match the init selector', async () => {
-	  expect(ScrollPoints.init('.not-found')).toEqual(undefined);
+    it('should return undefined if no nodes match the initialisation selector', async () => {
+	  expect(scrollPoints('.not-found')).toEqual(undefined);
     });
 
     it('each array item should be an object with the expected properties', () => {
         expect(basic[0]).not.toBeNull();
         expect(basic[0].node).not.toBeNull();
         expect(basic[0].settings).not.toBeNull();
-        expect(basic[0].init).not.toBeNull();
     });
 
     it('should initialisation with different settings if different options are passed', () => {
@@ -59,7 +58,7 @@ describe(`Scroll points > IntersectionObserver > observe`, () => {
                 <div class="js-scroll-point test-2"></div>
                 <div class="js-scroll-point-two test-3"></div>`;
 
-        basic = ScrollPoints.init('.js-scroll-point');
+        basic = scrollPoints('.js-scroll-point');
     });
 
     it('creates an observer on the node', () => {

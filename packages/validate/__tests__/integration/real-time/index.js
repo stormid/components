@@ -1,4 +1,4 @@
-import Validate from '../../../src';
+import validate from '../../../src';
 import defaults from '../../../src/lib/defaults';
 // import { DOTNET_CLASSNAMES } from '../../../src/lib/constants';
 
@@ -17,7 +17,7 @@ describe('Validate > Integration > Real-time', () => {
         </form>`;
 
         const form = document.querySelector('form');
-        const [ validator ] = Validate.init(form);
+        const [ validator ] = validate(form);
         await validator.validate();
         const validityState = await validator.validate();
         expect(validityState).toEqual(false);
@@ -39,7 +39,7 @@ describe('Validate > Integration > Real-time', () => {
         const label = document.querySelector('label');
         const input = document.querySelector('input');
         const cachedLabel = label.innerHTML;
-        const [ validator ] = Validate.init(form);
+        const [ validator ] = validate(form);
         await validator.validate();
         expect(label.innerHTML).not.toEqual(cachedLabel);
         input.value = 'Super';
@@ -63,7 +63,7 @@ describe('Validate > Integration > Real-time', () => {
         const form = document.querySelector('form');
         const label = document.querySelector('label');
         const input = document.querySelector('input');
-        const [ validator ] = Validate.init(form);
+        const [ validator ] = validate(form);
         await validator.validate();
         expect(label.lastElementChild.textContent).toEqual(defaults.messages.required());
         input.value = 'Super';
@@ -93,7 +93,7 @@ describe('Validate > Integration > Real-time', () => {
         const label = document.querySelector('label');
         const input = document.querySelector('input');
         const cachedLabel = label.innerHTML;
-        const [ validator ] = Validate.init(form);
+        const [ validator ] = validate(form);
         await validator.validate();
         expect(label.lastElementChild.textContent).toEqual(defaults.messages.required());
         input.checked = 'checked';

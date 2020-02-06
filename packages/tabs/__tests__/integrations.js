@@ -1,4 +1,4 @@
-import Tabs from '../src';
+import tabs from '../src';
 
 let TabSet;
 
@@ -41,7 +41,7 @@ const init = () => {
         </section>
     </div>`;
 
-    TabSet = Tabs.init('[role=tablist]');
+    TabSet = tabs('[role=tablist]');
 };
 
 describe(`Tabs > Initialisation`, () => {

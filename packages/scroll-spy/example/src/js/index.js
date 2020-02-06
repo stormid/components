@@ -1,5 +1,5 @@
-import ScrollSpy from '../../../src';
+import scrollSpy from '../../../src';
     
 window.addEventListener('DOMContentLoaded', () => {
-    ScrollSpy.init('.js-scroll-spy');
+    scrollSpy('.js-scroll-spy');
 });

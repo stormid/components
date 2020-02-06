@@ -18,9 +18,9 @@ npm i -S @stormid/boilerplate
 
 Initialise the module
 ```
-import Boilerplate from '@stormid/boilerplate';
+import boilerplate from '@stormid/boilerplate';
 
-Boilerplate.init('.js-boilerplate');
+boilerplate('.js-boilerplate');
 ```
 
 ## Options
@@ -32,7 +32,7 @@ Boilerplate.init('.js-boilerplate');
 
 For example
 ```
-Boilerplate.init('.js-selector', {
+boilerplate('.js-selector', {
     callback(){
         console.log(this);
     }
@@ -40,10 +40,10 @@ Boilerplate.init('.js-selector', {
 ```
 
 ## API
-Boilerplate.init returns an array of instances. Each instance exposes the interface
+boilerplate() returns an array of instances. Each instance exposes the interface
 ```
 {
-    node, DOMNode augmented by init
+    node, DOMNode augmented by initialisation
     click, trigger the handleClick method
 }
 ```

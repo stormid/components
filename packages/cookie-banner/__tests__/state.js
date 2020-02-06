@@ -1,4 +1,4 @@
-import CookieBanner from '../src';
+import cookieBanner from '../src';
 import defaults from '../src/lib/defaults';
 import { updateConsent, updateExecuted } from '../src/lib/reducers';
 
@@ -11,15 +11,15 @@ const init = () => {
 describe(`Cookie banner > state > init`, () => {
     beforeAll(init);
 
-    it('Should return the Store.getState method from init', async () => {
-        const Store = CookieBanner.init({ types: {} });
+    it('Should return the Store.getState method mon initialisation', async () => {
+        const Store = cookieBanner({ types: {} });
 
         expect(Store.getState).not.toBeUndefined();
 
     });
 
     it('Should return the state Object from Store.getState', async () => {
-        const Store = CookieBanner.init({ types: {} });
+        const Store = cookieBanner({ types: {} });
 
         expect(Store.getState()).toEqual({ consent: {}, settings: defaults });
 
@@ -44,7 +44,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 ]
             }
         };
-        const Store = CookieBanner.init({ types });
+        const Store = cookieBanner({ types });
 
         expect(Store.getState().settings.types).toEqual(types);
 

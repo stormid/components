@@ -6,8 +6,15 @@ const update = ({ target }) => {
     target.style.height = 'auto';
     target.style.height = `${target.scrollHeight}px`;
 };
+const initObserver = el => {
+    const observer = new MutationObserver(mutationsList => {
+        update({ target: el });
+    });
+    observer.observe(el.parentNode, { attributes: true, attributeOldValue: true, attributeFilter: ['class', 'hidden']  });
+};
 
-const init = (selector, options) => {
+
+export default (selector, options) => {
     const nodes = [].slice.call(document.querySelectorAll(selector));
     const events = options && options.events || defaults.events;
 
@@ -26,12 +33,3 @@ const init = (selector, options) => {
         };
     });
 };
-
-const initObserver = el => {
-    const observer = new MutationObserver(mutationsList => {
-        update({ target: el });
-    });
-    observer.observe(el.parentNode, { attributes: true, attributeOldValue: true, attributeFilter: ['class', 'hidden']  });
-};
-
-export default { init };

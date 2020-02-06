@@ -35,9 +35,9 @@ npm i -S @stormid/scroll-spy
 
 Initialise the module
 ```
-import ScrollSpy from '@stormid/scroll-spy';
+import scrollSpy from '@stormid/scroll-spy';
 
-ScrollSpy.init('.js-scroll-spy');
+scrollSpy('.js-scroll-spy');
 ```
 
 ## Options
@@ -54,7 +54,7 @@ ScrollSpy.init('.js-scroll-spy');
 
 ## API
 
-ScrollSpy.init returns an array of instances. Each instance exposes the interface
+scrollSpy() returns an array of instances. Each instance exposes the interface
 ```
 {
     getState, a Function that returns the current state Object

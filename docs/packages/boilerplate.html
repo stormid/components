@@ -176,9 +176,9 @@
 <pre><code>npm i -S @stormid/boilerplate
 </code></pre>
 <p>Initialise the module</p>
-<pre><code>import Boilerplate from '@stormid/boilerplate';
+<pre><code>import boilerplate from '@stormid/boilerplate';
 
-Boilerplate.init('.js-boilerplate');
+boilerplate('.js-boilerplate');
 </code></pre>
 <h2 id="options">Options</h2>
 <pre><code>{
@@ -186,16 +186,16 @@ Boilerplate.init('.js-boilerplate');
 }
 </code></pre>
 <p>For example</p>
-<pre><code>Boilerplate.init('.js-selector', {
+<pre><code>boilerplate('.js-selector', {
     callback(){
         console.log(this);
     }
 });
 </code></pre>
 <h2 id="api">API</h2>
-<p>Boilerplate.init returns an array of instances. Each instance exposes the interface</p>
+<p>boilerplate() returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
-    node, DOMNode augmented by init
+    node, DOMNode augmented by initialisation
     click, trigger the handleClick method
 }
 </code></pre>

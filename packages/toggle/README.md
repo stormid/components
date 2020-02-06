@@ -20,9 +20,9 @@ npm i -S @stormid/toggle
 
 Initialise the module
 ```
-import Toggle from '@stormid/toggle';
+import toggle from '@stormid/toggle';
 
-Toggle.init('.js-toggle');
+toggle('.js-toggle');
 ```
 
 
@@ -63,7 +63,7 @@ Example MVP CSS
 ```
 e.g.
 ```
-Toggle.init('.js-toggle', {
+toggle('.js-toggle', {
     startOpen: true
 });
 ```
@@ -78,7 +78,7 @@ Options can also be set on an instance by adding data-attributes to the toggle e
 
 ## API
 
-Toggle.init returns an array of instances. Each instance exposes the interface
+toggle() returns an array of instances. Each instance exposes the interface
 ```
 {
     node, DOMElement, the text area

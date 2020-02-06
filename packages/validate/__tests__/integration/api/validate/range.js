@@ -1,4 +1,4 @@
-import Validate from '../../../../src';
+import validate from '../../../../src';
 import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 
 describe('Validate > Integration >  api > validate > equalto', () => {
@@ -19,7 +19,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
         </form>`;
         const input = document.querySelector('#group1');
         const label = document.getElementById('group1-label');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         // //validityState
         expect(validityState).toEqual(false);
@@ -46,7 +46,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 value="5"
                 type="text">
         </form>`;
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         expect(validityState).toEqual(true);
     });
@@ -66,7 +66,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
         </form>`;
         const input = document.querySelector('#group1');
         const label = document.getElementById('group1-label');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         // //validityState
         expect(validityState).toEqual(false);
@@ -93,7 +93,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 value="2"
                 type="text">
         </form>`;
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         expect(validityState).toEqual(true);
     });
@@ -113,7 +113,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
         </form>`;
         const input = document.querySelector('#group1');
         const label = document.getElementById('group1-label');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         // //validityState
         expect(validityState).toEqual(false);
@@ -141,7 +141,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 value="7"
                 type="text">
         </form>`;
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         expect(validityState).toEqual(true);
     });

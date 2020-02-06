@@ -1,4 +1,4 @@
-import Tabs from '../../src';
+import tabs from '../../src';
 
 let TabSet;
 
@@ -23,7 +23,7 @@ const init = () => {
         </section>
     </div>`;
 
-    TabSet = Tabs.init('[role=tablist]');
+    TabSet = tabs('[role=tablist]');
     
 };
 
@@ -42,7 +42,7 @@ describe(`Tabs > init`, () => {
     });
 
     it('should return without throwing if no DOM nodes are found', () => {
-        expect(Tabs.init('.js-no-found')).toBeUndefined();
+        expect(tabs('.js-no-found')).toBeUndefined();
     });
 
     it('should set activeIndex based on options passed to init', () => {
@@ -65,7 +65,7 @@ describe(`Tabs > init`, () => {
             </section>
         </div>`;
 
-        TabSet = Tabs.init('[role=tablist]', { activeIndex: '2' });
+        TabSet = tabs('[role=tablist]', { activeIndex: '2' });
 
         expect(TabSet[0].getState().activeIndex).toEqual(2);
     });
@@ -90,7 +90,7 @@ describe(`Tabs > init`, () => {
             </section>
         </div>`;
 
-        TabSet = Tabs.init('[role=tablist]');
+        TabSet = tabs('[role=tablist]');
 
         expect(TabSet[0].getState().activeIndex).toEqual(1);
     });
@@ -124,7 +124,7 @@ describe(`Tabs > init`, () => {
             </section>
         </div>`;
 
-        TabSet = Tabs.init('[role=tablist]');
+        TabSet = tabs('[role=tablist]');
 
         expect(TabSet[0].getState().activeIndex).toEqual(2);
     });

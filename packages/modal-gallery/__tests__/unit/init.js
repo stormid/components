@@ -1,6 +1,6 @@
-import ModalGallery from '../../src';
+import modalGallery from '../../src';
 
-describe(`Modal Gallery > Init > gallery`, () => {
+describe(`Modal Gallery > Initialisation > gallery`, () => {
 
     it('should return an Object when passed a DOM selector matching links', async () => {
 		 document.body.innerHTML = `<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w" data-sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px">
@@ -9,7 +9,7 @@ describe(`Modal Gallery > Init > gallery`, () => {
 		<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 2" data-description="Description 2" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w" data-sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px">
 			<img src="//placehold.it/200x200" alt="">
 		</a>`;
-        const gallery = ModalGallery.init('.js-modal-gallery');
+        const gallery = modalGallery('.js-modal-gallery');
         expect(gallery).not.toBeUndefined();
         expect(gallery.getState).not.toBeUndefined();
         expect(gallery.getState().items.length).toEqual(2);
@@ -18,11 +18,11 @@ describe(`Modal Gallery > Init > gallery`, () => {
     });
 
     it('should return undefined when passed a DOM selector gthat does not match links', async () => {
-        expect(ModalGallery.init('.js-not-found')).toBeUndefined();
+        expect(modalGallery('.js-not-found')).toBeUndefined();
     });
 	
     it('should return undefined when passed a zero-length selector or node array', async () => {
-        expect(ModalGallery.init('')).toBeUndefined();
+        expect(modalGallery('')).toBeUndefined();
     });
 
     it('should return an Object with minimal possible options when passed a DOM selector matching links', async () => {
@@ -32,7 +32,7 @@ describe(`Modal Gallery > Init > gallery`, () => {
 		<a class="js-modal-gallery" href="//placehold.it/500x500">
 			<img src="//placehold.it/200x200" alt="">
 		</a>`;
-        const gallery = ModalGallery.init('.js-modal-gallery');
+        const gallery = modalGallery('.js-modal-gallery');
         expect(gallery).not.toBeUndefined();
         expect(gallery.getState).not.toBeUndefined();
         expect(gallery.getState().items.length).toEqual(2);
@@ -42,7 +42,7 @@ describe(`Modal Gallery > Init > gallery`, () => {
 
 });
 
-describe(`Modal Gallery > Init > single`, () => {
+describe(`Modal Gallery > Initisation > single`, () => {
 
     it('should return an array of Objects when passed a DOM selector matching links when initialising as single images', async () => {
 		 document.body.innerHTML = `<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w">
@@ -51,13 +51,13 @@ describe(`Modal Gallery > Init > single`, () => {
 		<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 2" data-description="Description 2" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w">
 			<img src="//placehold.it/200x200" alt="">
 		</a>`;
-        const gallery = ModalGallery.init('.js-modal-gallery', { single: true });
+        const gallery = modalGallery('.js-modal-gallery', { single: true });
         expect(gallery).not.toBeUndefined();
         expect(gallery.length).toEqual(2);
     });
 
     it('should return undefined when passed a DOM selector gthat does not match links', async () => {
-        expect(ModalGallery.init('.js-not-found', { single: true })).toBeUndefined();
+        expect(modalGallery('.js-not-found', { single: true })).toBeUndefined();
     });
 
     it('should return an Object with minimal possible options when passed a DOM selector matching links', async () => {
@@ -67,7 +67,7 @@ describe(`Modal Gallery > Init > single`, () => {
 		<a class="js-modal-gallery" href="//placehold.it/500x500">
 			<img src="//placehold.it/200x200" alt="">
 		</a>`;
-        const gallery = ModalGallery.init('.js-modal-gallery', { single: true });
+        const gallery = modalGallery('.js-modal-gallery', { single: true });
         expect(gallery).not.toBeUndefined();
         expect(gallery.length).toEqual(2);
     });
@@ -76,7 +76,7 @@ describe(`Modal Gallery > Init > single`, () => {
 });
 
 
-describe(`Modal Gallery > Init > gallery from code`, () => {
+describe(`Modal Gallery > Initialisation > gallery from code`, () => {
 
     it('should return an Object when passed a DOM selector matching links', async () => {
 		 document.body.innerHTML = `<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w">
@@ -95,7 +95,7 @@ describe(`Modal Gallery > Init > gallery from code`, () => {
             description: el.getAttribute('data-description') || ''
         }));
 
-        const gallery = ModalGallery.init(items);
+        const gallery = modalGallery(items);
         expect(gallery).not.toBeUndefined();
         expect(gallery.getState).not.toBeUndefined();
         expect(gallery.getState().items.length).toEqual(2);

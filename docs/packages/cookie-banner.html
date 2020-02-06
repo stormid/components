@@ -178,9 +178,9 @@
 <pre><code>&lt;div class=&quot;privacy-banner__form-container&quot;&gt;&lt;/div&gt;
 </code></pre>
 <p>Initialise the module (example configuration shown below)</p>
-<pre><code>import CookieBanner from '@stormid/cookie-banner';
+<pre><code>import banner from '@stormid/cookie-banner';
 
-CookieBanner.init({
+    banner({
     types: {
         'performance': {
             title: 'Performance preferences',
@@ -296,7 +296,7 @@ CookieBanner.init({
 }
 </code></pre>
 <h2 id="api">API</h2>
-<p>The Object returned from init exposes the interface</p>
+<p>The Object returned from initialisation exposes the interface</p>
 <pre><code>{
     getState, a Function that returns the current state Object
 }

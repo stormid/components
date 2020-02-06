@@ -1,8 +1,8 @@
-import PrivacyBanner from '../../../src';
+import cookieBanner from '../../../src';
 import { writeCookie } from '../../../src/lib/utils';
     
 window.addEventListener('DOMContentLoaded', () => {
-    window.__pb__ = PrivacyBanner.init({
+    window.__pb__ = cookieBanner({
         secure: false,
         necessary: [ () => {
             // console.log('Necessary fn');

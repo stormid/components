@@ -1,4 +1,4 @@
-import Toggle from '../../src';
+import toggle from '../../src';
 
 let Toggles, ToggleLocals;
 
@@ -15,12 +15,12 @@ const init = () => {
         <button id="target-4" class="js-toggle__btn-2">Test toggle</button>
         <div id="target-4" class="js-toggle-local" data-toggle="js-toggle__btn-2" data-start-open="true"></div>`;
 
-    Toggles = Toggle.init('.js-toggle', {
+    Toggles = toggle('.js-toggle', {
         trapTab: true,
         closeOnBlur: true,
         focus: true
     });
-    ToggleLocals = Toggle.init('.js-toggle-local', { local: true });
+    ToggleLocals = toggle('.js-toggle-local', { local: true });
 };
 
 
@@ -41,7 +41,7 @@ describe(`Toggle > Init`, () => {
     });
 
     it('should return without throwing if no DOM nodes are found', () => {
-        expect(Toggle.init('.js-not-found')).toBeUndefined();
+        expect(toggle('.js-not-found')).toBeUndefined();
     });
 
     it('should use data attributes as settings, overriding options', () => {

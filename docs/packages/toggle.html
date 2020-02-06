@@ -178,9 +178,9 @@
 <pre><code>npm i -S @stormid/toggle
 </code></pre>
 <p>Initialise the module</p>
-<pre><code>import Toggle from '@stormid/toggle';
+<pre><code>import toggle from '@stormid/toggle';
 
-Toggle.init('.js-toggle');
+toggle('.js-toggle');
 </code></pre>
 <h3 id="local-toggle">Local toggle</h3>
 <p>To localise a toggle state to part of the document (e.g. show/hide panel)</p>
@@ -212,7 +212,7 @@ Toggle.init('.js-toggle');
 }
 </code></pre>
 <p>e.g.</p>
-<pre><code>Toggle.init('.js-toggle', {
+<pre><code>toggle('.js-toggle', {
     startOpen: true
 });
 </code></pre>
@@ -223,7 +223,7 @@ Toggle.init('.js-toggle');
 &lt;/div&gt;
 </code></pre>
 <h2 id="api">API</h2>
-<p>Toggle.init returns an array of instances. Each instance exposes the interface</p>
+<p>toggle returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
     node, DOMElement, the text area
     startToggle, a Function that starts the toggle lifecycle with prehook, toggle, and postHook

@@ -18,9 +18,9 @@ npm i -S @stormid/scroll-points
 
 Initialise the module
 ```
-import ScrollPoints from '@stormid/scroll-points';
+import scrollPoints from '@stormid/scroll-points';
 
-ScrollPoints.init('.js-scroll-point');
+scrollPoints('.js-scroll-point');
 ```
 
 ## Options

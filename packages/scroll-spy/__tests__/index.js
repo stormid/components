@@ -1,4 +1,4 @@
-import ScrollSpy from '../src';
+import scrollSpy from '../src';
 
 let basic, withCallback;
 const init = () => {
@@ -34,8 +34,8 @@ const init = () => {
                 Section 4
             </section>`;
 
-    basic = ScrollSpy.init('.js-scroll-spy');
-    withCallback = ScrollSpy.init('.js-scroll-spy-two', {
+    basic = scrollSpy('.js-scroll-spy');
+    withCallback = scrollSpy('.js-scroll-spy-two', {
 	  callback(){
             // this.node.classList.toggle('callback-test');
 	  }
@@ -47,7 +47,7 @@ describe(`Scroll Spy > Initialisation`, () => {
     beforeAll(init);
 
     it('should return undefined if no nodes match the init selector', async () => {
-	  expect(ScrollSpy.init('.not-found')).toEqual(undefined);
+	  expect(scrollSpy('.not-found')).toEqual(undefined);
     });
 
     it('should return an object with the expected properties', () => {

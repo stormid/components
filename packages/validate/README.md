@@ -20,11 +20,11 @@ npm i -S @storm/validate
 
 Initialise the module
 ```
-import Validate from '@storm/validate';
+import validate from '@storm/validate';
 
 //returns an array of instances for every selector matched
 //you can also pass in a DOM element as the first argument
-const [ validator ] = Validate.init('form:not([novalidate])');
+const [ validator ] = validate('form:not([novalidate])');
 ```
 
 ## Validators
@@ -310,7 +310,7 @@ Fields without data-val error messages will show the default messages for the fa
 
 ## API
 
-Validate.init returns an array of instances. Each instance exposes the interface
+validate() returns an array of instances. Each instance exposes the interface
 ```
 {
     validate
@@ -323,7 +323,7 @@ Validate.init returns an array of instances. Each instance exposes the interface
 ### addMethod
 Add a custom validation method:
 ```
-const [ validators ] = Validate.init('.my-form');
+const [ validators ] = validate('.my-form');
 
 validators.addMethod(
     'MyFieldName', //input/input group name
@@ -337,7 +337,7 @@ validators.addMethod(
 ### validate
 Manually trigger validation on the whole form, returns a promise:
 ```
-const [ validators ] = Validate.init('.my-form');
+const [ validators ] = validate('.my-form');
 
 await validators.validate();
 ```
@@ -345,7 +345,7 @@ await validators.validate();
 ### addGroup
 add an input or input validation group
 ```
-const [ validators ] = Validate.init('.my-form');
+const [ validators ] = validate('.my-form');
 const fieldsArray = Array.from(document.querySelector('.new-fields'))
 
 //add by passing an array of fields
@@ -356,7 +356,7 @@ validators.addGroup(fieldsArray);
 ### removeGroup
 remove a validation group
 ```
-const [ validators ] = Validate.init('.my-form');
+const [ validators ] = validate('.my-form');
 const fieldsArray = Array.from(document.querySelectorAll([name=new-fields]))
 
 //add by passing an array of fields

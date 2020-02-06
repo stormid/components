@@ -1,4 +1,4 @@
-import Validate from '../../../../src';
+import validate from '../../../../src';
 import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 
 describe('Validate > Integration >  api > validate > dateISO', () => {
@@ -24,7 +24,7 @@ describe('Validate > Integration >  api > validate > dateISO', () => {
         </form>`;
         const input = document.getElementById('group1-1');
         const label = document.getElementById('group1-1-label');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         expect(validityState).toEqual(false);
         // realtimeValidation start
@@ -49,7 +49,7 @@ describe('Validate > Integration >  api > validate > dateISO', () => {
                 value="2019-05-14"
                 type="text" />
         </form>`;
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         expect(validityState).toEqual(true);
     });

@@ -1,10 +1,10 @@
-import CookieBanner from '../../src';
+import cookieBanner from '../../src';
 import defaults from '../../src/lib/defaults';
 
 describe(`Cookie banner > DOM > form > render`, () => {
     beforeAll(() => {
         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
-        CookieBanner.init({
+        cookieBanner({
             secure: false,
             types: {
                 test: {

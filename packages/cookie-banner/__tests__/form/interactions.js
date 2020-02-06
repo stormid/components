@@ -1,4 +1,4 @@
-import CookieBanner from '../../src';
+import cookieBanner from '../../src';
 import defaults from '../../src/lib/defaults';
 
 const dispatchSyntheticEvent = (node, eventType) => {
@@ -9,8 +9,8 @@ const dispatchSyntheticEvent = (node, eventType) => {
 
 describe(`Cookie banner > DOM > form interactions`, () => {
     beforeAll(() => {
-        document.body.innerHTML = `<div></div>`;
-        CookieBanner.init({
+        document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
+        cookieBanner({
             secure: false,
             types: {
                 test: {

@@ -1,4 +1,4 @@
-import Modal from '../../src';
+import modal from '../../src';
 
 let ModalSet;
 
@@ -45,12 +45,12 @@ const init = () => {
         </div>
     </div>`;
 
-    ModalSet = Modal.init('.js-modal');
+    ModalSet = modal('.js-modal');
     
 };
 
 
-describe(`Modal > Init`, () => {
+describe(`Modal > Initialisation`, () => {
     
     beforeAll(init);
 
@@ -64,7 +64,7 @@ describe(`Modal > Init`, () => {
     });
 
     it('should return without throwing if no DOM nodes are found', () => {
-        expect(Modal.init('.js-not-found')).toBeUndefined();
+        expect(modal('.js-not-found')).toBeUndefined();
     });
 
     it('should create instance with different options based on node data-attributes from same init function', () => {

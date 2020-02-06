@@ -1,4 +1,4 @@
-import Validate from '../../../src';
+import validate from '../../../src';
 
 describe('Validate > Integration > API > addGroup', () => {
 
@@ -14,7 +14,7 @@ describe('Validate > Integration > API > addGroup', () => {
         </form>`;
         // const form = document.querySelector('.form');
         const input = document.querySelector('#group1-1');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
 
         expect(validator.getState().groups).toEqual({});
         input.setAttribute('required', 'required');
@@ -47,7 +47,7 @@ describe('Validate > Integration > API > removeGroup', () => {
         </form>`;
         // const form = document.querySelector('.form');
         const input = document.querySelector('#group1-1');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
 
         expect(validator.getState().groups).toEqual({
             group1: {
@@ -80,7 +80,7 @@ describe('Validate > Integration > API > addMethod', () => {
         </form>`;
         // const form = document.querySelector('.form');
         const input = document.querySelector('#group1-1');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
 
         expect(validator.getState().groups).toEqual({
             group1: {
@@ -117,7 +117,7 @@ describe('Validate > Integration > API > addMethod', () => {
         </form>`;
         // const form = document.querySelector('.form');
         const input = document.querySelector('#group1-1');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
 
         expect(validator.getState().groups).toEqual({
             group1: {

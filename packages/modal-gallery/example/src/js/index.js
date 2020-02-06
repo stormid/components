@@ -1,5 +1,5 @@
-import ModalGallery from '../../../src';
+import modalGallery from '../../../src';
     
 window.addEventListener('DOMContentLoaded', () => {
-    ModalGallery.init('.js-modal-gallery', { preload: true });
+    modalGallery('.js-modal-gallery', { preload: true });
 });

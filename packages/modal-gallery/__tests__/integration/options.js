@@ -1,4 +1,4 @@
-import ModalGallery from '../../src';
+import modalGallery from '../../src';
 
 describe(`Modal Gallery > options > preload`, () => {
 
@@ -19,7 +19,7 @@ describe(`Modal Gallery > options > preload`, () => {
             </li>
         </ul>`;
 
-        const Gallery = ModalGallery.init('.js-modal-gallery', { preload: true });
+        const Gallery = modalGallery('.js-modal-gallery', { preload: true });
         expect(Gallery.getState().settings.preload).toEqual(true);
         // expect(Gallery.getState().imageCache.length).toEqual(3); <--- JSDOM doesn't fire the load event when the images load
     });
@@ -46,7 +46,7 @@ describe(`Modal Gallery > options > fullscreen`, () => {
             </li>
         </ul>`;
 
-        const Gallery = ModalGallery.init('.js-modal-gallery', { fullscreen: true });
+        const Gallery = modalGallery('.js-modal-gallery', { fullscreen: true });
         expect(Gallery.getState().settings.fullscreen).toEqual(true);
         Gallery.getState().items[0].trigger.click();
         Gallery.getState().dom.overlay.querySelector('.js-modal-gallery__close').click();
@@ -76,7 +76,7 @@ describe(`Modal Gallery > options > scrollable`, () => {
             </li>
         </ul>`;
 
-        const Gallery = ModalGallery.init('.js-modal-gallery', { scrollable: true });
+        const Gallery = modalGallery('.js-modal-gallery', { scrollable: true });
         expect(Gallery.getState().settings.scrollable).toEqual(true);
         //jsdom does not support image load event, so the image is never rendered
         //we can only determine that the setting is correctly configured

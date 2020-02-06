@@ -1,6 +1,6 @@
-import Validate from '../../../src';
+import validate from '../../../src';
 {
-    const validator = Validate.init('form');
+    const validator = validate('form');
 
     const later = document.getElementById('Later');
     document.querySelector('.js-add').addEventListener('click', e => {

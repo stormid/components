@@ -1,4 +1,4 @@
-import Validation from '../../src';
+import validate from '../../src';
 import defaults from '../../src/lib/defaults';
 
 let validators;
@@ -12,7 +12,7 @@ const setUpDOM = () => {
 };
 const init = async () => {
     setUpDOM();
-    validators = await Validation.init('form');
+    validators = await validate('form');
 };
 
 describe('Validate > Initialisation', () => {
@@ -98,7 +98,7 @@ describe('Validate > Initialisation > DOM element', () => {
         expect.assertions(4);
         setUpDOM();
         const form = document.querySelector('.form');
-        const validators = await Validation.init(form);
+        const validators = await validate(form);
         expect(validators[0]).not.toBeNull();
         expect(validators[0].validate).not.toBeUndefined();
         expect(validators[0].addMethod).not.toBeUndefined();
@@ -114,7 +114,7 @@ describe('Validate > Initialisation > novalidate', () => {
             <input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="${defaults.messages.required()}" data-val-length-min="2" data-val-length-max="8" type="text">
             <span class="text-danger field-validation-valid" data-valmsg-for="group1" data-valmsg-replace="true"></span>
         </form>`;
-        const validators = await Validation.init('.form');
+        const validators = await validate('.form');
         expect(validators).toEqual([]);
     });
 });

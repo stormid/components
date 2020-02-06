@@ -1,9 +1,9 @@
-import CookieBanner from '../../src';
+import cookieBanner from '../../src';
 import defaults from '../../src/lib/defaults';
 
 describe(`Cookie banner > DOM > form > not render`, () => {
     document.body.innerHTML = `<div></div>`;
-    CookieBanner.init({
+    cookieBanner({
         types: {
             test: {
                 title: 'Test title',
@@ -18,8 +18,9 @@ describe(`Cookie banner > DOM > form > not render`, () => {
             }
         }
     });
+    
     it('Should return if there is no form container', async () => {
-        expect(document.querySelector(`.${defaults.classNames.form}`)).not.toBeNull();
+        expect(document.querySelector(`.${defaults.classNames.form}`)).toBeNull();
     });
 
 });

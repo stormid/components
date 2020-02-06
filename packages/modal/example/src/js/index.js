@@ -1,5 +1,5 @@
-import Modal from '../../../src';
+import modal from '../../../src';
     
 window.addEventListener('DOMContentLoaded', () => {
-    window.__m1__ = Modal.init('.js-modal');
+    window.__m1__ = modal('.js-modal');
 });

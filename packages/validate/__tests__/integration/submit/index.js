@@ -1,4 +1,4 @@
-import Validate from '../../../src';
+import validate from '../../../src';
 
 describe('Validate > Integration > Submit', () => {
 
@@ -16,7 +16,7 @@ describe('Validate > Integration > Submit', () => {
         // const form = document.querySelector('form');
         // const button = document.querySelector('button');
         const submit = jest.fn();
-        const [ validator ] = Validate.init(document.querySelector('form'), { submit });
+        const [ validator ] = validate(document.querySelector('form'), { submit });
         await validator.validate({ target: true, preventDefault(){} });
         // button.click();
         expect(validator.getState().settings.submit).toEqual(submit);
@@ -42,7 +42,7 @@ describe('Validate > Integration > preSubmitHook', () => {
         // const form = document.querySelector('form');
         // const button = document.querySelector('button');
         const preSubmitHook = jest.fn();
-        const [ validator ] = Validate.init(document.querySelector('form'), { preSubmitHook });
+        const [ validator ] = validate(document.querySelector('form'), { preSubmitHook });
 
         await validator.validate({ target: true, preventDefault(){} });
         expect(validator.getState().settings.preSubmitHook).toEqual(preSubmitHook);

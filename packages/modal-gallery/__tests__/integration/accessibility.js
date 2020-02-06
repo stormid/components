@@ -1,4 +1,4 @@
-import ModalGallery from '../../src';
+import modalGallery from '../../src';
 import { KEY_CODES } from '../../src/lib/constants';
 
 describe(`Modal Gallery > accessibility > keyboard > escape`, () => {
@@ -20,7 +20,7 @@ describe(`Modal Gallery > accessibility > keyboard > escape`, () => {
             </li>
         </ul>`;
 
-        const Gallery = ModalGallery.init('.js-modal-gallery');
+        const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[0].trigger.click();
         expect(Gallery.getState().isOpen).toEqual(true);
         document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.ESC, bubbles: true }));
@@ -48,7 +48,7 @@ describe(`Modal Gallery > accessibility > keyboard > left`, () => {
             </li>
         </ul>`;
 
-        const Gallery = ModalGallery.init('.js-modal-gallery');
+        const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[1].trigger.click();
         expect(Gallery.getState().current).toEqual(1);
         document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.LEFT, bubbles: true }));
@@ -77,7 +77,7 @@ describe(`Modal Gallery > accessibility > keyboard > right`, () => {
             </li>
         </ul>`;
 
-        const Gallery = ModalGallery.init('.js-modal-gallery');
+        const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[0].trigger.click();
         expect(Gallery.getState().current).toEqual(0);
         document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.RIGHT, bubbles: true }));
@@ -106,7 +106,7 @@ describe(`Modal Gallery > accessibility > keyboard > tab`, () => {
             </li>
         </ul>`;
 
-        const Gallery = ModalGallery.init('.js-modal-gallery');
+        const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[0].trigger.click();
         expect(Gallery.getState().current).toEqual(0);
         // expect(document.activeElement).toEqual(Gallery.getState().dom.focusableChildren[0]);
@@ -145,7 +145,7 @@ describe(`Modal Gallery > accessibility > keyboard`, () => {
             </li>
         </ul>`;
 
-        const Gallery = ModalGallery.init('.js-modal-gallery');
+        const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[0].trigger.click();
         expect(Gallery.getState().current).toEqual(0);
         document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: 83, bubbles: true }));

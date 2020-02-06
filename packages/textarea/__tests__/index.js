@@ -1,4 +1,4 @@
-import Textarea from '../src';
+import textarea from '../src';
 
 global.MutationObserver = class {
     // constructor(callback) {}
@@ -12,11 +12,11 @@ const init = () => {
     // Set up our document body
     document.body.innerHTML = `<textarea rows="1"></textarea>`;
 
-    Textareas = Textarea.init('textarea');
+    Textareas = textarea('textarea');
     
 };
 
-describe(`Textarea > init`, () => {
+describe(`Textarea > initialisation`, () => {
     
     beforeAll(init);
 

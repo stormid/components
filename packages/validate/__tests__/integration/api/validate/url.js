@@ -1,4 +1,4 @@
-import Validate from '../../../../src';
+import validate from '../../../../src';
 import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 import defaults from '../../../../src/lib/defaults';
 
@@ -18,7 +18,7 @@ describe('Validate > Integration >  api > validate > url', () => {
         </form>`;
         const input = document.getElementById('group1');
         const label = document.getElementById('group1-label');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         // //validityState
         expect(validityState).toEqual(false);
@@ -42,7 +42,7 @@ describe('Validate > Integration >  api > validate > url', () => {
                 value="https://a.url.com"
                 type="url" />
         </form>`;
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         // //validityState
         expect(validityState).toEqual(true);
@@ -62,7 +62,7 @@ describe('Validate > Integration >  api > validate > url', () => {
                 <span data-valmsg-for="group2" data-valmsg-replace="true" class="${DOTNET_CLASSNAMES.ERROR}"></span>
         </form>`;
         const input = document.getElementById('group2');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         //validityState
         expect(validityState).toEqual(false);
@@ -91,7 +91,7 @@ describe('Validate > Integration >  api > validate > url', () => {
                 type="url">
                 <span data-valmsg-for="group2" data-valmsg-replace="true" class="${DOTNET_CLASSNAMES.ERROR}"></span>
         </form>`;
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         //validityState
         expect(validityState).toEqual(true);

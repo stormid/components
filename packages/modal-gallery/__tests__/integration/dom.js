@@ -1,4 +1,4 @@
-import ModalGallery from '../../src';
+import modalGallery from '../../src';
 import { initUI, next, previous, close } from '../../src/lib/dom';
 import { createStore } from '../../src/lib/store';
 import defaults from '../../src/lib/defaults/';
@@ -187,7 +187,7 @@ describe(`Modal Gallery > accessibility > buttons`, () => {
             </li>
         </ul>`;
 
-        const Gallery = ModalGallery.init('.js-modal-gallery');
+        const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[1].trigger.click();
         expect(Gallery.getState().current).toEqual(1);
         Gallery.getState().dom.overlay.querySelector('.js-modal-gallery__previous').click();
@@ -213,7 +213,7 @@ describe(`Modal Gallery > accessibility > buttons`, () => {
             </li>
         </ul>`;
 
-        const Gallery = ModalGallery.init('.js-modal-gallery');
+        const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[0].trigger.click();
         expect(Gallery.getState().current).toEqual(0);
         Gallery.getState().dom.overlay.querySelector('.js-modal-gallery__next').click();

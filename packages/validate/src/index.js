@@ -1,7 +1,7 @@
 import factory from './lib/factory';
 import defaults from './lib/defaults';
 
-const init = (candidate, opts) => {
+export default (candidate, opts) => {
     let els;
 	
     //if we think candidate is a form DOM node, pass it in an Array
@@ -18,5 +18,3 @@ const init = (candidate, opts) => {
     }, []);
 
 };
-
-export default { init };

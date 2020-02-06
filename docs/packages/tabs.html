@@ -185,9 +185,9 @@
 <pre><code>npm i -S @stormid/tabs
 </code></pre>
 <p>Initialise the module</p>
-<pre><code>import Tabs from '@stormid/tabs';
+<pre><code>import tabs from '@stormid/tabs';
 
-Tabs.init('[role=tablist]');
+tabs('[role=tablist]');
 </code></pre>
 <h2 id="options">Options</h2>
 <pre><code>{
@@ -198,7 +198,7 @@ Tabs.init('[role=tablist]');
 }
 </code></pre>
 <h2 id="api">API</h2>
-<p>Tabs.init returns an array of instances. Each instance exposes the interface</p>
+<p>tabs() returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
     getState, a Function that returns the current state Object
 }

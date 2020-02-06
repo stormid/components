@@ -30,9 +30,9 @@ npm i -S @stormid/modal
 
 Inititialise the module
 ```
-import Modal from '@stormid/modal';
+import modal from '@stormid/modal';
 
-Modal.init('.js-modal');
+modal('.js-modal');
 ```
 
 ## Options
@@ -46,7 +46,7 @@ Modal.init('.js-modal');
 ```
 
 ## API
-Modal.init returns an array of instances. Each instance exposes the interface
+modal() returns an array of instances. Each instance exposes the interface
 ```
 {
     getState, a Function that returns the current state Object

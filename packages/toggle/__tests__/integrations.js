@@ -1,4 +1,4 @@
-import Toggle from '../src';
+import toggle from '../src';
 
 let Toggles, TogglesLocal;
 
@@ -19,13 +19,13 @@ const init = () => {
         <div id="target-4" class="js-toggle-local" data-toggle="js-toggle__btn-4"></div>
     </div>`;
 
-    Toggles = Toggle.init('.js-toggle', {
+    Toggles = toggle('.js-toggle', {
         trapTab: true,
         closeOnBlur: true,
         closeOnClick: true,
         focus: true
     });
-    TogglesLocal = Toggle.init('.js-toggle-local', {
+    TogglesLocal = toggle('.js-toggle-local', {
         local: true
     });
 };

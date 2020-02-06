@@ -1,5 +1,5 @@
-import Tabs from '../../../src';
+import tabs from '../../../src';
     
 window.addEventListener('DOMContentLoaded', () => {
-    Tabs.init('[role=tablist]');
+    tabs('[role=tablist]');
 });

@@ -1,5 +1,5 @@
 import mock from 'xhr-mock';
-import Validate from '../../../../src';
+import validate from '../../../../src';
 import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 
 describe('Validate > Integration > api > validate > remote', () => {
@@ -35,7 +35,7 @@ describe('Validate > Integration > api > validate > remote', () => {
         </form>`;
         const input = document.getElementById('group1');
         const label = document.getElementById('group1-label');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         
         const validityState = await validator.validate();
         expect(validityState).toEqual(false);
@@ -70,7 +70,7 @@ describe('Validate > Integration > api > validate > remote', () => {
         </form>`;
         const input = document.getElementById('group1');
         const label = document.getElementById('group1-label');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         
         const validityState = await validator.validate();
         expect(validityState).toEqual(false);
@@ -111,7 +111,7 @@ describe('Validate > Integration > api > validate > remote', () => {
         </form>`;
         const input = document.getElementById('group1');
         const label = document.getElementById('group1-label');
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         
         const validityState = await validator.validate();
         expect(validityState).toEqual(false);
@@ -143,7 +143,7 @@ describe('Validate > Integration > api > validate > remote', () => {
             data-val-remote-url="/api/validate"
             value="Pass"
             type="text"></form>`;
-        const validator = Validate.init('form')[0];
+        const validator = validate('form')[0];
         const validityState = await validator.validate();
         expect(validityState).toEqual(true);
     });

@@ -1,5 +1,5 @@
-import Textarea from '../../../src';
+import textarea from '../../../src';
     
 window.addEventListener('DOMContentLoaded', () => {
-    Textarea.init('.js-textarea');
+    textarea('.js-textarea');
 });

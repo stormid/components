@@ -22,9 +22,9 @@ Create a container element for the consent form
 
 Initialise the module (example configuration shown below)
 ```
-import CookieBanner from '@stormid/cookie-banner';
+import banner from '@stormid/cookie-banner';
 
-CookieBanner.init({
+banner({
     types: {
         'performance': {
             suggested: true, //set as pre-checked on consent form as a suggested response
@@ -144,7 +144,7 @@ CookieBanner.init({
 ```
 
 ## API
-The Object returned from init exposes the interface
+The Object returned from initialisation exposes the interface
 ```
 {
     getState, a Function that returns the current state Object

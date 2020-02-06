@@ -188,9 +188,9 @@
 <pre><code>npm i -S @stormid/modal
 </code></pre>
 <p>Inititialise the module</p>
-<pre><code>import Modal from '@stormid/modal';
+<pre><code>import modal from '@stormid/modal';
 
-Modal.init('.js-modal');
+modal('.js-modal');
 </code></pre>
 <h2 id="options">Options</h2>
 <pre><code>{
@@ -201,7 +201,7 @@ Modal.init('.js-modal');
 }
 </code></pre>
 <h2 id="api">API</h2>
-<p>Modal.init returns an array of instances. Each instance exposes the interface</p>
+<p>modal() returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
     getState, a Function that returns the current state Object
 }

@@ -193,9 +193,9 @@
 <pre><code>npm i -S @stormid/scroll-spy
 </code></pre>
 <p>Initialise the module</p>
-<pre><code>import ScrollSpy from '@stormid/scroll-spy';
+<pre><code>import scrollSpy from '@stormid/scroll-spy';
 
-ScrollSpy.init('.js-scroll-spy');
+scrollSpy('.js-scroll-spy');
 </code></pre>
 <h2 id="options">Options</h2>
 <pre><code>{
@@ -208,7 +208,7 @@ ScrollSpy.init('.js-scroll-spy');
 }
 </code></pre>
 <h2 id="api">API</h2>
-<p>ScrollSpy.init returns an array of instances. Each instance exposes the interface</p>
+<p>scrollSpy() returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
     getState, a Function that returns the current state Object
 }

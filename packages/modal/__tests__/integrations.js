@@ -1,4 +1,4 @@
-import Modal from '../src';
+import modal from '../src';
 import defaults from '../src/lib/defaults';
 
 let ModalSet;
@@ -36,7 +36,7 @@ const init = () => {
         </div>
     </div>`;
 
-    ModalSet = Modal.init('.js-modal');
+    ModalSet = modal('.js-modal');
 };
 
 describe(`Modal > Initialisation`, () => {

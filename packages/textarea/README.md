@@ -14,9 +14,9 @@ npm i -S @stormid/textarea
 
 Initialise the module
 ```
-import Textarea from '@stormid/textarea';
+import textarea from '@stormid/textarea';
 
-Textarea.init('textarea');
+textarea('textarea');
 ```
 
 ## Options
@@ -30,7 +30,7 @@ Textarea.init('textarea');
 
 ## API
 
-Textarea.init returns an array of instances. Each instance exposes the interface
+textarea() returns an array of instances. Each instance exposes the interface
 ```
 {
     node, DOMElement, the text area
