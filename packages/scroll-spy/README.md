@@ -37,7 +37,7 @@ Initialise the module
 ```
 import scrollSpy from '@stormid/scroll-spy';
 
-scrollSpy('.js-scroll-spy');
+const [ link ] = scrollSpy('.js-scroll-spy');
 ```
 
 ## Options

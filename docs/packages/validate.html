@@ -180,7 +180,7 @@
 <pre><code>npm i -S @storm/validate
 </code></pre>
 <p>Initialise the module</p>
-<pre><code>import Validate from '@storm/validate';
+<pre><code>import validate from '@storm/validate';
 
 //returns an array of instances for every selector matched
 //you can also pass in a DOM element as the first argument
@@ -411,7 +411,7 @@ validators.addGroup(fieldsArray);
 </code></pre>
 <h3 id="removegroup">removeGroup</h3>
 <p>remove a validation group</p>
-<pre><code>const [ validators ] = Validate.init('.my-form');
+<pre><code>const [ validators ] = validate('.my-form');
 const fieldsArray = Array.from(document.querySelectorAll([name=new-fields]))
 
 //add by passing an array of fields

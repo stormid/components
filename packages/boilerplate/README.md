@@ -20,7 +20,7 @@ Initialise the module
 ```
 import boilerplate from '@stormid/boilerplate';
 
-boilerplate('.js-boilerplate');
+const [ instance ] = boilerplate('.js-boilerplate');
 ```
 
 ## Options

@@ -281,7 +281,7 @@ const modalGallery = gallery([
 ]);
 
 //e.g. Open the gallery at the second item (index 1) by clicking on a button with the className 'js-modal-gallery__trigger'
-document.querySelector('.js-modal-gallery__trigger').addEventListener('click', () =&gt; modalGallery.open(1));
+document.querySelector('.js-modal-gallery__trigger').addEventListener('click', () =&gt; gallery.open(1));
 </code></pre>
 <h2 id="options">Options</h2>
 <pre><code>{
@@ -293,7 +293,7 @@ document.querySelector('.js-modal-gallery__trigger').addEventListener('click', (
 }
 </code></pre>
 <h2 id="api">API</h2>
-<p>gallery() returns an array of instances. Each instance exposes the interface</p>
+<p>modalGallery() returns an array of instances. Each instance exposes the interface</p>
 <pre><code>{
     getState, a Function that returns the current state Object
     open, a Function that opens the modal gallery

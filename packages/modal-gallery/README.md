@@ -27,9 +27,9 @@ From HTML
 
 Initialise the module
 ```
-import gallery from '@stormid/modal-gallery';
+import modaGallery from '@stormid/modal-gallery';
 
-gallery('.js-modal-gallery');
+const [ gallery ] = modaGallery('.js-modal-gallery');
 ```
 
 Example MVP CSS
@@ -111,9 +111,9 @@ Example MVP CSS
 
 To create from a JavaScript Object
 ```
-import gallery from '@stormid/modal-gallery';
+import modaGallery from '@stormid/modal-gallery';
 
-const modalGallery = gallery([
+const [ gallery ] = modaGallery([
     {
         src: '//placehold.it/500x500',
         srcset:'//placehold.it/800x800 800w, //placehold.it/500x500 320w',

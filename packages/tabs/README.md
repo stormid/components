@@ -29,7 +29,7 @@ Initialise the module
 ```
 import tabs from '@stormid/tabs';
 
-tabs('[role=tablist]');
+const [ tablist ] = tabs('[role=tablist]');
 ```
 
 ## Options

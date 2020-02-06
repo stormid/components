@@ -12,7 +12,7 @@ Install the package
 npm i -S @stormid/outliner
 ```
 
-Intitialise the module
+Initialise the module
 ```
 import '@stormid/outliner';
 

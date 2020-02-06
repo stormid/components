@@ -20,7 +20,7 @@ Initialise the module
 ```
 import scrollPoints from '@stormid/scroll-points';
 
-scrollPoints('.js-scroll-point');
+const [ point ] = scrollPoints('.js-scroll-point');
 ```
 
 ## Options

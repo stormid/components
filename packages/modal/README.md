@@ -32,7 +32,7 @@ Inititialise the module
 ```
 import modal from '@stormid/modal';
 
-modal('.js-modal');
+const [ instance ] = modal('.js-modal');
 ```
 
 ## Options

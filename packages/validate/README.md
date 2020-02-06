@@ -323,9 +323,9 @@ validate() returns an array of instances. Each instance exposes the interface
 ### addMethod
 Add a custom validation method:
 ```
-const [ validators ] = validate('.my-form');
+const [ validator ] = validate('.my-form');
 
-validators.addMethod(
+validator.addMethod(
     'MyFieldName', //input/input group name
     (value, fields, params) => { //validation method
         return value === 'test'; //must return boolean
@@ -337,33 +337,33 @@ validators.addMethod(
 ### validate
 Manually trigger validation on the whole form, returns a promise:
 ```
-const [ validators ] = validate('.my-form');
+const [ validator ] = validate('.my-form');
 
-await validators.validate();
+await validator.validate();
 ```
 
 ### addGroup
 add an input or input validation group
 ```
-const [ validators ] = validate('.my-form');
+const [ validator ] = validate('.my-form');
 const fieldsArray = Array.from(document.querySelector('.new-fields'))
 
 //add by passing an array of fields
 //if these fields span multiple groups they will be collected into the correct validation groups internally by the validator
-validators.addGroup(fieldsArray);
+validator.addGroup(fieldsArray);
 ```
 
 ### removeGroup
 remove a validation group
 ```
-const [ validators ] = validate('.my-form');
+const [ validator ] = validate('.my-form');
 const fieldsArray = Array.from(document.querySelectorAll([name=new-fields]))
 
 //add by passing an array of fields
-validators.addGroup(fieldsArray);
+validator.addGroup(fieldsArray);
 
 //remove by passing the name of a group
-validators.removeGroup('new-fields');
+validator.removeGroup('new-fields');
 ```
 
 ## Tests

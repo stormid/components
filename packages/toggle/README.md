@@ -22,7 +22,7 @@ Initialise the module
 ```
 import toggle from '@stormid/toggle';
 
-toggle('.js-toggle');
+const [ instance ] = toggle('.js-toggle');
 ```
 
 
@@ -63,7 +63,7 @@ Example MVP CSS
 ```
 e.g.
 ```
-toggle('.js-toggle', {
+const [ instance ] = toggle('.js-toggle', {
     startOpen: true
 });
 ```
@@ -82,7 +82,7 @@ toggle() returns an array of instances. Each instance exposes the interface
 ```
 {
     node, DOMElement, the text area
-    startToggle, a Function that starts the toggle lifecycle with prehook, toggle, and postHook
+    startToggle, a Function that starts the toggle lifecycle with prehook, toggle, and post-toggle callback
     toggle, a Function that just executes the toggle
     getState, a Function that returns the current state Object
 }

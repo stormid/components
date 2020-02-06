@@ -16,7 +16,7 @@ Initialise the module
 ```
 import textarea from '@stormid/textarea';
 
-textarea('textarea');
+const [ instance ] = textarea('textarea');
 ```
 
 ## Options

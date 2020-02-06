@@ -24,7 +24,7 @@ Initialise the module (example configuration shown below)
 ```
 import banner from '@stormid/cookie-banner';
 
-banner({
+const cookieBanner = banner({
     types: {
         'performance': {
             suggested: true, //set as pre-checked on consent form as a suggested response
