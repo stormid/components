@@ -1,6 +1,6 @@
 # Components
 
-This is a [lerna](https://lerna.js.org/) monorepo containing a suite of UI components build, used and maintained by [Storm Id](https://stormid.com).
+This is a [lerna](https://lerna.js.org/) monorepo containing a suite of UI components built, used and maintained by [Storm Id](https://stormid.com).
 
 Each package is available for use on npm. See [the docs](https://stormid.github.io/components/) for details on each package.
 
