@@ -327,7 +327,8 @@ const [ validator ] = validate('.my-form');
 
 validator.addMethod(
     'MyFieldName', //input/input group name
-    (value, fields, params) => { //validation method
+    (value, fields) => { //validation method
+        //value is the value of the whole group of fields (grouped under the name attribute)
         return value === 'test'; //must return boolean
     },
     'Value must equal "test"' //error message on validation failure

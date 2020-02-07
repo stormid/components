@@ -5,7 +5,7 @@ import { ACTIONS } from '../constants';
  * Dispatches add validation method to store to update the validators in a group
  * 
  * @param groupName [String] The name attribute shared by the DOM nodes in the group
- * @param method [Function] The validation method (function that returns true or false) that us called on the group
+ * @param method [Function] The validation method (function that returns true or false) that is called on the group
  * @param message [String] Te error message displayed if the validation method returns false
  * 
  */
