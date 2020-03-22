@@ -1,6 +1,6 @@
 {
   "name": "@stormid/boilerplate",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0",
   "description": "Boilerplate for developing UI components",
   "author": "stormid",
   "license": "MIT",
