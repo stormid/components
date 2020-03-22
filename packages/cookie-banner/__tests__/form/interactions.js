@@ -59,6 +59,6 @@ describe(`Cookie banner > DOM > form interactions`, () => {
         document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
         
         expect(document.cookie).toEqual(`${defaults.name}={"test":1,"performance":1}`);
-        expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull(); 
+        expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull();
     });
 });

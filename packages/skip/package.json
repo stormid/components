@@ -31,5 +31,6 @@
   },
   "jest": {
     "testURL": "http://localhost"
-  }
+  },
+  "gitHead": "292de9943740845608618f420ef432adf862b1d7"
 }

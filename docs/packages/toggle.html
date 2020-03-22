@@ -180,7 +180,7 @@
 <p>Initialise the module</p>
 <pre><code>import toggle from '@stormid/toggle';
 
-toggle('.js-toggle');
+const [ instance ] = toggle('.js-toggle');
 </code></pre>
 <h3 id="local-toggle">Local toggle</h3>
 <p>To localise a toggle state to part of the document (e.g. show/hide panel)</p>
@@ -212,7 +212,7 @@ toggle('.js-toggle');
 }
 </code></pre>
 <p>e.g.</p>
-<pre><code>toggle('.js-toggle', {
+<pre><code>const [ instance ] = toggle('.js-toggle', {
     startOpen: true
 });
 </code></pre>

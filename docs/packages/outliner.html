@@ -166,15 +166,21 @@
         </svg>
     </a>
     <article class="markdown-body entry-content"><h1 id="outliner">Outliner</h1>
-<p>Hide CSS outline on mouse interactions, show on keyboard interactions. Until <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible">:focus-visible</a> has broader browser support.</p>
+<p>Adds a classNamw to the documentElement to be used to hide CSS outline on mouse interactions, show on keyboard interactions. Until <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible">:focus-visible</a> has broader browser support.</p>
 <hr>
 <h2 id="usage">Usage</h2>
 <p>Install the package</p>
 <pre><code>npm i -S @stormid/outliner
 </code></pre>
-<p>Intitialise the module</p>
+<p>Initialise the module</p>
 <pre><code>import '@stormid/outliner';
 
+</code></pre>
+<p>Add CSS</p>
+<pre><code>.no-outline * {
+    outline: 0 none !important;
+    box-shadow: none !important;
+}
 </code></pre>
 <h2 id="tests">Tests</h2>
 <pre><code>npm t

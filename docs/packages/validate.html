@@ -384,11 +384,12 @@ const [ validator ] = validate('form:not([novalidate])');
 </code></pre>
 <h3 id="addmethod">addMethod</h3>
 <p>Add a custom validation method:</p>
-<pre><code>const [ validators ] = validate('.my-form');
+<pre><code>const [ validator ] = validate('.my-form');
 
-validators.addMethod(
+validator.addMethod(
     'MyFieldName', //input/input group name
-    (value, fields, params) =&gt; { //validation method
+    (value, fields) =&gt; { //validation method
+        //value is the value of the whole group of fields (grouped under the name attribute)
         return value === 'test'; //must return boolean
     },
     'Value must equal &quot;test&quot;' //error message on validation failure
@@ -396,29 +397,29 @@ validators.addMethod(
 </code></pre>
 <h3 id="validate-2">validate</h3>
 <p>Manually trigger validation on the whole form, returns a promise:</p>
-<pre><code>const [ validators ] = validate('.my-form');
+<pre><code>const [ validator ] = validate('.my-form');
 
-await validators.validate();
+await validator.validate();
 </code></pre>
 <h3 id="addgroup">addGroup</h3>
 <p>add an input or input validation group</p>
-<pre><code>const [ validators ] = validate('.my-form');
+<pre><code>const [ validator ] = validate('.my-form');
 const fieldsArray = Array.from(document.querySelector('.new-fields'))
 
 //add by passing an array of fields
 //if these fields span multiple groups they will be collected into the correct validation groups internally by the validator
-validators.addGroup(fieldsArray);
+validator.addGroup(fieldsArray);
 </code></pre>
 <h3 id="removegroup">removeGroup</h3>
 <p>remove a validation group</p>
-<pre><code>const [ validators ] = validate('.my-form');
+<pre><code>const [ validator ] = validate('.my-form');
 const fieldsArray = Array.from(document.querySelectorAll([name=new-fields]))
 
 //add by passing an array of fields
-validators.addGroup(fieldsArray);
+validator.addGroup(fieldsArray);
 
 //remove by passing the name of a group
-validators.removeGroup('new-fields');
+validator.removeGroup('new-fields');
 </code></pre>
 <h2 id="tests">Tests</h2>
 <pre><code>npm t
