@@ -1,10 +1,9 @@
 {
-    const styleElement = document.createElement('STYLE');
-    const setCss = (cssText = '') => { styleElement.innerHTML = cssText; };
-
-    document.getElementsByTagName('HEAD')[0].appendChild(styleElement);
+    const NO_OUTLINE_CLASSNAME = 'no-outline';
     document.addEventListener('mousedown', () => {
-        setCss('*:focus{outline:none !important}');
+        document.documentElement.classList.add(NO_OUTLINE_CLASSNAME);
     });
-    document.addEventListener('keydown', setCss);
+    document.addEventListener('keydown', () => {
+        document.documentElement.classList.remove(NO_OUTLINE_CLASSNAME);
+    });
 };
