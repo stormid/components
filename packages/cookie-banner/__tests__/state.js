@@ -15,14 +15,12 @@ describe(`Cookie banner > state > init`, () => {
         const Store = cookieBanner({ types: {} });
 
         expect(Store.getState).not.toBeUndefined();
-
     });
 
     it('Should return the state Object from Store.getState', async () => {
         const Store = cookieBanner({ types: {} });
 
         expect(Store.getState()).toEqual({ consent: {}, settings: defaults });
-
     });
 
 });
@@ -47,7 +45,6 @@ describe(`Cookie banner > state > update/reducers`, () => {
         const Store = cookieBanner({ types });
 
         expect(Store.getState().settings.types).toEqual(types);
-
     });
 
 

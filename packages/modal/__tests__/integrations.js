@@ -102,7 +102,7 @@ describe(`Modal > Keyboard events`, () => {
         expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
     });
 
-    // tab events not changing activeElement in JSDOM
+    // tab events not firing as expected in JSDOM
     // it('should trap tab in the modal until it is closed', () => {
     //     const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true });
     //     const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });

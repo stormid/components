@@ -71,7 +71,6 @@ describe(`Modal Gallery > Initisation > single`, () => {
         expect(gallery).not.toBeUndefined();
         expect(gallery.length).toEqual(2);
     });
-	
 
 });
 
@@ -104,13 +103,3 @@ describe(`Modal Gallery > Initialisation > gallery from code`, () => {
     });
 
 });
-
-
-/*
-return {
-				srcset: el.getAttribute('data-srcset') || null,
-				sizes: el.getAttribute('data-sizes') || null,
-				title: el.getAttribute('data-title') || '',
-				description: el.getAttribute('data-description') || ''
-			};
-			*/
