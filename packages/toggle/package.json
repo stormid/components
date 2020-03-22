@@ -4,7 +4,6 @@
   "description": "Accessible DOM state toggling",
   "author": "stormid",
   "license": "MIT",
-  "repository": {
   "publishConfig": {
     "access": "public"
   },
