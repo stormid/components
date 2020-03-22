@@ -4,17 +4,13 @@ describe('Outliner', () => {
     const mousedown = new Event('mousedown', { bubbles: false, cancelable: false });
     const keydown = new Event('keydown', { bubbles: false, cancelable: false });
 
-    it('should attach a mousedown eventListener that edits a style tag in the head', () => {
+    it('should attach a mousedown eventListener that adds a className to the documentElement', () => {
         document.dispatchEvent(mousedown);
-        expect(document.getElementsByTagName('STYLE')[0].innerHTML).toEqual('*:focus{outline:none !important}');
+        expect(document.documentElement.classList.contains('no-outline')).toEqual(true);
     });
 
-    it('should attach a keydown eventListener', async () => {
+    it('should attach a keydown eventListener that removes the className', async () => {
         document.dispatchEvent(keydown);
-        // ;_;
-        setTimeout(() => {
-            expect(document.getElementsByTagName('STYLE')[0]).toEqual('');
-        }, 0);
-        
+        expect(document.documentElement.classList.contains('no-outline')).toEqual(false);
     });
 });
