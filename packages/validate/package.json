@@ -1,7 +1,7 @@
 {
   "name": "@stormid/validate",
   "version": "1.0.0-alpha.0",
-  "description": "",
+  "description": "Client-side form validation",
   "author": "stormid",
   "license": "MIT",
   "repository": {

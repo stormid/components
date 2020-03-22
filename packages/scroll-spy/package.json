@@ -1,7 +1,7 @@
 {
   "name": "@stormid/scroll-spy",
   "version": "1.0.0-alpha.0",
-  "description": "",
+  "description": "Scroll position-related navigation state management",
   "author": "stormid",
   "license": "MIT",
   "repository": {

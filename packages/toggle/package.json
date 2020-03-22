@@ -21,7 +21,8 @@
     "stormid",
     "component",
     "ui",
-    "toggle"
+    "toggle",
+    "toggler"
   ],
   "scripts": {
     "build": "microbundle --name Toggle",
