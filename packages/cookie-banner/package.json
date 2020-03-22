@@ -4,13 +4,10 @@
   "description": "GDPR compliant cookie banner",
   "author": "stormid",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/stormid/components.git"
+  "publishConfig": {
+    "access": "public"
   },
-  "bugs": {
-    "url": "https://github.com/stormid/components"
-  },
+  "repository": "https://github.com/stormid/components/tree/master/packages/cookie-banner",
   "private": false,
   "main": "dist/index.js",
   "source": "src/index.js",
