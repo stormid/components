@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 // DOM events on a trigger that initiate toggle
-export const TRIGGER_EVENTS = window.PointerEvent ? ['pointerdown', 'keydown'] : ['ontouchstart' in window ? 'touchstart' : 'click', 'keydown' ];
+export const TRIGGER_EVENTS = window.PointerEvent ? ['pointerup', 'keydown'] : ['ontouchend' in window ? 'ontouchend' : 'click', 'keydown' ];
 
 // Event keycodes that initiate toggle for keyboard events
 export const TRIGGER_KEYCODES = [13, 32];
