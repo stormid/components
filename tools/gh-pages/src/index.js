@@ -16,7 +16,7 @@ module.exports = (packages, content, component) => `<html lang="en" class="no-we
                 <div class="logo__subtitle">Components</div>
             </div>
             <nav class="nav">
-                ${packages.map(packageName => `<a class="nav__item${packageName === component ? ' is--active' : ''}" href="./${packageName}.html">${packageName.substr(0, 1).toUpperCase()}${packageName.substr(1)}</a>`).join('')}
+                ${packages.map((packageName, i) => `<a class="nav__item${packageName === component ? ' is--active' : ''}" href="./${i === 0 ? 'index' : packageName}.html">${packageName.substr(0, 1).toUpperCase()}${packageName.substr(1)}</a>`).join('')}
             </nav>
         </header>
         <main class="markdown-body entry-content">
