@@ -3,7 +3,7 @@ const styles = require('./styles');
 module.exports = (packages, content, component) => `<html lang="en" class="no-webfonts no-js">
     <head>
         <title>StormId Components - ${component}</title>
-        <link type="text/css" rel="stylesheet" href="http://fast.fonts.net/cssapi/5b32fdc1-42a3-4334-b7b1-5befe7df53c8.css">
+        <link type="text/css" rel="stylesheet" href="https://fast.fonts.net/cssapi/5b32fdc1-42a3-4334-b7b1-5befe7df53c8.css">
         <style>${styles()}</style>
     </head>
     <body>
