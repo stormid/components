@@ -50,7 +50,7 @@
     }
     body {
         background: var(--light-grey-1);
-        color: #fff;
+        color: #333333;
         font: 100%/1.4 "AvenirNextLTW01-Regular", Helvetica, "Lucida Grande", sans-serif;
         font-display: swap;
     }
@@ -123,11 +123,10 @@
     }
     .entry-content {
         overflow: none;
-        margin: var(--baseline) 0 var(--baseline) 200px;
+        margin: var(--baseline) 0 var(--baseline) 0;
         max-width: 900px;
         padding: 0 calc(var(--gutter)*2);
-        width: calc(100% - 200px);
-        color: #333;
+        width: 100%
     }
     img {
         filter: grayscale(100%);
@@ -135,32 +134,38 @@
         top: calc(var(--baseline)*2);
         right: calc(var(--baseline)*1.5)
     }
-    .nav {
-        border-top: 1px solid rgba(255,255,255, .1);
+    .header {
+        border-bottom: 1px solid var(--light-grey-2);
+        margin-bottom: calc(var(--baseline)*2);
+        padding-bottom: var(--baseline);
+        margin-left: calc(var(--baseline)/2);
+        margin-right: calc(var(--baseline)/2);
     }
-    .nav__item {
-        display: block;
-        width: 100%;
-        text-align: left;
-        color: #fff;
-        padding: 10px 0 10px 20px;
-        text-decoration: none;
-        margin: 0;
-        border: 0 none;
-        font-family: "AvenirNextLTW01-Regular", Helvetica, "Lucida Grande", sans-serif;
-        font-size:14px;
-        background-color: transparent;
-        cursor:pointer;
-        border-bottom: 1px solid #2e2e2e;
+    .col {
+        float: left;
+        margin-left: calc(var(--baseline)/2);
+        margin-right: calc(var(--baseline)/2);
     }
-    .nav__item:hover {
-        background-color: #000;
+    .clearfix:after,
+    .clearfix:before {
+        content: "";
+        display: table
     }
-    .nav__item:focus {
-        outline: 0 none;
+    .clearfix:after {
+        clear: both
     }
-    .nav__item.is--active {
-        border-right: 2px solid #fff;
+    .section {
+        margin-bottom: calc(var(--baseline)*2);
+    }
+    .section__title {
+        border-top: 2px solid;
+        width: calc(((99.999% / 12) * 3) - (36px));
+        padding-top: calc(var(--baseline)/2);
+    }
+    .section__content {
+        border-top: 2px solid;
+        width: calc(((99.999% / 12) * 8) - (36px));
+        padding-top: calc(var(--baseline)/2);
     }
     .markdown-body .highlight pre,
     .markdown-body pre {
@@ -171,6 +176,30 @@
         padding: var(--baseline);
         margin-bottom: calc(var(--baseline));
         margin-top: calc(var(--baseline)/2);
+    }
+    
+    .button:first-of-type {
+        border-top: 1px solid rgba(255,255,255, .1);
+    }
+    .button {
+        display: block;
+        width: 100%;
+        text-align: left;
+        color: #fff;
+        padding: 10px 0 10px 20px;
+        margin: 0;
+        border: 0 none;
+        font-family: "AvenirNextLTW01-Regular", Helvetica, "Lucida Grande", sans-serif;
+        font-size:14px;
+        background-color: transparent;
+        cursor:pointer;
+        border-bottom: 1px solid rgba(255,255,255, .1);
+    }
+    .button:focus {
+        outline: 0 none;
+    }
+    .button.is--active {
+        border-right: 2px solid #fff;
     }</style>
     </head>
     <body>
@@ -182,9 +211,6 @@
                 </svg>
                 <div class="logo__subtitle">Components</div>
             </div>
-            <nav class="nav">
-                <a class="nav__item is--active" href="./boilerplate.html">Boilerplate</a><a class="nav__item" href="./cookie-banner.html">Cookie-banner</a><a class="nav__item" href="./modal.html">Modal</a><a class="nav__item" href="./modal-gallery.html">Modal-gallery</a><a class="nav__item" href="./outliner.html">Outliner</a><a class="nav__item" href="./scroll-points.html">Scroll-points</a><a class="nav__item" href="./scroll-spy.html">Scroll-spy</a><a class="nav__item" href="./skip.html">Skip</a><a class="nav__item" href="./tabs.html">Tabs</a><a class="nav__item" href="./textarea.html">Textarea</a><a class="nav__item" href="./toggle.html">Toggle</a><a class="nav__item" href="./validate.html">Validate</a>
-            </nav>
         </header>
         <main class="markdown-body entry-content">
             <a href="https://github.com/stormid/components/tree/master/packages/boilerplate" target="_blank" class="github-corner" aria-label="View source on Github">
@@ -237,5 +263,6 @@ const [ instance ] = boilerplate('.js-boilerplate');
 <p>MIT</p>
 
         <main>
+        <script>[object Object]</script>
     </body>
 </html>
