@@ -1,8 +1,8 @@
 const path = require('path');
 const fse = require('fs-extra');
 const doctype = require('../src/doctype.js');
-const content = require('../src');
-const componentContent = require('../src/component-doc');
+const template = require('../src');
+// const componentContent = require('../src/component-doc');
 const md = require('markdown-it')({
     html: true,
     linkify: true,
@@ -15,18 +15,16 @@ const writeFile = (file, data) => {
         data,
         'utf8',
         err => {
-            if(err) return console.log(err);
+            if (err) return console.error(err);
         }
     );
 };
 
-for (package of packages) {
+packages.forEach((component, i) => {
+    const content = md.render(fse.readFileSync(path.resolve(__dirname,`../../../packages/${component}/README.md`), 'utf8'));
+    const newFileName = i === 0 ? 'index' : component;
     writeFile(
-        path.resolve(__dirname,`../../../docs/packages/${package}.html`),
-        componentContent(md.render(fse.readFileSync(path.resolve(__dirname,`../../../packages/${package}/README.md`), 'utf8')), package)
+        path.resolve(__dirname,`../../../docs/${newFileName}.html`),
+        doctype(template(packages, content, component))
     );
-}
-writeFile(
-    path.resolve(__dirname,`../../../docs/index.html`),
-    doctype(content(packages))
-);
+});
