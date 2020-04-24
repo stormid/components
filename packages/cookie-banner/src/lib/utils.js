@@ -14,7 +14,7 @@ export const cookiesEnabled = () => {
 
 export const writeCookie = state => {
     document.cookie = [
-        `${state.settings.name}=${JSON.stringify(state.consent)};`,
+        `${state.settings.name}=${btoa(JSON.stringify(state.consent))};`,
         `expires=${(new Date(new Date().getTime() + (state.settings.expiry*24*60*60*1000))).toGMTString()};`,
         state.settings.path ? `path=${state.settings.path};` : '',
         state.settings.domain ? `domain=${state.settings.domain};` : '',
@@ -27,7 +27,7 @@ export const readCookie = settings => {
     const cookie = document.cookie.split('; ')
         .map(part => ({
             name: part.split('=')[0],
-            value: part.split('=')[1]
+            value: atob(part.split('=')[1])
         }))
         .filter(part => part.name === settings.name)[0];
     return cookie !== undefined ? cookie : false;
