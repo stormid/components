@@ -244,7 +244,7 @@ Data attributes
 ---
 
 ### Equalto
-Value must match the value of another field (or multiple fields). The data-val-equalto-other attribute is the id of another field, or a comma-separated list of ids of multiple fields.
+Value must match the value of another field (or multiple fields). The data-val-equalto-other attribute is the name of another field, or a comma-separated list of names of multiple fields.
 
 Data attributes
 ```

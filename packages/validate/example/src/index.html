@@ -154,18 +154,16 @@
         <input type="submit" name="onward" value="Submit">
         <input type="submit" name="onward" value="Submit and continue">
     </form> -->
-    <button class="js-add">Required last field</button>
+    <!-- <button class="js-add">Required last field</button>
     <form class="js-validate" action="#" autocomplete="off">
         <input type="hidden" name="hidden-field" value="" required />
         <div class="form-group">
             <label for="RequiredString1">Required String</label>
             <input class="form-control" type="text" id="RequiredString1" name="RequiredString1" value="" required />
-            <!-- <span style="color: red" class="field-validation-valid" data-valmsg-for="RequiredString" data-valmsg-replace="true" /> -->
         </div>
         <div class="form-group">
             <label for="Password">Required Password</label>
             <input class="form-control" type="password" id="Password" name="Password" value="" required />
-            <!-- <span style="color: red" class="field-validation-valid" data-valmsg-for="RequiredString" data-valmsg-replace="true" /> -->
         </div>
         <div class="form-group">
             <label for="Later">Required later</label>
@@ -173,6 +171,39 @@
         </div>
         <input type="submit" formaction="#back" value="Back">
         <input type="submit" name="onward" value="Submit">
+        <input type="submit" value="Submit">
+    </form> -->
+    <form class="js-validate" action="#" autocomplete="off">
+        <div class="form-row">
+            <label class="label" for="mce-EMAIL">Email address</label>
+            <input
+                class="input"
+                type="email"
+                id="mce-EMAIL"
+                name="EMAIL"
+                data-val="true"
+                data-val-required="Email is incomplete"
+                data-val-email="Email is not a valid email address"
+                data-val-maxlength="Email address must not exceed 254 characters"
+                data-val-maxlength-max="254"
+            />
+        </div>
+        <div class="form-row">
+            <label class="label" for="VERIFY-EMAIL">Verify email address</label>
+            <input
+                class="input"
+                type="email"
+                id="VERIFY-EMAIL"
+                name="VERIFY-EMAIL"
+                data-val="true"
+                data-val-required="Verify email is incomplete"
+                data-val-email="Verify email is not a valid email address"
+                data-val-maxlength="Verify email address must not exceed 254 characters"
+                data-val-maxlength-max="254"
+                data-val-equalto="'Verify email' must match 'email'"
+                data-val-equalto-other="EMAIL"
+            />
+        </div>
         <input type="submit" value="Submit">
     </form>
   </body>
