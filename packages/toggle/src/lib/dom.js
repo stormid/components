@@ -164,17 +164,16 @@ export const closeProxy = Store => () => {
  */
 export const manageFocus = Store => () => {
     const { isOpen, focusableChildren, settings, lastFocused, keyListener } = Store.getState();
-
     if (!settings.focus || focusableChildren.length === 0) return;
-    if (!isOpen){
+    if (isOpen){
         Store.dispatch({ lastFocused: document.activeElement });
         const focusFn = () => focusableChildren[0].focus();
         if (settings.delay) window.setTimeout(focusFn, settings.delay);
         else focusFn();
         if (!settings.trapTab) return;
-        document.removeEventListener('keydown', keyListener);
-    } else {
         settings.trapTab && document.addEventListener('keydown', keyListener);
+    } else {
+        document.removeEventListener('keydown', keyListener);
         const reFocusFn = () => {
             lastFocused && lastFocused.focus();
             Store.dispatch({ lastFocused: false });
