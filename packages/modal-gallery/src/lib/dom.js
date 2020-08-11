@@ -53,8 +53,7 @@ export const initUI = Store => state => {
     const { settings, items, keyListener } = Store.getState();
     const container = document.body.appendChild(settings.templates.overlay());
     const buttons = items.length > 2 ? settings.templates.buttons() : '';
-    container.insertAdjacentHTML('beforeend', settings.templates.overlayInner(buttons, items.map(settings.templates.details).map(settings.templates.item).join('')));
-    
+    container.insertAdjacentHTML('beforeend', settings.templates.overlayInner(buttons, items.map(settings.templates.details).map(settings.templates.item(items)).join('')));
     const domItems = [].slice.call(container.querySelectorAll('.js-modal-gallery__item'));
     const domTotals = container.querySelector('.js-gallery-totals');
     Store.dispatch({ dom: {
