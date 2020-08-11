@@ -39,7 +39,7 @@ describe(`Cookie banner > cookies > accept`, () => {
 
     it('Sets a cookie based on accept button', async () => {
         document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-        expect(document.cookie).toEqual(`${defaults.name}={"test":1,"performance":1}`);
+        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"test":1,"performance":1}`)}`);
     });
 
 });
@@ -48,13 +48,13 @@ describe(`Cookie banner > cookies > update`, () => {
     beforeAll(init);
 
     it('Sets a cookie based on preferences form', async () => {
-        expect(document.cookie).toEqual(`${defaults.name}={"test":1,"performance":1}`);
+        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"test":1,"performance":1}`)}`);
 
         const fields = Array.from(document.querySelectorAll(`.${defaults.classNames.field}`));
         fields[1].checked = true;
         fields[3].checked = true;
         document.querySelector(`.${defaults.classNames.submitBtn}`).click();
-        expect(document.cookie).toEqual(`${defaults.name}={"test":0,"performance":0}`);
+        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"test":0,"performance":0}`)}`);
     });
 
 });

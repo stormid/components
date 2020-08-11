@@ -58,7 +58,7 @@ describe(`Cookie banner > DOM > form interactions`, () => {
     it('Submit button should set the cookie and hide the banner', async () => {
         document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
         
-        expect(document.cookie).toEqual(`${defaults.name}={"test":1,"performance":1}`);
+        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"test":1,"performance":1}`)}`);
         expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull();
     });
 });

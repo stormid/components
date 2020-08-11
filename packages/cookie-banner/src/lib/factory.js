@@ -9,11 +9,11 @@ export default settings => {
     if (!cookiesEnabled()) return;
     
     const Store = createStore();
-    const cookies = readCookie(settings);
+    const cookie = readCookie(settings);
     Store.update(
         initialState,
-        { settings, consent: cookies ? JSON.parse(cookies.value) : { } },
-        [ necessary, apply(Store), cookies ? noop : initBanner(Store), initForm(Store) ]
+        { settings, consent: cookie ? JSON.parse(cookie) : { } },
+        [ necessary, apply(Store), cookie ? noop : initBanner(Store), initForm(Store) ]
     );
 
     return { getState: Store.getState } ;

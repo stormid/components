@@ -24,13 +24,15 @@ export const writeCookie = state => {
 };
 
 export const readCookie = settings => {
-    const cookie = document.cookie.split('; ')
-        .map(part => ({
-            name: part.split('=')[0],
-            value: atob(part.split('=')[1])
-        }))
-        .filter(part => part.name === settings.name)[0];
-    return cookie !== undefined ? cookie : false;
+    const cookies = document.cookie.split('; ');
+
+    for (let n = 0; n <= cookies.length; n++) {
+        if (!cookies[n]) return false;
+        const [ name, value ] = cookies[n].split('=');
+        if (name === settings.name) return atob(value);
+    }
+
+    return false;
 };
 
 const updateCookie = state => model => document.cookie = [
