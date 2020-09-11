@@ -15,12 +15,12 @@ Client-side form validation library to support .NET validation using data-val at
 
 Install the package
 ```
-npm i -S @storm/validate
+npm i -S @stormid/validate
 ```
 
 Initialise the module
 ```
-import validate from '@storm/validate';
+import validate from '@stormid/validate';
 
 //returns an array of instances for every selector matched
 //you can also pass in a DOM element as the first argument
