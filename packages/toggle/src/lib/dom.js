@@ -13,7 +13,7 @@ export const initUI = Store => () => {
         const id = node.getAttribute('id');
         if (!id) throw console.warn(`The toggle target should have an id.`);
         toggle.setAttribute('aria-controls', id);
-        toggle.setAttribute('aria-expanded', 'false');
+        if(!classTarget.classList.contains(statusClass)) toggle.setAttribute('aria-expanded', 'false');
         TRIGGER_EVENTS.forEach(ev => {
             toggle.addEventListener(ev, e => {
                 if (!!e.keyCode && !~TRIGGER_KEYCODES.indexOf(e.keyCode) || (e.which && e.which === 3)) return;
