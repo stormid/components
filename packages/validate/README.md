@@ -8,6 +8,7 @@ Client-side form validation library to support .NET validation using data-val at
 
 - [Usage](#usage)
 - [Validators](#validators)
+- [Errors](#errors)
 - [Options](#options)
 - [API](#api)
 
