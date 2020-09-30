@@ -76,6 +76,14 @@ Options can also be set on an instance by adding data-attributes to the toggle e
 </div>
 ```
 
+A toggle can also be started open usng the active className alone, e.g.
+```
+<div class="parent is--active">
+    <button class="js-toggle__btn"></a>
+    <div class="js-toggle__local" data-toggle="js-toggle__btn"></div>
+</div>
+```
+
 ## API
 
 toggle() returns an array of instances. Each instance exposes the interface
