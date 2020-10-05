@@ -82,7 +82,7 @@ export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(
 export const toggleAttributes = ({ toggles, isOpen, classTarget, animatingClass, statusClass }) => {
     toggles.forEach(toggle => toggle.setAttribute('aria-expanded', isOpen));
     classTarget.classList.remove(animatingClass);
-    classTarget.classList.toggle(statusClass);
+    classTarget.classList[isOpen ? 'add' : 'remove'](statusClass);
 };
 
 /*
@@ -181,4 +181,14 @@ export const manageFocus = Store => () => {
         if (settings.delay) window.setTimeout(reFocusFn, settings.delay);
         else reFocusFn();
     }
+};
+
+export const getStateFromDOM = (node, settings) => {
+    const classTarget = settings.local ? node.parentNode : document.documentElement;
+    const statusClass = settings.local ? 'is--active' : `on--${node.getAttribute('id')}`;
+    return {
+        classTarget,
+        statusClass,
+        shouldStartOpen: settings.startOpen || classTarget.classList.contains(statusClass)
+    };
 };

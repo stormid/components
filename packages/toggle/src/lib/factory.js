@@ -6,7 +6,8 @@ import {
     proxyListener,
     initUI,
     startToggleLifecycle,
-    toggle
+    toggle,
+    getStateFromDOM
 } from './dom';
 
 
@@ -18,14 +19,16 @@ import {
  */
 export default ({ node, settings }) => {
     const Store = createStore();
+    //resolve state from DOM
+    const { classTarget, statusClass, shouldStartOpen } = getStateFromDOM(node, settings);
     //set initial state of Store
     Store.dispatch({
         node,
         settings,
         toggles: findToggles(node),
         isOpen: false,
-        classTarget: settings.local ? node.parentNode : document.documentElement,
-        statusClass: settings.local ? 'is--active' : `on--${node.getAttribute('id')}`,
+        classTarget,
+        statusClass,
         animatingClass: settings.local ? `animating--${node.getAttribute('id')}` : 'is--animating',
         focusableChildren: getFocusableChildren(node),
         lastFocused: false,
@@ -33,7 +36,7 @@ export default ({ node, settings }) => {
         focusInListener: proxyListener(Store),
         clickListener: proxyListener(Store)
     }, [ initUI(Store), () => {
-	    settings.startOpen && startToggleLifecycle(Store)();
+	    shouldStartOpen && startToggleLifecycle(Store)();
     }]);
 
 

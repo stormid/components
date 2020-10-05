@@ -155,6 +155,34 @@ describe('Toggle > Escape to close', () => {
     });
 });
 
+describe(`Toggle > start open`, () => {
+
+    it('should start open based on data-attribute', async () => {
+
+        document.body.innerHTML = `<div><button class="js-toggle__btn">Test toggle</button>
+            <div id="exp-section" class="js-toggle-local" data-toggle="js-toggle__btn" data-start-open="true"></div>
+        </div>`;
+
+        const [ instance ] = toggle('.js-toggle-local', { local: true });
+        const { isOpen, toggles } = instance.getState();
+        expect(isOpen).toEqual(true);
+        expect(toggles[0].getAttribute('aria-expanded')).toEqual('true');
+    });
+
+    it('should start open based on className', async () => {
+
+        document.body.innerHTML = `<div class="is--active"><button class="js-toggle__btn">Test toggle</button>
+            <div id="exp-section" class="js-toggle-local" data-toggle="js-toggle__btn"></div>
+        </div>`;
+
+        const [ instance ] = toggle('.js-toggle-local', { local: true });
+        const { isOpen, toggles, classTarget, statusClass } = instance.getState();
+        expect(isOpen).toEqual(true);
+        expect(toggles[0].getAttribute('aria-expanded')).toEqual('true');
+        expect(classTarget.classList.contains(statusClass)).toEqual(true);
+    });
+});
+
 describe('Toggle > lifecycle > prehook', () => {
     let prehookToggle, prehook;
     beforeEach(() => {

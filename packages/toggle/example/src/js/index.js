@@ -6,5 +6,7 @@ window.addEventListener('DOMContentLoaded', () => {
         closeOnBlur: true,
         trapTab: true
     });
-    window.__t2__ = toggle('.js-toggle__local', { closeOnBlur: true });
+    window.__t2__ = toggle('.js-toggle__local', {
+        closeOnBlur: true
+    });
 });
