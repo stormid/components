@@ -194,15 +194,16 @@ describe('Toggle > lifecycle > prehook', () => {
         })[0];
     });
 
+    it('should bypass the prehook if toggle is invoked outwith lifecycle', async () => {
+        prehookToggle.toggle();
+        expect(prehook).not.toHaveBeenCalled();
+    });
+    
     it('should call the prehook before toggle with node, toggles and isOpen properties of state', async () => {
         let { node, toggles } = prehookToggle.getState();
         prehookToggle.startToggle();
         expect(prehook).toHaveBeenCalledWith({ node, toggles, isOpen: false });
     });
-
-    it('should bypass the prehook if toggle is invoked outwith lifecycle', async () => {
-        prehookToggle.toggle();
-        expect(prehook).not.toHaveBeenCalled();
-    });
+    
     
 });
