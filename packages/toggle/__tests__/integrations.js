@@ -181,5 +181,28 @@ describe(`Toggle > start open`, () => {
         expect(toggles[0].getAttribute('aria-expanded')).toEqual('true');
         expect(classTarget.classList.contains(statusClass)).toEqual(true);
     });
+});
 
+describe('Toggle > lifecycle > prehook', () => {
+    let prehookToggle, prehook;
+    beforeEach(() => {
+        document.body.innerHTML = `<button class="js-toggle__prehook-btn">Test toggle</button>
+            <div id="target-2" class="js-toggle__prehook" data-toggle="js-toggle__prehook-btn"></div>`;
+        prehook = jest.fn();
+        prehookToggle= toggle('.js-toggle__prehook', {
+            prehook
+        })[0];
+    });
+
+    it('should call the prehook before toggle with node, toggles and isOpen properties of state', async () => {
+        let { node, toggles } = prehookToggle.getState();
+        prehookToggle.startToggle();
+        expect(prehook).toHaveBeenCalledWith({ node, toggles, isOpen: false });
+    });
+
+    it('should bypass the prehook if toggle is invoked outwith lifecycle', async () => {
+        prehookToggle.toggle();
+        expect(prehook).not.toHaveBeenCalled();
+    });
+    
 });
