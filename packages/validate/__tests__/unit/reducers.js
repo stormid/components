@@ -1,4 +1,4 @@
-import { ACTIONS } from '../../src/lib/constants';
+import { ACTIONS, GROUP_ATTRIBUTE } from '../../src/lib/constants';
 import Reducers from '../../src/lib/reducers';
 
 //set initial state
@@ -270,6 +270,34 @@ describe('Validate > Unit > Reducers > Add validation method', () => {
             groups: {
                 group1: {
                     fields: [input],
+                    validators: [{ type: 'custom', validatorFn, message: 'This field can never be valid' }],
+                    serverErrorNode: false,
+                    valid: false
+                }
+            }
+        });
+    });
+    it('should add a validator and collect fields based on group data attribute', async () => {
+        expect.assertions(1);
+        const validatorFn = (value, fields, param) => false;
+        document.body.innerHTML = `<form class="form" method="post" action="">
+            <label for="group1">Text</label>
+            <input id="group1" name="group1" data-val-${GROUP_ATTRIBUTE}="groupX" type="text">
+        </form>`;
+        
+        //set new group name to data group attribute, not name attribute
+        const nextState = {
+            groupName: 'groupX',
+            validator: { type: 'custom', validatorFn, message: 'This field can never be valid' }
+        };
+        const state = { groups: {} };
+        //select field based on data attribute
+        const fields = [].slice.call(document.querySelectorAll(`[data-val-${GROUP_ATTRIBUTE}="groupX"]`));
+        const output = Reducers[ACTIONS.ADD_VALIDATION_METHOD](state, nextState);
+        expect(output).toEqual({
+            groups: {
+                groupX: { //data attribute group name used as group key, not name attribute
+                    fields,
                     validators: [{ type: 'custom', validatorFn, message: 'This field can never be valid' }],
                     serverErrorNode: false,
                     valid: false

@@ -171,8 +171,6 @@ export const assembleValidationGroup = (acc, input) => {
     let name = (input.getAttribute('data-val-'+GROUP_ATTRIBUTE)) ? input.getAttribute('data-val-'+GROUP_ATTRIBUTE) : input.getAttribute('name') ;
     if (!name) return console.warn('Missing data group or name attribute'), acc;
     
-    console.log(acc);
-
     return acc[name] = acc[name] ? Object.assign(acc[name], { fields: [...acc[name].fields, input] })
         : {
             valid: false,
@@ -281,7 +279,6 @@ export const getValidityState = groups => Promise.all(
 export const getGroupValidityState = group => {
     let hasError = false;
     return Promise.all(group.validators.map(validator => new Promise((resolve, reject) => {
-        console.log(validator);
         if (validator.type !== 'remote'){
             if (validate(group, validator)) resolve(true);
             else {
