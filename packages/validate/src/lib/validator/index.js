@@ -10,7 +10,8 @@ import {
     DOTNET_ADAPTORS,
     DOTNET_PARAMS,
     DOTNET_ERROR_SPAN_DATA_ATTRIBUTE,
-    DOM_SELECTOR_PARAMS
+    DOM_SELECTOR_PARAMS,
+    GROUP_ATTRIBUTE
 } from '../constants';
 
 /**
@@ -167,14 +168,15 @@ export const validate = (group, validator) => validator.type === 'custom'
  * 
  */
 export const assembleValidationGroup = (acc, input) => {
-    let name = input.getAttribute('name');
-    if (!name) return console.warn('Missing name attribute'), acc;
+    let name = (input.getAttribute('data-val-'+GROUP_ATTRIBUTE)) ? input.getAttribute('data-val-'+GROUP_ATTRIBUTE) : input.getAttribute('name') ;
+    if (!name) return console.warn('Missing data group or name attribute'), acc;
+    
     return acc[name] = acc[name] ? Object.assign(acc[name], { fields: [...acc[name].fields, input] })
         : {
             valid: false,
             validators: normaliseValidators(input),
             fields: [input],
-            serverErrorNode: document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}="${input.getAttribute('name')}"]`) || false
+            serverErrorNode: document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}="${name}"]`) || false
         }, acc;
 };
 

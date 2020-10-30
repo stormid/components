@@ -1,4 +1,5 @@
 import validate from '../../../src';
+import { GROUP_ATTRIBUTE } from '../../../src/lib/constants';
 
 describe('Validate > Integration > API > addGroup', () => {
 
@@ -104,7 +105,7 @@ describe('Validate > Integration > API > addMethod', () => {
         });
     });
 
-    it('should not add a validation method of parameters are missing', async () => {
+    it('should not add a validation method if parameters are missing', async () => {
         // expect.assertions(6);
         document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
@@ -133,6 +134,45 @@ describe('Validate > Integration > API > addMethod', () => {
         validator.addMethod(undefined, method, message);
         expect(validator.getState().groups).toEqual({
             group1: {
+                serverErrorNode: false,
+                validators: [{ type: 'required' }],
+                fields: [input],
+                valid: false
+            }
+        });
+
+    });
+
+    it('should not add a validation method if fields cannot be found', async () => {
+        // expect.assertions(6);
+        document.body.innerHTML = `<form class="form">
+            <label id="group1-1-label" for="group1-1">group1</label>
+            <input
+                id="group1-1"
+                name="group1"
+                data-val-${GROUP_ATTRIBUTE}="groupX"
+                value=""
+                required
+                type="text" />
+        </form>`;
+        // const form = document.querySelector('.form');
+        const input = document.querySelector('#group1-1');
+        const validator = validate('form')[0];
+
+        expect(validator.getState().groups).toEqual({
+            groupX: {
+                serverErrorNode: false,
+                validators: [{ type: 'required' }],
+                fields: [input],
+                valid: false
+            }
+        });
+        const method = () => false;
+        const message = 'Custom error';
+
+        validator.addMethod('neither-name-or-group-name', method, message);
+        expect(validator.getState().groups).toEqual({
+            groupX: {
                 serverErrorNode: false,
                 validators: [{ type: 'required' }],
                 fields: [input],

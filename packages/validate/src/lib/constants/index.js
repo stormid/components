@@ -76,3 +76,5 @@ export const DOTNET_CLASSNAMES = {
     VALID: 'field-validation-valid',
     ERROR: 'error-message'
 };
+
+export const GROUP_ATTRIBUTE = "group";
