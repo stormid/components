@@ -70,5 +70,17 @@ export const fetch = (url, props) =>
         };
         xhr.onerror = () => reject(xhr.statusText);
         xhr.send(props.body);
-    })
-;
+    });
+
+export const findErrorNodes = groups => Object.keys(groups).reduce((errorNodes, groupName) => {
+    // if there's a server-rendered error message string we need to extract it into a DOM node
+    // it can then be treated the same as a client-rendered error container node, or a text node rendered to a serverErrorNode
+    if (groups[groupName].serverErrorNode){
+        const serverErrorText = groups[groupName].serverErrorNode.textContent;
+        if (serverErrorText) {
+            groups[groupName].serverErrorNode.innerHTML = '';
+            errorNodes[groupName] = groups[groupName].serverErrorNode.appendChild(document.createTextNode(serverErrorText));
+        }
+    }
+    return errorNodes;
+}, {});

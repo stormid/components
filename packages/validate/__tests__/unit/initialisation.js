@@ -35,7 +35,7 @@ describe('Validate > Initialisation', () => {
         expect(validators[0].getState().form.getAttribute('novalidate')).toEqual('novalidate');
     });
 
-    it('should create an empty errorNodes object property of the validator state', async () => {
+    it('should create an empty errorNodes object property of the validator state if there are no server-rendered errors', async () => {
         expect.assertions(1);
         expect(validators[0].getState().errorNodes).toEqual({});
     });
@@ -116,5 +116,20 @@ describe('Validate > Initialisation > novalidate', () => {
         </form>`;
         const validators = await validate('.form');
         expect(validators).toEqual([]);
+    });
+});
+
+describe('Validate > Initialisation > server-side errors', () => {
+    it('should collect server-rendered errors, convert to DOM nodes, and add tp errorNodes object property of the validator state', async () => {
+        expect.assertions(2);
+        const serverRenderedErrorMessage = 'Please enter between 2 and 8 characters';
+        document.body.innerHTML = `<form class="form" method="post" action="">
+            <label for="group1-1">Text (required, min 2 characters, max 8 characters)</label>
+            <input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="${defaults.messages.required()}" data-val-length-min="2" data-val-length-max="8" type="text">
+            <span class="text-danger field-validation-valid" data-valmsg-for="group1">${serverRenderedErrorMessage}</span>
+        </form>`;
+        const [ validator ] = await validate('.form');
+        expect(Object.keys(validator.getState().errorNodes).length).toEqual(1);
+        expect(validator.getState().errorNodes.group1.textContent).toEqual(serverRenderedErrorMessage);
     });
 });

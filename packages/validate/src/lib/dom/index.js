@@ -33,8 +33,6 @@ export const h = (nodeName, attributes, text) => {
 export const createErrorTextNode = (group, msg) => {
     let node = document.createTextNode(msg);
     group.serverErrorNode.setAttribute('role', 'alert');
-    group.serverErrorNode.innerHTML = '';
-
     group.serverErrorNode.classList.remove(DOTNET_CLASSNAMES.VALID);
     group.serverErrorNode.classList.add(DOTNET_CLASSNAMES.ERROR);
     
@@ -54,12 +52,10 @@ export const createErrorTextNode = (group, msg) => {
  */
 export const clearError = groupName => state => {
     state.errorNodes[groupName].parentNode.removeChild(state.errorNodes[groupName]);
-    state.errorNodes[groupName].parentNode.removeAttribute('role');
-    // errorNodes[groupName].parentNode.removeChild(errorNodes[groupName]);
     if (state.groups[groupName].serverErrorNode) {
         state.groups[groupName].serverErrorNode.classList.remove(DOTNET_CLASSNAMES.ERROR);
         state.groups[groupName].serverErrorNode.classList.add(DOTNET_CLASSNAMES.VALID);
-        state.groups[groupName].serverErrorNode.innerHTML = '';
+        state.groups[groupName].serverErrorNode.removeAttribute('role');
     }
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.remove('is--invalid');
@@ -114,7 +110,10 @@ export const renderError = groupName => state => {
             : document
                 .querySelector(`[for="${state.groups[groupName].fields[state.groups[groupName].fields.length-1].getAttribute('id')}"]`)
                 .appendChild(
-                    h('span', { class: DOTNET_CLASSNAMES.ERROR, role: 'alert' }, state.groups[groupName].errorMessages[0]),
+                    h('span', {
+                        class: DOTNET_CLASSNAMES.ERROR,
+                        role: 'alert'
+                    }, state.groups[groupName].errorMessages[0]),
                     state.groups[groupName].fields[state.groups[groupName].fields.length-1]
                 );
 						

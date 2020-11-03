@@ -11,7 +11,8 @@ import {
     resolveGetParams,
     domNodesFromCommaList,
     escapeAttributeValue,
-    extractValueFromGroup
+    extractValueFromGroup,
+    findErrorNodes
 } from '../../../src/lib/validator/utils';
 
 describe('Validate > Unit > Utils > isCheckable', () => {
@@ -334,3 +335,25 @@ describe('Validate > Unit > Utils > extractValueFromGroup', () => {
 });
 
 //fetch
+
+describe('Validate > Unit > Utils > findErrorNodes', () => {
+
+    it('Should find serverErrorNodes and convert string error messages to DOM nodes', async () => {
+        document.body.innerHTML = `<form class="form" method="post" action="">
+            <label id="test-label" for="group1">Text</label>
+            <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
+            <span id="test-server-error-node" data-valmsg-for="group1" role="alert">Server-rendered error</span>
+        </form>`;
+        const serverErrorNode = document.getElementById('test-server-error-node');
+        const groups = {
+            group1: {
+                serverErrorNode,
+                fields: Array.from(document.getElementsByName('group1'))
+            }
+        };
+        const errorNodes = findErrorNodes(groups);
+        const convertedNode = serverErrorNode.childNodes[0];
+        expect(errorNodes.group1).toEqual(convertedNode);
+    });
+
+});
