@@ -19,7 +19,7 @@ export default (form, settings) => {
     const Store = createStore();
     Store.dispatch(ACTIONS.SET_INITIAL_STATE, getInitialState(form, settings));
     form.addEventListener('submit', validate(Store));
-    form.addEventListener('reset', () => { Store.update(ACTIONS.CLEAR_ERRORS, null, [ clearErrors ]); });
+    form.addEventListener('reset', () => Store.dispatch(ACTIONS.CLEAR_ERRORS, {}, [ clearErrors ]));
 
     return {
         getState: Store.getState,

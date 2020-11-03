@@ -21,16 +21,6 @@ export default {
             groups: Object.assign({}, state.groups, nextGroup)
         });
     },
-    [ACTIONS.CLEAR_ERROR]: (state, data) => {
-        const nextGroup = {};
-        nextGroup[data] = Object.assign({}, state.groups[data], {
-            errorMessages: [],
-            valid: true
-        });
-        return Object.assign({}, state, {
-            groups: Object.assign({}, state.groups, nextGroup)
-        });
-    },
     [ACTIONS.ADD_GROUP]: (state, data) => Object.assign({}, state, {
         groups: Object.assign({}, state.groups, data)
     }),
