@@ -57,7 +57,7 @@ describe('Validate > Integration > api > validate > regex/pattern', () => {
         expect(label.lastChild.textContent).toEqual('Regex error message');
     });
     
-    it('should validate a form based on the HTML5 number validator returning true if valid', async () => {
+    it('should validate a form based on the HTML5 pattern validator returning true if the pattern is matched', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">group1</label>
@@ -73,7 +73,7 @@ describe('Validate > Integration > api > validate > regex/pattern', () => {
         expect(validityState).toEqual(true);
     });
 
-    it('should validate a form based on the HTML5 remote validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if the remote validation returns an error', async () => {
+    it('should validate a form based on the HTML5 pattern validator returning true if the pattern is matched', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">group1</label>
