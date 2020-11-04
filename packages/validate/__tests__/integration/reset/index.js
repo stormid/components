@@ -2,7 +2,7 @@ import validate from '../../../src';
 
 describe('Validate > Integration > Reset', () => {
 
-    it('should clear errors messages from state and DOM, remove error classNames and attributes, remove errorNodes from state', async () => {
+    it('should clear errors messages from state and DOM, remove error classNames and attributes, remove errors from state', async () => {
         document.body.innerHTML = `<form class="form" method="post" action="">
             <div>
                 <label for="group1">Label</label>
@@ -26,7 +26,7 @@ describe('Validate > Integration > Reset', () => {
         //             valid: false
         //         }
         //     },
-        //     errorNodes: {
+        //     errors: {
         //         group1: document.getElementById('test-error-node-1'),
         //         group2: document.getElementById('test-error-node-2')
         //     }
@@ -36,8 +36,8 @@ describe('Validate > Integration > Reset', () => {
         await validator.validate();
         expect(validator.getState().groups.group1.valid).toEqual(false);
         expect(validator.getState().groups.group2.valid).toEqual(false);
-        expect(validator.getState().errorNodes.group1).toEqual(document.querySelector('[for="group1"]').lastElementChild);
-        expect(validator.getState().errorNodes.group2).toEqual(document.querySelector('[for="group2"]').lastElementChild);
+        expect(validator.getState().errors.group1).toEqual(document.querySelector('[for="group1"]').lastElementChild);
+        expect(validator.getState().errors.group2).toEqual(document.querySelector('[for="group2"]').lastElementChild);
         expect(validator.getState().groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(validator.getState().groups.group2.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(validator.getState().groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
@@ -49,8 +49,8 @@ describe('Validate > Integration > Reset', () => {
         expect(validator.getState().groups.group2.valid).toEqual(true);
         expect(validator.getState().groups.group1.errorMessages).toEqual([]);
         expect(validator.getState().groups.group2.errorMessages).toEqual([]);
-        expect(validator.getState().errorNodes.group1).toBeUndefined();
-        expect(validator.getState().errorNodes.group2).toBeUndefined();
+        expect(validator.getState().errors.group1).toBeUndefined();
+        expect(validator.getState().errors.group2).toBeUndefined();
         expect(validator.getState().groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(false);
         expect(validator.getState().groups.group2.fields[0].parentNode.classList.contains('is--invalid')).toEqual(false);
         expect(validator.getState().groups.group1.fields[0].getAttribute('aria-invalid')).toEqual(null);
