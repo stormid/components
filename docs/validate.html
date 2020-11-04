@@ -413,7 +413,7 @@ const [ validator ] = validate('form:not([novalidate])');
 }
 </code></pre>
 <h3 id="addmethod">addMethod</h3>
-<p>Add a custom validation method:</p>
+<p>Add a custom validation method to a group:</p>
 <pre><code>const [ validator ] = validate('.my-form');
 
 validator.addMethod(
@@ -432,7 +432,7 @@ validator.addMethod(
 await validator.validate();
 </code></pre>
 <h3 id="addgroup">addGroup</h3>
-<p>add an input or input validation group</p>
+<p>Add a field or field group to the validator:</p>
 <pre><code>const [ validator ] = validate('.my-form');
 const fieldsArray = Array.from(document.querySelector('.new-fields'))
 
@@ -441,7 +441,7 @@ const fieldsArray = Array.from(document.querySelector('.new-fields'))
 validator.addGroup(fieldsArray);
 </code></pre>
 <h3 id="removegroup">removeGroup</h3>
-<p>remove a validation group</p>
+<p>Remove a validation group from the validator:</p>
 <pre><code>const [ validator ] = validate('.my-form');
 const fieldsArray = Array.from(document.querySelectorAll([name=new-fields]))
 
