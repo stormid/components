@@ -54,8 +54,8 @@ export const extractValueFromGroup = group => Object.prototype.hasOwnProperty.ca
     : group.reduce(groupValueReducer, '');
 
 
+/* istanbul ignore next */
 export const fetch = (url, props) =>
-    /* istanbul ignore next */
     new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.open(props.method || 'GET', url);
@@ -70,5 +70,14 @@ export const fetch = (url, props) =>
         };
         xhr.onerror = () => reject(xhr.statusText);
         xhr.send(props.body);
-    })
-;
+    });
+
+export const findErrors = groups => Object.keys(groups).reduce((errors, groupName) => {
+    if (groups[groupName].serverErrorNode){
+        const serverErrorText = groups[groupName].serverErrorNode.textContent;
+        if (serverErrorText) {
+            errors[groupName] = serverErrorText;
+        }
+    }
+    return errors;
+}, {});

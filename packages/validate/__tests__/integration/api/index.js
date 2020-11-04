@@ -31,6 +31,26 @@ describe('Validate > Integration > API > addGroup', () => {
 
     });
 
+    it('should return leave state unchanged if it cannot add the validation group', async () => {
+        document.body.innerHTML = `<form class="form">
+            <label id="group1-1-label" for="group1-1">group1</label>
+            <input
+                id="group1-1"
+                name="group1"
+                value=""
+                type="text" />
+        </form>`;
+        const input = document.querySelector('#group1-1');
+        const [ validator ] = validate('form');
+        console.warn = jest.fn();
+
+        expect(validator.getState().groups).toEqual({});
+        validator.addGroup([input]);
+        expect(validator.getState().groups).toEqual({});
+        expect(console.warn).toHaveBeenCalled();
+    });
+
+
 });
 
 describe('Validate > Integration > API > removeGroup', () => {
@@ -119,6 +139,7 @@ describe('Validate > Integration > API > addMethod', () => {
         // const form = document.querySelector('.form');
         const input = document.querySelector('#group1-1');
         const validator = validate('form')[0];
+        console.warn = jest.fn();
 
         expect(validator.getState().groups).toEqual({
             group1: {
@@ -140,6 +161,7 @@ describe('Validate > Integration > API > addMethod', () => {
                 valid: false
             }
         });
+        expect(console.warn).toHaveBeenCalled();
 
     });
 

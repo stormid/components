@@ -4,7 +4,8 @@ import {
     isSelect,
     isFile,
     domNodesFromCommaList,
-    groupIsHidden
+    groupIsHidden,
+    findErrors
 } from './utils';
 import {
     DOTNET_ADAPTORS,
@@ -232,14 +233,17 @@ export const removeUnvalidatableGroups = groups => {
  * @return state [Object] consisting of groups [Object] name-indexed validation groups
  * 
  */
-export const getInitialState = (form, settings) => ({
-    form,
-    settings,
-    errorNodes: {},
-    realTimeValidation: false,
-    groups: removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
-        .reduce(assembleValidationGroup, {}))
-});
+export const getInitialState = (form, settings) => {
+    const groups = removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
+        .reduce(assembleValidationGroup, {}));
+    return {
+        form,
+        settings,
+        errors: findErrors(groups),
+        realTimeValidation: false,
+        groups
+    };
+};
 
 /**
  * Reducer run against an array of resolved validation promises to set the overall validityState of a group

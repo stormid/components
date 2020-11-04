@@ -3,15 +3,24 @@ import {
     createErrorTextNode,
     focusFirstInvalidField,
     createButtonValueNode
-} from '../../src/lib/dom';
-import { DOTNET_CLASSNAMES } from '../../src/lib/constants';
+} from '../../../src/lib/dom';
+import { DOTNET_CLASSNAMES } from '../../../src/lib/constants';
 
 describe('Validate > Unit > DOM > h', () => {
+    
+
     it('should return a DOM node for given vNode arguments', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<div class="test"></div>`;
+        expect(h('div', { class: 'test' })).toEqual(document.body.firstElementChild);
+    });
+
+    it('should return a DOM node for given vNode arguments with text nodes', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<div class="test">Lorem ipsum</div>`;
         expect(h('div', { class: 'test' }, 'Lorem ipsum')).toEqual(document.body.firstElementChild);
     });
+
 });
 
 //createErrorTextNode
@@ -34,19 +43,9 @@ describe('Validate > Unit > DOM > createErrorTextNode', () => {
     
 });
 
-
-/**
- * To do: rationalise error rendering and clean-up
- */
-
-//clearError
-//clearErrors
-//renderErrors
-//renderError
-
 //focusFirstInvalidField
 describe('Validate > Unit > DOM > focusFirstInvalidField', () => {
-    it('should focus on the first invalid field in a form post-vaidation', async () => {
+    it('should focus on the first invalid field in a form post-validation', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form class="form" method="post" action="">
             <label for="group1">Text (required, min 2 characters, max 8 characters)</label>

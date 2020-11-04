@@ -175,12 +175,16 @@
     </form> -->
     <form class="js-validate" action="#" autocomplete="off">
         <div class="form-row">
-            <label class="label" for="mce-EMAIL">Email address</label>
+            <label class="label" for="mce-EMAIL">
+                Email address
+                <span data-valmsg-for="EMAIL" role="alert">Email is not a valid email address</span>
+            </label>
             <input
                 class="input"
                 type="email"
                 id="mce-EMAIL"
                 name="EMAIL"
+                aria-invalid="true"
                 data-val="true"
                 data-val-required="Email is incomplete"
                 data-val-email="Email is not a valid email address"
