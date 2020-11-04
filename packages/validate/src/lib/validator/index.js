@@ -5,7 +5,7 @@ import {
     isFile,
     domNodesFromCommaList,
     groupIsHidden,
-    findErrorNodes
+    findErrors
 } from './utils';
 import {
     DOTNET_ADAPTORS,
@@ -237,7 +237,7 @@ export const getInitialState = (form, settings) => {
     return {
         form,
         settings,
-        errorNodes: findErrorNodes(groups),
+        errors: findErrors(groups),
         realTimeValidation: false,
         groups
     };

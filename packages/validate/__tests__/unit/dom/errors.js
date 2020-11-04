@@ -25,7 +25,7 @@ describe('Validate > Unit > DOM > clearError', () => {
                     fields: Array.from(document.getElementsByName('group1'))
                 }
             },
-            errorNodes: {
+            errors: {
                 group1: document.getElementById('test-error-node')
             }
         };
@@ -34,7 +34,7 @@ describe('Validate > Unit > DOM > clearError', () => {
         expect(document.getElementById('test-error-node')).toEqual(null);
         expect(mockState.groups.group1.fields[0].classList.contains('is--invalid')).toEqual(false);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual(null);
-        expect(mockState.errorNodes.group1).toBeUndefined();
+        expect(mockState.errors.group1).toBeUndefined();
     });
 
     it('should remove a server-side rendered text node, toggle serverNode classNames, remove invalid classNames and aria, and deletes the errorNode for the group from state', async () => {
@@ -56,7 +56,7 @@ describe('Validate > Unit > DOM > clearError', () => {
                     fields: Array.from(document.getElementsByName('group1'))
                 }
             },
-            errorNodes: {
+            errors: {
                 group1: errorNode
             }
         };
@@ -68,7 +68,7 @@ describe('Validate > Unit > DOM > clearError', () => {
         expect(mockState.groups.group1.serverErrorNode.classList.contains(DOTNET_CLASSNAMES.ERROR)).toEqual(false);
         expect(mockState.groups.group1.serverErrorNode.classList.contains(DOTNET_CLASSNAMES.VALID)).toEqual(true);
         expect(mockState.groups.group1.serverErrorNode.getAttribute('role')).toEqual(null);
-        expect(mockState.errorNodes.group1).toBeUndefined();
+        expect(mockState.errors.group1).toBeUndefined();
     });
 });
 
@@ -99,7 +99,7 @@ describe('Validate > Unit > DOM > clearErrors', () => {
                     fields: Array.from(document.getElementsByName('group2'))
                 }
             },
-            errorNodes: {
+            errors: {
                 group1: document.getElementById('test-error-node-1'),
                 group2: document.getElementById('test-error-node-2')
             }
@@ -109,11 +109,11 @@ describe('Validate > Unit > DOM > clearErrors', () => {
         expect(document.getElementById('test-error-node-1')).toEqual(null);
         expect(mockState.groups.group1.fields[0].classList.contains('is--invalid')).toEqual(false);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual(null);
-        expect(mockState.errorNodes.group1).toBeUndefined();
+        expect(mockState.errors.group1).toBeUndefined();
         expect(document.getElementById('test-error-node-2')).toEqual(null);
         expect(mockState.groups.group2.fields[0].classList.contains('is--invalid')).toEqual(false);
         expect(mockState.groups.group2.fields[0].getAttribute('aria-invalid')).toEqual(null);
-        expect(mockState.errorNodes.group2).toBeUndefined();
+        expect(mockState.errors.group2).toBeUndefined();
     });
     
     it('should not change state if there are no errors', async () => {
@@ -138,7 +138,7 @@ describe('Validate > Unit > DOM > clearErrors', () => {
                     fields: Array.from(document.getElementsByName('group2'))
                 }
             },
-            errorNodes: {}
+            errors: {}
         };
         //all side effects to test
         const copy = Object.assign({}, mockState);
@@ -165,7 +165,7 @@ describe('Validate > Unit > DOM > renderError', () => {
                     errorMessages: ['This field is required']
                 }
             },
-            errorNodes: {}
+            errors: {}
         };
         renderError('group1')(mockState);
         const errorContainer = document.getElementById('test-label').lastElementChild;
@@ -193,7 +193,7 @@ describe('Validate > Unit > DOM > renderError', () => {
                     errorMessages: ['This field is required']
                 }
             },
-            errorNodes: {}
+            errors: {}
         };
         renderError('group1')(mockState);
         expect(serverErrorNode.textContent).toEqual('This field is required');
@@ -222,7 +222,7 @@ describe('Validate > Unit > DOM > renderError', () => {
                     errorMessages: ['This field is required']
                 }
             },
-            errorNodes: {
+            errors: {
                 group1: errorNode
             }
         };
@@ -231,7 +231,7 @@ describe('Validate > Unit > DOM > renderError', () => {
         expect(serverErrorNode.getAttribute('role')).toEqual('alert');
         expect(mockState.groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
-        expect(mockState.errorNodes.group1).not.toEqual(errorNode);
+        expect(mockState.errors.group1).not.toEqual(errorNode);
     });
 });
 
@@ -265,7 +265,7 @@ describe('Validate > Unit > DOM > renderErrors', () => {
                     valid: true
                 }
             },
-            errorNodes: {}
+            errors: {}
         };
         renderErrors(mockState);
         const errorContainer = document.getElementById('test-label').lastElementChild;

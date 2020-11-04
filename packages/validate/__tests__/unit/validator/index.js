@@ -298,7 +298,7 @@ describe('Validate > Unit > Validator > getInitialState', () => {
         expect(getInitialState(form, {})).toEqual({
             form,
             settings: {},
-            errorNodes: {},
+            errors: {},
             realTimeValidation: false,
             groups: {
                 group1: {
@@ -324,7 +324,7 @@ describe('Validate > Unit > Validator > getInitialState', () => {
         expect(getInitialState(form, { preSubmitHook: true })).toEqual({
             form,
             settings: { preSubmitHook: true },
-            errorNodes: {},
+            errors: {},
             realTimeValidation: false,
             groups: {
                 group1: {

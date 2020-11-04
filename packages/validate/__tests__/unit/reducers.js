@@ -15,7 +15,7 @@ describe('Validate > Unit > Reducers > Set initial state', () => {
                     validators: []
                 }
             },
-            errorNodes: {},
+            errors: {},
             realTimeValidation: false
         };
         const output = Reducers[ACTIONS.SET_INITIAL_STATE](state, nextState);
@@ -43,7 +43,7 @@ describe('Validate > Unit > Reducers > Clear errors', () => {
                     valid: false
                 }
             },
-            errorNodes: {},
+            errors: {},
             realTimeValidation: false
         };
         const output = Reducers[ACTIONS.CLEAR_ERRORS](state);
@@ -63,7 +63,7 @@ describe('Validate > Unit > Reducers > Clear errors', () => {
                     valid: true
                 }
             },
-            errorNodes: {},
+            errors: {},
             realTimeValidation: false
         });
     });
@@ -89,7 +89,7 @@ describe('Validate > Unit > Reducers > Clear error', () => {
                     valid: false
                 }
             },
-            errorNodes: {},
+            errors: {},
             realTimeValidation: false
         };
         const output = Reducers[ACTIONS.CLEAR_ERROR](state, 'group1');
@@ -109,7 +109,7 @@ describe('Validate > Unit > Reducers > Clear error', () => {
                     valid: false
                 }
             },
-            errorNodes: {},
+            errors: {},
             realTimeValidation: false
         });
     });

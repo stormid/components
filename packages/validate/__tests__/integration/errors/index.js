@@ -58,7 +58,7 @@ describe('Validate > Integration > errors', () => {
             <span id="ssec" data-valmsg-for="group1" role="alert">The server dislikes this value</span>
         </form>`;
         const [ validator ] = validate('form');
-        expect(validator.getState().errorNodes.group1.textContent).toEqual('The server dislikes this value');
+        expect(validator.getState().errors.group1).toEqual('The server dislikes this value');
         await validator.validate();
         const errorContainer = document.getElementById('ssec');
         //render error message

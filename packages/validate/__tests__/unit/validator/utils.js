@@ -12,7 +12,7 @@ import {
     domNodesFromCommaList,
     escapeAttributeValue,
     extractValueFromGroup,
-    findErrorNodes
+    findErrors
 } from '../../../src/lib/validator/utils';
 
 describe('Validate > Unit > Utils > isCheckable', () => {
@@ -336,7 +336,7 @@ describe('Validate > Unit > Utils > extractValueFromGroup', () => {
 
 //fetch
 
-describe('Validate > Unit > Utils > findErrorNodes', () => {
+describe('Validate > Unit > Utils > findErrors', () => {
 
     it('Should find serverErrorNodes and convert string error messages to DOM nodes', async () => {
         document.body.innerHTML = `<form class="form" method="post" action="">
@@ -351,9 +351,8 @@ describe('Validate > Unit > Utils > findErrorNodes', () => {
                 fields: Array.from(document.getElementsByName('group1'))
             }
         };
-        const errorNodes = findErrorNodes(groups);
-        const convertedNode = serverErrorNode.childNodes[0];
-        expect(errorNodes.group1).toEqual(convertedNode);
+        const errors = findErrors(groups);
+        expect(errors.group1).toEqual(serverErrorNode.textContent);
     });
 
 });
