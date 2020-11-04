@@ -322,7 +322,7 @@ validate() returns an array of instances. Each instance exposes the interface
 ```
 
 ### addMethod
-Add a custom validation method:
+Add a custom validation method to a group:
 ```
 const [ validator ] = validate('.my-form');
 
@@ -345,7 +345,7 @@ await validator.validate();
 ```
 
 ### addGroup
-add an input or input validation group
+Add a field or field group to the validator:
 ```
 const [ validator ] = validate('.my-form');
 const fieldsArray = Array.from(document.querySelector('.new-fields'))
@@ -356,7 +356,7 @@ validator.addGroup(fieldsArray);
 ```
 
 ### removeGroup
-remove a validation group
+Remove a validation group from the validator:
 ```
 const [ validator ] = validate('.my-form');
 const fieldsArray = Array.from(document.querySelectorAll([name=new-fields]))

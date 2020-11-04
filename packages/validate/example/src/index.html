@@ -177,9 +177,9 @@
         <div class="form-row">
             <label class="label" for="mce-EMAIL">
                 Email address
-                <span data-valmsg-for="EMAIL" role="alert">Email is not a valid email address</span>
+                <!-- <span data-valmsg-for="EMAIL" role="alert">Email is not a valid email address</span> -->
             </label>
-            <input
+            <!-- <input
                 class="input"
                 type="email"
                 id="mce-EMAIL"
@@ -190,11 +190,18 @@
                 data-val-email="Email is not a valid email address"
                 data-val-maxlength="Email address must not exceed 254 characters"
                 data-val-maxlength-max="254"
+            /> -->
+            <input
+                class="input"
+                type="email"
+                id="mce-EMAIL"
+                name="EMAIL"
+                required
             />
         </div>
         <div class="form-row">
             <label class="label" for="VERIFY-EMAIL">Verify email address</label>
-            <input
+            <!-- <input
                 class="input"
                 type="email"
                 id="VERIFY-EMAIL"
@@ -206,6 +213,13 @@
                 data-val-maxlength-max="254"
                 data-val-equalto="'Verify email' must match 'email'"
                 data-val-equalto-other="EMAIL"
+            /> -->
+            <input
+                class="input"
+                type="email"
+                id="VERIFY-EMAIL"
+                name="VERIFY-EMAIL"
+                required
             />
         </div>
         <input type="submit" value="Submit">

@@ -172,17 +172,12 @@ describe('Validate > Unit > Validator > extractErrorMessage', () => {
     });
 
     it('should return an error message based on constants and params given a validator without an error message', async () => {
-        expect.assertions(14);
+        expect.assertions(9);
         const requiredValidator = { type: 'required' };
         const emailValidator = { type: 'email' };
         const patternValidator = { type: 'pattern' };
         const URLValidator = { type: 'url' };
-        const dateValidator = { type: 'date' };
-        const dateISOValidator = { type: 'dateISO' };
         const numberValidator = { type: 'number' };
-        const digitsValidator = { type: 'digits' };
-        const equalToValidator = { type: 'equalto' };
-        const remoteValidator = { type: 'remote' };
         const maxValidator = { type: 'max', params: { max: 10 } };
         const minValidator = { type: 'min', params: { min: 2 } };
         const maxLengthValidator = { type: 'maxlength',  params: { max: 10 } };
@@ -192,12 +187,7 @@ describe('Validate > Unit > Validator > extractErrorMessage', () => {
         expect(extractErrorMessage(defaults.messages, emailValidator)).toEqual(defaults.messages.email());
         expect(extractErrorMessage(defaults.messages, patternValidator)).toEqual(defaults.messages.pattern());
         expect(extractErrorMessage(defaults.messages, URLValidator)).toEqual(defaults.messages.url());
-        expect(extractErrorMessage(defaults.messages, dateValidator)).toEqual(defaults.messages.date());
-        expect(extractErrorMessage(defaults.messages, dateISOValidator)).toEqual(defaults.messages.dateISO());
         expect(extractErrorMessage(defaults.messages, numberValidator)).toEqual(defaults.messages.number());
-        expect(extractErrorMessage(defaults.messages, digitsValidator)).toEqual(defaults.messages.digits());
-        expect(extractErrorMessage(defaults.messages, equalToValidator)).toEqual(defaults.messages.equalto());
-        expect(extractErrorMessage(defaults.messages, remoteValidator)).toEqual(defaults.messages.remote());
         expect(extractErrorMessage(defaults.messages, maxValidator)).toEqual(defaults.messages.max(maxValidator.params));
         expect(extractErrorMessage(defaults.messages, minValidator)).toEqual(defaults.messages.min(minValidator.params));
         expect(extractErrorMessage(defaults.messages, maxLengthValidator)).toEqual(defaults.messages.maxlength(maxLengthValidator.params));

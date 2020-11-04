@@ -76,9 +76,9 @@ describe('Validate > Integration > api > validate > remote', () => {
         expect(validityState).toEqual(false);
         // realtimeValidation start
         expect(validator.getState().realTimeValidation).toEqual(true);
-        // // focus on first invalid node
+        // focus on first invalid node
         expect(document.activeElement).toEqual(input);
-        // // render error message
+        // render error message
         expect(label.lastChild.nodeName).toEqual('SPAN');
         expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
         expect(label.lastChild.textContent).toEqual('Error message from API');
@@ -117,9 +117,9 @@ describe('Validate > Integration > api > validate > remote', () => {
         expect(validityState).toEqual(false);
         // realtimeValidation start
         expect(validator.getState().realTimeValidation).toEqual(true);
-        // // focus on first invalid node
+        // focus on first invalid node
         expect(document.activeElement).toEqual(input);
-        // // render error message
+        // render error message
         expect(label.lastChild.nodeName).toEqual('SPAN');
         expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
         expect(label.lastChild.textContent).toEqual('Remote error message');
