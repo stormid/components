@@ -84,7 +84,7 @@ const cookieBanner = banner({
     },
     savedMessage: 'Your settings have been saved.', //displayed after consent form update 
     bannerTemplate(model){
-        return `<section role="dialog" aria-live="polite" aria-label="You privacy" class="${model.classNames.banner}">
+        return `<section role="dialog" aria-live="polite" aria-label="Your privacy" class="${model.classNames.banner}">
             <div class="privacy-content">
                 <div class="wrap">
                     <!--googleoff: all-->
