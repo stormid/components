@@ -10,7 +10,7 @@ export default {
     expiry: 365,
     types: {},
     necessary: [],
-    policyURL: '/cookie-policy',
+    policyURL: '/cookie-policy#preferences',
     classNames: {
         banner: 'privacy-banner',
         acceptBtn: 'privacy-banner__accept',
@@ -44,7 +44,7 @@ export default {
         return `<div class="${model.settings.classNames.formMessage}" aria-role="alert">${model.settings.savedMessage}</div>`;
     },
     formTemplate(model){
-        return `<form class="${model.settings.classNames.form}" novalidate>
+        return `<form id="preferences" class="${model.settings.classNames.form}" novalidate>
 				${Object.keys(model.settings.types).map(type => `<fieldset class="${model.settings.classNames.fieldset}">
 				<legend class="${model.settings.classNames.legend}">
 					<span class="${model.settings.classNames.title}">${model.settings.types[type].title}</span>

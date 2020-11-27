@@ -68,7 +68,7 @@ const cookieBanner = banner({
     expiry: 365, //preferences cookie expiry in days
     types: {}, //types of cookie-dependent functionality 
     necessary: [], //cookie-dependent functionality that will always execute, for convenience only
-    policyURL: '/cookie-policy', //URL to cookie policy page (location of cookie consent form) rendered in the banner
+    policyURL: '/cookie-policy#preferences', //URL to cookie policy page (location of cookie consent form) rendered in the banner
     classNames: {
         banner: 'privacy-banner',
         acceptBtn: 'privacy-banner__accept',
@@ -102,7 +102,7 @@ const cookieBanner = banner({
         return `<div class="${model.settings.classNames.formMessage}" aria-role="alert">${model.settings.savedMessage}</div>`
     },
     formTemplate(model){
-        return `<form class="${model.settings.classNames.form}" novalidate>
+        return `<form id="preferences" class="${model.settings.classNames.form}" novalidate>
                 ${Object.keys(model.settings.types).map(type => `<fieldset class="${model.settings.classNames.fieldset}">
                 <legend class="${model.settings.classNames.legend}">
                     <span class="${model.settings.classNames.title}">${model.settings.types[type].title}</span>
