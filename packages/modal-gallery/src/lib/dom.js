@@ -81,6 +81,8 @@ const writeImage = (state, i) => {
     const { dom, settings, items } = state;
     if (!dom) return;
     const imageContainer = dom.items[i].querySelector('.js-modal-gallery__img-container');
+    const img = imageContainer.querySelector('.modal-gallery__img');
+    if (img) return;
     const imageClassName = settings.scrollable ? 'modal-gallery__img modal-gallery__img--scrollable' : 'modal-gallery__img';
     const srcsetAttribute = dom.items[i].srcset ? ` srcset="${dom.items[i].srcset}"` : '';
     const sizesAttribute = dom.items[i].sizes ? ` sizes="${dom.items[i].sizes}"` : '';
