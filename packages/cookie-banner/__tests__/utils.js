@@ -25,7 +25,7 @@ describe('Cookie > Utils > removeSubdomain', () => {
         expect(removeSubdomain('cookie-test-wip.azurewebsites.net')).toEqual('cookie-test-wip.azurewebsites.net');
     });
 
-    it('should handle netlfiy.app as a multi dot tdl', async () => {
+    it('should handle netlify.app as a multi dot tdl', async () => {
         expect(removeSubdomain('cookie-test-wip.netlify.app')).toEqual('cookie-test-wip.netlify.app');
     });
 
