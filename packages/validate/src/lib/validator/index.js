@@ -284,7 +284,7 @@ export const getValidityState = groups => Promise.all(
 export const getGroupValidityState = group => {
     let hasError = false;
     //check if group is disabled
-    if (groupIsDisabled(group.fields)) return Promise.resolve(true);
+    if (groupIsDisabled(group.fields)) return Promise.resolve([true]);
     return Promise.all(group.validators.map(validator => new Promise((resolve, reject) => {
         if (validator.type !== 'remote'){
             if (validate(group, validator)) resolve(true);

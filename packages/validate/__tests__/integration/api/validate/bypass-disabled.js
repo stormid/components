@@ -14,6 +14,16 @@ describe('Validate > Integration > api > validate > bypass disabled fields', () 
                 required
                 disabled
             />
+
+            
+            <label id="group1-1-label" for="group1-1">group1</label>
+            <input
+                id="group2"
+                name="group2"
+                value="Test"
+                type="text"
+                required
+            />
         </form>`;
         const [ validator ] = validate('form');
         const validityState = await validator.validate();
