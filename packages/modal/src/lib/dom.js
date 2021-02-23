@@ -40,7 +40,9 @@ export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(
 export const keyListener = Store => event => {
     if (Store.getState().isOpen && event.keyCode === 27) {
         event.preventDefault();
-        toggle(Store.getState());
+        Store.dispatch({
+            isOpen: !Store.getState().isOpen
+        }, [ change(Store) ]);
     }
     if (Store.getState().isOpen && event.keyCode === 9) trapTab(Store.getState())(event);
 };

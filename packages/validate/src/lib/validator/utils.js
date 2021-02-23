@@ -17,6 +17,10 @@ export const groupIsHidden = fields => fields.reduce((acc, field) => {
     return acc;
 }, false);
 
+export const groupIsDisabled = fields => fields.reduce((acc, field) => {
+    if (field.hasAttribute('disabled') && field.getAttribute('disabled') !== "false") acc = true;
+    return acc;
+}, false);
 
 export const hasValue = input => (input.value !== undefined && input.value !== null && input.value.length > 0);
 
