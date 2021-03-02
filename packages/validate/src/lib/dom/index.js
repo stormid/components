@@ -57,6 +57,8 @@ export const clearError = groupName => state => {
             state.groups[groupName].serverErrorNode.classList.remove(DOTNET_CLASSNAMES.ERROR);
             state.groups[groupName].serverErrorNode.classList.add(DOTNET_CLASSNAMES.VALID);
             state.groups[groupName].serverErrorNode.removeAttribute('role');
+        } else {
+            state.errors[groupName].parentNode.removeChild(state.errors[groupName]);
         }
 
         if(state.groups[groupName].fields) {
@@ -68,7 +70,6 @@ export const clearError = groupName => state => {
     } 
         
     if (state.errors[groupName]) {
-        state.errors[groupName].parentNode.removeChild(state.errors[groupName]);
         delete state.errors[groupName];//shouldn't be doing this here...
     }
 };
