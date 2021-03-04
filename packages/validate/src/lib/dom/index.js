@@ -51,27 +51,19 @@ export const createErrorTextNode = (group, msg) => {
  * 
  */
 export const clearError = groupName => state => {
-    if(state.groups[groupName]) {
-        if (state.groups[groupName].serverErrorNode) {
-            state.groups[groupName].serverErrorNode.innerHTML = '';
-            state.groups[groupName].serverErrorNode.classList.remove(DOTNET_CLASSNAMES.ERROR);
-            state.groups[groupName].serverErrorNode.classList.add(DOTNET_CLASSNAMES.VALID);
-            state.groups[groupName].serverErrorNode.removeAttribute('role');
-        } else {
-            state.errors[groupName].parentNode.removeChild(state.errors[groupName]);
-        }
-
-        if(state.groups[groupName].fields) {
-            state.groups[groupName].fields.forEach(field => {
-                field.parentNode.classList.remove('is--invalid');
-                field.removeAttribute('aria-invalid');
-            });
-        }
-    } 
-        
-    if (state.errors[groupName]) {
-        delete state.errors[groupName];//shouldn't be doing this here...
+    if (state.groups[groupName].serverErrorNode) {
+        state.groups[groupName].serverErrorNode.innerHTML = '';
+        state.groups[groupName].serverErrorNode.classList.remove(DOTNET_CLASSNAMES.ERROR);
+        state.groups[groupName].serverErrorNode.classList.add(DOTNET_CLASSNAMES.VALID);
+        state.groups[groupName].serverErrorNode.removeAttribute('role');
+    } else {
+        state.errors[groupName].parentNode.removeChild(state.errors[groupName]);
     }
+    state.groups[groupName].fields.forEach(field => {
+        field.parentNode.classList.remove('is--invalid');
+        field.removeAttribute('aria-invalid');
+    });
+    delete state.errors[groupName];//shouldn't be doing this here...
 };
 
 /**
