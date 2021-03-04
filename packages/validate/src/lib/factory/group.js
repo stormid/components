@@ -1,4 +1,5 @@
 import { removeUnvalidatableGroups, assembleValidationGroup } from '../validator';
+import { clearError } from '../dom';
 import { ACTIONS } from '../constants';
 
 /**
@@ -23,5 +24,7 @@ export const addGroup = Store => nodes => {
  * 
  */
 export const removeGroup = Store => groupName => {
+    const state = Store.getState();
+    if (state.errors[groupName]) clearError(groupName)(state);
     Store.dispatch(ACTIONS.REMOVE_GROUP, groupName);
 };
