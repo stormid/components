@@ -31,36 +31,36 @@ const handler = (eventData, Store) => e => {
 };
 
 export const links = Store => () => {
-    const links = document.querySelectorAll('a');
+    const links = [].slice.call(document.querySelectorAll('a'));
     const state = Store.getState();
     const settings = state.settings;
-    for (let link of links) {
-        if (link.href.match(EMAIL_REGEX) && settings.email) {
+    for (let index in links) {
+        if (links[index].href.match(EMAIL_REGEX) && settings.email) {
             TRIGGER_EVENTS.forEach(ev => {
-                link.addEventListener(ev, handler(linkEvent(link, settings.email), Store), { composed: true, useCapture: true });
+                links[index].addEventListener(ev, handler(linkEvent(links[index], settings.email), Store), { composed: true, useCapture: true });
             });
             continue;
-        } else if (link.href.match(TEL_REGEX) && settings.tel) {
+        } else if (links[index].href.match(TEL_REGEX) && settings.tel) {
             TRIGGER_EVENTS.forEach(ev => {
-                link.addEventListener(ev, handler(linkEvent(link, settings.tel), Store), { composed: true, useCapture: true });
+                links[index].addEventListener(ev, handler(linkEvent(links[index], settings.tel), Store), { composed: true, useCapture: true });
             });
             continue;
         }
         if (settings.download){
-            const downloadSettings = download(link, settings.download.types);
+            const downloadSettings = download(links[index], settings.download.types);
             if (downloadSettings) {
                 TRIGGER_EVENTS.forEach(ev => {
-                    link.addEventListener(ev, handler(downloadEvent(link, downloadSettings), Store), { composed: true, useCapture: true });
+                    links[index].addEventListener(ev, handler(downloadEvent(links[index], downloadSettings), Store), { composed: true, useCapture: true });
                 });
                 continue;
             }
         }
         if (settings.external) {
             const { host } = parseUrl(document.location.href);
-            const linkUrl = parseUrl(link.href);
+            const linkUrl = parseUrl(links[index].href);
             if (linkUrl.host !== host) {
                 TRIGGER_EVENTS.forEach(ev => {
-                    link.addEventListener(ev, handler(linkEvent(link, settings.external), Store), { composed: true, useCapture: true });
+                    links[index].addEventListener(ev, handler(linkEvent(links[index], settings.external), Store), { composed: true, useCapture: true });
                 });
                 continue;
             }

@@ -19,8 +19,8 @@ export const stateFromOptions = ({ parameters, settings, custom }) => ({
 });
 
 const parametersFromOptions = (parameters, custom) => Object.keys(parameters).reduce((acc, key) => {
-	if (PERSISTENT_PARAMETERS.includes(key)) acc.persistent[key] = parameters[key];
-	else if (ACCEPTED_PARAMETERS.includes(key)) acc.stack[key] = parameters[key];
+	if (PERSISTENT_PARAMETERS.indexOf(key) > -1) acc.persistent[key] = parameters[key];
+	else if (ACCEPTED_PARAMETERS.indexOf(key) > -1) acc.stack[key] = parameters[key];
 	return acc;
 }, { persistent: {}, stack: custom ? stackFromCustom(custom) : {} });
 

@@ -6,9 +6,9 @@ export default __m => {
     let listed = {};
     let unlisted = [];
 
-    for (let node of nodes){
-        const impression = node.getAttribute(DATA_ATTRIBUTES.IMPRESSION);
-        const item = node.getAttribute(DATA_ATTRIBUTES.ITEM);
+    for (let index in nodes){
+        const impression = nodes[index].getAttribute(DATA_ATTRIBUTES.IMPRESSION);
+        const item = nodes[index].getAttribute(DATA_ATTRIBUTES.ITEM);
         if (impression === undefined || !item) continue;
 
         if (impression !== ''){

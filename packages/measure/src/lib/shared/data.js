@@ -56,8 +56,8 @@ export const clientId = () => {
 };
 
 export const download = (link, types) => {
-    for (let type of types){
-        if (link.href.match(type.regex)) return type;
+    for (let index in types){
+        if (link.href.match(types[index].regex)) return types[index];
     }
     return false;
 };

@@ -5,9 +5,9 @@ export default __m => {
     const nodes = [].slice.call(document.querySelectorAll(`[${DATA_ATTRIBUTES.ADD}]`));
     if (nodes.length === 0) return;
     
-    for (let node of nodes){
+    for (let index in nodes){
         TRIGGER_EVENTS.forEach(ev => {
-            node.addEventListener(ev, handler(composeAction({ node, action: 'add', event: 'Add to Cart' }), __m), LISTENER_OPTIONS);
+            nodes[index].addEventListener(ev, handler(composeAction({ node: nodes[index], action: 'add', event: 'Add to Cart' }), __m), LISTENER_OPTIONS);
         });
     }
 };
