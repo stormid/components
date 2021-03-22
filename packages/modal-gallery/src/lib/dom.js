@@ -73,7 +73,7 @@ export const initUI = Store => state => {
 
 const load = Store => state => {
     const { imageCache, items, current } = Store.getState();
-    if (imageCache.length === items.length) imageCache.map((img, i) => { writeImage(state, i); });
+    if (Object.keys(imageCache).length === items.length) imageCache.map((img, i) => { writeImage(state, i); });
     else loadImages(Store)(current);
 };
 
