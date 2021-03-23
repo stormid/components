@@ -121,20 +121,20 @@ export const keyListener = Store => e => {
     const { isOpen } = Store.getState();
     if (!isOpen) return;
     switch (e.keyCode) {
-    case KEY_CODES.ESC:
-        close(Store);
-        break;
-    case KEY_CODES.TAB:
-        trapTab(Store, e);
-        break;
-    case KEY_CODES.LEFT:
-        previous(Store);
-        break;
-    case KEY_CODES.RIGHT:
-        next(Store);
-        break;
-    default:
-        break;
+        case KEY_CODES.ESC:
+            close(Store);
+            break;
+        case KEY_CODES.TAB:
+            trapTab(Store, e);
+            break;
+        case KEY_CODES.LEFT:
+            previous(Store);
+            break;
+        case KEY_CODES.RIGHT:
+            next(Store);
+            break;
+        default:
+            break;
     }
 };
 
