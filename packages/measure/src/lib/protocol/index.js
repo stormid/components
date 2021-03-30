@@ -52,7 +52,7 @@ export const links = Store => () => {
             if (downloadType) {
                 settings.download.action = downloadType.action;
                 TRIGGER_EVENTS.forEach(ev => {
-                    links[index].addEventListener(ev, handler(downloadEvent(Store)(links[index], settings.download), Store), { composed: true, useCapture: true });
+                    links[index].addEventListener(ev, handler(downloadEvent(links[index], settings.download), Store), { composed: true, useCapture: true });
                 });
                 continue;
             } 
