@@ -47,10 +47,12 @@ export const links = Store => () => {
             continue;
         }
         if (settings.download){
-            const downloadSettings = download(links[index], settings.download.types);
-            if (downloadSettings) {
+            
+            const downloadType = download(links[index], settings.download.types);
+
+            if (downloadType) {
                 TRIGGER_EVENTS.forEach(ev => {
-                    links[index].addEventListener(ev, handler(downloadEvent(links[index], downloadSettings), Store), { composed: true, useCapture: true });
+                    links[index].addEventListener(ev, handler(downloadEvent(links[index], { ...downloadType, category: settings.download.category  }), Store), { composed: true, useCapture: true });
                 });
                 continue;
             }
