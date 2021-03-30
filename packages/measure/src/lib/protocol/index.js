@@ -47,17 +47,15 @@ export const links = Store => () => {
             continue;
         }
         if (settings.download){
-
-            const downloadSettings = {...settings.download};
-            const downloadType = download(link, downloadSettings.types);
+            
+            const downloadType = download(links[index], settings.download.types);
 
             if (downloadType) {
-                downloadSettings.action = downloadType.action;
                 TRIGGER_EVENTS.forEach(ev => {
-                    links[index].addEventListener(ev, handler(downloadEvent(links[index], downloadSettings), Store), { composed: true, useCapture: true });
+                    links[index].addEventListener(ev, handler(downloadEvent(links[index], { ...downloadType, category: settings.download.category  }), Store), { composed: true, useCapture: true });
                 });
                 continue;
-            } 
+            }
         }
         if (settings.external) {
             const { host } = parseUrl(document.location.href);
