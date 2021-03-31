@@ -42,6 +42,32 @@ describe(`Cookie banner > DOM > render`, () => {
     });
 });
 
+describe(`Cookie banner > DOM > render`, () => {
+
+    it('It not should render the banner if hideBannerOnFormPage setting is true and on consent form page', async () => {
+        document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
+        cookieBanner({
+            secure: false,
+            hideBannerOnFormPage: true,
+            types: {
+                test: {
+                    title: 'Test title',
+                    description: 'Test description',
+                    labels: {
+                        yes: 'Pages you visit and actions you take will be measured and used to improve the service',
+                        no: 'Pages you visit and actions you take will not be measured and used to improve the service'
+                    },
+                    fns: [
+                        () => { }
+                    ]
+                }
+            }
+        });
+        expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull();
+    });
+});
+
+
 describe(`Cookie banner > DOM > accessibility`, () => {
     beforeAll(init);
     it('The banner should be a dialog', async () => {

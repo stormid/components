@@ -4,6 +4,7 @@ import { apply } from './consent';
 import { updateConsent } from './reducers';
 
 export const initBanner = Store => state => {
+    if (state.settings.hideBannerOnFormPage && document.querySelector(`.${state.settings.classNames.formContainer}`)) return;
     document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
     const acceptBtn = document.querySelector(`.${state.settings.classNames.acceptBtn}`);
