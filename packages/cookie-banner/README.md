@@ -82,6 +82,7 @@ const cookieBanner = banner({
         title: 'privacy-banner__form-title',
         description: 'privacy-banner__form-description'
     },
+    hideBannerOnFormPage: false, //don't show the banner when the user is on the same page as a consent form
     savedMessage: 'Your settings have been saved.', //displayed after consent form update 
     bannerTemplate(model){
         return `<section role="dialog" aria-live="polite" aria-label="Your privacy" class="${model.classNames.banner}">
