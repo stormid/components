@@ -13,8 +13,9 @@ export const cookiesEnabled = () => {
 };
 
 export const writeCookie = state => {
+    const newCookie = {consent: state.consent, consentID: state.consentID};
     document.cookie = [
-        `${state.settings.name}=${btoa(JSON.stringify(state.consent))};`,
+        `${state.settings.name}=${btoa(JSON.stringify(newCookie))};`,
         `expires=${(new Date(new Date().getTime() + (state.settings.expiry*24*60*60*1000))).toGMTString()};`,
         state.settings.path ? `path=${state.settings.path};` : '',
         state.settings.domain ? `domain=${state.settings.domain};` : '',
@@ -98,3 +99,10 @@ export const removeSubdomain = s => {
 
     return parts.join('.');
 };
+
+export const uuidv4 = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }

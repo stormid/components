@@ -6,15 +6,16 @@ export default {
     path: '/',
     domain: window.location.hostname === 'localhost' ? '' : `.${removeSubdomain(window.location.hostname)}`,
     secure: true,
-    samesite: 'lax',
+    samesite: 'strict',
     expiry: 365,
     types: {},
     necessary: [],
-    policyURL: '/cookie-policy#preferences',
+    policyURL: '/cookie-policy/#preferences',
     classNames: {
         banner: 'privacy-banner',
         acceptBtn: 'privacy-banner__accept',
         submitBtn: 'privacy-banner__submit',
+        optionsBtn: 'privacy-banner__options',
         field: 'privacy-banner__field',
         form: 'privacy-banner__form',
         fieldset: 'privacy-banner__fieldset',
@@ -22,7 +23,7 @@ export default {
         formContainer: 'privacy-banner__form-container',
         formMessage: 'privacy-banner__form-msg',
         title: 'privacy-banner__form-title',
-        description: 'privacy-banner__form-description'
+        description: 'privacy-banner__form-description',
     },
 	hideBannerOnFormPage: false,
     savedMessage: 'Your settings have been saved.',
@@ -35,7 +36,7 @@ export default {
 					<p>We use cookies to improve your experience on our site and show you personalised advertising.</p>
 					<p>Find out more from our <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="/privacy-policy">privacy policy</a> and <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="${model.policyURL}">cookie policy</a>.</p>
 					<button class="btn btn--primary ${model.classNames.acceptBtn}">Accept and close</button>
-					<a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="${model.policyURL}">Your options</a>
+					<a class="privacy-banner__link privacy-banner__options" rel="noopener noreferrer nofollow" href="${model.policyURL}">Your options</a>
 					<!--googleon: all-->
 				</div>
 			</div>
