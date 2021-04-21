@@ -1,23 +1,17 @@
 import { shouldReturn, writeCookie, groupValueReducer, deleteCookies } from './utils';
-import { TRIGGER_EVENTS } from './constants';
+import { TRIGGER_EVENTS, MEASUREMENTS } from './constants';
 import { apply } from './consent';
 import { updateConsent } from './reducers';
+import { measure } from './measurement';
+import { composeMeasurementConsent } from './measurement/utils';
 
 export const initBanner = Store => state => {
     if (state.settings.hideBannerOnFormPage && document.querySelector(`.${state.settings.classNames.formContainer}`)) return;
     document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
-
-    if(state.measurement ){
-        state.measurement.event({
-            cid: state.consentID,
-            ec: 'Banner', 
-            ea: 'Displays', 
-            cd1: state.consentID, 
-            cd3: location.hostname, 
-            cm1: 1
-        });
-    }
     
+    //track banner display
+    measure(state, MEASUREMENTS.BANNER_DISPLAY);
+
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
     const acceptBtn = document.querySelector(`.${state.settings.classNames.acceptBtn}`);
     const optionsBtn = document.querySelector(`.${state.settings.classNames.optionsBtn}`);
@@ -37,42 +31,29 @@ export const initBanner = Store => state => {
                     apply(Store),
                     removeBanner(banner),
                     initForm(Store),
-                    () => {
-                        const consent = Store.getState().consent;
-                        const consentString = Object.keys(consent).filter(function(key) {
-                            return consent[key]
-                        }).join(',');
-                        if(state.measurement) {
-                            state.measurement.event({
-                                cid: state.consentID,
-                                ec: 'Save preferences', 
-                                ea: 'Banner', 
-                                cd1: state.consentID, 
-                                cd2: consentString,
-                                cd3: location.hostname, 
-                                cm2: 1,
-                                cm3: 1
-                            });
-                        }   
-                    }
+                    //track banner accept click
+                    () => measure(state, {
+                        ...MEASUREMENTS.BANNER_ACCEPT,
+                        cd2: composeMeasurementConsent(Store.getState().consent)
+                    })
                 ]
             );   
         });
 
-        optionsBtn.addEventListener(event, e => {
-            e.preventDefault();
-            if(state.measurement) {
-                state.measurement.event({
-                    cid: state.consentID,
-                    ec: 'Banner', 
-                    ea: 'Clicks', 
-                    el: 'Edit preferences',
-                    cd1: state.consentID, 
-                    cd3: location.hostname, 
-                    cm4: 1
-                }, e.target.href);
-            }
-        });
+        // optionsBtn.addEventListener(event, e => {
+        //     e.preventDefault();
+        //     if(state.measurement) {
+        //         state.measurement.event({
+        //             cid: state.consentID,
+        //             ec: 'Banner', 
+        //             ea: 'Clicks', 
+        //             el: 'Edit preferences',
+        //             cd1: state.consentID, 
+        //             cd3: location.hostname, 
+        //             cm4: 1
+        //         }, e.target.href);
+        //     }
+        // });
     });
 };
 
@@ -93,17 +74,8 @@ export const initForm = Store => state => {
 
     formContainer.innerHTML = state.settings.formTemplate(suggestedConsent(state));
 
-    if(state.measurement) {
-        state.measurement.event({
-            cid: state.consentID,
-            ec: 'CookiePrefsWidget', 
-            ea: 'Displays', 
-            el: 'Edit preferences',
-            cd1: state.consentID, 
-            cd3: location.hostname, 
-            cm5: 1
-        });
-    }
+    //track form display
+    measure(state,FORM_DISPLAYS);
 
     const form = document.querySelector(`.${state.settings.classNames.form}`);
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
@@ -139,25 +111,25 @@ export const initForm = Store => state => {
                 apply(Store),
                 removeBanner(banner),
                 renderMessage(button),
-                () => {
-                    if(state.measurement ){
-                        const state = Store.getState();
-                        const consentString = Object.keys(state.consent).filter(function(key) {
-                            return state.consent[key]
-                        }).join(',');
-                        if (consentString === '') consentString = "None";
-                        Store.getState().measurement.event({
-                            cid: state.consentID,
-                            ec: 'Save preferences', 
-                            ea: 'CookiePrefs', 
-                            cd1: state.consentID, 
-                            cd2: consentString,
-                            cd3: location.hostname,
-                            cm2: state.consent["performance"] ? state.consent["performance"] : 0 ,
-                            cm3: state.consent["thirdParty"] ? state.consent["thirdParty"] : 0
-                        });
-                    }
-                }
+                // () => {
+                //     if(state.measurement ){
+                //         const state = Store.getState();
+                //         const consentString = Object.keys(state.consent).filter(function(key) {
+                //             return state.consent[key]
+                //         }).join(',');
+                //         if (consentString === '') consentString = "None";
+                //         Store.getState().measurement.event({
+                //             cid: state.consentID,
+                //             ec: 'Save preferences', 
+                //             ea: 'CookiePrefs', 
+                //             cd1: state.consentID, 
+                //             cd2: consentString,
+                //             cd3: location.hostname,
+                //             cm2: state.consent["performance"] ? state.consent["performance"] : 0 ,
+                //             cm3: state.consent["thirdParty"] ? state.consent["thirdParty"] : 0
+                //         });
+                //     }
+                // }
             ]
         );
     });
