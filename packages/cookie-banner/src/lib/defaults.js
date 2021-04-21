@@ -23,7 +23,7 @@ export default {
         formContainer: 'privacy-banner__form-container',
         formMessage: 'privacy-banner__form-msg',
         title: 'privacy-banner__form-title',
-        description: 'privacy-banner__form-description',
+        description: 'privacy-banner__form-description'
     },
 	hideBannerOnFormPage: false,
     savedMessage: 'Your settings have been saved.',
