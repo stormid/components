@@ -26,7 +26,7 @@ export default {
         title: 'privacy-banner__form-title',
         description: 'privacy-banner__form-description'
     },
-	hideBannerOnFormPage: false,
+	hideBannerOnFormPage: true,
     savedMessage: 'Your settings have been saved.',
     bannerTemplate(model){
         return `<section role="dialog" aria-live="polite" aria-label="Your privacy" class="${model.classNames.banner}">
