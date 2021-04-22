@@ -8,7 +8,7 @@ import { composeParams } from './measurement/utils';
 export default settings => {
     /* istanbul ignore next */
     if (!cookiesEnabled()) return;
-    
+    if (!settings.tid) console.warn('Measurement tid setting missing');
     const Store = createStore();
     const cookie = readCookie(settings);
     const cid = cookie ? JSON.parse(cookie).cid : uuidv4();
@@ -18,7 +18,7 @@ export default settings => {
         initialState,
         {
             settings,
-            persistentMeasurementParams: composeParams(cid),
+            persistentMeasurementParams: composeParams(cid, settings.tid),
             consent
         },
         [

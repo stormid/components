@@ -3,24 +3,26 @@ import defaults from '../src/lib/defaults';
 import { updateConsent, updateExecuted } from '../src/lib/reducers';
 
 const init = () => {
-    // Set up our document body
+    // Set up container for form
     document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
-    
+
 };
 
 describe(`Cookie banner > state > init`, () => {
     beforeAll(init);
 
-    it('Should return the Store.getState method mon initialisation', async () => {
+    it('Should return the Store.getState method on initialisation', async () => {
         const Store = cookieBanner({ types: {} });
-
         expect(Store.getState).not.toBeUndefined();
     });
 
     it('Should return the state Object from Store.getState', async () => {
         const Store = cookieBanner({ types: {} });
 
-        expect(Store.getState()).toEqual({ consent: {}, settings: defaults });
+        expect(Store.getState()).toBeDefined();
+        expect(Store.getState().consent).toEqual({});
+        expect(Store.getState().persistentMeasurementParams).toBeDefined();
+        expect(Store.getState().settings).toBeDefined();
     });
 
 });

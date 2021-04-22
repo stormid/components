@@ -1,5 +1,14 @@
 import cookieBanner from '../../../src';
-import { writeCookie } from '../../../src/lib/utils';
+const writeCookie = state => {
+    document.cookie = [
+        `${state.settings.name}=${btoa(JSON.stringify(state))};`,
+        `expires=${(new Date(new Date().getTime() + (state.settings.expiry*24*60*60*1000))).toGMTString()};`,
+        state.settings.path ? `path=${state.settings.path};` : '',
+        state.settings.domain ? `domain=${state.settings.domain};` : '',
+        state.settings.samesite ? `SameSite=${state.settings.samesite};` : '',
+        state.settings.secure ? `secure` : ''
+    ].join('');
+};
     
 window.addEventListener('DOMContentLoaded', () => {
     window.__pb__ = cookieBanner({

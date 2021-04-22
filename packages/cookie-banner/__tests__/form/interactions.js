@@ -10,7 +10,7 @@ const dispatchSyntheticEvent = (node, eventType) => {
 describe(`Cookie banner > DOM > form interactions`, () => {
     beforeAll(() => {
         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
-        cookieBanner({
+        window.__cb__ = cookieBanner({
             secure: false,
             types: {
                 test: {
@@ -57,8 +57,9 @@ describe(`Cookie banner > DOM > form interactions`, () => {
 
     it('Submit button should set the cookie and hide the banner', async () => {
         document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-        
-        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"test":1,"performance":1}`)}`);
+        //get the cid from state
+        const cid = window.__cb__.getState().persistentMeasurementParams.cid;
+        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":1,"performance":1},"cid":"${cid}"}`)}`);
         expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull();
     });
 });

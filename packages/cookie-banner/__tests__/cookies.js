@@ -4,7 +4,7 @@ import defaults from '../src/lib/defaults';
 const init = () => {
     // Set up our document body
     document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
-    cookieBanner({
+    window.__cb__ = cookieBanner({
         secure: false,
         types: {
             test: {
@@ -34,27 +34,20 @@ const init = () => {
 };
 
 
-describe(`Cookie banner > cookies > accept`, () => {
-    beforeAll(init);
-
-    it('Sets a cookie based on accept button', async () => {
-        document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"test":1,"performance":1}`)}`);
-    });
-
-});
-
 describe(`Cookie banner > cookies > update`, () => {
     beforeAll(init);
 
     it('Sets a cookie based on preferences form', async () => {
-        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"test":1,"performance":1}`)}`);
+        document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
+        //get the cid from state
+        const cid = window.__cb__.getState().persistentMeasurementParams.cid;
+        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":1,"performance":1},"cid":"${cid}"}`)}`);
 
         const fields = Array.from(document.querySelectorAll(`.${defaults.classNames.field}`));
         fields[1].checked = true;
         fields[3].checked = true;
         document.querySelector(`.${defaults.classNames.submitBtn}`).click();
-        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"test":0,"performance":0}`)}`);
+        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":0,"performance":0},"cid":"${cid}"}`)}`);
     });
 
 });

@@ -1,9 +1,13 @@
-export const composeParams = cid => ({ 
+import { HOSTNAME } from '../constants';
+
+export const composeParams = (cid, tid) => ({
+    tid,
     v:	1,
+    t: 'event',
     ds:	'cookiebanner',
     dh: location.hostname,
     uip: '0.0.0.0',
-    ua:	navigator.userAgent, //do we need this?
+    // ua:	navigator.userAgent, //do we need this?
     sr:  window.screen ? `${window.screen.width}x${window.screen.height}`: null,
     vp: `${document.documentElement.clientWidth}x${document.documentElement.clientHeight}`,
     cid,
@@ -39,4 +43,4 @@ export const composeDataToURL = data => Object.keys(data).reduce((acc, param) =>
 	return acc;
 }, []).join('&');
 
-export const dataToURL = data => `https://www.google-analytics.com/collect?${composeDataToURL(data)}`;
+export const dataToURL = (data, urlAction) => `${HOSTNAME}/${urlAction}?${composeDataToURL(data)}`;

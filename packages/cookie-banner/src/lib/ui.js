@@ -30,9 +30,9 @@ export const initBanner = Store => state => {
                     writeCookie,
                     apply(Store),
                     removeBanner(banner),
-                    initForm(Store),
+                    initForm(Store, false),
                     //track banner accept click
-                    () => measure(state, {
+                    state => measure(state, {
                         ...MEASUREMENTS.BANNER_ACCEPT,
                         cd2: composeMeasurementConsent(Store.getState().consent)
                     })
@@ -40,20 +40,9 @@ export const initBanner = Store => state => {
             );   
         });
 
-        // optionsBtn.addEventListener(event, e => {
-        //     e.preventDefault();
-        //     if(state.measurement) {
-        //         state.measurement.event({
-        //             cid: state.consentID,
-        //             ec: 'Banner', 
-        //             ea: 'Clicks', 
-        //             el: 'Edit preferences',
-        //             cd1: state.consentID, 
-        //             cd3: location.hostname, 
-        //             cm4: 1
-        //         }, e.target.href);
-        //     }
-        // });
+        //track options click
+        //shouldn't have to catch and replay the event since we're using beacons/
+        optionsBtn.addEventListener(event, e => measure(state, MEASUREMENTS.BANNER_OPTIONS));
     });
 };
 
@@ -68,14 +57,15 @@ const suggestedConsent = state => Object.keys(state.consent).length > 0
         }, {})
     });
 
-export const initForm = Store => state => {
+export const initForm = (Store, track = true) => state => {
     const formContainer = document.querySelector(`.${state.settings.classNames.formContainer}`);
     if (!formContainer) return;
 
     formContainer.innerHTML = state.settings.formTemplate(suggestedConsent(state));
 
-    //track form display
-    measure(state,FORM_DISPLAYS);
+    //measure form display
+    //track flag is false if a re-render from a banner acceptance
+    track && measure(state, MEASUREMENTS.FORM_DISPLAY);
 
     const form = document.querySelector(`.${state.settings.classNames.form}`);
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
@@ -111,6 +101,11 @@ export const initForm = Store => state => {
                 apply(Store),
                 removeBanner(banner),
                 renderMessage(button),
+                state => {
+                    const consentString = composeMeasurementConsent(state.consent);
+                    const consent = consentString === '' ? 'None' : consentString;
+                    measure(state, { ...MEASUREMENTS.SAVE_PREFERENCES, cd2: consent })
+                }
                 // () => {
                 //     if(state.measurement ){
                 //         const state = Store.getState();
