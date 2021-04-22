@@ -6,6 +6,7 @@ const init = () => {
     document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
     cookieBanner({
         secure: false,
+        hideBannerOnFormPage: false,
         types: {
             test: {
                 title: 'Test title',
@@ -48,6 +49,7 @@ describe(`Cookie banner > DOM > render`, () => {
         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
         cookieBanner({
             secure: false,
+            hideBannerOnFormPage: false,
             hideBannerOnFormPage: true,
             types: {
                 test: {

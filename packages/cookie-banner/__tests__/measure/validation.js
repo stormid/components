@@ -1,4 +1,4 @@
-import { dataToURL, composeParams} from '../../src/lib/measurement/utils';
+import { dataToURL, composeParams} from '../../src/lib/measurement';
 import { HOSTNAME, MEASUREMENTS } from '../../src/lib/constants';
 // -> https://developers.google.com/analytics/devguides/collection/protocol/v1/validating-hits
 

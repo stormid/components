@@ -12,6 +12,7 @@ describe(`Cookie banner > DOM > form interactions`, () => {
         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
         window.__cb__ = cookieBanner({
             secure: false,
+            hideBannerOnFormPage: false,
             types: {
                 test: {
                     title: 'Test title',

@@ -2,8 +2,7 @@ import { shouldReturn, writeCookie, groupValueReducer, deleteCookies } from './u
 import { TRIGGER_EVENTS, MEASUREMENTS } from './constants';
 import { apply } from './consent';
 import { updateConsent } from './reducers';
-import { measure } from './measurement';
-import { composeMeasurementConsent } from './measurement/utils';
+import { measure, composeMeasurementConsent } from './measurement';
 
 export const initBanner = Store => state => {
     if (state.settings.hideBannerOnFormPage && document.querySelector(`.${state.settings.classNames.formContainer}`)) return;

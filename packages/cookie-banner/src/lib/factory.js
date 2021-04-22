@@ -3,7 +3,7 @@ import { initBanner, initForm } from './ui';
 import { necessary, apply } from './consent';
 import { createStore } from './store';
 import { initialState } from './reducers';
-import { composeParams } from './measurement/utils';
+import { composeParams } from './measurement';
 
 export default settings => {
     /* istanbul ignore next */

@@ -1,5 +1,5 @@
 import CookieBanner from '../../../src';
-import { composeParams, dataToURL } from '../../../src/lib/measurement/utils';
+import { composeParams, dataToURL } from '../../../src/lib/measurement';
 import { MEASUREMENTS } from '../../../src/lib/constants';
 
 navigator = navigator || {};
@@ -12,6 +12,7 @@ describe('Cookie banner > measurements > options', () => {
         document.body.innerHTML = `<div></div>`;
         const __cb__ = CookieBanner({
             debug: true,
+            hideBannerOnFormPage: false,
             secure: false,
             tid: 'UA-141774857-1',
             types: {

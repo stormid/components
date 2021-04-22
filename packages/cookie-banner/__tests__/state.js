@@ -1,5 +1,4 @@
 import cookieBanner from '../src';
-import defaults from '../src/lib/defaults';
 import { updateConsent, updateExecuted } from '../src/lib/reducers';
 
 const init = () => {

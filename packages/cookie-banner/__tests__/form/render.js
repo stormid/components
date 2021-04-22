@@ -6,6 +6,7 @@ describe(`Cookie banner > DOM > form > render`, () => {
         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
         cookieBanner({
             secure: false,
+            hideBannerOnFormPage: false,
             types: {
                 test: {
                     suggested: true,
@@ -50,5 +51,4 @@ describe(`Cookie banner > DOM > form > render`, () => {
         expect(fields[0].checked).toEqual(true);
     });
 
-    //titles, descriptions, labels
 });

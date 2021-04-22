@@ -1,4 +1,4 @@
-import { HOSTNAME } from '../constants';
+import { HOSTNAME } from './constants';
 
 export const composeParams = (cid, tid) => ({
     tid,
@@ -44,3 +44,9 @@ export const composeDataToURL = data => Object.keys(data).reduce((acc, param) =>
 }, []).join('&');
 
 export const dataToURL = (data, urlAction) => `${HOSTNAME}/${urlAction}?${composeDataToURL(data)}`;
+
+export const measure = (state, measurements, urlAction = 'collect') => request(dataToURL({
+    ...state.persistentMeasurementParams,
+    ...measurements,
+    ...(state.settings.debug ? {} : { z: cacheBuster() })
+}, urlAction));

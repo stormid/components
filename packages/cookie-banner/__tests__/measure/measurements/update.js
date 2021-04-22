@@ -1,5 +1,5 @@
 import CookieBanner from '../../../src';
-import { composeParams, dataToURL, composeMeasurementConsent } from '../../../src/lib/measurement/utils';
+import { composeParams, dataToURL, composeMeasurementConsent } from '../../../src/lib/measurement';
 import { MEASUREMENTS } from '../../../src/lib/constants';
 import defaults from '../../../src/lib/defaults';
 
@@ -14,6 +14,7 @@ describe('Cookie banner > measure > update', () => {
         document.cookie = `${defaults.name}=${btoa(`{"consent":{"test":1},"cid":"12345"}`)}`;
         const __cb__ = CookieBanner({
             debug: true,
+            hideBannerOnFormPage: false,
             secure: false,
             tid: 'UA-141774857-1',
             types: {

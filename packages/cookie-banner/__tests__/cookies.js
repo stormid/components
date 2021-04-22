@@ -6,6 +6,7 @@ const init = () => {
     document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
     window.__cb__ = cookieBanner({
         secure: false,
+        hideBannerOnFormPage: false,
         types: {
             test: {
                 title: 'Test title',

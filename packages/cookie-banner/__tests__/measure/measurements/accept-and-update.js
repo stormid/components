@@ -1,5 +1,5 @@
 import CookieBanner from '../../../src';
-import { composeParams, dataToURL, composeMeasurementConsent } from '../../../src/lib/measurement/utils';
+import { composeParams, dataToURL, composeMeasurementConsent } from '../../../src/lib/measurement';
 import { MEASUREMENTS } from '../../../src/lib/constants';
 import defaults from '../../../src/lib/defaults';
 
@@ -13,6 +13,7 @@ describe('Cookie banner > measure > banner/form/accept/change', () => {
         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
         const __cb__ = CookieBanner({
             debug: true,
+            hideBannerOnFormPage: false,
             secure: false,
             tid: 'UA-141774857-1',
             types: {
