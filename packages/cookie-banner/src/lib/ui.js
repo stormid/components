@@ -9,7 +9,7 @@ export const initBanner = Store => state => {
     document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
     
     //track banner display
-    measure(state, MEASUREMENTS.BANNER_DISPLAY);
+    if (state.settings.tid) measure(state, MEASUREMENTS.BANNER_DISPLAY);
 
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
     const acceptBtn = document.querySelector(`.${state.settings.classNames.acceptBtn}`);
@@ -31,17 +31,19 @@ export const initBanner = Store => state => {
                     removeBanner(banner),
                     initForm(Store, false),
                     //track banner accept click
-                    state => measure(state, {
-                        ...MEASUREMENTS.BANNER_ACCEPT,
-                        cd2: composeMeasurementConsent(Store.getState().consent)
-                    })
+                    state => {
+                        if (state.settings.tid) measure(state, {
+                            ...MEASUREMENTS.BANNER_ACCEPT,
+                            cd2: composeMeasurementConsent(Store.getState().consent)
+                        });
+                    }
                 ]
             );   
         });
 
         //track options click
-        //shouldn't have to catch and replay the event since we're using beacons/
-        optionsBtn.addEventListener(event, e => measure(state, MEASUREMENTS.BANNER_OPTIONS));
+        //shouldn't have to catch and replay the event since we're using beacons
+        if (state.settings.tid) optionsBtn.addEventListener(event, e => measure(state, MEASUREMENTS.BANNER_OPTIONS));
     });
 };
 
@@ -64,7 +66,7 @@ export const initForm = (Store, track = true) => state => {
 
     //measure form display
     //track flag is false if a re-render from a banner acceptance
-    track && measure(state, MEASUREMENTS.FORM_DISPLAY);
+    if (state.settings.tid && track) measure(state, MEASUREMENTS.FORM_DISPLAY);
 
     const form = document.querySelector(`.${state.settings.classNames.form}`);
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
@@ -101,6 +103,7 @@ export const initForm = (Store, track = true) => state => {
                 removeBanner(banner),
                 renderMessage(button),
                 state => {
+                    if (!state.settings.tid) return;
                     const consentString = composeMeasurementConsent(state.consent);
                     const consent = consentString === '' ? 'None' : consentString;
                     measure(state, { ...MEASUREMENTS.SAVE_PREFERENCES, cd2: consent })

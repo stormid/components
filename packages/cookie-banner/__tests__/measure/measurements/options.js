@@ -35,7 +35,7 @@ describe('Cookie banner > measurements > options', () => {
             ...MEASUREMENTS.BANNER_DISPLAY
         }, 'collect');
         expect(navigator.sendBeacon).toHaveBeenNthCalledWith(1, bannerDisplayReqURL);
-        console.log(document.querySelector(`.${__cb__.getState().settings.classNames.banner}`));
+        
         //2. click options on banner tracked
         document.querySelector(`.${__cb__.getState().settings.classNames.optionsBtn}`).click();
         const bannerOptionsUrl = dataToURL({

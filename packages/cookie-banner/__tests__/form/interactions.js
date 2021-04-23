@@ -13,6 +13,7 @@ describe(`Cookie banner > DOM > form interactions`, () => {
         window.__cb__ = cookieBanner({
             secure: false,
             hideBannerOnFormPage: false,
+            tid: 'UA-141774857-1',
             types: {
                 test: {
                     title: 'Test title',

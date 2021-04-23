@@ -25,6 +25,7 @@ Initialise the module (example configuration shown below)
 import banner from '@stormid/cookie-banner';
 
 const cookieBanner = banner({
+    tid: '',
     types: {
         'performance': {
             suggested: true, //set as pre-checked on consent form as a suggested response
@@ -61,6 +62,7 @@ const cookieBanner = banner({
 ```
 {
     name: '.CookiePreferences', //name of the cookie set to record user consent
+    tid: '', // Google Analytics tracking id for Measurement API event tracking
     path: '/', //path of the preferences cookie
     domain: window.location.hostname === 'localhost' ? '' : `.${removeSubdomain(window.location.hostname)}`, //domain of the preferences cookie, defaults to .<root-domain>
     secure: true, //preferences cookie secure

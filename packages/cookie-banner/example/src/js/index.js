@@ -12,7 +12,9 @@ const writeCookie = state => {
     
 window.addEventListener('DOMContentLoaded', () => {
     window.__pb__ = cookieBanner({
+        tid: 'UA-401849-33',
         secure: false,
+        hideBannerOnFormPage: false,
         necessary: [ () => {
             // console.log('Necessary fn');
             writeCookie({

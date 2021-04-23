@@ -9,7 +9,6 @@ export default {
     samesite: 'strict',
     expiry: 365,
     types: {},
-	tid: 'UA-401849-33',
     necessary: [],
     policyURL: '/cookie-policy/#preferences',
     classNames: {

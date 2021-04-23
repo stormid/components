@@ -25,13 +25,11 @@ export const writeCookie = state => {
 
 export const readCookie = settings => {
     const cookies = document.cookie.split('; ');
-
     for (let n = 0; n <= cookies.length; n++) {
         if (!cookies[n]) return false;
         const [ name, value ] = cookies[n].split('=');
-        if (name === settings.name) return atob(value);
+        if (name === settings.name) return window.atob(value);
     }
-
     return false;
 };
 
@@ -53,6 +51,18 @@ export const deleteCookies = state => {
             expiry: 'Thu, 01 Jan 1970 00:00:01 GMT'
         }))
         .map(updateCookie(state));
+};
+
+//@return array [hasCookie<Boolean>, cid<UUID>, consent<{}>]
+export const extractFromCookie = settings => {
+    try {
+        const cookie = readCookie(settings);
+        if (!cookie) return [false, uuidv4(), {}];
+        const { cid, consent } = JSON.parse(cookie);
+        return [true, cid, consent]
+    } catch(e){
+        return [false, uuidv4(), {}];
+    }
 };
 
 export const shouldReturn = event => (!!event.keyCode && !~TRIGGER_KEYCODES.indexOf(event.keyCode) || (event.which && event.which === 3));
