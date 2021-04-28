@@ -64,7 +64,9 @@ describe('Cookie banner > measure > banner/form/accept/change', () => {
         const preferenceSaveUrl = dataToURL({
             ...composeParams(cid, 'UA-141774857-1'),
             ...MEASUREMENTS.SAVE_PREFERENCES,
-            cd2: consentString === '' ? 'None' : consentString
+            cd2: consentString === '' ? 'None' : consentString,
+            cm2: 0,
+            cm3: 0
         }, 'collect');
         expect(navigator.sendBeacon).toHaveBeenNthCalledWith(4, preferenceSaveUrl);
 

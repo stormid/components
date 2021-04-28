@@ -11,19 +11,30 @@ describe('Cookie banner > measure > update', () => {
     //user loads screen containing consent form, clicks banner accept
     it('should send form display, and form submit beacons', () => {
         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
-        document.cookie = `${defaults.name}=${btoa(`{"consent":{"test":1},"cid":"12345"}`)}`;
+        document.cookie = `${defaults.name}=${btoa(`{"consent":{"performance":0,"thirdParty":0},"cid":"12345"}`)}`;
         const __cb__ = CookieBanner({
             debug: true,
             hideBannerOnFormPage: false,
             secure: false,
             tid: 'UA-141774857-1',
             types: {
-                test: {
-                    title: 'Test title',
-                    description: 'Test description',
+                performance: {
+                    title: 'Performance title',
+                    description: 'Performance description',
                     labels: {
                         yes: 'Pages you visit and actions you take will be measured and used to improve the service',
                         no: 'Pages you visit and actions you take will not be measured and used to improve the service'
+                    },
+                    fns: [
+                        () => { }
+                    ]
+                },
+                thirdParty: {
+                    title: 'Third party title',
+                    description: 'Performance description',
+                    labels: {
+                        yes: 'Pages you visit and actions you take will be measured by third parties',
+                        no: 'Pages you visit and actions you take will not be measured by third parties'
                     },
                     fns: [
                         () => { }
@@ -44,14 +55,17 @@ describe('Cookie banner > measure > update', () => {
         
         //2. Change preferences and submit form tracked
         const fields = Array.from(document.querySelectorAll(`.${defaults.classNames.field}`));
-        fields[1].checked = true;
+        fields[0].checked = true;
+        fields[2].checked = true;
         document.querySelector(`.${defaults.classNames.submitBtn}`).click();
 
         const consentString = composeMeasurementConsent(__cb__.getState().consent);
         const preferenceSaveUrl = dataToURL({
             ...composeParams(cid, 'UA-141774857-1'),
             ...MEASUREMENTS.SAVE_PREFERENCES,
-            cd2: consentString === '' ? 'None' : consentString
+            cd2: consentString === '' ? 'None' : consentString,
+            cm2: 1,
+            cm3: 1
         }, 'collect');
         expect(navigator.sendBeacon).toHaveBeenNthCalledWith(2, preferenceSaveUrl);
 

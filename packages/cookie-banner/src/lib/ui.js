@@ -106,27 +106,13 @@ export const initForm = (Store, track = true) => state => {
                     if (!state.settings.tid) return;
                     const consentString = composeMeasurementConsent(state.consent);
                     const consent = consentString === '' ? 'None' : consentString;
-                    measure(state, { ...MEASUREMENTS.SAVE_PREFERENCES, cd2: consent })
+                    measure(state, {
+                        ...MEASUREMENTS.SAVE_PREFERENCES,
+                        cd2: consent,
+                        cm2: state.consent.performance ? state.consent.performance : 0,
+                        cm3: state.consent.thirdParty ? state.consent.thirdParty : 0
+                    })
                 }
-                // () => {
-                //     if(state.measurement ){
-                //         const state = Store.getState();
-                //         const consentString = Object.keys(state.consent).filter(function(key) {
-                //             return state.consent[key]
-                //         }).join(',');
-                //         if (consentString === '') consentString = "None";
-                //         Store.getState().measurement.event({
-                //             cid: state.consentID,
-                //             ec: 'Save preferences', 
-                //             ea: 'CookiePrefs', 
-                //             cd1: state.consentID, 
-                //             cd2: consentString,
-                //             cd3: location.hostname,
-                //             cm2: state.consent["performance"] ? state.consent["performance"] : 0 ,
-                //             cm3: state.consent["thirdParty"] ? state.consent["thirdParty"] : 0
-                //         });
-                //     }
-                // }
             ]
         );
     });
