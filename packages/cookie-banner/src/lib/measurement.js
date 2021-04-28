@@ -7,11 +7,11 @@ export const composeParams = (cid, tid) => ({
     ds:	'cookiebanner',
     dh: location.hostname,
     uip: '0.0.0.0',
-    // ua:	navigator.userAgent, //do we need this?
     sr:  window.screen ? `${window.screen.width}x${window.screen.height}`: null,
     vp: `${document.documentElement.clientWidth}x${document.documentElement.clientHeight}`,
     cid,
-    cd1: cid
+    cd1: cid,
+	cd4: 'consentAPI'
 });
 
 export const composeMeasurementConsent = consent => Object.keys(consent).filter(key => consent[key]).join(',')
