@@ -9,7 +9,6 @@ export const MEASUREMENTS = {
     BANNER_DISPLAY: {
         ec: 'Banner', 
         ea: 'Displays',
-        cd3: location.hostname, 
         cm1: 1
     },
     BANNER_ACCEPT: {
@@ -27,7 +26,6 @@ export const MEASUREMENTS = {
     FORM_DISPLAY: {
         ec: 'CookiePrefsWidget', 
         ea: 'Displays',
-        el: 'Edit preferences',
         cm5: 1
     },
     SAVE_PREFERENCES: {

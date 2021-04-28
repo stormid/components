@@ -11,6 +11,7 @@ export const composeParams = (cid, tid) => ({
     vp: `${document.documentElement.clientWidth}x${document.documentElement.clientHeight}`,
     cid,
     cd1: cid,
+    cd3: location.hostname,
 	cd4: 'consentAPI'
 });
 
