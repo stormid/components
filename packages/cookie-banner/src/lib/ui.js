@@ -12,40 +12,42 @@ export const initBanner = Store => state => {
     if (state.settings.tid) measure(state, MEASUREMENTS.BANNER_DISPLAY);
 
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
-    const acceptBtn = document.querySelector(`.${state.settings.classNames.acceptBtn}`);
+    const acceptBtns = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.acceptBtn}`));
     const optionsBtn = document.querySelector(`.${state.settings.classNames.optionsBtn}`);
 
     TRIGGER_EVENTS.forEach(event => {
-        acceptBtn.addEventListener(event, e => {
-            if (shouldReturn(e)) return;
+        acceptBtns.forEach(acceptBtn => {
+            acceptBtn.addEventListener(event, e => {
+                if (shouldReturn(e)) return;
 
-            Store.update(
-                updateConsent,
-                Object.keys(state.settings.types).reduce((acc, type) => {
-                    acc[type] = 1;
-                    return acc;
-                }, {}),
-                [
-                    writeCookie,
-                    apply(Store),
-                    removeBanner(banner),
-                    initForm(Store, false),
-                    //track banner accept click
-                    state => {
-                        if (state.settings.tid) {
-                            measure(state, {
-                                ...MEASUREMENTS.BANNER_ACCEPT,
-                                cd2: composeMeasurementConsent(Store.getState().consent)
-                            });
+                Store.update(
+                    updateConsent,
+                    Object.keys(state.settings.types).reduce((acc, type) => {
+                        acc[type] = 1;
+                        return acc;
+                    }, {}),
+                    [
+                        writeCookie,
+                        apply(Store),
+                        removeBanner(banner),
+                        initForm(Store, false),
+                        //track banner accept click
+                        state => {
+                            if (state.settings.tid) {
+                                measure(state, {
+                                    ...MEASUREMENTS.BANNER_ACCEPT,
+                                    cd2: composeMeasurementConsent(Store.getState().consent)
+                                });
+                            }
                         }
-                    }
-                ]
-            );
+                    ]
+                );
+            });
         });
 
         //track options click
         //shouldn't have to catch and replay the event since we're using beacons
-        if (state.settings.tid) optionsBtn.addEventListener(event, e => measure(state, MEASUREMENTS.BANNER_OPTIONS));
+        if (optionsBtn && state.settings.tid) optionsBtn.addEventListener(event, e => measure(state, MEASUREMENTS.BANNER_OPTIONS));
     });
 };
 
