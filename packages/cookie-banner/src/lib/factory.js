@@ -8,7 +8,6 @@ import { composeParams } from './measurement';
 export default settings => {
     /* istanbul ignore next */
     if (!cookiesEnabled()) return;
-    if (!settings.tid) console.warn('Measurement tid setting missing');
     const Store = createStore();
     
     //extractFromCookie adds a try/catch guard for cookie reading and JSON.parse in case of cookie name collisions caused by versioning
