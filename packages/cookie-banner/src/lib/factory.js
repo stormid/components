@@ -1,5 +1,5 @@
 import { cookiesEnabled, extractFromCookie, noop } from './utils';
-import { initBanner, initForm } from './ui';
+import { initBanner, initForm, initBannerListeners } from './ui';
 import { necessary, apply } from './consent';
 import { createStore } from './store';
 import { initialState } from './reducers';
@@ -14,7 +14,7 @@ export default settings => {
     //for sites that are saving the cookie consent in a different shape, i.e. without cid and consent properties
     //and for sites with cookies that are not base64 encoded
     const [ hasCookie, cid, consent ] = extractFromCookie(settings);
-     
+    
     Store.update(
         initialState,
         {
@@ -25,8 +25,9 @@ export default settings => {
         [
             necessary,
             apply(Store),
-            hasCookie ? noop : initBanner(Store),
-            initForm(Store)
+            hasCookie ? noop : initBanner,
+            initForm(Store),
+            initBannerListeners(Store)
         ]
     );
 

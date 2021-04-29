@@ -4,14 +4,19 @@ import { apply } from './consent';
 import { updateConsent } from './reducers';
 import { measure, composeMeasurementConsent } from './measurement';
 
-export const initBanner = Store => state => {
+export const initBanner = state => {
     if (state.settings.hideBannerOnFormPage && document.querySelector(`.${state.settings.classNames.formContainer}`)) return;
     document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
     
     //track banner display
     if (state.settings.tid) measure(state, MEASUREMENTS.BANNER_DISPLAY);
+};
 
+
+export const initBannerListeners = Store => state => {
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
+    if (!banner) return;
+    
     const acceptBtns = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.acceptBtn}`));
     const optionsBtn = document.querySelector(`.${state.settings.classNames.optionsBtn}`);
 
