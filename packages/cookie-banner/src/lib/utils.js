@@ -59,7 +59,6 @@ export const extractFromCookie = settings => {
         const cookie = readCookie(settings);
         if (!cookie) return [false, uuidv4(), {}];
         const { cid, consent } = JSON.parse(cookie);
-        console.log(cid, consent);
         const hasCookie = cid !== undefined && consent !== undefined;
         return [hasCookie, cid || uuidv4(), consent || {}];
     } catch (e){
