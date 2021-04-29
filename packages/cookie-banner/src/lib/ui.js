@@ -1,13 +1,19 @@
 import { shouldReturn, writeCookie, groupValueReducer, deleteCookies } from './utils';
-import { TRIGGER_EVENTS } from './constants';
+import { TRIGGER_EVENTS, MEASUREMENTS } from './constants';
 import { apply } from './consent';
 import { updateConsent } from './reducers';
+import { measure, composeMeasurementConsent } from './measurement';
 
 export const initBanner = Store => state => {
     if (state.settings.hideBannerOnFormPage && document.querySelector(`.${state.settings.classNames.formContainer}`)) return;
     document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
+    
+    //track banner display
+    if (state.settings.tid) measure(state, MEASUREMENTS.BANNER_DISPLAY);
+
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
     const acceptBtn = document.querySelector(`.${state.settings.classNames.acceptBtn}`);
+    const optionsBtn = document.querySelector(`.${state.settings.classNames.optionsBtn}`);
 
     TRIGGER_EVENTS.forEach(event => {
         acceptBtn.addEventListener(event, e => {
@@ -23,10 +29,23 @@ export const initBanner = Store => state => {
                     writeCookie,
                     apply(Store),
                     removeBanner(banner),
-                    initForm(Store)
+                    initForm(Store, false),
+                    //track banner accept click
+                    state => {
+                        if (state.settings.tid) {
+                            measure(state, {
+                                ...MEASUREMENTS.BANNER_ACCEPT,
+                                cd2: composeMeasurementConsent(Store.getState().consent)
+                            });
+                        }
+                    }
                 ]
             );
         });
+
+        //track options click
+        //shouldn't have to catch and replay the event since we're using beacons
+        if (state.settings.tid) optionsBtn.addEventListener(event, e => measure(state, MEASUREMENTS.BANNER_OPTIONS));
     });
 };
 
@@ -41,11 +60,15 @@ const suggestedConsent = state => Object.keys(state.consent).length > 0
         }, {})
     });
 
-export const initForm = Store => state => {
+export const initForm = (Store, track = true) => state => {
     const formContainer = document.querySelector(`.${state.settings.classNames.formContainer}`);
     if (!formContainer) return;
 
     formContainer.innerHTML = state.settings.formTemplate(suggestedConsent(state));
+
+    //measure form display
+    //track flag is false if a re-render from a banner acceptance
+    if (state.settings.tid && track) measure(state, MEASUREMENTS.FORM_DISPLAY);
 
     const form = document.querySelector(`.${state.settings.classNames.form}`);
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
@@ -80,7 +103,18 @@ export const initForm = Store => state => {
                 writeCookie,
                 apply(Store),
                 removeBanner(banner),
-                renderMessage(button)
+                renderMessage(button),
+                state => {
+                    if (!state.settings.tid) return;
+                    const consentString = composeMeasurementConsent(state.consent);
+                    const consent = consentString === '' ? 'None' : consentString;
+                    measure(state, {
+                        ...MEASUREMENTS.SAVE_PREFERENCES,
+                        cd2: consent,
+                        cm2: state.consent.performance ? state.consent.performance : 0,
+                        cm3: state.consent.thirdParty ? state.consent.thirdParty : 0
+                    });
+                }
             ]
         );
     });

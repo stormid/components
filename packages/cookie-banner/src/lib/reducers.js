@@ -1,4 +1,4 @@
-export const initialState = (state, data) => Object.assign({}, state, data);
+export const initialState = (state, data) => data;
 
 export const updateConsent = (state, data) => Object.assign({}, state, {
     consent: Object.assign({}, state.consent, data)

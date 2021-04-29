@@ -1,19 +1,33 @@
-import { cookiesEnabled, readCookie, noop } from './utils';
+import { cookiesEnabled, extractFromCookie, noop } from './utils';
 import { initBanner, initForm } from './ui';
 import { necessary, apply } from './consent';
 import { createStore } from './store';
 import { initialState } from './reducers';
+import { composeParams } from './measurement';
 
 export default settings => {
     /* istanbul ignore next */
     if (!cookiesEnabled()) return;
-    
     const Store = createStore();
-    const cookie = readCookie(settings);
+    
+    //extractFromCookie adds a try/catch guard for cookie reading and JSON.parse in case of cookie name collisions caused by versioning
+    //for sites that are saving the cookie consent in a different shape, i.e. without cid and consent properties
+    //and for sites with cookies that are not base64 encoded
+    const [ hasCookie, cid, consent ] = extractFromCookie(settings);
+     
     Store.update(
         initialState,
-        { settings, consent: cookie ? JSON.parse(cookie) : { } },
-        [ necessary, apply(Store), cookie ? noop : initBanner(Store), initForm(Store) ]
+        {
+            settings,
+            persistentMeasurementParams: settings.tid ? composeParams(cid, settings.tid) : false,
+            consent
+        },
+        [
+            necessary,
+            apply(Store),
+            hasCookie ? noop : initBanner(Store),
+            initForm(Store)
+        ]
     );
 
     return { getState: Store.getState } ;

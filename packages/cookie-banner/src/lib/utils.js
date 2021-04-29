@@ -14,7 +14,7 @@ export const cookiesEnabled = () => {
 
 export const writeCookie = state => {
     document.cookie = [
-        `${state.settings.name}=${btoa(JSON.stringify(state.consent))};`,
+        `${state.settings.name}=${btoa(JSON.stringify({ consent: state.consent, cid: state.persistentMeasurementParams.cid }))};`,
         `expires=${(new Date(new Date().getTime() + (state.settings.expiry*24*60*60*1000))).toGMTString()};`,
         state.settings.path ? `path=${state.settings.path};` : '',
         state.settings.domain ? `domain=${state.settings.domain};` : '',
@@ -25,13 +25,11 @@ export const writeCookie = state => {
 
 export const readCookie = settings => {
     const cookies = document.cookie.split('; ');
-
     for (let n = 0; n <= cookies.length; n++) {
         if (!cookies[n]) return false;
         const [ name, value ] = cookies[n].split('=');
-        if (name === settings.name) return atob(value);
+        if (name === settings.name) return window.atob(value);
     }
-
     return false;
 };
 
@@ -53,6 +51,18 @@ export const deleteCookies = state => {
             expiry: 'Thu, 01 Jan 1970 00:00:01 GMT'
         }))
         .map(updateCookie(state));
+};
+
+//@return array [hasCookie<Boolean>, cid<UUID>, consent<{}>]
+export const extractFromCookie = settings => {
+    try {
+        const cookie = readCookie(settings);
+        if (!cookie) return [false, uuidv4(), {}];
+        const { cid, consent } = JSON.parse(cookie);
+        return [true, cid, consent];
+    } catch (e){
+        return [false, uuidv4(), {}];
+    }
 };
 
 export const shouldReturn = event => (!!event.keyCode && !~TRIGGER_KEYCODES.indexOf(event.keyCode) || (event.which && event.which === 3));
@@ -98,3 +108,8 @@ export const removeSubdomain = s => {
 
     return parts.join('.');
 };
+
+export const uuidv4 = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+});

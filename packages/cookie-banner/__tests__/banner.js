@@ -6,6 +6,7 @@ const init = () => {
     document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
     cookieBanner({
         secure: false,
+        hideBannerOnFormPage: false,
         types: {
             test: {
                 title: 'Test title',
@@ -42,9 +43,9 @@ describe(`Cookie banner > DOM > render`, () => {
     });
 });
 
-describe(`Cookie banner > DOM > render`, () => {
+describe(`Cookie banner > DOM > not render`, () => {
 
-    it('It not should render the banner if hideBannerOnFormPage setting is true and on consent form page', async () => {
+    it('It should not render the banner if hideBannerOnFormPage setting is true and on consent form page', async () => {
         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
         cookieBanner({
             secure: false,

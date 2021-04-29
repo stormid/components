@@ -3,6 +3,7 @@
   "private": false,
   "scripts": {
     "gh-pages": "node tools/gh-pages/render",
+    "test": "lerna run test --stream",
     "lint": "node_modules/.bin/eslint packages -c .eslintrc --ext js",
     "prepublish": "npm run gh-pages -s"
   },

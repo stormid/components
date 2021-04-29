@@ -1,11 +1,15 @@
 # Cookie banner
 
-GDPR compliant cookie banner and consent form. Renders a cookie banner and a consent form based on configuration settings, and conditionally invokes cookie-reliant functionality based on user consent. 
+GDPR compliant cookie banner and consent form.
+
+Renders a cookie banner and a consent form based on configuration settings, and conditionally invokes cookie-reliant functionality based on user consent.
+
+Optionally send anonymous [predefined cookie banner and consent form interaction measurements](./measurements.md) to a specified Google Analytics using the Google Measurement API.
 
 ---
 
 ## Usage
-Cookie consent is based on categorising cookies and the functions that initialise them, dsribing them in a configuration object passed into the module at initialisition.
+Cookie consent is based on categorising cookies and the functions that initialise them, desribing them in a configuration object passed into the module at initialisition.
 
 The cookie banner renders itself if no consent preferences are recorded in the browser. The consent form renders into a DOMElement with a particular className configurable options (classNames.formContainer).
 
@@ -25,6 +29,7 @@ Initialise the module (example configuration shown below)
 import banner from '@stormid/cookie-banner';
 
 const cookieBanner = banner({
+    tid: 'UA-XXXXXXXX-X',
     types: {
         'performance': {
             suggested: true, //set as pre-checked on consent form as a suggested response
@@ -40,12 +45,12 @@ const cookieBanner = banner({
                 }
             ]
         },
-        'ads': {
-            title: 'Personalised ads preferences',
-            description: 'We work with advertising partners to show you ads for our products and services across the web.  You can choose whether we collect and share that data with our partners below. ',
+        'thirdParty': {
+            title: 'Third party preferences',
+            description: 'We work with third party partners to show you ads for our products and services across the web, and to serve video and audio content.  You can choose whether we collect and share that data with our partners below. ',
             labels: {
-                yes: 'Our partners might serve you ads knowing you have visited our website',
-                no: 'Our partners will still serve you ads, but they will not know you have visited out website'
+                yes: 'Our partners might know you have visited our website',
+                no: 'Our partners will will not know you have visited out website but you cannot video third party video and audio content'
             },
             fns: [
                 model => { 
@@ -61,6 +66,7 @@ const cookieBanner = banner({
 ```
 {
     name: '.CookiePreferences', //name of the cookie set to record user consent
+    tid: '', // Google Analytics tracking id for Measurement API event tracking
     path: '/', //path of the preferences cookie
     domain: window.location.hostname === 'localhost' ? '' : `.${removeSubdomain(window.location.hostname)}`, //domain of the preferences cookie, defaults to .<root-domain>
     secure: true, //preferences cookie secure
