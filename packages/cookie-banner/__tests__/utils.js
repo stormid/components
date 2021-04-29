@@ -102,9 +102,9 @@ describe('Cookie > Utils > extractFromCookie > malformed JSON cookie', () => {
 
 describe('Cookie > Utils > extractFromCookie > well-formed JSON cookie', () => {
     it('should return hasCookie, cid, and content properties from well-formed JSON cookie', () => {
-        document.cookie = `${defaults.name}=${btoa(JSON.stringify({ "cid":"12345","consent": { "performance": 1, "thirdParty": 0 } }))}`;
+        document.cookie = `${defaults.name}=${btoa(JSON.stringify({ cid: '12345', consent: { performance: 1, thirdParty: 0 } }))}`;
         const [hasCookie, cid, consent ] = extractFromCookie(defaults);
-        console.log(hasCookie, cid, consent);
+        
         expect(hasCookie).toEqual(true);
         expect(cid).toEqual('12345');
         expect(consent).toEqual({ performance: 1, thirdParty: 0 });

@@ -1,4 +1,4 @@
-import CookieBanner from '../../../src';
+import cookieBanner from '../../../src';
 import { composeParams, dataToURL, composeMeasurementConsent } from '../../../src/lib/measurement';
 import { MEASUREMENTS } from '../../../src/lib/constants';
 import defaults from '../../../src/lib/defaults';
@@ -11,7 +11,7 @@ describe('Cookie banner > measure > banner/form/accept/change', () => {
     //user loads screen containing consent form, clicks banner accept
     it('should send banner display, form display, banner accept, and form submit beacons', () => {
         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
-        const __cb__ = CookieBanner({
+        const __cb__ = cookieBanner({
             debug: true,
             hideBannerOnFormPage: false,
             secure: false,

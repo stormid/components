@@ -1,4 +1,4 @@
-import CookieBanner from '../../../src';
+import cookieBanner from '../../../src';
 
 navigator = navigator || {};
 navigator.sendBeacon = jest.fn();
@@ -7,7 +7,7 @@ describe('Cookie banner > measurements > no tid', () => {
 
     it('should not attempt tp send any measurements if there is no tid', () => {
         document.body.innerHTML = `<div></div>`;
-        const __cb__ = CookieBanner({
+        const __cb__ = cookieBanner({
             debug: true,
             hideBannerOnFormPage: false,
             secure: false,

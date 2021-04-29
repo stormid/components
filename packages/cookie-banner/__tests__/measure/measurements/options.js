@@ -1,4 +1,4 @@
-import CookieBanner from '../../../src';
+import cookieBanner from '../../../src';
 import { composeParams, dataToURL } from '../../../src/lib/measurement';
 import { MEASUREMENTS } from '../../../src/lib/constants';
 
@@ -10,7 +10,7 @@ describe('Cookie banner > measurements > options', () => {
     //user loads page clicks banner options
     it('should send banner display, banner options beacons', () => {
         document.body.innerHTML = `<div></div>`;
-        const __cb__ = CookieBanner({
+        const __cb__ = cookieBanner({
             debug: true,
             hideBannerOnFormPage: false,
             secure: false,

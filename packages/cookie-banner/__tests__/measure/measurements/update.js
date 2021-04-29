@@ -1,4 +1,4 @@
-import CookieBanner from '../../../src';
+import cookieBanner from '../../../src';
 import { composeParams, dataToURL, composeMeasurementConsent } from '../../../src/lib/measurement';
 import { MEASUREMENTS } from '../../../src/lib/constants';
 import defaults from '../../../src/lib/defaults';
@@ -12,7 +12,7 @@ describe('Cookie banner > measure > update', () => {
     it('should send form display, and form submit beacons', () => {
         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
         document.cookie = `${defaults.name}=${btoa(`{"consent":{"performance":0,"thirdParty":0},"cid":"12345"}`)}`;
-        const __cb__ = CookieBanner({
+        const __cb__ = cookieBanner({
             debug: true,
             hideBannerOnFormPage: false,
             secure: false,

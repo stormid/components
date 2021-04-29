@@ -32,13 +32,15 @@ export const initBanner = Store => state => {
                     initForm(Store, false),
                     //track banner accept click
                     state => {
-                        if (state.settings.tid) measure(state, {
-                            ...MEASUREMENTS.BANNER_ACCEPT,
-                            cd2: composeMeasurementConsent(Store.getState().consent)
-                        });
+                        if (state.settings.tid) {
+                            measure(state, {
+                                ...MEASUREMENTS.BANNER_ACCEPT,
+                                cd2: composeMeasurementConsent(Store.getState().consent)
+                            });
+                        }
                     }
                 ]
-            );   
+            );
         });
 
         //track options click
@@ -111,7 +113,7 @@ export const initForm = (Store, track = true) => state => {
                         cd2: consent,
                         cm2: state.consent.performance ? state.consent.performance : 0,
                         cm3: state.consent.thirdParty ? state.consent.thirdParty : 0
-                    })
+                    });
                 }
             ]
         );
