@@ -5,7 +5,6 @@ import {
     isFile,
     isHidden,
     domNodesFromCommaList,
-    groupIsHidden,
     groupIsDisabled,
     findErrors
 } from './utils';
@@ -220,7 +219,7 @@ export const removeUnvalidatableGroups = groups => {
     let validationGroups = {};
 
     for (let group in groups){
-        if (groups[group].validators.length > 0 && !groupIsHidden(groups[group].fields)){
+        if (groups[group].validators.length > 0){
             validationGroups[group] = groups[group];
         }
     }

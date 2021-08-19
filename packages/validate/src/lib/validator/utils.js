@@ -14,11 +14,6 @@ export const hasFormactionValue = node => node.hasAttribute('formaction') && nod
 
 export const isRequired = group => group.validators.filter(validator => validator.type === 'required').length > 0;
 
-export const groupIsHidden = fields => fields.reduce((acc, field) => {
-    if ((field.type === 'hidden') && ([].slice.call(document.querySelectorAll(field.name)).length === 1)) acc = true;
-    return acc;
-}, false);
-
 export const groupIsDisabled = fields => fields.reduce((acc, field) => {
     if (field.hasAttribute('disabled') && field.getAttribute('disabled') !== "false") acc = true;
     return acc;
