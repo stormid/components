@@ -241,31 +241,6 @@ describe('Validate > Unit > Validator > removeUnvalidatableGroups', () => {
             }
         });
     });
-
-    it('should remove groups with all hidden fields  from the array of vaidationGroups', async () => {
-        expect.assertions(1);
-        document.body.innerHTML = `<input
-            id="i-1"
-            name="group1"
-            type="hidden">
-            <input
-            required
-            id="i-2"
-            name="group1"
-            type="hidden">`;
-        const input1 = document.querySelector('#i-1');
-        const input2 = document.querySelector('#i-2');
-        let groups = {
-            group1: {
-                validators: [{ type: 'required', message: 'This field is required' }],
-                fields: [input1, input2],
-                errorMessages: [],
-                valid: false
-            }
-        };
-
-        expect(removeUnvalidatableGroups(groups)).toEqual({});
-    });
 });
 
 //getInitialState

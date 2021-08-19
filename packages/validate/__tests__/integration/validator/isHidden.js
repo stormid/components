@@ -1,4 +1,4 @@
-import { assembleValidationGroup } from '../../../src/lib/validator';
+import { isFormValid, getValidityState, assembleValidationGroup } from '../../../src/lib/validator';
 
 describe('Validate > Integration > assembleValidationGroup > With hidden element', () => {
     it('should return the validation group minus hidden inputs', async () => {
@@ -15,8 +15,8 @@ describe('Validate > Integration > assembleValidationGroup > With hidden element
             required
             value=""
             type="hidden">`;
-        const inputs = [].slice.call(document.querySelectorAll('name="group1'));
-        const group = inputs.reduce(assembleValidationGroup, {});
+        const inputs = [].slice.call(document.querySelectorAll('[name="group1"]'));
+        const group = inputs.reduce(assembleValidationGroup, {}); 
         expect(group.group1.fields).toEqual([inputs[0]]);
     });
 
@@ -35,15 +35,13 @@ describe('Validate > Integration > assembleValidationGroup > With hidden element
             required
             value=""
             type="hidden">`;
-        const inputs = [].slice.call(document.querySelectorAll('name="group1'));
+        const inputs = [].slice.call(document.querySelectorAll('[name="group1"]'));
         const group = inputs.reduce(assembleValidationGroup, {});
-        expect(group).toEqual({
-            group1: {
-                valid: true,
-                validators: [{ type: 'required' }],
-                fields: [inputs[0]],
-                serverErrorNode: false
-            }
+        let validity = null;
+
+        return getValidityState(group).then(validityState => {
+            validity = isFormValid(validityState);
+            expect(validity).toBe(true);
         });
     });
 
@@ -61,15 +59,13 @@ describe('Validate > Integration > assembleValidationGroup > With hidden element
             required
             value=""
             type="hidden">`;
-        const inputs = [].slice.call(document.querySelectorAll('name="group1'));
+        const inputs = [].slice.call(document.querySelectorAll('[name="group1"]'));
         const group = inputs.reduce(assembleValidationGroup, {});
-        expect(group).toEqual({
-            group1: {
-                valid: false,
-                validators: [{ type: 'required' }],
-                fields: [inputs[0]],
-                serverErrorNode: false
-            }
+        let validity = null;
+
+        return getValidityState(group).then(validityState => {
+            validity = isFormValid(validityState);
+            expect(validity).toBe(false);
         });
     });
 });
