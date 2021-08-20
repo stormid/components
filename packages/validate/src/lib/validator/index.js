@@ -6,7 +6,8 @@ import {
     isHidden,
     domNodesFromCommaList,
     groupIsDisabled,
-    findErrors
+    findErrors,
+    groupIsAllHidden
 } from './utils';
 import {
     DOTNET_ADAPTORS,
@@ -219,11 +220,11 @@ export const removeUnvalidatableGroups = groups => {
     let validationGroups = {};
 
     for (let group in groups){
-        if (groups[group].validators.length > 0){
+        if (groups[group].validators.length > 0 && !groupIsAllHidden(groups[group].fields)){
             validationGroups[group] = groups[group];
         }
     }
-
+    console.log(validationGroups);
     return validationGroups;
 };
 
