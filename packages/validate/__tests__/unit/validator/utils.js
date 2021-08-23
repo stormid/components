@@ -5,7 +5,7 @@ import {
     isSubmitButton,
     hasNameValue,
     isRequired,
-    groupIsHidden,
+    isHidden,
     hasValue,
     groupValueReducer,
     resolveGetParams,
@@ -153,26 +153,20 @@ describe('Validate > Unit > Utils > isRequired', () => {
     });
 });
 
-describe('Validate > Unit > Utils > groupIsHidden', () => {
-    it('should return true if the array of fields contains one with type of hidden', async () => {
+describe('Validate > Unit > Utils > isHidden', () => {
+    it('should return true if the field is of type hidden', async () => {
         expect.assertions(1);
-        document.body.innerHTML = `<form>
-            <input name="fields" id="field-1" />
-            <input name="fields" id="field-2" type="hidden" />
-        </form>`;
-        const fields = Array.from(document.querySelectorAll('input'));
+        document.body.innerHTML = `<input name="fields" id="field-1" type="hidden" />`;
+        const field = document.querySelector('#field-1');
 
-        expect(groupIsHidden(fields)).toEqual(true);
+        expect(isHidden(field)).toEqual(true);
     });
-    it('should return false if the array of fields contains no nodes with type of hidden', async () => {
+    it('should return false if the field is not of type hidden', async () => {
         expect.assertions(1);
-        document.body.innerHTML = `<form>
-            <input name="fields" id="field-1" />
-            <input name="fields" id="field-2" />
-        </form>`;
-        const fields = Array.from(document.querySelectorAll('input'));
+        document.body.innerHTML = `<input name="fields" id="field-1" type="text" />`;
+        const field = document.querySelector('#field-1');
 
-        expect(groupIsHidden(fields)).toEqual(false);
+        expect(isHidden(field)).toEqual(false);
     });
 });
 

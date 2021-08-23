@@ -2,6 +2,8 @@ export const isCheckable = field => (/radio|checkbox/i).test(field.type);
 
 export const isFile = field => field.getAttribute('type') === 'file';
 
+export const isHidden = field => field.getAttribute('type') === 'hidden';
+
 export const isSelect = field => field.nodeName.toLowerCase() === 'select';
 
 export const isSubmitButton = node =>  node.getAttribute('type') === 'submit' || node.nodeName === 'BUTTON';
@@ -12,10 +14,10 @@ export const hasFormactionValue = node => node.hasAttribute('formaction') && nod
 
 export const isRequired = group => group.validators.filter(validator => validator.type === 'required').length > 0;
 
-export const groupIsHidden = fields => fields.reduce((acc, field) => {
-    if (field.type === 'hidden') acc = true;
+export const groupIsAllHidden = fields => fields.reduce((acc, field) => {
+    if (field.type !== 'hidden') acc = false;
     return acc;
-}, false);
+}, true);
 
 export const groupIsDisabled = fields => fields.reduce((acc, field) => {
     if (field.hasAttribute('disabled') && field.getAttribute('disabled') !== "false") acc = true;
@@ -25,7 +27,7 @@ export const groupIsDisabled = fields => fields.reduce((acc, field) => {
 export const hasValue = input => (input.value !== undefined && input.value !== null && input.value.length > 0);
 
 export const groupValueReducer = (acc, input) => {
-    if (!isCheckable(input) && hasValue(input)) acc = input.value;
+    if (!isCheckable(input) && !isHidden(input) && hasValue(input)) acc = input.value;
     if (isCheckable(input) && input.checked) {
         if (Array.isArray(acc)) acc.push(input.value);
         else acc = [input.value];

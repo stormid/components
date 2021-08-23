@@ -240,9 +240,10 @@ describe('Validate > Unit > Validator > removeUnvalidatableGroups', () => {
                 valid: false
             }
         });
+    
     });
 
-    it('should remove groups with all hidden fields  from the array of vaidationGroups', async () => {
+    it('should remove groups with all hidden fields from the array of validationGroups', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
             id="i-1"
@@ -266,6 +267,7 @@ describe('Validate > Unit > Validator > removeUnvalidatableGroups', () => {
 
         expect(removeUnvalidatableGroups(groups)).toEqual({});
     });
+
 });
 
 //getInitialState
