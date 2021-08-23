@@ -224,7 +224,6 @@ export const removeUnvalidatableGroups = groups => {
             validationGroups[group] = groups[group];
         }
     }
-    console.log(validationGroups);
     return validationGroups;
 };
 
