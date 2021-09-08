@@ -12,10 +12,17 @@ export const ACTIONS = {
     VALIDATION_ERRORS: 'VALIDATION_ERRORS',
     VALIDATION_ERROR: 'VALIDATION_ERROR',
     CLEAR_ERROR: 'CLEAR_ERROR',
+    CREATE_ERROR_SUMMARY: 'CREATE_ERROR_SUMMARY',
     ADD_VALIDATION_METHOD: 'ADD_VALIDATION_METHOD',
     ADD_GROUP: 'ADD_GROUP',
     REMOVE_GROUP: 'REMOVE_GROUP'
 };
+
+export const AX_ATTRIBUTES = {
+    ERROR_SUMMARY: 'data-error-summary',
+    ERROR_MESSAGE: 'data-ax-error',
+    HIDDEN_CLASS: 'visually-hidden'
+}
 
 //https://html.spec.whatwg.org/multipage/forms.html#valid-e-mail-address
 export const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;

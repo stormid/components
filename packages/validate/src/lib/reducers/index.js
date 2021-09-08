@@ -24,6 +24,9 @@ export default {
     [ACTIONS.ADD_GROUP]: (state, data) => Object.assign({}, state, {
         groups: Object.assign({}, state.groups, data)
     }),
+    [ACTIONS.CREATE_ERROR_SUMMARY]: (state, data) => Object.assign({}, state, {
+        errorSummary: data
+    }),
     [ACTIONS.REMOVE_GROUP]: (state, groupName) => Object.assign({}, state, {
         groups: Object.keys(state.groups).reduce((acc, group) => {
             if (group !== groupName) acc[group] = state.groups[group];

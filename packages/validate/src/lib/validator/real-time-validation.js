@@ -23,7 +23,7 @@ import {
 export const initRealTimeValidation = Store => {
     const handler = groupName => () => {
         const { groups } = Store.getState();
-        
+
         if (!groups[groupName].valid) {
             Store.dispatch(ACTIONS.CLEAR_ERROR, groupName, [ clearError(groupName) ]);
         }
@@ -36,7 +36,7 @@ export const initRealTimeValidation = Store => {
                             group: groupName,
                             errorMessages: res.reduce(reduceErrorMessages(groupName, Store.getState()), [])
                         },
-                        [ renderError(groupName) ]
+                        [() => renderError(Store)(groupName)]
                     );
                 }
             });

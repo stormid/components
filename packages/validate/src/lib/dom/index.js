@@ -1,4 +1,4 @@
-import { DOTNET_CLASSNAMES } from '../constants';
+import { DOTNET_CLASSNAMES, AX_ATTRIBUTES, ACTIONS } from '../constants';
 
 /**
  * Hypertext DOM factory function
@@ -32,7 +32,6 @@ export const h = (nodeName, attributes, text) => {
  */
 export const createErrorTextNode = (group, msg) => {
     let node = document.createTextNode(msg);
-    group.serverErrorNode.setAttribute('role', 'alert');
     group.serverErrorNode.classList.remove(DOTNET_CLASSNAMES.VALID);
     group.serverErrorNode.classList.add(DOTNET_CLASSNAMES.ERROR);
     
@@ -55,7 +54,6 @@ export const clearError = groupName => state => {
         state.groups[groupName].serverErrorNode.innerHTML = '';
         state.groups[groupName].serverErrorNode.classList.remove(DOTNET_CLASSNAMES.ERROR);
         state.groups[groupName].serverErrorNode.classList.add(DOTNET_CLASSNAMES.VALID);
-        state.groups[groupName].serverErrorNode.removeAttribute('role');
     } else {
         state.errors[groupName].parentNode.removeChild(state.errors[groupName]);
     }
@@ -63,6 +61,9 @@ export const clearError = groupName => state => {
         field.parentNode.classList.remove('is--invalid');
         field.removeAttribute('aria-invalid');
     });
+
+    const currentError = state.form.querySelector('['+AX_ATTRIBUTES.ERROR_MESSAGE+'='+groupName+']');
+    if (currentError) currentError.parentNode.removeChild(currentError);
     delete state.errors[groupName];//shouldn't be doing this here...
 };
 
@@ -84,10 +85,21 @@ export const clearErrors = state => {
  * @param state [Object, validation state]
  * 
  */
-export const renderErrors = state => {
-    Object.keys(state.groups).forEach(groupName => {
-        if (!state.groups[groupName].valid) renderError(groupName)(state);
-    });
+export const renderErrors = Store => () => {
+    const state = Store.getState();
+    
+    if(state.errorSummary) state.form.removeChild(state.errorSummary);
+    
+    const errorSummary = h('div', {role:'alert', class:AX_ATTRIBUTES.HIDDEN_CLASS, [AX_ATTRIBUTES.ERROR_SUMMARY]:"true"})
+    state.form.insertBefore(errorSummary, state.form.firstChild);
+
+    Store.dispatch(ACTIONS.CREATE_ERROR_SUMMARY, errorSummary, [
+        () => {
+            Object.keys(state.groups).forEach(groupName => {
+                if (!state.groups[groupName].valid) renderError(Store)(groupName);
+            });
+        }
+    ])
 };
 
 /**
@@ -103,7 +115,10 @@ export const renderErrors = state => {
  * @param state [Object, validation state]
  * 
  */
-export const renderError = groupName => state => {
+export const renderError = Store => groupName => {
+
+    const state = Store.getState();
+
     if (state.errors[groupName]) clearError(groupName)(state);
     
     state.errors[groupName] =
@@ -113,12 +128,14 @@ export const renderError = groupName => state => {
                 .querySelector(`[for="${state.groups[groupName].fields[state.groups[groupName].fields.length-1].getAttribute('id')}"]`)
                 .appendChild(
                     h('span', {
-                        class: DOTNET_CLASSNAMES.ERROR,
-                        role: 'alert'
+                        class: DOTNET_CLASSNAMES.ERROR
                     }, state.groups[groupName].errorMessages[0]),
                     state.groups[groupName].fields[state.groups[groupName].fields.length-1]
                 );
-						
+	
+    state.errorSummary.appendChild(
+        h('span', {[AX_ATTRIBUTES.ERROR_MESSAGE]: groupName}, state.groups[groupName].errorMessages[0]));         
+    
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.add('is--invalid');
         field.setAttribute('aria-invalid', 'true');

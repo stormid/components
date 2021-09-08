@@ -45,9 +45,9 @@ export const validate = Store => event => {
                             valid: validityState[i].reduce(reduceGroupValidityState, true),
                             errorMessages: validityState[i].reduce(reduceErrorMessages(group, state), [])
                         }, acc), {}),
-                    [renderErrors, focusFirstInvalidField]
+                    [renderErrors(Store), focusFirstInvalidField]
                 );
-
+                
                 return resolve(false);
             })
             .catch(err => console.warn(err));
