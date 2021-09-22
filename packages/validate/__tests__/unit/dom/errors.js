@@ -5,13 +5,16 @@ import {
     renderError,
     renderErrors
 } from '../../../src/lib/dom';
-import { DOTNET_CLASSNAMES } from '../../../src/lib/constants';
+import {
+    createStore
+} from '../../../src/lib/store'
+import { DOTNET_CLASSNAMES, ACTIONS } from '../../../src/lib/constants';
 
 //clearError
 describe('Validate > Unit > DOM > clearError', () => {
     
     it('should remove a client-side rendered errorNode container, remove invalid classNames and aria, and deletes the errorNode for the group from state', async () => {
-        document.body.innerHTML = `<form class="form" method="post" action="">
+        document.body.innerHTML = `<form id="form" class="form" method="post" action="">
             <div class="is--invalid">
                 <label for="group1">Label</label>
                 <input id="group1" name="group1" aria-invalid="true" data-val="true" data-val-required="This field is required" />
@@ -19,6 +22,7 @@ describe('Validate > Unit > DOM > clearError', () => {
             </div>
         </form>`;
         const mockState = {
+            form: document.getElementById('form'),
             groups: {
                 group1: {
                     serverErrorNode: false,
@@ -38,7 +42,7 @@ describe('Validate > Unit > DOM > clearError', () => {
     });
 
     it('should remove a server-side rendered text node, toggle serverNode classNames, remove invalid classNames and aria, and deletes the errorNode for the group from state', async () => {
-        document.body.innerHTML = `<form class="form" method="post" action="">
+        document.body.innerHTML = `<form id="form" class="form" method="post" action="">
             <div class="is--invalid">
                 <label for="group1">Label</label>
                 <input id="group1" name="group1" aria-invalid="true" data-val="true" data-val-required="This field is required" />
@@ -50,6 +54,7 @@ describe('Validate > Unit > DOM > clearError', () => {
         const serverErrorNode = document.getElementById('test-server-error-node');
         serverErrorNode.appendChild(errorNode);
         const mockState = {
+            form: document.getElementById('form'),
             groups: {
                 group1: {
                     serverErrorNode,
@@ -76,7 +81,7 @@ describe('Validate > Unit > DOM > clearError', () => {
 describe('Validate > Unit > DOM > clearErrors', () => {
     
     it('should all errors and update DOM via clearError for each validation group', async () => {
-        document.body.innerHTML = `<form class="form" method="post" action="">
+        document.body.innerHTML = `<form id="form" class="form" method="post" action="">
             <div class="is--invalid">
                 <label for="group1">Label</label>
                 <input id="group1" name="group1" aria-invalid="true" data-val="true" data-val-required="This field is required" />
@@ -89,6 +94,7 @@ describe('Validate > Unit > DOM > clearErrors', () => {
             </div>
         </form>`;
         const mockState = {
+            form: document.getElementById('form'),
             groups: {
                 group1: {
                     serverErrorNode: false,
@@ -117,7 +123,7 @@ describe('Validate > Unit > DOM > clearErrors', () => {
     });
     
     it('should not change state if there are no errors', async () => {
-        document.body.innerHTML = `<form class="form" method="post" action="">
+        document.body.innerHTML = `<form id="form" class="form" method="post" action="">
             <div>
                 <label for="group1">Label</label>
                 <input id="group1" name="group1" data-val="true" data-val-required="This field is required" />
@@ -128,6 +134,7 @@ describe('Validate > Unit > DOM > clearErrors', () => {
             </div>
         </form>`;
         const mockState = {
+            form: document.getElementById('form'),
             groups: {
                 group1: {
                     serverErrorNode: false,
@@ -154,9 +161,11 @@ describe('Validate > Unit > DOM > renderError', () => {
     it('Should add an error message container if there is no serverErrorNode, and attributes to reflect invalidity', async () => {
 
         document.body.innerHTML = `<form class="form" method="post" action="">
+            <div id="errorSummary" class="visually-hidden" role="alert" data-error-summary></div>
             <label id="test-label" for="group1">Text</label>
             <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
         </form>`;
+        const Store = createStore();
         const mockState = {
             groups: {
                 group1: {
@@ -165,9 +174,11 @@ describe('Validate > Unit > DOM > renderError', () => {
                     errorMessages: ['This field is required']
                 }
             },
-            errors: {}
+            errors: {},
+            errorSummary: document.getElementById('errorSummary')
         };
-        renderError('group1')(mockState);
+        Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
+        renderError(Store)('group1');
         const errorContainer = document.getElementById('test-label').lastElementChild;
         expect(errorContainer).not.toBeUndefined();
         expect(errorContainer.classList.contains(DOTNET_CLASSNAMES.ERROR)).toEqual(true);
@@ -178,8 +189,9 @@ describe('Validate > Unit > DOM > renderError', () => {
 
     //add error to serverErrorNode
     it('Should add an error message text node to a serverErrorNode, and attributes to reflect invalidity', async () => {
-
+        const Store = createStore();
         document.body.innerHTML = `<form class="form" method="post" action="">
+            <div id="errorSummary" class="visually-hidden" role="alert" data-error-summary></div>
             <label id="test-label" for="group1">Text</label>
             <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
             <span id="test-server-error-node" data-valmsg-for="group1" role="alert" class="${DOTNET_CLASSNAMES.ERROR}"></span>
@@ -193,11 +205,12 @@ describe('Validate > Unit > DOM > renderError', () => {
                     errorMessages: ['This field is required']
                 }
             },
-            errors: {}
+            errors: {},
+            errorSummary: document.getElementById('errorSummary')
         };
-        renderError('group1')(mockState);
+        Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
+        renderError(Store)('group1');
         expect(serverErrorNode.textContent).toEqual('This field is required');
-        expect(serverErrorNode.getAttribute('role')).toEqual('alert');
         expect(mockState.groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
     });
@@ -205,16 +218,23 @@ describe('Validate > Unit > DOM > renderError', () => {
     //remove existing error and add new one
     it('Should remove existing server-side rendered error before adding new one', async () => {
 
-        document.body.innerHTML = `<form class="form" method="post" action="">
+        const Store = createStore();
+
+        document.body.innerHTML = `<form id="form" class="form" method="post" action="">
+            <div id="errorSummary" class="visually-hidden" role="alert" data-error-summary></div>
             <label id="test-label" for="group1">Text</label>
             <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
             <span id="test-server-error-node" data-valmsg-for="group1" role="alert" class="${DOTNET_CLASSNAMES.ERROR}"></span>
         </form>`;
+
         //have to create a text node and append it to the serverError node to test fn this in isolation
+        const form = document.getElementById('form');
         const errorNode = document.createTextNode('The server dislikes the valule of this field');
         const serverErrorNode = document.getElementById('test-server-error-node');
         serverErrorNode.appendChild(errorNode);
+
         const mockState = {
+            form: form,
             groups: {
                 group1: {
                     serverErrorNode,
@@ -224,9 +244,11 @@ describe('Validate > Unit > DOM > renderError', () => {
             },
             errors: {
                 group1: errorNode
-            }
+            },
+            errorSummary: document.getElementById('errorSummary')
         };
-        renderError('group1')(mockState);
+        Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
+        renderError(Store)('group1');
         expect(serverErrorNode.textContent).toEqual('This field is required');
         expect(serverErrorNode.getAttribute('role')).toEqual('alert');
         expect(mockState.groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
@@ -238,9 +260,10 @@ describe('Validate > Unit > DOM > renderError', () => {
 //renderErrors
 describe('Validate > Unit > DOM > renderErrors', () => {
 
-    
+    const Store = createStore();
     it('Should add error messages for every invalid group in state', async () => {
         document.body.innerHTML = `<form class="form" method="post" action="">
+            <div id="errorSummary" class="visually-hidden" role="alert" data-error-summary></div>
             <div>
                 <label id="test-label" for="group1">Text</label>
                 <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
@@ -265,9 +288,11 @@ describe('Validate > Unit > DOM > renderErrors', () => {
                     valid: true
                 }
             },
-            errors: {}
+            errors: {},
+            errorSummary: document.getElementById('errorSummary')
         };
-        renderErrors(mockState);
+        Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
+        renderError(Store)('group1');
         const errorContainer = document.getElementById('test-label').lastElementChild;
         expect(errorContainer).not.toBeUndefined();
         expect(errorContainer.classList.contains(DOTNET_CLASSNAMES.ERROR)).toEqual(true);
