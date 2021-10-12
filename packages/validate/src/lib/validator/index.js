@@ -7,6 +7,7 @@ import {
     domNodesFromCommaList,
     groupIsDisabled,
     findErrors,
+    findErrorSummary,
     groupIsAllHidden
 } from './utils';
 import {
@@ -243,6 +244,7 @@ export const getInitialState = (form, settings) => {
         form,
         settings,
         errors: findErrors(groups),
+        errorSummary: findErrorSummary(form),
         realTimeValidation: false,
         groups
     };

@@ -113,13 +113,13 @@ describe(`Modal Gallery > accessibility > keyboard > tab`, () => {
         //urgh, JSDOM doesn't dig document.activeElement
         //checking the test coverage it doesa appear that the correct items are being focused and tab is trapped
         document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { shiftKey: true, keyCode: KEY_CODES.TAB, bubbles: true }));
-        // expect(document.activeElement).toEqual(Gallery.getState().dom.focusableChildren[0]);
+        // document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
+        // document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
+        // document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
+        // document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
+        // document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
+        // document.dispatchEvent(new window.KeyboardEvent('keydown', { shiftKey: true, keyCode: KEY_CODES.TAB, bubbles: true }));
+        expect(document.activeElement).toEqual(Gallery.getState().dom.focusableChildren[1]);
     
     });
 

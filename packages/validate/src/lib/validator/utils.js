@@ -1,3 +1,5 @@
+import { AX_ATTRIBUTES } from '../constants';
+
 export const isCheckable = field => (/radio|checkbox/i).test(field.type);
 
 export const isFile = field => field.getAttribute('type') === 'file';
@@ -87,3 +89,5 @@ export const findErrors = groups => Object.keys(groups).reduce((errors, groupNam
     }
     return errors;
 }, {});
+
+export const findErrorSummary = form => form.querySelector(`[${AX_ATTRIBUTES.ERROR_SUMMARY}]`);

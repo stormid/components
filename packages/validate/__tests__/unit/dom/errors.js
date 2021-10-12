@@ -102,6 +102,7 @@ describe('Validate > Unit > DOM > clearErrors', () => {
         </form>`;
         const mockState = {
             form: document.getElementById('form'),
+            errorSummary: document.getElementById('errorSummary'),
             groups: {
                 group1: {
                     serverErrorNode: false,
@@ -150,6 +151,7 @@ describe('Validate > Unit > DOM > clearErrors', () => {
             </div>
         </form>`;
         const mockState = {
+            errorSummary: document.getElementById('errorSummary'),
             form: document.getElementById('form'),
             groups: {
                 group1: {
@@ -171,7 +173,7 @@ describe('Validate > Unit > DOM > clearErrors', () => {
         };
         //all side effects to test
         clearErrors(mockState);
-        expect(document.getElementById('errorSummary').children.length).toEqual(0);
+        expect(mockState.errorSummary.children.length).toEqual(0);
     });
     
     it('should not change state if there are no errors', async () => {
@@ -347,7 +349,7 @@ describe('Validate > Unit > DOM > renderErrors', () => {
             errors: {},
             settings: {
                 useSummary: true
-            }      
+            }
         };
         Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
         renderErrors(Store)('group1');
