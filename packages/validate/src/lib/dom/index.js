@@ -63,7 +63,11 @@ export const clearError = groupName => state => {
     });
 
     const currentError = state.form.querySelector('['+AX_ATTRIBUTES.ERROR_MESSAGE+'='+groupName+']');
-    if (currentError) currentError.parentNode.removeChild(currentError);
+    if (currentError) {
+        let parent = currentError.parentNode;
+        parent.removeChild(currentError);
+        if(!parent.children.length) parent.parentNode.removeChild(parent);
+    }
     delete state.errors[groupName];//shouldn't be doing this here...
 };
 
@@ -89,8 +93,10 @@ export const renderErrors = Store => () => {
     const state = Store.getState();
     
     if(state.errorSummary) state.form.removeChild(state.errorSummary);
+
+    let existingSummary = state.form.querySelector('['+AX_ATTRIBUTES.ERROR_SUMMARY+']');
     
-    const errorSummary = h('div', {role:'alert', class:AX_ATTRIBUTES.HIDDEN_CLASS, [AX_ATTRIBUTES.ERROR_SUMMARY]:"true"})
+    const errorSummary =  (existingSummary) ? existingSummary : h('div', {role:'alert', class:AX_ATTRIBUTES.HIDDEN_CLASS, [AX_ATTRIBUTES.ERROR_SUMMARY]:"true"})
     state.form.insertBefore(errorSummary, state.form.firstChild);
 
     Store.dispatch(ACTIONS.CREATE_ERROR_SUMMARY, errorSummary, [
@@ -133,8 +139,10 @@ export const renderError = Store => groupName => {
                     state.groups[groupName].fields[state.groups[groupName].fields.length-1]
                 );
 	
-    state.errorSummary.appendChild(
-        h('span', {[AX_ATTRIBUTES.ERROR_MESSAGE]: groupName}, state.groups[groupName].errorMessages[0]));         
+    if(!state.errorSummary.querySelector('ul')) state.errorSummary.appendChild(h('ul'));
+
+    state.errorSummary.querySelector('ul').appendChild(
+        h('li', {[AX_ATTRIBUTES.ERROR_MESSAGE]: groupName}, state.groups[groupName].errorMessages[0]));         
     
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.add('is--invalid');

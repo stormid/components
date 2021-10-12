@@ -83,8 +83,9 @@ describe('Validate > Unit > DOM > clearErrors', () => {
     it('should all errors and update DOM via clearError for each validation group', async () => {
         document.body.innerHTML = `<form id="form" class="form" method="post" action="">
             <div id="errorSummary" class="visually-hidden" role="alert" data-error-summary>
-                <span data-ax-error="group1">This field is required<span>
-                <span data-ax-error="group2">This field is required<span>
+                <ul><li data-ax-error="group1">This field is required<li>
+                    <li data-ax-error="group2">This field is required<li>
+                </ul>
             </div>
             <div class="is--invalid">
                 <label for="group1">Label</label>
@@ -128,9 +129,11 @@ describe('Validate > Unit > DOM > clearErrors', () => {
 
     it('should remove appropriate errors from AX error summary', async () => {
         document.body.innerHTML = `<form id="form" class="form" method="post" action="">
-            <div id="errorSummary" class="visually-hidden" role="alert" data-error-summary>
-                <span data-ax-error="group1">This field is required<span>
-                <span data-ax-error="group2">This field is required<span>
+            <div id="errorSummary" class="visually-hidden" role="alert" data-error-summary="true">
+                <ul>
+                    <li data-ax-error="group1">This field is required</li>
+                    <li data-ax-error="group2">This field is required</li>
+                </ul>
             </div>
             <div class="is--invalid">
                 <label for="group1">Label</label>
@@ -340,9 +343,46 @@ describe('Validate > Unit > DOM > renderErrors', () => {
         expect(errorContainer.hasAttribute('role')).toEqual(true);
         expect(errorContainer.getAttribute('role')).toEqual('alert');
         expect(errorContainer.classList.contains(AX_ATTRIBUTES.HIDDEN_CLASS)).toEqual(true);
-        expect(errorContainer.children.length).toEqual(1);
-        expect(errorContainer.children[0].getAttribute(AX_ATTRIBUTES.ERROR_MESSAGE)).toEqual('group1');
+        expect(errorContainer.querySelector('ul').children.length).toEqual(1);
+        expect(errorContainer.querySelector('ul').children[0].getAttribute(AX_ATTRIBUTES.ERROR_MESSAGE)).toEqual('group1');
   
+    });
+
+    it('Should use an existing error summary block if it finds one in the form', async () => {
+        const Store = createStore();
+        document.body.innerHTML = `<form id="form" class="form" method="post" action="">
+            <div class="visually-hidden" data-error-summary></div>
+            <div>
+                <label id="test-label" for="group1">Text</label>
+                <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
+            </div>
+            <div>
+                <label id="test-label" for="group2">Text</label>
+                <input id="group2" name="group2" value="Has a value" data-val="true" data-val-required="This field is required">
+            </div>
+        </form>`;
+        const mockState = {
+            form: document.getElementById('form'),
+            groups: {
+                group1: {
+                    serverErrorNode: false,
+                    fields: Array.from(document.getElementsByName('group1')),
+                    errorMessages: ['This field is required'],
+                    valid: false
+                },
+                group2: {
+                    serverErrorNode: false,
+                    fields: Array.from(document.getElementsByName('group2')),
+                    errorMessages: [],
+                    valid: true
+                }
+            },
+            errors: {}        
+        };
+        Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
+        renderErrors(Store)('group1');
+        const errorContainers = [].slice.call(document.querySelectorAll('['+AX_ATTRIBUTES.ERROR_SUMMARY+']'));
+        expect(errorContainers.length).toEqual(1);
     });
 
     it('Should add error messages for every invalid group in state', async () => {
