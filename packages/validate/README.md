@@ -287,6 +287,16 @@ If this element is not present a span is appended to the label for the field wit
 
 Fields without data-val error messages will show the default messages for the failed validator (see options below).
 
+### Error summary
+The plugin uses an optional error summary. See the options below on how to enable.
+
+These can be manually created in the markup as below:
+```
+<div class="your-class-here" data-error-summary>
+    <p>You can enter some explainatory content here</p>
+</div>
+```
+If the option to use an error summary is enabled, but no summary div/element is found within the form, a div is programmatically created with the class 'visually-hidden'
 
 ## Options
 
@@ -294,6 +304,7 @@ Fields without data-val error messages will show the default messages for the fa
 {
     preSubmitHook: false, //function, called on validation pass, before submit
     submit: form.submit, // function, to support async form submissions, pass your own submit function
+    useSummary: false, //Set to true to have the plugin either create, or look for, an accessible error summary block
     messages: { //default HTML5 error messages
         required() { return 'This field is required'; } ,
         email() { return 'Please enter a valid email address'; },
