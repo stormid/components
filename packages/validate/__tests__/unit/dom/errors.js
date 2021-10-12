@@ -31,7 +31,8 @@ describe('Validate > Unit > DOM > clearError', () => {
             },
             errors: {
                 group1: document.getElementById('test-error-node')
-            }
+            },
+            settings: {}
         };
         //all side effects to test
         clearError('group1')(mockState);
@@ -63,7 +64,8 @@ describe('Validate > Unit > DOM > clearError', () => {
             },
             errors: {
                 group1: errorNode
-            }
+            },
+            settings: {}
         };
 
         clearError('group1')(mockState);
@@ -113,7 +115,8 @@ describe('Validate > Unit > DOM > clearErrors', () => {
             errors: {
                 group1: document.getElementById('test-error-node-1'),
                 group2: document.getElementById('test-error-node-2')
-            }
+            },
+            settings: {}
         };
         //all side effects to test
         clearErrors(mockState);
@@ -162,6 +165,9 @@ describe('Validate > Unit > DOM > clearErrors', () => {
                 group1: document.getElementById('test-error-node-1'),
                 group2: document.getElementById('test-error-node-2')
             },
+            settings: {
+                useSummary: true
+            }
         };
         //all side effects to test
         clearErrors(mockState);
@@ -191,7 +197,8 @@ describe('Validate > Unit > DOM > clearErrors', () => {
                     fields: Array.from(document.getElementsByName('group2'))
                 }
             },
-            errors: {}
+            errors: {},
+            settings: {}
         };
         //all side effects to test
         const copy = Object.assign({}, mockState);
@@ -221,7 +228,8 @@ describe('Validate > Unit > DOM > renderError', () => {
                 }
             },
             errors: {},
-            errorSummary: document.getElementById('errorSummary')
+            errorSummary: document.getElementById('errorSummary'),
+            settings: {}
         };
         Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
         renderError(Store)('group1');
@@ -252,7 +260,8 @@ describe('Validate > Unit > DOM > renderError', () => {
                 }
             },
             errors: {},
-            errorSummary: document.getElementById('errorSummary')
+            errorSummary: document.getElementById('errorSummary'),
+            settings: {}
         };
         Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
         renderError(Store)('group1');
@@ -291,7 +300,8 @@ describe('Validate > Unit > DOM > renderError', () => {
             errors: {
                 group1: errorNode
             },
-            errorSummary: document.getElementById('errorSummary')
+            errorSummary: document.getElementById('errorSummary'),
+            settings: {}
         };
         Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
         renderError(Store)('group1');
@@ -306,7 +316,7 @@ describe('Validate > Unit > DOM > renderError', () => {
 //renderErrors
 describe('Validate > Unit > DOM > renderErrors', () => {
 
-    it('Should create a hidden error summary block', async () => {
+    it('Should create a hidden error summary block when the option is set', async () => {
         const Store = createStore();
         document.body.innerHTML = `<form id="form" class="form" method="post" action="">
             <div>
@@ -334,7 +344,10 @@ describe('Validate > Unit > DOM > renderErrors', () => {
                     valid: true
                 }
             },
-            errors: {}        
+            errors: {},
+            settings: {
+                useSummary: true
+            }      
         };
         Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
         renderErrors(Store)('group1');
@@ -345,10 +358,9 @@ describe('Validate > Unit > DOM > renderErrors', () => {
         expect(errorContainer.classList.contains(AX_ATTRIBUTES.HIDDEN_CLASS)).toEqual(true);
         expect(errorContainer.querySelector('ul').children.length).toEqual(1);
         expect(errorContainer.querySelector('ul').children[0].getAttribute(AX_ATTRIBUTES.ERROR_MESSAGE)).toEqual('group1');
-  
     });
 
-    it('Should use an existing error summary block if it finds one in the form', async () => {
+    it('Should use an existing error summary block if it finds one in the form if the option is set', async () => {
         const Store = createStore();
         document.body.innerHTML = `<form id="form" class="form" method="post" action="">
             <div class="visually-hidden" data-error-summary></div>
@@ -377,12 +389,52 @@ describe('Validate > Unit > DOM > renderErrors', () => {
                     valid: true
                 }
             },
-            errors: {}        
+            errors: {},
+            settings: {
+                useSummary: true
+            }      
         };
         Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
         renderErrors(Store)('group1');
         const errorContainers = [].slice.call(document.querySelectorAll('['+AX_ATTRIBUTES.ERROR_SUMMARY+']'));
         expect(errorContainers.length).toEqual(1);
+    });
+
+    it('Should not create a hidden error summary block if the option is not set', async () => {
+        const Store = createStore();
+        document.body.innerHTML = `<form id="form" class="form" method="post" action="">
+            <div>
+                <label id="test-label" for="group1">Text</label>
+                <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
+            </div>
+            <div>
+                <label id="test-label" for="group2">Text</label>
+                <input id="group2" name="group2" value="Has a value" data-val="true" data-val-required="This field is required">
+            </div>
+        </form>`;
+        const mockState = {
+            form: document.getElementById('form'),
+            groups: {
+                group1: {
+                    serverErrorNode: false,
+                    fields: Array.from(document.getElementsByName('group1')),
+                    errorMessages: ['This field is required'],
+                    valid: false
+                },
+                group2: {
+                    serverErrorNode: false,
+                    fields: Array.from(document.getElementsByName('group2')),
+                    errorMessages: [],
+                    valid: true
+                }
+            },
+            errors: {},
+            settings: {}
+        };
+        Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
+        renderErrors(Store)('group1');
+        const errorContainer = document.querySelector('['+AX_ATTRIBUTES.ERROR_SUMMARY+']');
+        expect(errorContainer).toBeNull();  
     });
 
     it('Should add error messages for every invalid group in state', async () => {
@@ -413,7 +465,8 @@ describe('Validate > Unit > DOM > renderErrors', () => {
                     valid: true
                 }
             },
-            errors: {}        
+            errors: {},
+            settings: {}     
         };
         Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
         renderErrors(Store)('group1');

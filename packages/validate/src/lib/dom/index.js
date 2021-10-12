@@ -148,17 +148,17 @@ export const renderError = Store => groupName => {
                     }, state.groups[groupName].errorMessages[0]),
                     state.groups[groupName].fields[state.groups[groupName].fields.length-1]
                 );
+
+    state.groups[groupName].fields.forEach(field => {
+        field.parentNode.classList.add('is--invalid');
+        field.setAttribute('aria-invalid', 'true');
+    });
 	
     if(state.settings.useSummary) {
         if(!state.errorSummary.querySelector('ul')) state.errorSummary.appendChild(h('ul'));
 
         state.errorSummary.querySelector('ul').appendChild(
             h('li', {[AX_ATTRIBUTES.ERROR_MESSAGE]: groupName}, state.groups[groupName].errorMessages[0]));         
-        
-        state.groups[groupName].fields.forEach(field => {
-            field.parentNode.classList.add('is--invalid');
-            field.setAttribute('aria-invalid', 'true');
-        });
     }
     
 };
