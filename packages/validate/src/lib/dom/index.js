@@ -65,9 +65,7 @@ export const clearError = groupName => state => {
     if(state.settings.useSummary) {
         const currentError = state.form.querySelector('['+AX_ATTRIBUTES.ERROR_MESSAGE+'='+groupName+']');
         if (currentError) {
-            let parent = currentError.parentNode;
-            parent.removeChild(currentError);
-            if(!parent.children.length) parent.parentNode.removeChild(parent);
+            currentError.parentNode.removeChild(currentError);
         }
     }
     
@@ -151,14 +149,12 @@ export const renderError = Store => groupName => {
 
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.add('is--invalid');
-        field.setAttribute('aria-invalid', 'true');
+        field.removeAttribute('aria-invalid');
     });
 	
     if(state.settings.useSummary) {
-        if(!state.errorSummary.querySelector('ul')) state.errorSummary.appendChild(h('ul'));
-
-        state.errorSummary.querySelector('ul').appendChild(
-            h('li', {[AX_ATTRIBUTES.ERROR_MESSAGE]: groupName}, state.groups[groupName].errorMessages[0]));         
+        state.errorSummary.appendChild(
+            h('span', {[AX_ATTRIBUTES.ERROR_MESSAGE]: groupName}, state.groups[groupName].errorMessages[0]));  
     }
     
 };
