@@ -62,10 +62,10 @@ export const clearError = groupName => state => {
         field.removeAttribute('aria-invalid');
     });
 
-    if(state.settings.useSummary) {
-        const currentError = state.form.querySelector('['+AX_ATTRIBUTES.ERROR_MESSAGE+'='+groupName+']');
-        if (currentError) {
-            currentError.parentNode.removeChild(currentError);
+    if (state.errorSummary) {
+        const errorSummaryItem = state.errorSummary.querySelector(`[${AX_ATTRIBUTES.ERROR_MESSAGE}=${groupName}]`);
+        if (errorSummaryItem) {
+            errorSummaryItem.parentNode.removeChild(errorSummaryItem);
         }
     }
     
@@ -92,27 +92,17 @@ export const clearErrors = state => {
  */
 export const renderErrors = Store => () => {
     const state = Store.getState();
+    const render = () => Object.keys(state.groups).forEach(groupName => {
+        if (!state.groups[groupName].valid) renderError(Store)(groupName);
+    });
     
-    if (state.settings.useSummary) {
-        if(state.errorSummary) state.form.removeChild(state.errorSummary);
+    if (state.errorSummary && state.errorSummary.firstElementChild) state.errorSummary.removeChild(state.errorSummary.firstElementChild);
 
-        let existingSummary = state.form.querySelector('['+AX_ATTRIBUTES.ERROR_SUMMARY+']');
-        
-        const errorSummary =  (existingSummary) ? existingSummary : h('div', {role:'alert', class:AX_ATTRIBUTES.HIDDEN_CLASS, [AX_ATTRIBUTES.ERROR_SUMMARY]:"true"})
+    if (state.settings.useSummary && !state.errorSummary) {
+        const errorSummary = h('div', { role: 'alert', class: AX_ATTRIBUTES.HIDDEN_CLASS, [AX_ATTRIBUTES.ERROR_SUMMARY]: 'true' } );
         state.form.insertBefore(errorSummary, state.form.firstChild);
-
-        Store.dispatch(ACTIONS.CREATE_ERROR_SUMMARY, errorSummary, [
-            () => {
-                Object.keys(state.groups).forEach(groupName => {
-                    if (!state.groups[groupName].valid) renderError(Store)(groupName);
-                });
-            }
-        ]);
-    } else {
-        Object.keys(state.groups).forEach(groupName => {
-            if (!state.groups[groupName].valid) renderError(Store)(groupName);
-        });
-    }
+        Store.dispatch(ACTIONS.CREATE_ERROR_SUMMARY, errorSummary, [ render ]);
+    } else render();
     
 };
 
@@ -152,7 +142,7 @@ export const renderError = Store => groupName => {
         field.removeAttribute('aria-invalid');
     });
 	
-    if(state.settings.useSummary) {
+    if (state.errorSummary) {
         state.errorSummary.appendChild(
             h('span', {[AX_ATTRIBUTES.ERROR_MESSAGE]: groupName}, state.groups[groupName].errorMessages[0]));  
     }

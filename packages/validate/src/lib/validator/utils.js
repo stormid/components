@@ -1,3 +1,5 @@
+import { AX_ATTRIBUTES } from '../constants';
+
 export const isCheckable = field => (/radio|checkbox/i).test(field.type);
 
 export const isFile = field => field.getAttribute('type') === 'file';
@@ -77,6 +79,8 @@ export const fetch = (url, props) =>
         xhr.onerror = () => reject(xhr.statusText);
         xhr.send(props.body);
     });
+
+export const findErrorSummary = form => form.querySelector(`[${AX_ATTRIBUTES.ERROR_SUMMARY}]`); 
 
 export const findErrors = groups => Object.keys(groups).reduce((errors, groupName) => {
     if (groups[groupName].serverErrorNode){
