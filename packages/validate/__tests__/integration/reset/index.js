@@ -40,8 +40,6 @@ describe('Validate > Integration > Reset', () => {
         expect(validator.getState().errors.group2).toEqual(document.querySelector('[for="group2"]').lastElementChild);
         expect(validator.getState().groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(validator.getState().groups.group2.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
-        expect(validator.getState().groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
-        expect(validator.getState().groups.group2.fields[0].getAttribute('aria-invalid')).toEqual('true');
 
         //reset to remove errors from state and DOM
         validator.getState().form.dispatchEvent(new Event('reset'));
