@@ -166,7 +166,7 @@ describe('Validate > Unit > DOM > clearErrors', () => {
         };
         //all side effects to test
         clearErrors(mockState);
-        expect(mockState.children.length).toEqual(0);
+        expect(mockState.errorSummary.children.length).toEqual(0);
     });
     
     it('should not change state if there are no errors', async () => {
@@ -355,7 +355,7 @@ describe('Validate > Unit > DOM > renderErrors', () => {
     it('Should use an existing error summary block if it finds one in the form if the option is set', async () => {
         const Store = createStore();
         document.body.innerHTML = `<form id="form" class="form" method="post" action="">
-            <div class="visually-hidden" data-error-summary></div>
+            <div id="errorSummary" class="visually-hidden" data-error-summary></div>
             <div>
                 <label id="test-label" for="group1">Text</label>
                 <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
@@ -382,9 +382,10 @@ describe('Validate > Unit > DOM > renderErrors', () => {
                 }
             },
             errors: {},
+            errorSummary: document.getElementById('errorSummary'),
             settings: {
                 useSummary: true
-            }      
+            }    
         };
         Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
         renderErrors(Store)('group1');
