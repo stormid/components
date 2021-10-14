@@ -186,8 +186,14 @@
         <input type="submit" value="Submit">
     </form> -->
     <form class="js-validate" action="#" autocomplete="off">
+        <div data-error-summary="">
+            <!-- <span data-ax-error="RequiredString1">This field is required</span> -->
+        </div>
         <div class="form-group">
-            <label for="RequiredString1">Required String</label>
+            <label for="RequiredString1">
+                Required String
+                <span class="error-message" data-valmsg-for="RequiredString1">This field is required</span>
+            </label>
             <input class="form-control" type="text" id="RequiredString1" name="RequiredString1" value="" required />
         </div>
         <div class="form-group">

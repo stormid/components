@@ -98,12 +98,15 @@ export const renderErrors = Store => () => {
     
     if (state.errorSummary && state.errorSummary.firstElementChild) state.errorSummary.removeChild(state.errorSummary.firstElementChild);
 
-    if (state.settings.useSummary && !state.errorSummary) {
-        const errorSummary = h('div', { role: 'alert', class: AX_ATTRIBUTES.HIDDEN_CLASS, [AX_ATTRIBUTES.ERROR_SUMMARY]: 'true' } );
-        state.form.insertBefore(errorSummary, state.form.firstChild);
-        Store.dispatch(ACTIONS.CREATE_ERROR_SUMMARY, errorSummary, [ render ]);
-    } else render();
+    if (state.settings.useSummary && !state.errorSummary) createErrorSummary(state, render);
+    else render();
     
+};
+
+export const createErrorSummary = (state, cb) => {
+    const errorSummary = h('div', { role: 'alert', class: AX_ATTRIBUTES.HIDDEN_CLASS, [AX_ATTRIBUTES.ERROR_SUMMARY]: 'true' } );
+    state.form.insertBefore(errorSummary, state.form.firstChild);
+    Store.dispatch(ACTIONS.CREATE_ERROR_SUMMARY, errorSummary, cb);
 };
 
 /**
@@ -142,12 +145,30 @@ export const renderError = Store => groupName => {
         field.removeAttribute('aria-invalid');
     });
 	
-    if (state.errorSummary) {
-        state.errorSummary.appendChild(
-            h('span', {[AX_ATTRIBUTES.ERROR_MESSAGE]: groupName}, state.groups[groupName].errorMessages[0]));  
-    }
+    if (state.errorSummary) renderErrorToSummary(state, groupName);
     
 };
+
+/*
+ * 
+ */
+export const renderErrorSummary = state => {
+    if (!state.errorSummary && !state.settings.useSummary) return;
+    const render = () => Object.keys(state.groups).forEach(groupName => {
+        if (!state.groups[groupName].valid) renderErrorToSummary(state, groupName);
+    });
+    if (state.settings.useSummary && !state.errorSummary) createErrorSummary(state, render);
+    else render();
+    
+};
+
+export const renderErrorToSummary = (state, groupName) => {
+    state.errorSummary.appendChild(
+        h('span', {[AX_ATTRIBUTES.ERROR_MESSAGE]: groupName}, state.groups[groupName].errorMessages[0]));
+};
+
+
+
 
 /**
  * Set focus on first invalid field after form-level validate()

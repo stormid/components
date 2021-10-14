@@ -2,10 +2,9 @@ import { createStore } from '../store';
 import { ACTIONS } from '../constants';
 import { getInitialState } from '../validator';
 import { validate }  from './validate';
-import { clearErrors }  from '../dom';
+import { clearErrors, renderErrorSummary }  from '../dom';
 import { addMethod } from './add-method';
 import { addGroup, removeGroup } from './group';
-
 
 /**
  * Default function, sets initial state and adds form-level event listeners
@@ -17,7 +16,7 @@ import { addGroup, removeGroup } from './group';
  */
 export default (form, settings) => {
     const Store = createStore();
-    Store.dispatch(ACTIONS.SET_INITIAL_STATE, getInitialState(form, settings));
+    Store.dispatch(ACTIONS.SET_INITIAL_STATE, getInitialState(form, settings), [ renderErrorSummary ]);
     form.addEventListener('submit', validate(Store));
     form.addEventListener('reset', () => Store.dispatch(ACTIONS.CLEAR_ERRORS, {}, [ clearErrors ]));
 

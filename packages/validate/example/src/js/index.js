@@ -1,6 +1,7 @@
 import validate from '../../../src';
 {
-    const validator = validate('form');
+    const [ validator ] = validate('form');
+    console.log(validator.getState());
 
     // const later = document.getElementById('Later');
     // document.querySelector('.js-add').addEventListener('click', e => {

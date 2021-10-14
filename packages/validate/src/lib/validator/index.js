@@ -8,7 +8,8 @@ import {
     groupIsDisabled,
     findErrors,
     findErrorSummary,
-    groupIsAllHidden
+    groupIsAllHidden,
+    addErrorMessageToGroup
 } from './utils';
 import {
     DOTNET_ADAPTORS,
@@ -240,13 +241,14 @@ export const removeUnvalidatableGroups = groups => {
 export const getInitialState = (form, settings) => {
     const groups = removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
         .reduce(assembleValidationGroup, {}));
+    const errors = findErrors(groups);
     return {
         form,
         settings,
-        errors: findErrors(groups),
+        errors,
         errorSummary: findErrorSummary(form),
         realTimeValidation: false,
-        groups
+        groups: errors ? addErrorMessageToGroup(groups, errors) : groups
     };
 };
 

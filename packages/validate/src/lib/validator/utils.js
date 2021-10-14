@@ -84,10 +84,17 @@ export const findErrorSummary = form => form.querySelector(`[${AX_ATTRIBUTES.ERR
 
 export const findErrors = groups => Object.keys(groups).reduce((errors, groupName) => {
     if (groups[groupName].serverErrorNode){
-        const serverErrorText = groups[groupName].serverErrorNode.textContent;
+        const serverErrorText = groups[groupName].serverErrorNode.firstChild;
         if (serverErrorText) {
             errors[groupName] = serverErrorText;
         }
     }
     return errors;
 }, {});
+
+
+export const addErrorMessageToGroup = (groups, errors) => Object.keys(groups).reduce((acc, group) => {
+        acc[group] = groups[group];
+        if (errors[group]) acc[group].errorMessages = [errors[group].textContent];
+        return acc;
+    }, {});
