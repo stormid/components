@@ -20,7 +20,7 @@ import {
  * Submits the form if called as a submit eventListener and is valid
  * Dispatches error state to Store if errors
  * 
- * @param form [DOM node]
+ * @param Store [Store Object]
  * 
  * @returns [Promise] Resolves with boolean validityState of the form
  * 

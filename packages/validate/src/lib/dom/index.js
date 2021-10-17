@@ -79,6 +79,7 @@ export const clearError = groupName => state => {
  * 
  */
 export const clearErrors = state => {
+    if (state.errorSummary && state.errorSummary.firstElementChild) state.errorSummary.removeChild(state.errorSummary.firstElementChild);
     state.errors && Object.keys(state.errors).forEach(name => {
         clearError(name)(state);
     });
@@ -96,18 +97,23 @@ export const renderErrors = Store => () => {
         if (!state.groups[groupName].valid) renderError(Store)(groupName);
     });
     
-    if (state.errorSummary && state.errorSummary.firstElementChild) state.errorSummary.removeChild(state.errorSummary.firstElementChild);
-
     if (state.settings.useSummary && !state.errorSummary) createErrorSummary(Store, render);
     else render();
     
 };
 
+/**
+ * Iterates over all groups to render each error post-vaidation
+ * 
+ * @param Store [Object]
+ * @param cb [Funciton, callback]
+ * 
+ */
 export const createErrorSummary = (Store, cb) => {
     const errorSummary = h('div', { role: 'alert', class: AX_ATTRIBUTES.HIDDEN_CLASS, [AX_ATTRIBUTES.ERROR_SUMMARY]: 'true' } );
     const { form } = Store.getState();
     form.insertBefore(errorSummary, form.firstChild);
-    Store.dispatch(ACTIONS.CREATE_ERROR_SUMMARY, errorSummary, [cb]);
+    Store.dispatch(ACTIONS.CREATE_ERROR_SUMMARY, errorSummary, [ cb ]);
 };
 
 /**
@@ -124,7 +130,6 @@ export const createErrorSummary = (Store, cb) => {
  * 
  */
 export const renderError = Store => groupName => {
-
     const state = Store.getState();
 
     if (state.errors[groupName]) clearError(groupName)(state);
@@ -151,18 +156,25 @@ export const renderError = Store => groupName => {
 };
 
 /*
- * 
+ * This only runs once during initialisation to ensure that the server-side error messages are announced
+ * They are only announed if they are appended to the live region summary some time (200ms+) after it is rendered to the DOM.
+ * @param state [Object, validation state]
  */
-export const renderErrorSummary = state => {
+export const renderErrorSummary = Store => state => {
     if (!state.errorSummary && !state.settings.useSummary) return;
     const render = () => Object.keys(state.groups).forEach(groupName => {
-        if (!state.groups[groupName].valid) renderErrorToSummary(state, groupName);
+        if (state.groups[groupName].errorMessages && state.groups[groupName].errorMessages.length > 0) renderErrorToSummary(state, groupName);
     });
-    if (state.settings.useSummary && !state.errorSummary) createErrorSummary(state, render);
+    //200ms timeout to ensure that the alert is in the DOM for long enough before the content changes with the error messages
+    if (state.settings.useSummary && !state.errorSummary) createErrorSummary(Store, () => window.setTimeout(render, 200));
     else render();
-    
 };
 
+/*
+ * Append an error message span (screen readers don't announce ul > li) to the summary live region
+ * @param state [Object, validation state]
+ * @param groupName [String, identifier (name or data-group attribute)]
+ */
 export const renderErrorToSummary = (state, groupName) => {
     state.errorSummary.appendChild(
         h('span', { [AX_ATTRIBUTES.ERROR_MESSAGE]: groupName }, state.groups[groupName].errorMessages[0]));

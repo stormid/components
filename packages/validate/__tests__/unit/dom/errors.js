@@ -3,11 +3,12 @@ import {
     clearError,
     clearErrors,
     renderError,
-    renderErrors
+    renderErrors,
+    renderErrorSummary
 } from '../../../src/lib/dom';
 import {
     createStore
-} from '../../../src/lib/store'
+} from '../../../src/lib/store';
 import { DOTNET_CLASSNAMES, ACTIONS, AX_ATTRIBUTES } from '../../../src/lib/constants';
 
 //clearError
@@ -343,13 +344,13 @@ describe('Validate > Unit > DOM > renderErrors', () => {
         };
         Store.dispatch(ACTIONS.SET_INITIAL_STATE, mockState);
         renderErrors(Store)();
-        // const errorContainer = document.querySelector('['+AX_ATTRIBUTES.ERROR_SUMMARY+']');
-        // expect(errorContainer).not.toBeUndefined();
-        // expect(errorContainer.hasAttribute('role')).toEqual(true);
-        // expect(errorContainer.getAttribute('role')).toEqual('alert');
-        // expect(errorContainer.classList.contains(AX_ATTRIBUTES.HIDDEN_CLASS)).toEqual(true);
-        // expect(errorContainer.children.length).toEqual(1);
-        // expect(errorContainer.children[0].getAttribute(AX_ATTRIBUTES.ERROR_MESSAGE)).toEqual('group1');
+        const errorContainer = document.querySelector('['+AX_ATTRIBUTES.ERROR_SUMMARY+']');
+        expect(errorContainer).not.toBeUndefined();
+        expect(errorContainer.hasAttribute('role')).toEqual(true);
+        expect(errorContainer.getAttribute('role')).toEqual('alert');
+        expect(errorContainer.classList.contains(AX_ATTRIBUTES.HIDDEN_CLASS)).toEqual(true);
+        expect(errorContainer.children.length).toEqual(1);
+        expect(errorContainer.children[0].getAttribute(AX_ATTRIBUTES.ERROR_MESSAGE)).toEqual('group1');
     });
 
     it('Should use an existing error summary block if it finds one in the form if the option is set', async () => {
@@ -469,6 +470,100 @@ describe('Validate > Unit > DOM > renderErrors', () => {
         expect(errorContainer.textContent).toEqual('This field is required');
         expect(mockState.groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(mockState.groups.group2.fields[0].parentNode.classList.contains('is--invalid')).toEqual(false);
+    });
+
+});
+
+
+/*
+export const renderErrorSummary = state => {
+    if (!state.errorSummary && !state.settings.useSummary) return;
+    const render = () => Object.keys(state.groups).forEach(groupName => {
+        if (!state.groups[groupName].valid) renderErrorToSummary(state, groupName);
+    });
+    //200ms timeout to ensure that the alert is in the DOM for long enough before the content changes with the error messages
+    if (state.settings.useSummary && !state.errorSummary) createErrorSummary(state, () => window.setTimeout(render, 200));
+    else render();
+};
+*/
+describe('Validate > Unit > DOM > renderErrorSummary', () => {
+
+    it('Should return early without rendering or updating summary if no exitsing element or config setting', () => {
+        document.body.innerHTML = `<form id="form" class="form" method="post" action="">
+            <div>
+                <label id="test-label" for="group1">Text</label>
+                <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
+            </div>
+            <div>
+                <label id="test-label" for="group2">Text</label>
+                <input id="group2" name="group2" value="Has a value" data-val="true" data-val-required="This field is required">
+            </div>
+        </form>`;
+        const mockState = {
+            form: document.getElementById('form'),
+            groups: {
+                group1: {
+                    serverErrorNode: false,
+                    fields: Array.from(document.getElementsByName('group1')),
+                    errorMessages: ['This field is required'],
+                    valid: false
+                },
+                group2: {
+                    serverErrorNode: false,
+                    fields: Array.from(document.getElementsByName('group2')),
+                    errorMessages: [],
+                    valid: true
+                }
+            },
+            errors: {},
+            settings: {}
+        };
+        const Store = createStore();
+        renderErrorSummary(Store)(mockState);
+        expect(document.querySelector(`[${AX_ATTRIBUTES.ERROR_SUMMARY}]`)).toEqual(null);
+    });
+
+    it('Should render an error summary if config setting', () => {
+        document.body.innerHTML = `<form id="form" class="form" method="post" action="">
+            <div>
+                <label id="test-label" for="group1">Text</label>
+                <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
+            </div>
+            <div>
+                <label id="test-label" for="group2">Text</label>
+                <input id="group2" name="group2" value="Has a value" data-val="true" data-val-required="This field is required">
+            </div>
+        </form>`;
+        const mockState = {
+            form: document.getElementById('form'),
+            groups: {
+                group1: {
+                    serverErrorNode: false,
+                    fields: Array.from(document.getElementsByName('group1')),
+                    errorMessages: ['This field is required'],
+                    valid: false
+                },
+                group2: {
+                    serverErrorNode: false,
+                    fields: Array.from(document.getElementsByName('group2')),
+                    errorMessages: [],
+                    valid: true
+                }
+            },
+            errors: {},
+            settings: {
+                useSummary: true
+            }
+        };
+        const Store = {
+            state: mockState,
+            dispatch(){},
+            getState(){
+                return mockState;
+            }
+        };
+        renderErrorSummary(Store)(mockState);
+        expect(document.querySelector(`[${AX_ATTRIBUTES.ERROR_SUMMARY}]`)).toBeDefined();
     });
 
 });

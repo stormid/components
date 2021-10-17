@@ -22,7 +22,7 @@ export const AX_ATTRIBUTES = {
     ERROR_SUMMARY: 'data-error-summary',
     ERROR_MESSAGE: 'data-ax-error',
     HIDDEN_CLASS: 'visually-hidden'
-}
+};
 
 //https://html.spec.whatwg.org/multipage/forms.html#valid-e-mail-address
 export const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
@@ -84,4 +84,4 @@ export const DOTNET_CLASSNAMES = {
     ERROR: 'error-message'
 };
 
-export const GROUP_ATTRIBUTE = "group";
+export const GROUP_ATTRIBUTE = 'group';

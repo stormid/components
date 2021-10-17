@@ -16,7 +16,7 @@ import { addGroup, removeGroup } from './group';
  */
 export default (form, settings) => {
     const Store = createStore();
-    Store.dispatch(ACTIONS.SET_INITIAL_STATE, getInitialState(form, settings), [ renderErrorSummary ]);
+    Store.dispatch(ACTIONS.SET_INITIAL_STATE, getInitialState(form, settings), [ renderErrorSummary(Store) ]);
     form.addEventListener('submit', validate(Store));
     form.addEventListener('reset', () => Store.dispatch(ACTIONS.CLEAR_ERRORS, {}, [ clearErrors ]));
 

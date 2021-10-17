@@ -176,7 +176,7 @@ export const assembleValidationGroup = (acc, input) => {
     let name = (input.getAttribute('data-val-'+GROUP_ATTRIBUTE)) ? input.getAttribute('data-val-'+GROUP_ATTRIBUTE) : input.getAttribute('name') ;
     if (!name) return console.warn('Missing data group or name attribute'), acc;
 
-    if(acc[name] && isHidden(input)) return acc;
+    if (acc[name] && isHidden(input)) return acc;
     
     return acc[name] = acc[name] ? Object.assign(acc[name], { fields: [...acc[name].fields, input] })
         : {
