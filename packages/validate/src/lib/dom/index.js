@@ -98,15 +98,16 @@ export const renderErrors = Store => () => {
     
     if (state.errorSummary && state.errorSummary.firstElementChild) state.errorSummary.removeChild(state.errorSummary.firstElementChild);
 
-    if (state.settings.useSummary && !state.errorSummary) createErrorSummary(state, render);
+    if (state.settings.useSummary && !state.errorSummary) createErrorSummary(Store, render);
     else render();
     
 };
 
-export const createErrorSummary = (state, cb) => {
+export const createErrorSummary = (Store, cb) => {
     const errorSummary = h('div', { role: 'alert', class: AX_ATTRIBUTES.HIDDEN_CLASS, [AX_ATTRIBUTES.ERROR_SUMMARY]: 'true' } );
-    state.form.insertBefore(errorSummary, state.form.firstChild);
-    Store.dispatch(ACTIONS.CREATE_ERROR_SUMMARY, errorSummary, cb);
+    const { form } = Store.getState();
+    form.insertBefore(errorSummary, form.firstChild);
+    Store.dispatch(ACTIONS.CREATE_ERROR_SUMMARY, errorSummary, [cb]);
 };
 
 /**
@@ -164,11 +165,8 @@ export const renderErrorSummary = state => {
 
 export const renderErrorToSummary = (state, groupName) => {
     state.errorSummary.appendChild(
-        h('span', {[AX_ATTRIBUTES.ERROR_MESSAGE]: groupName}, state.groups[groupName].errorMessages[0]));
+        h('span', { [AX_ATTRIBUTES.ERROR_MESSAGE]: groupName }, state.groups[groupName].errorMessages[0]));
 };
-
-
-
 
 /**
  * Set focus on first invalid field after form-level validate()

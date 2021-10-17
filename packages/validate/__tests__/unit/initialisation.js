@@ -120,8 +120,8 @@ describe('Validate > Initialisation > novalidate', () => {
 });
 
 describe('Validate > Initialisation > server-side errors', () => {
-    it('should collect server-rendered errors, convert to DOM nodes, and add to errors object property of the validator state', async () => {
-        expect.assertions(2);
+    it('should collect server-rendered errors, convert to DOM nodes, add to errors object property of the validator state, and add to error summary', async () => {
+        expect.assertions(3);
         const serverRenderedErrorMessage = 'Please enter between 2 and 8 characters';
         document.body.innerHTML = `<form class="form" method="post" action="">
             <label for="group1-1">Text (required, min 2 characters, max 8 characters)</label>
@@ -130,6 +130,7 @@ describe('Validate > Initialisation > server-side errors', () => {
         </form>`;
         const [ validator ] = await validate('.form');
         expect(Object.keys(validator.getState().errors).length).toEqual(1);
-        expect(validator.getState().errors.group1).toEqual(serverRenderedErrorMessage);
+        expect(validator.getState().errors.group1.nodeType).toEqual(Node.TEXT_NODE);
+        expect(validator.getState().errors.group1.textContent).toEqual(serverRenderedErrorMessage);
     });
 });

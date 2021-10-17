@@ -46,7 +46,7 @@ describe('Validate > Integration > errors', () => {
     });
 
     it('Should clear a server-rendered error node before rendering a text node error to a server-side error container', async () => {
-        expect.assertions(4);
+        expect.assertions(5);
         document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
             <input
@@ -58,7 +58,9 @@ describe('Validate > Integration > errors', () => {
             <span id="ssec" data-valmsg-for="group1" role="alert">The server dislikes this value</span>
         </form>`;
         const [ validator ] = validate('form');
-        expect(validator.getState().errors.group1).toEqual('The server dislikes this value');
+
+        expect(validator.getState().errors.group1.nodeType).toEqual(Node.TEXT_NODE);
+        expect(validator.getState().errors.group1.textContent).toEqual('The server dislikes this value');
         await validator.validate();
         const errorContainer = document.getElementById('ssec');
         //render error message

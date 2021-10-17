@@ -346,7 +346,8 @@ describe('Validate > Unit > Utils > findErrors', () => {
             }
         };
         const errors = findErrors(groups);
-        expect(errors.group1).toEqual(serverErrorNode.textContent);
+        expect(errors.group1).toEqual(serverErrorNode.firstChild);
+        expect(errors.group1.nodeType).toEqual(Node.TEXT_NODE);
     });
 
 });
