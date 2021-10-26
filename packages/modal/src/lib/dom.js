@@ -88,6 +88,7 @@ const open = state => {
     const focusFn = () => state.focusableChildren.length > 0 && state.focusableChildren[0].focus();
     if (state.settings.delay) window.setTimeout(focusFn, state.settings.delay);
     else focusFn();
+    document.body.style.setProperty('overflow', 'hidden');
 };
 
 /* 
@@ -96,6 +97,7 @@ const open = state => {
 const close = state => {
     document.removeEventListener('keydown', state.keyListener);
     toggle(state);
+    document.body.style.removeProperty('overflow');
     state.lastFocused.focus();
 };
 
