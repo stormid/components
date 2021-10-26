@@ -80,6 +80,7 @@ const toggle = state => {
  * @param state, Object, the current state or model of the instance
  */
 const open = state => {
+    if (state.dialog.hasAttribute('aria-hidden')) state.dialog.removeAttribute('aria-hidden'); // past implementations encouraged having aria-hidden on dialog when closed
     const ref = document.body.firstElementChild || null;
     if (ref !== state.node) document.body.insertBefore(state.node, ref);
     document.addEventListener('keydown', state.keyListener);
