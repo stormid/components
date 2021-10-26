@@ -5,7 +5,7 @@ describe(`Modal > DOM > findDialog`, () => {
     it('should return a node with an aria-role of dialog', async () => {
         document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle">
 			<div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label">
-				<h1 id="modal-label"></h1>
+				<h1 id="modal-label">Modal</h1>
 				<button>Focusable element</button>
 				<input type="text">
 				<input type="text">
@@ -19,8 +19,11 @@ describe(`Modal > DOM > findDialog`, () => {
     });
 
     it('should return undefined if it cant find a dialog', async () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
         document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle"></div>`;
         expect(DOM.findDialog(document.querySelector('#modal-1'))).toEqual(undefined);
+        expect(warn).toHaveBeenCalledWith('No dialog found in modal node');
+        warn.mockRestore();
     });
 
 
