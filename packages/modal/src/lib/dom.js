@@ -124,7 +124,8 @@ export const initUI = Store => ({ node, dialog, toggles }) => {
         !dialog.getAttribute('aria-label') &&
         (!dialog.getAttribute('aria-labelledby') || !document.querySelector(`#${dialog.getAttribute('aria-labelledby')}`))
     ) console.warn(`The modal dialog should have an aria-labelledby attribute that matches the id of an element that contains text, or an aria-label attribute.`);
-    //check aria-labelledby= an id in the dialog
+    if (dialog.getAttribute('role') === 'alertdialog' && (!dialog.getAttribute('aria-describedby') || !document.querySelector(`#${dialog.getAttribute('aria-describedby')}`))) console.warn(`The alertdialog should have an aria-describedby attribute that matches the id of an element that contains text`);
+    
     toggles.forEach(tgl => {
         TRIGGER_EVENTS.forEach(event => {
             tgl.addEventListener(event, e => {

@@ -27,7 +27,7 @@ describe(`Modal > DOM > findDialog`, () => {
         expect(DOM.findDialog(document.querySelector('#modal'))).toEqual(document.querySelector('.modal__inner'));
     });
 
-    it('should return undefined if it cant find a dialog', async () => {
+    it('should return undefined if it cant find a dialog or alertdialog', async () => {
         const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
         document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle"></div>`;
         expect(DOM.findDialog(document.querySelector('#modal-1'))).toEqual(undefined);

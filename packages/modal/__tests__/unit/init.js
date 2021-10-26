@@ -55,6 +55,18 @@ const init = () => {
                 <input type="text">
             </div>
         </div>
+    </div>
+
+    <button class="js-modal-toggle__4">Open modal</button>
+    <div id="modal-5" class="js-modal__undescribed modal" data-modal-toggle="js-modal-toggle__4">
+        <div class="modal__inner" role="alertdialog" aria-modal="true" aria-label="Test modal">
+            <div class="modal__inner">
+                <h1>Modal four</h1>
+                <button>Focusable element</button>
+                <input type="text">
+                <input type="text">
+            </div>
+        </div>
     </div>`;
 
     ModalSet = modal('.js-modal');
@@ -89,7 +101,7 @@ describe(`Modal > Initialisation`, () => {
         warn.mockRestore();
     });
 
-    it('should console.warn if the dialog is not labelled with an aria-label or heading that is linked with aria-labelledby', () => {
+    it('should console.warn if an alertdialog does not have a description linked with an aria-describedby attribute', () => {
         const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
         expect(modal('.js-not-found')).toBeUndefined();
         expect(warn).toHaveBeenCalledWith(`Modal not initialised, no elements found for selector '.js-not-found'`);
