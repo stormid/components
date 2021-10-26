@@ -10,12 +10,14 @@ const init = () => {
             <div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle" hidden>
                 <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label">
                     <h1 id="modal-label">Test modal</h1>
-                    <button>Focusable element</button>
+                    <button data-id="first-focuable-element">Focusable element</button>
                     <input type="text">
-                    <svg role="button" aria-label="close" tabindex="0" class="modal__close-btn js-modal-toggle" fill="#fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                    </svg>
+                    <button aria-label="close" data-id="last-focuable-element">
+                        <svg class="modal__close-btn js-modal-toggle" fill="#fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
@@ -27,10 +29,12 @@ const init = () => {
                     <button>Focusable element</button>
                     <input type="text">
                     <input type="text">
-                    <svg role="button" aria-label="close" tabindex="0" class="modal__close-btn js-modal-toggle__2" fill="#fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                    </svg>
+                    <button aria-label="close">
+                        <svg class="modal__close-btn js-modal-toggle__2" fill="#fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>`;
@@ -108,17 +112,48 @@ describe(`Modal > Keyboard events`, () => {
         expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
     });
 
-    // tab events not firing as expected in JSDOM
-    // it('should trap tab in the modal until it is closed', () => {
-    //     const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true });
-    //     const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
+    it('should trap tab in the modal until it is closed', () => {
+        const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true });
+        const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
 
-    // 	ModalSet[0].getState().toggles[0].dispatchEvent(enter);
-    //     // expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
-    // 	// document.dispatchEvent(tab);
-    //     // document.dispatchEvent(tab);
-    //     console.log(document.activeElement.innerHTML);
-    //     // expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
-    // });
+    	ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+        //open modal, focus on first focuable element
+        expect(document.activeElement.getAttribute('data-id')).toEqual('first-focuable-element');
+        //should have open modal className
+        expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+
+        //tab to next element
+    	document.dispatchEvent(tab);
+        //tab to last focusable element
+        document.dispatchEvent(tab);
+
+        //tab should go back to first focusable element 
+        document.dispatchEvent(tab);
+        expect(document.activeElement.getAttribute('data-id')).toEqual('first-focuable-element');
+        //modal should still be open/have active className
+        expect(ModalSet[0].getState().isOpen).toEqual(true);
+        expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+
+        //close modal
+        ModalSet[0].getState().toggles[0].click();
+        expect(ModalSet[0].getState().isOpen).toEqual(false);
+        expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
+    });
+
+    it('should move to last element with shift-tab', () => {
+        const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true });
+        const shiftTab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true, shiftKey: true });
+        const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
+
+    	ModalSet[0].getState().toggles[0].dispatchEvent(enter);
+        //open modal, focus on first focuable element
+        expect(document.activeElement.getAttribute('data-id')).toEqual('first-focuable-element');
+        //should have open modal className
+        expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
+
+        //tab to last element
+    	document.dispatchEvent(shiftTab);
+        expect(document.activeElement.getAttribute('data-id')).toEqual('last-focuable-element');
+    });
 
 });
