@@ -7,7 +7,7 @@ import { FOCUSABLE_ELEMENTS, TRIGGER_EVENTS, KEYCODES } from './constants';
  * @param settings, Object, settings of the 
  * @return HTMLElement
  */
-export const findDialog = node => node.querySelector('[role=dialog]') || console.warn(`No dialog found in modal node`);
+export const findDialog = node => (node.querySelector('[role=dialog]') || node.querySelector('[role=alertdialog]')) || console.warn(`No dialog or alertdialog found in modal node`);
 
 /*
  * Returns an Array of HTMLElements selected based on data-toggle attribute of a given node
