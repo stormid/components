@@ -9,7 +9,7 @@ Accessible modal dialog
 Create a modal dialog and button(s) to toggle in HTML
 ```
 <button class="js-modal-toggle">Open modal</button>
-<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle">
+<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle" hidden>
     <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label">
         <h2 id="modal-label">Modal title</h2>
         ...

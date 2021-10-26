@@ -70,15 +70,19 @@ const trapTab = state => event => {
  * @param state, Object, the current state or model of the instance
  */
 const toggle = state => {
-    state.dialog.setAttribute('aria-hidden', !state.isOpen);
+    state.node[state.isOpen ? 'removeAttribute' : 'setAttribute']('hidden', 'hidden');
+    const children = [].slice.call(document.querySelectorAll('body > *'));
+    children.forEach(child => child !== state.node && child[state.isOpen ? 'setAttribute' : 'removeAttribute']('aria-hidden', 'true'));
     state.node.classList.toggle(state.settings.onClassName);
-    // document.querySelector(this.settings.mainSelector) && document.querySelector(this.settings.mainSelector).setAttribute('aria-hidden', this.isOpen);
 };
 
 /* 
  * @param state, Object, the current state or model of the instance
  */
 const open = state => {
+    if (state.dialog.hasAttribute('aria-hidden')) state.dialog.removeAttribute('aria-hidden'); // past implementations encouraged having aria-hidden on dialog when closed
+    const ref = document.body.firstElementChild || null;
+    if (ref !== state.node) document.body.insertBefore(state.node, ref);
     document.addEventListener('keydown', state.keyListener);
     toggle(state);
     const focusFn = () => state.focusableChildren.length > 0 && state.focusableChildren[0].focus();
@@ -113,10 +117,9 @@ export const change = Store => state => {
  *
  * @param Store, Object, model or state of the current instance
  */
-export const initUI = Store => ({ dialog, toggles }) => {
+export const initUI = Store => ({ node, dialog, toggles }) => {
     if (!dialog || !toggles) return;
-    dialog.setAttribute('aria-hidden', true);
-    if (!dialog.getAttribute('aria-modal')) console.warn(`The modal dialog should have an aria-modal attribute of 'true'.`);
+    node.setAttribute('hidden', 'hidden');
     if (
         !dialog.getAttribute('aria-label') &&
         (!dialog.getAttribute('aria-labelledby') || !document.querySelector(`#${dialog.getAttribute('aria-labelledby')}`))
