@@ -129,7 +129,7 @@ export const createErrorSummary = (Store, cb) => {
  * @param state [Object, validation state]
  * 
  */
-export const renderError = Store => groupName => {
+export const renderError = Store => (groupName, realtime = false) => {
     const state = Store.getState();
 
     if (state.errors[groupName]) clearError(groupName)(state);
@@ -151,9 +151,11 @@ export const renderError = Store => groupName => {
         field.removeAttribute('aria-invalid');
     });
 	
-    if (state.errorSummary) renderErrorToSummary(state, groupName);
+    if (state.errorSummary) window.setTimeout(() => renderErrorToSummary(state, groupName, realtime), 0);
     
 };
+
+export const renderRealtimeError = Store => groupName => renderError(Store)(groupName, true);
 
 /*
  * This only runs once during initialisation to ensure that the server-side error messages are announced
@@ -167,7 +169,7 @@ export const renderErrorSummary = Store => state => {
     });
     //200ms timeout to ensure that the alert is in the DOM for long enough before the content changes with the error messages
     if (state.settings.useSummary && !state.errorSummary) createErrorSummary(Store, () => window.setTimeout(render, 200));
-    else render();
+    else window.setTimeout(render, 200);
 };
 
 /*
@@ -175,9 +177,10 @@ export const renderErrorSummary = Store => state => {
  * @param state [Object, validation state]
  * @param groupName [String, identifier (name or data-group attribute)]
  */
-export const renderErrorToSummary = (state, groupName) => {
-    state.errorSummary.appendChild(
-        h('span', { [AX_ATTRIBUTES.ERROR_MESSAGE]: groupName }, state.groups[groupName].errorMessages[0]));
+export const renderErrorToSummary = (state, groupName, realtime) => {
+    const newNode = h('span', { [AX_ATTRIBUTES.ERROR_MESSAGE]: groupName }, state.groups[groupName].errorMessages[0]);
+    if (realtime && state.errorSummary.childNodes.length > 0) state.errorSummary.insertBefore(newNode, state.errorSummary.childNodes[0]); 
+    else state.errorSummary.appendChild(newNode);
 };
 
 /**

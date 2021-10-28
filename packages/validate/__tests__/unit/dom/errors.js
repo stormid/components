@@ -474,18 +474,6 @@ describe('Validate > Unit > DOM > renderErrors', () => {
 
 });
 
-
-/*
-export const renderErrorSummary = state => {
-    if (!state.errorSummary && !state.settings.useSummary) return;
-    const render = () => Object.keys(state.groups).forEach(groupName => {
-        if (!state.groups[groupName].valid) renderErrorToSummary(state, groupName);
-    });
-    //200ms timeout to ensure that the alert is in the DOM for long enough before the content changes with the error messages
-    if (state.settings.useSummary && !state.errorSummary) createErrorSummary(state, () => window.setTimeout(render, 200));
-    else render();
-};
-*/
 describe('Validate > Unit > DOM > renderErrorSummary', () => {
 
     it('Should return early without rendering or updating summary if no exitsing element or config setting', () => {

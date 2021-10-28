@@ -9,7 +9,8 @@ import {
     findErrors,
     findErrorSummary,
     groupIsAllHidden,
-    addErrorMessageToGroup
+    addErrorMessageToGroup,
+    hasNoValidate
 } from './utils';
 import {
     DOTNET_ADAPTORS,

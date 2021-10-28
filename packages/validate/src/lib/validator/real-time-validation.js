@@ -7,7 +7,7 @@ import {
 } from './';
 import {
     clearError,
-    renderError
+    renderRealtimeError
 }  from '../dom';
 
 /**
@@ -36,7 +36,7 @@ export const initRealTimeValidation = Store => {
                             group: groupName,
                             errorMessages: res.reduce(reduceErrorMessages(groupName, Store.getState()), [])
                         },
-                        [() => renderError(Store)(groupName)]
+                        [() => renderRealtimeError(Store)(groupName)]
                     );
                 }
             });
