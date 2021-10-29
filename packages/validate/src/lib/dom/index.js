@@ -151,7 +151,6 @@ export const renderError = Store => (groupName, realtime = false) => {
 
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.add('is--invalid');
-        field.removeAttribute('aria-invalid');
     });
 	
     if (state.errorSummary) renderErrorToSummary(state, groupName, realtime);
