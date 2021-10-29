@@ -60,6 +60,9 @@ export const clearError = groupName => state => {
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.remove('is--invalid');
         field.removeAttribute('aria-invalid');
+        //assuming that the field only has an aria-describedby because of an associated error summary row
+        //do we need to add support for fields that have aria-describedby for another reason?
+        if (field.hasAttribute('aria-describedby')) field.removeAttribute('aria-describedby');
     });
 
     if (state.errorSummary) {
@@ -180,10 +183,12 @@ export const renderErrorSummary = Store => state => {
  * @param groupName [String, identifier (name or data-group attribute)]
  */
 export const renderErrorToSummary = (state, groupName, realtime) => {
-    const newNode = h('span', { [AX_ATTRIBUTES.ERROR_MESSAGE]: groupName }, state.groups[groupName].errorMessages[0]);
+    const newNode = h('span', { [AX_ATTRIBUTES.ERROR_MESSAGE]: groupName, id: `ax-error-${groupName}` }, state.groups[groupName].errorMessages[0]);
     if (realtime && state.errorSummary.childNodes.length > 0) state.errorSummary.insertBefore(newNode, state.errorSummary.childNodes[0]); 
     else state.errorSummary.appendChild(newNode);
+    state.groups[groupName].fields.forEach(field => field.setAttribute('aria-describedby', `ax-error-${groupName}`));
 };
+
 
 /**
  * Set focus on first invalid field after form-level validate()
