@@ -151,7 +151,7 @@ export const renderError = Store => (groupName, realtime = false) => {
         field.removeAttribute('aria-invalid');
     });
 	
-    if (state.errorSummary) window.setTimeout(() => renderErrorToSummary(state, groupName, realtime), 0);
+    if (state.errorSummary) renderErrorToSummary(state, groupName, realtime);
     
 };
 
@@ -164,12 +164,14 @@ export const renderRealtimeError = Store => groupName => renderError(Store)(grou
  */
 export const renderErrorSummary = Store => state => {
     if (!state.errorSummary && !state.settings.useSummary) return;
-    const render = () => Object.keys(state.groups).forEach(groupName => {
-        if (state.groups[groupName].errorMessages && state.groups[groupName].errorMessages.length > 0) renderErrorToSummary(state, groupName);
-    });
+    const render = state => window.setTimeout(() => {
+        Object.keys(state.groups).forEach(groupName => {
+            if (state.groups[groupName].errorMessages && state.groups[groupName].errorMessages.length > 0) renderErrorToSummary(state, groupName);
+        });
+    }, 200);
     //200ms timeout to ensure that the alert is in the DOM for long enough before the content changes with the error messages
-    if (state.settings.useSummary && !state.errorSummary) createErrorSummary(Store, () => window.setTimeout(render, 200));
-    else window.setTimeout(render, 200);
+    if (state.settings.useSummary && !state.errorSummary) createErrorSummary(Store, render);
+    else render(state);
 };
 
 /*

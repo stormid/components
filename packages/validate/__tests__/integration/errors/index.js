@@ -91,14 +91,14 @@ describe('Validate > Integration > errors > error summary', () => {
         expect(document.querySelector(`[${AX_ATTRIBUTES.ERROR_SUMMARY}]`)).toBeDefined();
         expect(state.groups.group1.valid).toEqual(false);
         expect(state.groups.group1.errorMessages).toEqual(['This field is required']);
-        // window.setTimeout(() => {
-        //     expect(document.querySelector(`[${AX_ATTRIBUTES.ERROR_MESSAGE}=group1]`)).toEqual(state.groups.group1.errorMessages[0]);
-        // }, 300);
+        window.setTimeout(() => {
+            expect(document.querySelector(`[${AX_ATTRIBUTES.ERROR_MESSAGE}=group1]`)).toEqual(state.groups.group1.errorMessages[0]);
+        }, 300);
     });
 
-    it('Should render server-side errors to the error summary', () => {
+    it('Should render server-side errors to the error summary', async () => {
         document.body.innerHTML = `<form id="form" class="form" method="post" action="">
-            <div ${AX_ATTRIBUTES.ERROR_SUMMARY}></div>
+            <div ${AX_ATTRIBUTES.ERROR_SUMMARY} role="alert"></div>
             <div>
                 <label id="test-label" for="group1">Text</label>
                 <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
@@ -115,7 +115,9 @@ describe('Validate > Integration > errors > error summary', () => {
         expect(document.querySelector(`[${AX_ATTRIBUTES.ERROR_SUMMARY}]`)).toBeDefined();
         expect(state.groups.group1.valid).toEqual(false);
         expect(state.groups.group1.errorMessages).toEqual(['This field is required']);
-        expect(document.querySelector(`[${AX_ATTRIBUTES.ERROR_MESSAGE}=group1]`).textContent).toEqual(state.groups.group1.errorMessages[0]);
+        window.setTimeout(() => {
+            expect(document.querySelector(`[${AX_ATTRIBUTES.ERROR_MESSAGE}=group1]`).textContent).toEqual(state.groups.group1.errorMessages[0]);
+        }, 200);
 
     });
 
