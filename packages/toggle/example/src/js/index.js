@@ -9,4 +9,8 @@ window.addEventListener('DOMContentLoaded', () => {
     window.__t2__ = toggle('.js-toggle__local', {
         closeOnBlur: true
     });
+
+    document.addEventListener('Toggle.On', e => {
+        console.log(e);
+    });
 });
