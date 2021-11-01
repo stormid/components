@@ -74,6 +74,7 @@ const toggle = state => {
     const children = [].slice.call(document.querySelectorAll('body > *'));
     children.forEach(child => child !== state.node && child[state.isOpen ? 'setAttribute' : 'removeAttribute']('aria-hidden', 'true'));
     state.node.classList.toggle(state.settings.onClassName);
+    document.body.classList.toggle('is--modal');
 };
 
 /* 
@@ -88,7 +89,6 @@ const open = state => {
     const focusFn = () => state.focusableChildren.length > 0 && state.focusableChildren[0].focus();
     if (state.settings.delay) window.setTimeout(focusFn, state.settings.delay);
     else focusFn();
-    document.body.style.setProperty('overflow', 'hidden');
 };
 
 /* 
@@ -97,7 +97,6 @@ const open = state => {
 const close = state => {
     document.removeEventListener('keydown', state.keyListener);
     toggle(state);
-    document.body.style.removeProperty('overflow');
     state.lastFocused.focus();
 };
 
