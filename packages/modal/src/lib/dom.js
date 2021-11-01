@@ -74,6 +74,7 @@ const toggle = state => {
     const children = [].slice.call(document.querySelectorAll('body > *'));
     children.forEach(child => child !== state.node && child[state.isOpen ? 'setAttribute' : 'removeAttribute']('aria-hidden', 'true'));
     state.node.classList.toggle(state.settings.onClassName);
+    document.documentElement.classList.toggle('is--modal');
 };
 
 /* 

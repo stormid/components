@@ -10,7 +10,7 @@ Create a modal dialog and button(s) to toggle in HTML
 ```
 <button class="js-modal-toggle">Open modal</button>
 <div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle" hidden>
-    <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label">
+    <div class="modal__inner" role="dialog" aria-labelledby="modal-label">
         <h2 id="modal-label">Modal title</h2>
         ...
         <button class="modal__close-btn js-modal-toggle" aria-label="close">
@@ -33,6 +33,15 @@ Inititialise the module
 import modal from '@stormid/modal';
 
 const [ instance ] = modal('.js-modal');
+```
+
+CSS
+The className 'is--modal' added to the document.body when the modal is open. This can be used to prevent the body from scrolling
+
+```
+.is--modal {
+    overflow: hidden;
+}
 ```
 
 ## Options
