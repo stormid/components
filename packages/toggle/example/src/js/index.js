@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
         closeOnBlur: true
     });
 
-    document.addEventListener('Toggle.On', e => {
-        console.log(e);
+    document.addEventListener('Toggle.Open', e => {
+        console.log(e.detail.getState());
     });
 });
