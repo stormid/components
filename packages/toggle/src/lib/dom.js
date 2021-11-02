@@ -196,9 +196,10 @@ export const getStateFromDOM = (node, settings) => {
 
 export const broadcast = Store => state => {
     const event = new CustomEvent(EVENTS[state.isOpen ? 'OPEN' : 'CLOSE'], {
+        bubbles: true,
         detail: {
             getState: Store.getState
         }
     });
-    document.dispatchEvent(event);
+    state.node.dispatchEvent(event);
 };
