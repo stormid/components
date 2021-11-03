@@ -10,7 +10,7 @@ import { ACTIONS } from '../constants';
  * 
  */
 export const addMethod = Store => (groupName, method, message, fields) => {
-    if ((groupName === undefined || method === undefined || message === undefined) || !Store.getState()[groupName] && (document.getElementsByName(groupName).length === 0  && [].slice.call(document.querySelectorAll('[data-val-group="'+groupName+'"]')).length === 0) && !fields)
+    if ((groupName === undefined || method === undefined || message === undefined) || !Store.getState()[groupName] && (document.getElementsByName(groupName).length === 0  && [].slice.call(document.querySelectorAll(`[data-val-group="${groupName}"]`)).length === 0) && !fields)
         return console.warn('Custom validation method cannot be added.');
     Store.dispatch(ACTIONS.ADD_VALIDATION_METHOD, { groupName, fields, validator: { type: 'custom', method, message } });
 };
