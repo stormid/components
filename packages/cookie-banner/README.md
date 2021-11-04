@@ -9,9 +9,11 @@ Optionally send anonymous [predefined cookie banner and consent form interaction
 ---
 
 ## Usage
-Cookie consent is based on categorising cookies and the functions that initialise them, desribing them in a configuration object passed into the module at initialisition.
+Cookie consent is based on categorising cookies and the functions that initialise them, describing them in a configuration object passed into the module at initialisition.
 
-The cookie banner renders itself if no consent preferences are recorded in the browser. The consent form renders into a DOMElement with a particular className configurable options (classNames.formContainer).
+The cookie banner renders itself if no consent preferences are recorded in the browser.
+
+The consent form renders into a DOMElement with a particular className configurable options (classNames.formContainer).
 
 
 Install the package
@@ -19,7 +21,7 @@ Install the package
 npm i -S @stormid/cookie-banner
 ```
 
-Create a container element for the consent form
+Create a container element for the consent form.
 ```
 <div class="privacy-banner__form-container"></div>
 ```
