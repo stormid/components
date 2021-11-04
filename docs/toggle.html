@@ -266,6 +266,23 @@ const [ instance ] = toggle('.js-toggle');
     getState, a Function that returns the current state Object
 }
 </code></pre>
+<h2 id="events">Events</h2>
+<p>There are two custom events that an instance of the toggle dispatches:</p>
+<ul>
+<li><code>toggle.open</code> when it opens</li>
+<li><code>toggle.close</code> when closes</li>
+</ul>
+<p>The events are dispatched on the same element used to initialise the toggle and bubble for event delegation. The a reference to the getState function of the instance is contained in the custom event detail.</p>
+<pre><code>const [ instance ] = toggle('.js-toggle');
+
+//event bubbles so can delegate
+//could also add event listener to document.querySelector('.js-toggle')
+document.addEventListener('toggle.on', e =&gt; {
+  const { node, toggles } = e.detail.getState();
+  // do something
+});
+
+</code></pre>
 <h2 id="tests">Tests</h2>
 <pre><code>npm t
 </code></pre>

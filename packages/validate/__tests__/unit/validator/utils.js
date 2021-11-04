@@ -210,6 +210,14 @@ describe('Validate > Unit > Utils > groupValueReducer', () => {
         const field = document.querySelector('#field');
         expect(groupValueReducer('', field)).toEqual('Test value');
     });
+    it('should trim String value given an input with a value whitespace', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<form>
+            <input name="field" id="field" value="   Test value   " />
+        </form>`;
+        const field = document.querySelector('#field');
+        expect(groupValueReducer('', field)).toEqual('Test value');
+    });
     it('should return an empty String given an input without a value and an initial empty string', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>

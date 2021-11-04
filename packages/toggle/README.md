@@ -96,6 +96,27 @@ toggle() returns an array of instances. Each instance exposes the interface
 }
 ```
 
+## Events
+
+There are two custom events that an instance of the toggle dispatches:
+- `toggle.open` when it opens
+- `toggle.close` when closes
+
+The events are dispatched on the same element used to initialise the toggle and bubble for event delegation. The a reference to the getState function of the instance is contained in the custom event detail.
+
+```
+const [ instance ] = toggle('.js-toggle');
+
+//event bubbles so can delegate
+//could also add event listener to document.querySelector('.js-toggle')
+document.addEventListener('toggle.on', e => {
+  const { node, toggles } = e.detail.getState();
+  // do something
+});
+
+```
+
+
 ## Tests
 ```
 npm t
