@@ -1,6 +1,6 @@
 # Measurements
 
-If a Google Analytics tid configuration option is passed in when initialising the Cookie Banner instance, the following data will be passed to the Analytics account using the Google Measurement API.
+If a Google Analytics tid configuration option is set when initialising the Cookie Banner instance, the following data will be sent to the Analytics account using the Google Measurement API.
 
 
 
@@ -68,14 +68,12 @@ Sent with every measurement
 
 | Parameter | Value                                                                          | Definition                                                                             |
 | --------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| ec        | 'Save Preferences'                                                             | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ec |
-| ea        | 'CookiePrefs'                                                                  | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ea |
+| ec        | 'Save Preferences'                                                       | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ec |
+| ea        | 'CookiePrefs'                                                            | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ea |
 | cd2       | Comma separated string of all cookie categories, e.g. 'performance,thirdParty' | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cd |
-| cm2       | 1 if performance is true, else 0 *                                             | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cm |
-| cm3       | 1 if thirdPatyr is true, else 0 *                                              | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cm |
+| cm2       | 1 if performance is true, else 0 [1]                                     | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cm |
+| cm3       | 1 if thirdPatyr is true, else 0 [1]                                      | https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cm |
 
-* Note that the cm2 and cm3 parameters relate to specific cookie categories names - 'performance' and 'third party' cookies respectively.
+[1] Note that the cm2 and cm3 parameters relate to specific cookie categories names - 'performance' and 'third party' cookies respectively.
 
 Storm defines performance cookies as those that are used to provide anonymous measurements that are used to measure the performance of the web application only. Third party cookies are defined as those that Storm has no control over and includes advertising, marketing, and third party service cookies that are loaded via iframes, embeds, and external libraries.
-
-If your application does not have these categories, the cm2 and cm3 
