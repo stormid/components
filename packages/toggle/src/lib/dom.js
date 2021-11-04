@@ -1,4 +1,4 @@
-import { FOCUSABLE_ELEMENTS, TRIGGER_EVENTS, TRIGGER_KEYCODES } from './constants';
+import { FOCUSABLE_ELEMENTS, TRIGGER_EVENTS, TRIGGER_KEYCODES, EVENTS } from './constants';
 
 /*
  * Sets aria attributes and adds eventListener on each toggle button
@@ -32,7 +32,7 @@ export const initUI = Store => () => {
 export const toggle = Store => () => {
     Store.dispatch({
         isOpen: !Store.getState().isOpen },
-    [toggleAttributes, manageFocus(Store), closeProxy(Store)]
+    [toggleAttributes, manageFocus(Store), closeProxy(Store), broadcast(Store)]
     );
 };
 
@@ -192,4 +192,14 @@ export const getStateFromDOM = (node, settings) => {
         statusClass,
         shouldStartOpen: settings.startOpen || classTarget.classList.contains(statusClass)
     };
+};
+
+export const broadcast = Store => state => {
+    const event = new CustomEvent(EVENTS[state.isOpen ? 'OPEN' : 'CLOSE'], {
+        bubbles: true,
+        detail: {
+            getState: Store.getState
+        }
+    });
+    state.node.dispatchEvent(event);
 };

@@ -201,7 +201,7 @@
 <p>Create a modal dialog and button(s) to toggle in HTML</p>
 <pre><code>&lt;button class=&quot;js-modal-toggle&quot;&gt;Open modal&lt;/button&gt;
 &lt;div id=&quot;modal-1&quot; class=&quot;js-modal modal&quot; data-modal-toggle=&quot;js-modal-toggle&quot; hidden&gt;
-    &lt;div class=&quot;modal__inner&quot; role=&quot;dialog&quot; aria-modal=&quot;true&quot; aria-labelledby=&quot;modal-label&quot;&gt;
+    &lt;div class=&quot;modal__inner&quot; role=&quot;dialog&quot; aria-labelledby=&quot;modal-label&quot;&gt;
         &lt;h2 id=&quot;modal-label&quot;&gt;Modal title&lt;/h2&gt;
         ...
         &lt;button class=&quot;modal__close-btn js-modal-toggle&quot; aria-label=&quot;close&quot;&gt;
@@ -220,6 +220,12 @@
 <pre><code>import modal from '@stormid/modal';
 
 const [ instance ] = modal('.js-modal');
+</code></pre>
+<p>CSS
+The className ‘is–modal’ added to the document.body when the modal is open. This can be used to prevent the body from scrolling</p>
+<pre><code>.is--modal {
+    overflow: hidden;
+}
 </code></pre>
 <h2 id="options">Options</h2>
 <pre><code>{
