@@ -251,6 +251,7 @@ describe('Validate > Unit > Reducers > Add validation method', () => {
             }
         });
     });
+    
     it('should add a validator of type custom and create a new group', async () => {
         expect.assertions(1);
         const validatorFn = (value, fields, param) => false;
@@ -277,6 +278,7 @@ describe('Validate > Unit > Reducers > Add validation method', () => {
             }
         });
     });
+    
     it('should add a validator and collect fields based on group data attribute', async () => {
         expect.assertions(1);
         const validatorFn = (value, fields, param) => false;
@@ -298,6 +300,38 @@ describe('Validate > Unit > Reducers > Add validation method', () => {
             groups: {
                 groupX: { //data attribute group name used as group key, not name attribute
                     fields,
+                    validators: [{ type: 'custom', validatorFn, message: 'This field can never be valid' }],
+                    serverErrorNode: false,
+                    valid: false
+                }
+            }
+        });
+    });
+
+    it('should add a validator with an array of fields', async () => {
+        expect.assertions(1);
+        const validatorFn = (value, fields, param) => false;
+        document.body.innerHTML = `<form class="form" method="post" action="">
+            <label for="group1">Text</label>
+            <input id="group1" name="group1"  type="text">
+        </form>`;
+        const input = document.getElementById('group1');
+        
+        const nextState = {
+            groupName: 'CustomGroup',
+            fields: [ input ],
+            validator: {
+                type: 'custom',
+                validatorFn,
+                message: 'This field can never be valid'
+            }
+        };
+        const state = { groups: {} };
+        const output = Reducers[ACTIONS.ADD_VALIDATION_METHOD](state, nextState);
+        expect(output).toEqual({
+            groups: {
+                CustomGroup: {
+                    fields: [ input ],
                     validators: [{ type: 'custom', validatorFn, message: 'This field can never be valid' }],
                     serverErrorNode: false,
                     valid: false

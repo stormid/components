@@ -34,22 +34,37 @@ This library supports HTML5 attribute constraints and the data-val attributes ge
 
 Multiple validators can be used on a single field. Custom validators can be added via the [addMethod](#addmethod) API.
 
-- [Required](#required)
-- [Email](#email)
-- [Url](#url)
-- [Pattern/Regex](#patternregex)
-- [Digits](#digits)
-- [Number](#number)
-- [Min](#min)
-- [Max](#max)
-- [Range](#range)
-- [Length](#length)
-- [Stringlength](#stringlength)
-- [Maxlength](#maxlength)
-- [Minlength](#minlength)
-- [DateISO](#dateiso)
-- [Equalto](#equalto)
-- [Remote](#remote)
+- [Validate](#validate)
+  - [Contents](#contents)
+  - [Usage](#usage)
+  - [Validators](#validators)
+    - [Required](#required)
+    - [Email](#email)
+    - [Url](#url)
+    - [Pattern/Regex](#patternregex)
+    - [Digits](#digits)
+    - [Number](#number)
+    - [Min](#min)
+    - [Max](#max)
+    - [Range](#range)
+    - [Length](#length)
+    - [Stringlength](#stringlength)
+    - [Maxlength](#maxlength)
+    - [Minlength](#minlength)
+    - [DateISO](#dateiso)
+    - [Equalto](#equalto)
+    - [Remote](#remote)
+  - [Errors](#errors)
+    - [Error message container](#error-message-container)
+    - [Error messages](#error-messages)
+  - [Options](#options)
+  - [API](#api)
+    - [addMethod](#addmethod)
+    - [validate](#validate-1)
+    - [addGroup](#addgroup)
+    - [removeGroup](#removegroup)
+  - [Tests](#tests)
+  - [License](#license)
 
 ---
 
@@ -338,12 +353,13 @@ Add a custom validation method to a group:
 const [ validator ] = validate('.my-form');
 
 validator.addMethod(
-    'MyFieldName', //input/input group name
+    'MyFieldName', //input/input group name/or validation group name if passing an array of fields
     (value, fields) => { //validation method
         //value is the value of the whole group of fields (grouped under the name attribute)
         return value === 'test'; //must return boolean
     },
-    'Value must equal "test"' //error message on validation failure
+    'Value must equal "test"', //error message on validation failure
+    fields // an optional array of inputs, if this isn't present the input/groupName is used as a name (or data-group) attribute selector
 );
 ```
 

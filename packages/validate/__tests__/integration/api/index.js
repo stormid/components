@@ -204,4 +204,46 @@ describe('Validate > Integration > API > addMethod', () => {
 
     });
 
+    it('Should add a validation method when provided an array of fields and a new group name', () => {
+        document.body.innerHTML = `<form class="form">
+            <label id="group1-1-label" for="group1-1">group1</label>
+            <input
+                id="group1-1"
+                name="group1"
+                value=""
+                required
+                type="text" />
+        </form>`;
+        // const form = document.querySelector('.form');
+        const input = document.querySelector('#group1-1');
+        const validator = validate('form')[0];
+
+        expect(validator.getState().groups).toEqual({
+            group1: {
+                serverErrorNode: false,
+                validators: [{ type: 'required' }],
+                fields: [input],
+                valid: false
+            }
+        });
+        const method = () => false;
+        const message = 'Custom error';
+        validator.addMethod('CustomGroup', method, message, [ input ]);
+
+        expect(validator.getState().groups).toEqual({
+            group1: {
+                serverErrorNode: false,
+                validators: [{ type: 'required' }],
+                fields: [input],
+                valid: false
+            },
+            CustomGroup: {
+                serverErrorNode: false,
+                validators: [{ type: 'custom', method, message }],
+                fields: [input],
+                valid: false
+            }
+        });
+    });
+
 });
