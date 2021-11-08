@@ -127,21 +127,43 @@ const trapTab = (Store, e) => {
 };
 
 /*
+ * Checks if the event was dispatched from a toggle button
+ *
+ * @param toggles, Array of toggle HTMLElements 
+ * @returns Boolean, true if event was dispatched from a toggle button
+ * 
+ */ 
+const targetIsToggle = (toggles, target) => toggles.reduce((acc, toggle) => {
+    if (toggle === target|| toggle.contains(target)) acc = true;
+    return acc;
+}, false)
+
+/*
  * Partially applied factory function that returns handlers for focusin and click events
- * Returned function is added as an eventListener when closeOnBlur and/or closeOnClick options are true
+ * Returned function is added as an eventListener when closeOnBlur options are true
  * 
  * @param Store, Object, model or store of the current instance
  * @returns Function, event handler
  * 
  * @param Event, event dispatched from document
  */
-export const proxyListener = Store => e => {
+export const focusInListener = Store => e => {
+    if (!Store.getState().node.contains(e.target)) toggle(Store)();
+};
+
+/*
+ * Partially applied factory function that returns handlers for focusin and click events
+ * Returned function is added as an eventListener when closeOnClick options are true
+ * 
+ * @param Store, Object, model or store of the current instance
+ * @returns Function, event handler
+ * 
+ * @param Event, event dispatched from document
+ */
+export const clickListener = Store => e => {
     const { node, toggles } = Store.getState();
-    if (!node.contains(e.target) && !toggles.reduce((acc, toggle) => {
-        if (toggle === e.target|| toggle.contains(e.target)) acc = true;
-        return acc;
-    }, false)
-    ) toggle(Store)();
+    if (node.contains(e.target) || targetIsToggle(toggles, e.target)) return;
+    toggle(Store)();
 };
 
 /*
