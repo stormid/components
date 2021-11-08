@@ -3,7 +3,8 @@ import {
     findToggles,
     getFocusableChildren,
     keyListener,
-    proxyListener,
+    focusInListener,
+    clickListener,
     initUI,
     startToggleLifecycle,
     toggle,
@@ -33,8 +34,8 @@ export default ({ node, settings }) => {
         focusableChildren: getFocusableChildren(node),
         lastFocused: false,
         keyListener: keyListener(Store),
-        focusInListener: proxyListener(Store),
-        clickListener: proxyListener(Store)
+        focusInListener: focusInListener(Store),
+        clickListener: clickListener(Store)
     }, [ initUI(Store), () => {
 	    shouldStartOpen && startToggleLifecycle(Store)();
     }]);
