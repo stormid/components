@@ -109,7 +109,7 @@ const [ instance ] = toggle('.js-toggle');
 
 //event bubbles so can delegate
 //could also add event listener to document.querySelector('.js-toggle')
-document.addEventListener('toggle.on', e => {
+document.addEventListener('toggle.open', e => {
   const { node, toggles } = e.detail.getState();
   // do something
 });
