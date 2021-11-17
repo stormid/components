@@ -43,18 +43,31 @@ export const initRealTimeValidation = Store => {
     };
 
     Object.keys(Store.getState().groups).forEach(groupName => {
-        Store.getState().groups[groupName].fields.forEach(input => {
-            input.addEventListener(resolveRealTimeValidationEvent(input), handler(groupName));
-        });
-        //;_; can do better?
-        const equalToValidator = Store.getState().groups[groupName].validators.filter(validator => validator.type === 'equalto');
+
+        const { groups } = Store.getState();
+        const groupUpdate = groups.slice();
         
-        if (equalToValidator.length > 0){
-            equalToValidator[0].params.other.forEach(subgroup => {
-                subgroup.forEach(item => {
-                    item.addEventListener('blur', handler(groupName));
-                });
+        if(!groupUpdate[groupName].hasEvent) {
+            groupUpdate[groupName].fields.forEach(input => {
+                input.addEventListener(resolveRealTimeValidationEvent(input), handler(groupName));
             });
+
+            //;_; can do better?
+            const equalToValidator = groupUpdate[groupName].validators.filter(validator => validator.type === 'equalto');
+            
+            if (equalToValidator.length > 0){
+                equalToValidator[0].params.other.forEach(subgroup => {
+                    subgroup.forEach(item => {
+                        item.addEventListener('blur', handler(groupName));
+                    });
+                });
+            }
+            
+            groupUpdate[groupName].hasEvent = true;
         }
+      
+        Store.dispatch(ACTIONS.START_REALTIME, {
+            groups: groupUpdate
+        });
     });
 };

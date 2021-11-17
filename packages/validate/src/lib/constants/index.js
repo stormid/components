@@ -14,7 +14,8 @@ export const ACTIONS = {
     CLEAR_ERROR: 'CLEAR_ERROR',
     ADD_VALIDATION_METHOD: 'ADD_VALIDATION_METHOD',
     ADD_GROUP: 'ADD_GROUP',
-    REMOVE_GROUP: 'REMOVE_GROUP'
+    REMOVE_GROUP: 'REMOVE_GROUP',
+    START_REALTIME: 'START_REALTIME'
 };
 
 //https://html.spec.whatwg.org/multipage/forms.html#valid-e-mail-address
