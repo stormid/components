@@ -45,7 +45,7 @@ export const initRealTimeValidation = Store => {
     Object.keys(Store.getState().groups).forEach(groupName => {
 
         const { groups } = Store.getState();
-        const groupUpdate = groups.slice();
+        const groupUpdate = {...groups};
         
         if(!groupUpdate[groupName].hasEvent) {
             groupUpdate[groupName].fields.forEach(input => {
