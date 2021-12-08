@@ -136,6 +136,8 @@ describe('Validate > Integration > Real-time', () => {
         expect(newLabel.lastElementChild.textContent).toEqual(defaults.messages.required());
 
         newInput.value="Sample";
+        const event = new Event('input', { bubbles: false });
+        newInput.dispatchEvent(event);
         expect(newLabel.querySelector('span')).toBeNull();
     });
     
