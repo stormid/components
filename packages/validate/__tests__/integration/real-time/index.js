@@ -101,5 +101,44 @@ describe('Validate > Integration > Real-time', () => {
         input.dispatchEvent(event);
         expect(label.innerHTML).toEqual(cachedLabel);
     });
+
+    it('should run realtime validation after a new group is added post first validation', async () => {
+        expect.assertions(3);
+        document.body.innerHTML = `<form method="post" action="">
+            <label for="group1">Group1</label>
+            <input
+                type="checkbox"
+                id="group1"
+                name="group1"
+                required />
+        </form>`;
+
+        const form = document.querySelector('form');
+        const label = document.querySelector('label');
+        const [ validator ] = validate(form);
+        await validator.validate();
+        expect(label.lastElementChild.textContent).toEqual(defaults.messages.required());
+
+        const newLabel = document.createElement('label');
+        newLabel.textContent="Group2";
+        newLabel.setAttribute('for', 'group2');
+        form.appendChild(newLabel);
+
+        const newInput = document.createElement('input');
+        newInput.setAttribute('type', 'text');
+        newInput.setAttribute('id', 'group2');
+        newInput.setAttribute('name', 'group2');
+        newInput.required = true;
+        form.appendChild(newInput);
+
+        validator.addGroup([newInput]);
+        await validator.validate();
+        expect(newLabel.lastElementChild.textContent).toEqual(defaults.messages.required());
+
+        newInput.value="Sample";
+        const event = new Event('input', { bubbles: false });
+        newInput.dispatchEvent(event);
+        expect(newLabel.querySelector('span')).toBeNull();
+    });
     
 });

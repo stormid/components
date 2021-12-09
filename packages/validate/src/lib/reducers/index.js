@@ -64,7 +64,8 @@ export default {
                 })
             })
         });
-    }
+    },
+    [ACTIONS.START_REALTIME]: (state, data) => Object.assign({}, state, data),
 };
 
     
