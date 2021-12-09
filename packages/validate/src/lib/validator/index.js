@@ -177,7 +177,7 @@ export const assembleValidationGroup = (acc, input) => {
     if(acc[name] && isHidden(input)) return acc;
 
     const serverErrorNode = document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}="${name}"]`) || false;
-    if (serverErrorNode && !serverErrorNode.hasAttribute('id')) serverErrorNode.setAttribute('id', `${name}-error-message`);
+
     return acc[name] = acc[name] ? Object.assign(acc[name], { fields: [...acc[name].fields, input] })
         : {
             valid: false,

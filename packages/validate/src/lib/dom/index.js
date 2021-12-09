@@ -164,3 +164,19 @@ export const createButtonValueNode = (source, form) => {
 export const cleanupButtonValueNode = node => {
     node.parentNode.removeChild(node);
 };
+
+/**
+ * Adds attributes to input and error nodes to help accessibility
+ * 
+ * @param state [Object]
+ */
+export const addAXAttributes = state => {    
+    Object.keys(state.groups).forEach(groupName => {
+        //ensure error message has an id for aria-describedby
+        if (state.groups[groupName].serverErrorNode && !state.groups[groupName].serverErrorNode.hasAttribute('id')) state.groups[groupName].serverErrorNode.setAttribute('id', `${groupName}-error-message`);
+
+        state.groups[groupName].fields.forEach(field => {
+            if (field.hasAttribute('required') || field.hasAttribute('data-val-required')) field.setAttribute('aria-required', 'true');
+        });
+    });
+}; 
