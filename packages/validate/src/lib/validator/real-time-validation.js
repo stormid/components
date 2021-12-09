@@ -22,9 +22,9 @@ import {
  */
 export const initRealTimeValidation = Store => {
     const handler = groupName => () => {
-        const { groups } = Store.getState();
+        const { groups, errors } = Store.getState();
         
-        if (!groups[groupName].valid) {
+        if (!groups[groupName].valid && errors[groupName]) {
             Store.dispatch(ACTIONS.CLEAR_ERROR, groupName, [ clearError(groupName) ]);
         }
         getGroupValidityState(groups[groupName])
