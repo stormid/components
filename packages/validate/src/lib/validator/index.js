@@ -117,7 +117,7 @@ export const extractAttrValidators = input => {
 /**
  * Validator checks to extract validators based on HTML5 attributes
  * 
- * Each function is curried so we can seed each fn with an input and pipe the result array through each function
+ * Each function is so we can seed each fn with an input and pipe the result array through each function
  * Signature: inputDOMNode => validatorArray => updateValidatorArray
 
 const required = input => (validators = []) => {
@@ -175,13 +175,15 @@ export const assembleValidationGroup = (acc, input) => {
     if (!name) return console.warn('Missing data group or name attribute'), acc;
 
     if(acc[name] && isHidden(input)) return acc;
-    
+
+    const serverErrorNode = document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}="${name}"]`) || false;
+    if (serverErrorNode && !serverErrorNode.hasAttribute('id')) serverErrorNode.setAttribute('id', `${name}-error-message`);
     return acc[name] = acc[name] ? Object.assign(acc[name], { fields: [...acc[name].fields, input] })
         : {
             valid: false,
             validators: normaliseValidators(input),
             fields: [input],
-            serverErrorNode: document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}="${name}"]`) || false
+            serverErrorNode
         }, acc;
 };
 
@@ -196,7 +198,7 @@ export const assembleValidationGroup = (acc, input) => {
 export const extractErrorMessage = (messages, validator) => validator.message || messages[validator.type](validator.params !== undefined ? validator.params : null);
 
 /**
- * Curried function that returns a reducer that reduces the resolved response from an array of validation Promises performed against a group
+ * Returns a reducer that reduces the resolved response from an array of validation Promises performed against a group
  * into an array of error messages or an empty array
  * 
  * @return error messages [Array]

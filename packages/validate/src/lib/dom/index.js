@@ -32,7 +32,6 @@ export const h = (nodeName, attributes, text) => {
  */
 export const createErrorTextNode = (group, msg) => {
     let node = document.createTextNode(msg);
-    group.serverErrorNode.setAttribute('role', 'alert');
     group.serverErrorNode.classList.remove(DOTNET_CLASSNAMES.VALID);
     group.serverErrorNode.classList.add(DOTNET_CLASSNAMES.ERROR);
     
@@ -44,7 +43,7 @@ export const createErrorTextNode = (group, msg) => {
  * error from local errors tracking object
  * 
  * Signature () => groupName => state => {}
- * (Curried groupName for ease of use as eventListener and in whole form iteration)
+ * (groupName for ease of use as eventListener and in whole form iteration)
  * 
  * @param groupName [String, vaidation group] 
  * @param state [Object, validation state]
@@ -55,13 +54,15 @@ export const clearError = groupName => state => {
         state.groups[groupName].serverErrorNode.innerHTML = '';
         state.groups[groupName].serverErrorNode.classList.remove(DOTNET_CLASSNAMES.ERROR);
         state.groups[groupName].serverErrorNode.classList.add(DOTNET_CLASSNAMES.VALID);
-        state.groups[groupName].serverErrorNode.removeAttribute('role');
     } else {
         state.errors[groupName].parentNode.removeChild(state.errors[groupName]);
     }
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.remove('is--invalid');
         field.removeAttribute('aria-invalid');
+        const describedbyid = ((state.groups[groupName].serverErrorNode || state.errors[groupName]).id);
+        if (field.getAttribute('aria-describedby') === describedbyid) field.removeAttribute('aria-describedby');
+        else field.setAttribute('aria-describedby', field.getAttribute('aria-describedby').replace(` ${describedbyid}`, ''));
     });
     delete state.errors[groupName];//shouldn't be doing this here...
 };
@@ -97,7 +98,7 @@ export const renderErrors = state => {
  * if not a new DOM node is created
  * 
  * Signature () => groupName => state => {}
- * (Curried groupName for ease of use as eventListener and in whole form iteration)
+ * (groupName for ease of use as eventListener and in whole form iteration)
  * 
  * @param groupName [String, validation group] 
  * @param state [Object, validation state]
@@ -106,22 +107,19 @@ export const renderErrors = state => {
 export const renderError = groupName => state => {
     if (state.errors[groupName]) clearError(groupName)(state);
     
-    state.errors[groupName] =
-        state.groups[groupName].serverErrorNode
-            ? createErrorTextNode(state.groups[groupName], state.groups[groupName].errorMessages[0])
-            : document
-                .querySelector(`[for="${state.groups[groupName].fields[state.groups[groupName].fields.length-1].getAttribute('id')}"]`)
-                .appendChild(
-                    h('span', {
-                        class: DOTNET_CLASSNAMES.ERROR,
-                        role: 'alert'
-                    }, state.groups[groupName].errorMessages[0]),
-                    state.groups[groupName].fields[state.groups[groupName].fields.length-1]
-                );
+    //shouldn't be updating state here...
+    //to do: refactor to update state later
+    if (state.groups[groupName].serverErrorNode) state.errors[groupName] = createErrorTextNode(state.groups[groupName], state.groups[groupName].errorMessages[0]);
+    else {
+        const label = document.querySelector(`[for="${state.groups[groupName].fields[state.groups[groupName].fields.length-1].getAttribute('id')}"]`);
+        state.errors[groupName] = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR }, state.groups[groupName].errorMessages[0]), label.nextSibling);
+    }
+    const errorContainer = state.groups[groupName].serverErrorNode || state.errors[groupName];
 						
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.add('is--invalid');
         field.setAttribute('aria-invalid', 'true');
+        field.setAttribute('aria-describedby', (field.hasAttribute('aria-describedby') ? `${field.getAttribute('aria-describedby')} ${errorContainer.getAttribute('id')}` : errorContainer.getAttribute('id')));
     });
 };
 

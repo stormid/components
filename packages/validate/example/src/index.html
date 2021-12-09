@@ -198,12 +198,14 @@
     </form> -->
     <form class="js-validate" action="#" autocomplete="off">
         <div class="form-group">
-            <label for="f1">Maybe potato</label>
-            <input class="form-control" id="f1" name="f1" value="" required />
+            <label for="f1">Field 1</label>
+            <span data-valmsg-for="f1"></span>
+            <input class="form-control" id="f1" name="f1" value="" data-val="true" data-val-required="This field is required" aria-required="true" />
         </div>
         <div class="form-group">
-            <label for="f2">Also maybe potato</label>
-            <input class="form-control" id="f2" name="f2" value=""  />
+            <label for="f2">Field 2</label>
+            <span data-valmsg-for="f2"></span>
+            <input class="form-control" id="f2" name="f2" value="" data-val="true" data-val-required="This field is required" aria-required="true" />
         </div>
         <input type="submit" value="Submit">
     </form>
