@@ -127,7 +127,7 @@ export const initForm = (Store, track = true) => state => {
     });
 
     if(window.location.hash.substring(1) === form.id) {
-        window.scrollTo(0, form.offsetTop);
+        window.scrollTo(0, form.getBoundingClientRect().top + window.scrollY);
     }
 };
 
