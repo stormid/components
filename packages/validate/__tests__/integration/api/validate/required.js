@@ -12,7 +12,7 @@ describe('Validate > Integration > api > validate > required', () => {
     //submit form
 
     it('should validate a form based on the HTML5 required validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
-        expect.assertions(6);
+        expect.assertions(4);
         document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
             <input
@@ -33,9 +33,7 @@ describe('Validate > Integration > api > validate > required', () => {
         // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(label.lastChild.nodeName).toEqual('SPAN');
-        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual(defaults.messages.required());
+        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual(defaults.messages.required());
     });
 
     it('should validate a form based on the HTML5 required validator returning true if valid', async () => {
@@ -56,7 +54,7 @@ describe('Validate > Integration > api > validate > required', () => {
     });
 
     it('should validate a form based on the data-val required validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
-        expect.assertions(6);
+        expect.assertions(4);
         document.body.innerHTML = `<form class="form">
             <label for="group2">group1</label>
             <input
@@ -78,9 +76,7 @@ describe('Validate > Integration > api > validate > required', () => {
         //focus on firstinvalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(input.nextElementSibling.nodeName).toEqual('SPAN');
-        expect(input.nextElementSibling.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(input.nextElementSibling.textContent).toEqual('Required error message');
+        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Required error message');
         
     });
 

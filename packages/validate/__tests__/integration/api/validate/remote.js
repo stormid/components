@@ -9,7 +9,7 @@ describe('Validate > Integration > api > validate > remote', () => {
     afterEach(() => mock.teardown());
 
     it('should validate a form based on the HTML5 remote validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if the remote validation returns an error', async () => {
-        expect.assertions(6);
+        expect.assertions(4);
  
         mock.post('/api/validate', {
             status: 201,
@@ -44,13 +44,11 @@ describe('Validate > Integration > api > validate > remote', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(label.lastChild.nodeName).toEqual('SPAN');
-        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual('Remote error message');
+        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Remote error message');
     });
 
     it('should validate a form based on the HTML5 remote validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering the error message if noe is returned from the remote validation API', async () => {
-        expect.assertions(6);
+        expect.assertions(4);
  
         mock.post('/api/validate', {
             status: 201,
@@ -79,9 +77,7 @@ describe('Validate > Integration > api > validate > remote', () => {
         // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // render error message
-        expect(label.lastChild.nodeName).toEqual('SPAN');
-        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual('Error message from API');
+        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Error message from API');
     });
     
     it('should validate a form based on the HTML5 remote validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if the remote validation returns an error via a GET request', async () => {
@@ -120,9 +116,7 @@ describe('Validate > Integration > api > validate > remote', () => {
         // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // render error message
-        expect(label.lastChild.nodeName).toEqual('SPAN');
-        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual('Remote error message');
+        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Remote error message');
     });
 
     it('should validate a form based on the data-val remote validator returning true if it passes remote validate', async () => {

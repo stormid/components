@@ -11,7 +11,7 @@ describe('Validate > Integration >  api > validate > dateISO', () => {
     //submit form
 
     it('should validate a form based on the data-val dateISO validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
-        expect.assertions(6);
+        expect.assertions(4);
         document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
             <input
@@ -32,9 +32,7 @@ describe('Validate > Integration >  api > validate > dateISO', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(label.lastChild.nodeName).toEqual('SPAN');
-        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual('DateISO error message');
+        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('DateISO error message');
     });
 
     it('should validate a form based on the data-val dateISO validator returning true if valid', async () => {

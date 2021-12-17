@@ -41,7 +41,7 @@ describe('Validate > Unit > DOM > clearError', () => {
         document.body.innerHTML = `<form class="form" method="post" action="">
             <div class="is--invalid">
                 <label for="group1">Label</label>
-                <input id="group1" name="group1" aria-invalid="true" data-val="true" data-val-required="This field is required" />
+                <input id="group1" name="group1" aria-invalid="true" data-val="true" data-val-required="This field is required" aria-describedby="test-server-error-node" />
                 <span id="test-server-error-node" data-valmsg-for="group1" class="${DOTNET_CLASSNAMES.ERROR}"></span>
             </div>
         </form>`;
@@ -79,12 +79,12 @@ describe('Validate > Unit > DOM > clearErrors', () => {
         document.body.innerHTML = `<form class="form" method="post" action="">
             <div class="is--invalid">
                 <label for="group1">Label</label>
-                <input id="group1" name="group1" aria-invalid="true" data-val="true" data-val-required="This field is required" />
+                <input id="group1" name="group1" aria-invalid="true" data-val="true" data-val-required="This field is required" aria-describedby="test-error-node-1" />
                 <span id="test-error-node-1" class="field-validation-valid">This field is required</span>
             </div>
             <div class="is--invalid">
                 <label for="group2">Label</label>
-                <input id="group2" name="group2" aria-invalid="true" data-val="true" data-val-required="This field is required" />
+                <input id="group2" name="group2" aria-invalid="true" data-val="true" data-val-required="This field is required" aria-describedby="test-error-node-2" />
                 <span id="test-error-node-2" class="field-validation-valid">This field is required</span>
             </div>
         </form>`;
@@ -181,7 +181,7 @@ describe('Validate > Unit > DOM > renderError', () => {
 
         document.body.innerHTML = `<form class="form" method="post" action="">
             <label id="test-label" for="group1">Text</label>
-            <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
+            <input id="group1" name="group1" data-val="true" data-val-required="This field is required" aria-describedby="test-server-error-node">
             <span id="test-server-error-node" data-valmsg-for="group1" role="alert" class="${DOTNET_CLASSNAMES.ERROR}"></span>
         </form>`;
         const serverErrorNode = document.getElementById('test-server-error-node');
@@ -207,7 +207,7 @@ describe('Validate > Unit > DOM > renderError', () => {
 
         document.body.innerHTML = `<form class="form" method="post" action="">
             <label id="test-label" for="group1">Text</label>
-            <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
+            <input id="group1" name="group1" data-val="true" data-val-required="This field is required" aria-describedby="test-server-error-node">
             <span id="test-server-error-node" data-valmsg-for="group1" role="alert" class="${DOTNET_CLASSNAMES.ERROR}"></span>
         </form>`;
         //have to create a text node and append it to the serverError node to test fn this in isolation

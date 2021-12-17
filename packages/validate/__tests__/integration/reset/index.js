@@ -36,8 +36,8 @@ describe('Validate > Integration > Reset', () => {
         await validator.validate();
         expect(validator.getState().groups.group1.valid).toEqual(false);
         expect(validator.getState().groups.group2.valid).toEqual(false);
-        expect(validator.getState().errors.group1).toEqual(document.querySelector('[for="group1"]').lastElementChild);
-        expect(validator.getState().errors.group2).toEqual(document.querySelector('[for="group2"]').lastElementChild);
+        expect(validator.getState().errors.group1).toEqual(document.querySelector('#group1').previousElementSibling);
+        expect(validator.getState().errors.group2).toEqual(document.querySelector('#group2').previousElementSibling);
         expect(validator.getState().groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(validator.getState().groups.group2.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(validator.getState().groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
