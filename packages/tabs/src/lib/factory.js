@@ -16,7 +16,7 @@ export default ({ node, settings }) => {
         settings,
         node,
         activeIndex: activeIndex !== undefined ? +activeIndex : +settings.activeIndex,
-        activeTabIndex: activeIndex, 
+        activeTabIndex: activeIndex !== undefined ? +activeIndex : +settings.activeIndex,
         tabs,
         panels
     }, [ initUI(Store), open ]);
