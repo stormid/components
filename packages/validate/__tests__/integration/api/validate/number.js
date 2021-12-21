@@ -24,7 +24,7 @@ describe('Validate > Integration > api > validate > number', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual(defaults.messages.number());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.number());
     });
 
     it('should validate a form based on the HTML5 number validator returning true if valid', async () => {
@@ -64,7 +64,7 @@ describe('Validate > Integration > api > validate > number', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Number error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Number error message');
     });
 
     it('should validate a form based on the data-val number validator returning true if valid', async () => {

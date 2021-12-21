@@ -25,7 +25,7 @@ describe('Validate > Integration > api > validate > max', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual(defaults.messages.max({ max: 2 }));
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.max({ max: 2 }));
     });
 
     it('should validate a form based on the data-val equalto validator returning true if valid', async () => {
@@ -51,7 +51,7 @@ describe('Validate > Integration > api > validate > max', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Max error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Max error message');
     });
 
     it('should validate a form based on the data-val max validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {

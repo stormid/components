@@ -25,7 +25,7 @@ describe('Validate > Integration > api > validate > maxlength', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual(defaults.messages.maxlength({ max: 5 }));
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.maxlength({ max: 5 }));
     });
 
     it('should validate a form based on the data-val maxlength validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
@@ -51,7 +51,7 @@ describe('Validate > Integration > api > validate > maxlength', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Maxlength error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Maxlength error message');
     });
 
     it('should validate a form based on the HTML5 maxlength validator returning true if valid', async () => {

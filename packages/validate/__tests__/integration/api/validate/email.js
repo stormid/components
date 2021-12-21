@@ -32,7 +32,7 @@ describe('Validate > Integration >  api > validate > email', () => {
         // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual(defaults.messages.email());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.email());
     });
 
     it('should validate a form based on the HTML5 email validator returning true if valid', async () => {
@@ -74,7 +74,7 @@ describe('Validate > Integration >  api > validate > email', () => {
         //focus on firstinvalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Email error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Email error message');
         
     });
 

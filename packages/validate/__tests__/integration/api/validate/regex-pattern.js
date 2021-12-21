@@ -24,7 +24,7 @@ describe('Validate > Integration > api > validate > regex/pattern', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual(defaults.messages.pattern());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.pattern());
     });
 
     it('should validate a form based on the data-val regex validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
@@ -50,7 +50,7 @@ describe('Validate > Integration > api > validate > regex/pattern', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Regex error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Regex error message');
     });
     
     it('should validate a form based on the HTML5 pattern validator returning true if the pattern is matched', async () => {

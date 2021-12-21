@@ -5,7 +5,7 @@ import defaults from '../../../src/lib/defaults';
 describe('Validate > Integration > errors', () => {
 
     it('Should render client-side error container as the last element in a label', async () => {
-        expect.assertions(3);
+        expect.assertions(1);
         document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
             <input
@@ -15,13 +15,10 @@ describe('Validate > Integration > errors', () => {
                 value=""
                 type="text" />
         </form>`;
-        const label = document.getElementById('group1-1-label');
         const validator = validate('form')[0];
         await validator.validate();
         //render error message
-        expect(label.lastChild.nodeName).toEqual('SPAN');
-        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual(defaults.messages.required());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.required());
     });
 
     it('Should render a text node error to a server-side error container', async () => {
@@ -33,8 +30,10 @@ describe('Validate > Integration > errors', () => {
                 name="group1"
                 required
                 value=""
-                type="text" />
-            <span id="ssec" data-valmsg-for="group1" role="alert"></span>
+                type="text"
+                aria-describedby="ssec"
+            />
+            <span id="ssec" data-valmsg-for="group1"></span>
         </form>`;
         const [ validator ] = validate('form');
         await validator.validate();
@@ -54,8 +53,10 @@ describe('Validate > Integration > errors', () => {
                 name="group1"
                 required
                 value=""
-                type="text" />
-            <span id="ssec" data-valmsg-for="group1" role="alert">The server dislikes this value</span>
+                type="text"
+                aria-describedby="ssec"
+            />
+            <span id="ssec" data-valmsg-for="group1">The server dislikes this value</span>
         </form>`;
         const [ validator ] = validate('form');
         expect(validator.getState().errors.group1).toEqual('The server dislikes this value');

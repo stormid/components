@@ -39,11 +39,11 @@ describe('Validate > Integration > Real-time', () => {
         const input = document.querySelector('input');
         const [ validator ] = validate(form);
         await validator.validate();
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR)).toBeDefined();
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`)).toBeDefined();
         input.value = 'Super';
         const event = new Event('input', { bubbles: false });
         input.dispatchEvent(event);
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR)).toBeUndefined();
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`)).toBeUndefined();
     });
 
     
@@ -62,14 +62,14 @@ describe('Validate > Integration > Real-time', () => {
         const input = document.querySelector('input');
         const [ validator ] = validate(form);
         await validator.validate();
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual(defaults.messages.required());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.required());
         input.value = 'Super';
         const event = new Event('input', { bubbles: false });
         input.dispatchEvent(event);
         
         //have to game Jest to ensure that the error is rendered in time for the assertion
         const nextMsg = await new Promise((resolve, reject) => setTimeout(() => {
-            resolve(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent);
+            resolve(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent);
         }, 16));
 
         expect(nextMsg).toEqual(defaults.messages.email());
@@ -90,11 +90,11 @@ describe('Validate > Integration > Real-time', () => {
         const input = document.querySelector('input');
         const [ validator ] = validate(form);
         await validator.validate();
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual(defaults.messages.required());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.required());
         input.checked = 'checked';
         const event = new Event('change', { bubbles: false });
         input.dispatchEvent(event);
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR)).toBeUndefined();
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toBeUndefined();
     });
 
     it('should run realtime validation after a new group is added post first validation', async () => {
@@ -111,10 +111,10 @@ describe('Validate > Integration > Real-time', () => {
         const form = document.querySelector('form');
         const [ validator ] = validate(form);
         await validator.validate();
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual(defaults.messages.required());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.required());
 
         const newLabel = document.createElement('label');
-        newLabel.textContent="Group2";
+        newLabel.textContent = 'Group2';
         newLabel.setAttribute('for', 'group2');
         form.appendChild(newLabel);
 
@@ -127,12 +127,12 @@ describe('Validate > Integration > Real-time', () => {
 
         validator.addGroup([newInput]);
         await validator.validate();
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual(defaults.messages.required());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.required());
 
-        newInput.value="Sample";
+        newInput.value = 'Sample';
         const event = new Event('input', { bubbles: false });
         newInput.dispatchEvent(event);
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR)).toBeUndefined();
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toBeUndefined();
     });
     
 });

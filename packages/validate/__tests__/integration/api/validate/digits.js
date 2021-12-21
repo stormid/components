@@ -32,7 +32,7 @@ describe('Validate > Integration > api > validate > digits', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Digits error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Digits error message');
     });
 
     it('should validate a form based on the data-val digits validator returning true if valid', async () => {

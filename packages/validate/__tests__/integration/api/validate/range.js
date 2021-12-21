@@ -28,7 +28,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
         // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Range error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Range error message');
     });
 
     it('should validate a form based on the data-val range validator returning true if value > min with no max', async () => {
@@ -73,7 +73,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
         // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Range error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Range error message');
     });
 
     it('should validate a form based on the data-val range validator returning true if value <= max with no min', async () => {
@@ -118,7 +118,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
         // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Range error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Range error message');
     });
 
     it('should validate a form based on the data-val range validator returning true if value is in range', async () => {

@@ -26,7 +26,7 @@ describe('Validate > Integration >  api > validate > stringlength', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Stringlength error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Stringlength error message');
     });
 
     it('should validate a form based on the data-val stringlength validator returning true if within the min and max length range', async () => {

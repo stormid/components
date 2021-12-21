@@ -32,7 +32,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
         // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Equalto error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Equalto error message');
     });
 
     it('should validate a form based on the data-val equalto validator returning true if valid', async () => {

@@ -33,7 +33,7 @@ describe('Validate > Integration > api > validate > required', () => {
         // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual(defaults.messages.required());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.required());
     });
 
     it('should validate a form based on the HTML5 required validator returning true if valid', async () => {
@@ -76,7 +76,7 @@ describe('Validate > Integration > api > validate > required', () => {
         //focus on firstinvalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(document.querySelector(DOTNET_CLASSNAMES.ERROR).textContent).toEqual('Required error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Required error message');
         
     });
 

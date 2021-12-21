@@ -14,7 +14,7 @@ describe('Validate > Unit > DOM > clearError', () => {
         document.body.innerHTML = `<form class="form" method="post" action="">
             <div class="is--invalid">
                 <label for="group1">Label</label>
-                <input id="group1" name="group1" aria-invalid="true" data-val="true" data-val-required="This field is required" />
+                <input id="group1" name="group1" aria-invalid="true" data-val="true" data-val-required="This field is required" aria-describedby="test-error-node" />
                 <span id="test-error-node" class="field-validation-valid">This field is required</span>
             </div>
         </form>`;
@@ -168,9 +168,8 @@ describe('Validate > Unit > DOM > renderError', () => {
             errors: {}
         };
         renderError('group1')(mockState);
-        const errorContainer = document.getElementById('test-label').lastElementChild;
+        const errorContainer = document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`);
         expect(errorContainer).not.toBeUndefined();
-        expect(errorContainer.classList.contains(DOTNET_CLASSNAMES.ERROR)).toEqual(true);
         expect(errorContainer.textContent).toEqual('This field is required');
         expect(mockState.groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
@@ -268,9 +267,8 @@ describe('Validate > Unit > DOM > renderErrors', () => {
             errors: {}
         };
         renderErrors(mockState);
-        const errorContainer = document.getElementById('test-label').lastElementChild;
+        const errorContainer = document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`);
         expect(errorContainer).not.toBeUndefined();
-        expect(errorContainer.classList.contains(DOTNET_CLASSNAMES.ERROR)).toEqual(true);
         expect(errorContainer.textContent).toEqual('This field is required');
         expect(mockState.groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
