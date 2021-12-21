@@ -60,11 +60,11 @@ const initListeners = (tab, nextIndex, Store) => {
             Store.dispatch({ activeIndex: getNextIndex(Store.getState()) }, [onDirectionChangeFunction(Store.getState().activeIndex)]);
             break;
         case KEYCODES.ENTER:
-            Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [changePanel(Store.getState().activeIndex)]);
+            Store.dispatch({ activeIndex: nextIndex }, [changePanel(Store.getState().activeIndex)]);
             break;
         case KEYCODES.SPACE:
             e.preventDefault();
-            Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [changePanel(Store.getState().activeIndex)]);
+            Store.dispatch({ activeIndex: nextIndex }, [changePanel(Store.getState().activeIndex)]);
             break;
         default:
             break;
@@ -78,6 +78,7 @@ const initListeners = (tab, nextIndex, Store) => {
 };
 
 const changePanel = previousActiveIndex => state => {
+    console.log(previousActiveIndex);
     close(state, previousActiveIndex);
     open(state);
     window.setTimeout(() => { state.tabs[state.activeIndex].focus(); }, 16);
