@@ -43,8 +43,8 @@ const getPreviousIndex = ({ activeIndex, tabs }) => activeIndex === 0 ? tabs.len
 const getNextIndex = ({ activeIndex, tabs }) => activeIndex === tabs.length - 1 ? 0 : activeIndex + 1;
 
 const initListeners = (tab, nextIndex, Store) => {
-    const isAutoActivation = Store.getState().settings.activation === 'auto';
-    const onDirectionChangeFunction = (isAutoActivation) ? changePanel : changeTab;
+    const isManualActivation = Store.getState().settings.activation === 'manual';
+    const onDirectionChangeFunction = (isManualActivation) ? changeTab : changePanel;
 
     tab.addEventListener('keydown', e => {
         switch (e.keyCode) {
