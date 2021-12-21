@@ -85,7 +85,10 @@ const initListeners = (tab, nextIndex, Store) => {
     
     tab.addEventListener('click', e => {
         e.preventDefault();
-        Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [changePanel(Store.getState().activeIndex)]);
+        Store.getState().activeIndex !== nextIndex && Store.dispatch({ 
+            activeIndex: nextIndex,
+            activeTabIndex: nextIndex
+        }, [changePanel(Store.getState().activeIndex)]);
     }, false);
 };
 
