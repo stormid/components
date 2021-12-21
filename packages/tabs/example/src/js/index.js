@@ -1,5 +1,7 @@
 import tabs from '../../../src';
     
 window.addEventListener('DOMContentLoaded', () => {
-    tabs('[role=tablist]');
+    tabs('[role=tablist]', {
+        activation: 'manual'
+    });
 });

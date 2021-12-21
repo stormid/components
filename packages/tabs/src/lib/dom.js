@@ -43,10 +43,13 @@ const getPreviousIndex = ({ activeIndex, tabs }) => activeIndex === 0 ? tabs.len
 const getNextIndex = ({ activeIndex, tabs }) => activeIndex === tabs.length - 1 ? 0 : activeIndex + 1;
 
 const initListeners = (tab, nextIndex, Store) => {
+    const isAutoActivation = Store.getState().settings.activation === 'auto';
+    const onDirectionChangeFunction = (isAutoActivation) ? changePanel : changeTab;
+
     tab.addEventListener('keydown', e => {
         switch (e.keyCode) {
         case KEYCODES.LEFT:
-            Store.dispatch({ activeIndex: getPreviousIndex(Store.getState()) }, [change(Store.getState().activeIndex)]);
+            Store.dispatch({ activeIndex: getPreviousIndex(Store.getState()) }, [onDirectionChangeFunction(Store.getState().activeIndex)]);
             break;
         case KEYCODES.DOWN:
             e.preventDefault();
@@ -54,31 +57,37 @@ const initListeners = (tab, nextIndex, Store) => {
             Store.getState().panels[Store.getState().activeIndex].focus();
             break;
         case KEYCODES.RIGHT:
-            Store.dispatch({ activeIndex: getNextIndex(Store.getState()) }, [change(Store.getState().activeIndex)]);
+            Store.dispatch({ activeIndex: getNextIndex(Store.getState()) }, [onDirectionChangeFunction(Store.getState().activeIndex)]);
             break;
         case KEYCODES.ENTER:
-            Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [change(Store.getState().activeIndex)]);
+            Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [changePanel(Store.getState().activeIndex)]);
             break;
         case KEYCODES.SPACE:
             e.preventDefault();
-            Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [change(Store.getState().activeIndex)]);
+            Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [changePanel(Store.getState().activeIndex)]);
             break;
         default:
             break;
         }
     });
+    
     tab.addEventListener('click', e => {
         e.preventDefault();
-        Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [change(Store.getState().activeIndex)]);
+        Store.getState().activeIndex !== nextIndex && Store.dispatch({ activeIndex: nextIndex }, [changePanel(Store.getState().activeIndex)]);
     }, false);
 };
 
-const change = previousActiveIndex => state => {
+const changePanel = previousActiveIndex => state => {
     close(state, previousActiveIndex);
     open(state);
     window.setTimeout(() => { state.tabs[state.activeIndex].focus(); }, 16);
     (state.settings.updateURL && window.history) && window.history.replaceState({ URL: state.tabs[state.activeIndex].getAttribute('href') }, '', state.tabs[state.activeIndex].getAttribute('href'));
 };
+
+const changeTab = previousActiveIndex => state => {
+    blurTab(state, previousActiveIndex);
+    focusTab(state);
+}
 
 const close = ({ settings, tabs, panels }, previousActiveIndex) => {
     tabs[previousActiveIndex].classList.remove(settings.activeClass);
@@ -89,6 +98,12 @@ const close = ({ settings, tabs, panels }, previousActiveIndex) => {
     panels[previousActiveIndex].setAttribute('tabindex', '-1');
 };
 
+const blurTab = ({ settings, tabs }, previousActiveIndex) => {
+    tabs[previousActiveIndex].classList.remove(settings.activeClass);
+    tabs[previousActiveIndex].setAttribute('aria-selected', false);
+    tabs[previousActiveIndex].setAttribute('tabindex', '-1');
+};
+
 export const open = ({ settings, tabs, panels, activeIndex }) => {
     tabs[activeIndex].classList.add(settings.activeClass);
     panels[activeIndex].classList.add(settings.activeClass);
@@ -97,3 +112,11 @@ export const open = ({ settings, tabs, panels, activeIndex }) => {
     tabs[activeIndex].setAttribute('tabindex', 0);
     panels[activeIndex].setAttribute('tabindex', 0);
 };
+
+const focusTab = ({ settings, tabs, activeIndex }) => {
+    tabs[activeIndex].classList.add(settings.activeClass);
+    tabs[activeIndex].setAttribute('aria-selected', true);
+    tabs[activeIndex].setAttribute('tabindex', 0);
+    window.setTimeout(() => { tabs[activeIndex].focus(); }, 16);
+};
+
