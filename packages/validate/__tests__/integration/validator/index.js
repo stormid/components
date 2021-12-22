@@ -2,7 +2,7 @@ import { validate } from '../../../src/lib/validator';
 
 describe('Validate > Integration > validator > error handling', () => {
 
-    it('should ', async () => {
+    it('should handle and console warn an error thrown during validation', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
 			id="group1"

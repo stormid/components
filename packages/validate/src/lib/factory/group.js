@@ -1,6 +1,6 @@
 import { removeUnvalidatableGroups, assembleValidationGroup } from '../validator';
-import { initRealTimeValidation } from '../validator/real-time-validation'
-import { clearError } from '../dom';
+import { initRealTimeValidation } from '../validator/real-time-validation';
+import { clearError, addAXAttributes } from '../dom';
 import { ACTIONS } from '../constants';
 
 /**
@@ -14,8 +14,8 @@ export const addGroup = Store => nodes => {
     const groups = removeUnvalidatableGroups(nodes.reduce(assembleValidationGroup, {}));
     if (Object.keys(groups).length === 0) return console.warn('Group cannot be added.');
 
-    Store.dispatch(ACTIONS.ADD_GROUP, groups, [()=> {
-        if(Store.getState().realTimeValidation) {
+    Store.dispatch(ACTIONS.ADD_GROUP, groups, [ addAXAttributes, () => {
+        if (Store.getState().realTimeValidation) {
             //if we're already in realtime validation then we need to re-start it with the newly added group
             initRealTimeValidation(Store);
         }

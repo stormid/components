@@ -2,7 +2,8 @@ import {
     h,
     createErrorTextNode,
     focusFirstInvalidField,
-    createButtonValueNode
+    createButtonValueNode,
+    addAXAttributes
 } from '../../../src/lib/dom';
 import { DOTNET_CLASSNAMES } from '../../../src/lib/constants';
 
@@ -87,5 +88,33 @@ describe('Validate > Unit > DOM > createButtonValueNode', () => {
         expect(lastElement.tagName).toEqual('INPUT');
         expect(lastElement.getAttribute('name')).toEqual('continue');
         expect(lastElement.getAttribute('value')).toEqual('1');
+    });
+});
+
+
+//addAXAttributes
+describe('Validate > Unit > DOM > addAXAttributes', () => {
+    it('should add attriubute to the input and server-rendered error container to improve accessibility', async () => {
+        // expect.assertions(3);
+        document.body.innerHTML = `<form>
+            <label for="group1">Text (required, min 2 characters, max 8 characters)</label>
+            <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
+            <span data-valmsg-for="group1" data-valmsg-replace="true"></span>
+        </form>`;
+        const field = document.getElementById('group1');
+        const errorContainer = document.querySelector('[data-valmsg-for="group1"]');
+        const state = {
+            groups: {
+                group1: {
+                    serverErrorNode: errorContainer,
+                    fields: [field]
+                }
+            }
+        };
+        addAXAttributes(state);
+        //ensure error message has an id for aria-describedby
+        expect(errorContainer.getAttribute('id')).toEqual(`group1-error-message`);
+        //add aria-required=true to required and data-val-required fields
+        expect(field.getAttribute('aria-required')).toEqual(`true`);
     });
 });

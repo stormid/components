@@ -61,6 +61,8 @@ export const clearError = groupName => state => {
         field.parentNode.classList.remove('is--invalid');
         field.removeAttribute('aria-invalid');
         const describedbyid = ((state.groups[groupName].serverErrorNode || state.errors[groupName]).id);
+
+        //check whether the aria-describedby matches the id, if not another id must be present, only replace the removed error id
         if (field.getAttribute('aria-describedby') === describedbyid) field.removeAttribute('aria-describedby');
         else field.setAttribute('aria-describedby', field.getAttribute('aria-describedby').replace(` ${describedbyid}`, ''));
     });
@@ -108,11 +110,12 @@ export const renderError = groupName => state => {
     if (state.errors[groupName]) clearError(groupName)(state);
     
     //shouldn't be updating state here...
-    //to do: refactor to update state later
+    //to do: refactor to update state as a side effect afterwards?
+    //would need to pass Store instead of state
     if (state.groups[groupName].serverErrorNode) state.errors[groupName] = createErrorTextNode(state.groups[groupName], state.groups[groupName].errorMessages[0]);
     else {
         const label = document.querySelector(`[for="${state.groups[groupName].fields[state.groups[groupName].fields.length-1].getAttribute('id')}"]`);
-        state.errors[groupName] = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR }, state.groups[groupName].errorMessages[0]), label.nextSibling);
+        state.errors[groupName] = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: `${groupName}-error-message` }, state.groups[groupName].errorMessages[0]), label.nextSibling);
     }
     const errorContainer = state.groups[groupName].serverErrorNode || state.errors[groupName];
 						
@@ -170,7 +173,7 @@ export const cleanupButtonValueNode = node => {
  * 
  * @param state [Object]
  */
-export const addAXAttributes = state => {    
+export const addAXAttributes = state => {
     Object.keys(state.groups).forEach(groupName => {
         //ensure error message has an id for aria-describedby
         if (state.groups[groupName].serverErrorNode && !state.groups[groupName].serverErrorNode.hasAttribute('id')) state.groups[groupName].serverErrorNode.setAttribute('id', `${groupName}-error-message`);
@@ -179,4 +182,4 @@ export const addAXAttributes = state => {
             if (field.hasAttribute('required') || field.hasAttribute('data-val-required')) field.setAttribute('aria-required', 'true');
         });
     });
-}; 
+};
