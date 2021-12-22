@@ -154,9 +154,15 @@ export const normaliseValidators = input => input.getAttribute('data-val') === '
  * @returns validityState [Boolean]
  * 
  */
-export const validate = (group, validator) => validator.type === 'custom'
-    ? methods.custom(validator.method, group)
-    : methods[validator.type](group, validator.params);
+export const validate = (group, validator) => {
+    try {
+        return validator.type === 'custom'
+            ? methods.custom(validator.method, group)
+            : methods[validator.type](group, validator.params);
+    } catch (err) {
+        console.warn(err);
+    }
+};
 
 /**
  * Reducer constructing an validation Object for a group of DOM nodes
@@ -174,7 +180,7 @@ export const assembleValidationGroup = (acc, input) => {
     let name = (input.getAttribute('data-val-'+GROUP_ATTRIBUTE)) ? input.getAttribute('data-val-'+GROUP_ATTRIBUTE) : input.getAttribute('name') ;
     if (!name) return console.warn('Missing data group or name attribute'), acc;
 
-    if(acc[name] && isHidden(input)) return acc;
+    if (acc[name] && isHidden(input)) return acc;
 
     const serverErrorNode = document.querySelector(`[${DOTNET_ERROR_SPAN_DATA_ATTRIBUTE}="${name}"]`) || false;
 
@@ -303,8 +309,7 @@ export const getGroupValidityState = group => {
                     if (res === 'true') resolve(true);
                     if (res === 'false') resolve(false);
                     resolve(res);
-                })
-                .catch(err => console.warn(err));
+                });
         }
     })));
 };

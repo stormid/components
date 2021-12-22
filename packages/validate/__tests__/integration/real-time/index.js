@@ -43,7 +43,7 @@ describe('Validate > Integration > Real-time', () => {
         input.value = 'Super';
         const event = new Event('input', { bubbles: false });
         input.dispatchEvent(event);
-        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`)).toBeUndefined();
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`)).toBeNull();
     });
 
     
@@ -94,7 +94,7 @@ describe('Validate > Integration > Real-time', () => {
         input.checked = 'checked';
         const event = new Event('change', { bubbles: false });
         input.dispatchEvent(event);
-        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toBeUndefined();
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`)).toBeNull();
     });
 
     it('should run realtime validation after a new group is added post first validation', async () => {
@@ -132,7 +132,7 @@ describe('Validate > Integration > Real-time', () => {
         newInput.value = 'Sample';
         const event = new Event('input', { bubbles: false });
         newInput.dispatchEvent(event);
-        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toBeUndefined();
+        expect([].slice.call(document.querySelectorAll(`.${DOTNET_CLASSNAMES.ERROR}`)).length).toEqual(1);
     });
     
 });
