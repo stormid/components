@@ -171,6 +171,7 @@ describe('Validate > Unit > DOM > renderError', () => {
         const errorContainer = document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`);
         expect(errorContainer).not.toBeUndefined();
         expect(errorContainer.textContent).toEqual('This field is required');
+        expect(errorContainer.id).toEqual('group1-error-message');
         expect(mockState.groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
     });
@@ -269,6 +270,7 @@ describe('Validate > Unit > DOM > renderErrors', () => {
         renderErrors(mockState);
         const errorContainer = document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`);
         expect(errorContainer).not.toBeUndefined();
+        expect(errorContainer.id).toEqual('group1-error-message');
         expect(errorContainer.textContent).toEqual('This field is required');
         expect(mockState.groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
