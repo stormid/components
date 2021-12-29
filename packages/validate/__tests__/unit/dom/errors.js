@@ -34,7 +34,32 @@ describe('Validate > Unit > DOM > clearError', () => {
         expect(document.getElementById('test-error-node')).toEqual(null);
         expect(mockState.groups.group1.fields[0].classList.contains('is--invalid')).toEqual(false);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual(null);
+        expect(mockState.groups.group1.fields[0].getAttribute('aria-describedby')).toEqual(null);
         expect(mockState.errors.group1).toBeUndefined();
+    });
+
+    it('should remove the aria-describedby attribute relating to the error, but preserve other aria-describedby values', async () => {
+        document.body.innerHTML = `<form class="form" method="post" action="">
+            <h2 id="form-title">Title</h2>
+            <div class="is--invalid">
+                <label for="group1">Label</label>
+                <input id="group1" name="group1" aria-invalid="true" data-val="true" data-val-required="This field is required" aria-describedby="form-title test-error-node" />
+                <span id="test-error-node" class="field-validation-valid">This field is required</span>
+            </div>
+        </form>`;
+        const mockState = {
+            groups: {
+                group1: {
+                    serverErrorNode: false,
+                    fields: Array.from(document.getElementsByName('group1'))
+                }
+            },
+            errors: {
+                group1: document.getElementById('test-error-node')
+            }
+        };
+        clearError('group1')(mockState);
+        expect(mockState.groups.group1.fields[0].getAttribute('aria-describedby')).toEqual('form-title');
     });
 
     it('should remove a server-side rendered text node, toggle serverNode classNames, remove invalid classNames and aria, and deletes the errorNode for the group from state', async () => {
@@ -65,6 +90,7 @@ describe('Validate > Unit > DOM > clearError', () => {
         expect(document.getElementById('test-server-error-node').firstElementChild).toEqual(null);
         expect(mockState.groups.group1.fields[0].classList.contains('is--invalid')).toEqual(false);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual(null);
+        expect(mockState.groups.group1.fields[0].getAttribute('aria-describedby')).toEqual(null);
         expect(mockState.groups.group1.serverErrorNode.classList.contains(DOTNET_CLASSNAMES.ERROR)).toEqual(false);
         expect(mockState.groups.group1.serverErrorNode.classList.contains(DOTNET_CLASSNAMES.VALID)).toEqual(true);
         expect(mockState.groups.group1.serverErrorNode.getAttribute('role')).toEqual(null);
@@ -109,10 +135,12 @@ describe('Validate > Unit > DOM > clearErrors', () => {
         expect(document.getElementById('test-error-node-1')).toEqual(null);
         expect(mockState.groups.group1.fields[0].classList.contains('is--invalid')).toEqual(false);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual(null);
+        expect(mockState.groups.group1.fields[0].getAttribute('aria-describedby')).toEqual(null);
         expect(mockState.errors.group1).toBeUndefined();
         expect(document.getElementById('test-error-node-2')).toEqual(null);
         expect(mockState.groups.group2.fields[0].classList.contains('is--invalid')).toEqual(false);
         expect(mockState.groups.group2.fields[0].getAttribute('aria-invalid')).toEqual(null);
+        expect(mockState.groups.group2.fields[0].getAttribute('aria-describedby')).toEqual(null);
         expect(mockState.errors.group2).toBeUndefined();
     });
     
@@ -174,15 +202,17 @@ describe('Validate > Unit > DOM > renderError', () => {
         expect(errorContainer.id).toEqual('group1-error-message');
         expect(mockState.groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
+        expect(mockState.groups.group1.fields[0].getAttribute('aria-describedby')).toEqual(errorContainer.id);
     });
 
     //add error to serverErrorNode
     it('Should add an error message text node to a serverErrorNode, and attributes to reflect invalidity', async () => {
 
         document.body.innerHTML = `<form class="form" method="post" action="">
+            <h2 id="title">Test</h2>
             <label id="test-label" for="group1">Text</label>
-            <input id="group1" name="group1" data-val="true" data-val-required="This field is required" aria-describedby="test-server-error-node">
-            <span id="test-server-error-node" data-valmsg-for="group1" role="alert" class="${DOTNET_CLASSNAMES.ERROR}"></span>
+            <input id="group1" name="group1" data-val="true" data-val-required="This field is required" aria-describedby="title">
+            <span id="test-server-error-node" data-valmsg-for="group1" class="${DOTNET_CLASSNAMES.ERROR}"></span>
         </form>`;
         const serverErrorNode = document.getElementById('test-server-error-node');
         const mockState = {
@@ -197,9 +227,9 @@ describe('Validate > Unit > DOM > renderError', () => {
         };
         renderError('group1')(mockState);
         expect(serverErrorNode.textContent).toEqual('This field is required');
-        expect(serverErrorNode.getAttribute('role')).toEqual('alert');
         expect(mockState.groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
+        expect(mockState.groups.group1.fields[0].getAttribute('aria-describedby')).toEqual(`title ${serverErrorNode.id}`);
     });
 
     //remove existing error and add new one
@@ -208,7 +238,7 @@ describe('Validate > Unit > DOM > renderError', () => {
         document.body.innerHTML = `<form class="form" method="post" action="">
             <label id="test-label" for="group1">Text</label>
             <input id="group1" name="group1" data-val="true" data-val-required="This field is required" aria-describedby="test-server-error-node">
-            <span id="test-server-error-node" data-valmsg-for="group1" role="alert" class="${DOTNET_CLASSNAMES.ERROR}"></span>
+            <span id="test-server-error-node" data-valmsg-for="group1" class="${DOTNET_CLASSNAMES.ERROR}"></span>
         </form>`;
         //have to create a text node and append it to the serverError node to test fn this in isolation
         const errorNode = document.createTextNode('The server dislikes the valule of this field');
@@ -228,7 +258,6 @@ describe('Validate > Unit > DOM > renderError', () => {
         };
         renderError('group1')(mockState);
         expect(serverErrorNode.textContent).toEqual('This field is required');
-        expect(serverErrorNode.getAttribute('role')).toEqual('alert');
         expect(mockState.groups.group1.fields[0].parentNode.classList.contains('is--invalid')).toEqual(true);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
         expect(mockState.errors.group1).not.toEqual(errorNode);
@@ -276,6 +305,7 @@ describe('Validate > Unit > DOM > renderErrors', () => {
         expect(mockState.groups.group1.fields[0].getAttribute('aria-invalid')).toEqual('true');
         expect(mockState.groups.group2.fields[0].parentNode.classList.contains('is--invalid')).toEqual(false);
         expect(mockState.groups.group2.fields[0].getAttribute('aria-invalid')).toEqual(null);
+        expect(mockState.groups.group1.fields[0].getAttribute('aria-describedby')).toEqual(errorContainer.id);
     });
 
 });

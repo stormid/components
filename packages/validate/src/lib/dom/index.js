@@ -122,9 +122,22 @@ export const renderError = groupName => state => {
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.add('is--invalid');
         field.setAttribute('aria-invalid', 'true');
-        field.setAttribute('aria-describedby', (field.hasAttribute('aria-describedby') ? `${field.getAttribute('aria-describedby')} ${errorContainer.getAttribute('id')}` : errorContainer.getAttribute('id')));
+        if (!field.hasAttribute('aria-describedby') || !hasAriaDescribedbyValue(field, errorContainer.getAttribute('id'))) {
+            field.setAttribute('aria-describedby', (field.hasAttribute('aria-describedby')
+                ? `${field.getAttribute('aria-describedby')} ${errorContainer.getAttribute('id')}`
+                : errorContainer.getAttribute('id'))
+            );
+        }
     });
 };
+
+
+export const hasAriaDescribedbyValue = (field, value) => {
+    const describedby = field.getAttribute('aria-describedby').split(' ');
+    return describedby.length > 0
+        && describedby.reduce((acc, curr) => (acc || curr === value), false);
+};
+
 
 /**
  * Set focus on first invalid field after form-level validate()
