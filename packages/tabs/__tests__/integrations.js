@@ -112,9 +112,11 @@ describe(`Tabs > Accessibility > keyboard events manual `, () => {
 
         TabSet[0].getState().tabs[0].dispatchEvent(right);
         expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('false');
+        expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
         expect(TabSet[0].getState().tabs[1].classList.contains('is--active'));
         TabSet[0].getState().tabs[1].dispatchEvent(left);
-        expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('false');
+        expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('false');
+        expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
         expect(TabSet[0].getState().tabs[0].classList.contains('is--active'));
     });
     
