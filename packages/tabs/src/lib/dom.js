@@ -106,12 +106,12 @@ const changeTab = (previousActiveTabIndex) => state => {
 
 const blurTab = ({ settings, tabs }, previousActiveTabIndex) => {
     tabs[previousActiveTabIndex].classList.remove(settings.activeClass);
-    tabs[previousActiveTabIndex].setAttribute('aria-selected', false);
     tabs[previousActiveTabIndex].setAttribute('tabindex', '-1');
 };
 
 const close = ({ settings, tabs, panels }, previousActiveIndex, previousActiveTabIndex) => {
     blurTab({settings, tabs}, previousActiveTabIndex);
+    tabs[previousActiveTabIndex].setAttribute('aria-selected', false);
     panels[previousActiveIndex].classList.remove(settings.activeClass);
     panels[previousActiveIndex].setAttribute('hidden', 'hidden');
     panels[previousActiveIndex].setAttribute('tabindex', '-1');
@@ -119,7 +119,6 @@ const close = ({ settings, tabs, panels }, previousActiveIndex, previousActiveTa
 
 const activateTab = ({ settings, tabs, activeTabIndex }) => {
     tabs[activeTabIndex].classList.add(settings.activeClass);
-    tabs[activeTabIndex].setAttribute('aria-selected', true);
     tabs[activeTabIndex].setAttribute('tabindex', 0);
 }
 
@@ -130,6 +129,7 @@ const focusTab = ({ tabs, activeTabIndex }) => {
 export const open = ({ settings, tabs, panels, activeIndex, activeTabIndex }) => {
     activateTab({settings, tabs, activeTabIndex})
     focusTab({tabs, activeTabIndex});
+    tabs[activeTabIndex].setAttribute('aria-selected', true);
     panels[activeIndex].classList.add(settings.activeClass);
     panels[activeIndex].removeAttribute('hidden');
     panels[activeIndex].setAttribute('tabindex', 0);

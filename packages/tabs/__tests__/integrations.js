@@ -2,7 +2,9 @@ import tabs from '../src';
 
 let TabSet;
 
-const init = () => {
+const init = (mode) => {
+
+    const activation = (mode) ? mode : "auto";
     // Set up our document body
     document.body.innerHTML = `<div role="tablist">
         <nav class="tabs__nav">
@@ -41,12 +43,12 @@ const init = () => {
         </section>
     </div>`;
 
-    TabSet = tabs('[role=tablist]');
+    TabSet = tabs('[role=tablist]', {activation: activation});
 };
 
 describe(`Tabs > Initialisation`, () => {
     
-    beforeAll(init);
+    beforeAll(() => {init()});
 
     it('should return array of length 1', async () => {
         expect(TabSet.length).toEqual(2);
@@ -67,6 +69,8 @@ describe(`Tabs > Initialisation`, () => {
     
 describe(`Tabs > Accessibility > ARIA`, () => {
 
+    beforeAll(() => {init()});
+
     it('should add correct attributes to tabs', async () => {
         expect(TabSet[0].getState().tabs[1].getAttribute('role')).toEqual('tab');
         expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('false');
@@ -82,7 +86,10 @@ describe(`Tabs > Accessibility > ARIA`, () => {
     
 });
 
-describe(`Tabs > Accessibility > keyboard events`, () => {
+describe(`Tabs > Accessibility > keyboard events auto `, () => {
+
+    beforeAll(() => {init()});
+
     it('should add keyboard event listener for the left and right keys to each tab', () => {
         const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
         const left = new window.KeyboardEvent('keydown', { keyCode: 37, bubbles: true });
@@ -92,6 +99,30 @@ describe(`Tabs > Accessibility > keyboard events`, () => {
         TabSet[0].getState().tabs[1].dispatchEvent(left);
         expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
     });
+    
+});
+
+describe(`Tabs > Accessibility > keyboard events manual `, () => {
+
+    beforeAll(() => {init("manual")});
+
+    it('should add keyboard event listener for the left and right keys to each tab', () => {
+        const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
+        const left = new window.KeyboardEvent('keydown', { keyCode: 37, bubbles: true });
+
+        TabSet[0].getState().tabs[0].dispatchEvent(right);
+        expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('false');
+        expect(TabSet[0].getState().tabs[1].classList.contains('is--active'));
+        TabSet[0].getState().tabs[1].dispatchEvent(left);
+        expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('false');
+        expect(TabSet[0].getState().tabs[0].classList.contains('is--active'));
+    });
+    
+});
+
+describe(`Tabs > Accessibility > keyboard events both `, () => {
+
+    beforeAll(() => {init()});
     
     it('should add keyboard event listener for the space key to each tab', () => {
         const space = new window.KeyboardEvent('keydown', { keyCode: 32, bubbles: true });
@@ -130,6 +161,8 @@ describe(`Tabs > Accessibility > keyboard events`, () => {
 });
 
 describe(`Tabs > mouse events`, () => {
+    beforeAll(() => {init()});
+
     it('should click event listener for each tab', () => {
         const click = new MouseEvent('click', { bubbles: true, cancelable: true });
 
