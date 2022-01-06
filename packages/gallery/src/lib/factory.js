@@ -1,5 +1,5 @@
 import { createStore } from './store';
-import { initTriggers, keyListener, open } from './dom';
+import { initUI, toggleFullScreen } from './dom';
 
 /* 
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
@@ -15,11 +15,11 @@ export default ({ items, settings }) => {
         items,
         imageCache: [],
         current: settings.start,
-        keyListener: keyListener(Store)
-    }, [ initUI(Store)/*, initTriggers(Store)*/ ]);
+        isFullScreen: false
+    }, [ initUI(Store) ]);
 
     return {
         getState: Store.getState,
-        open: open(Store)
+        toggleFullScreen: toggleFullScreen.bind(null, Store)
     };
 };

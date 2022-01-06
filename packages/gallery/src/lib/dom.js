@@ -1,22 +1,3 @@
-import { TRIGGER_EVENTS, KEY_CODES } from './constants';
-import { getFocusableChildren } from './utils';
-
-export const initTriggers = Store => state => {
-    const { items, settings } = state;
-    
-    items.map((item, i) => {
-        if (!item.trigger) return;
-        TRIGGER_EVENTS.map(ev => {
-            item.trigger.addEventListener(ev, e => {
-                if ((e.keyCode && e.keyCode !== KEY_CODES.ENTER) || (e.which && e.which === 3)) return;
-                e.preventDefault();
-                open(Store)(i);
-            });
-        });
-    });
-    if (settings.preload) items.map(loadImage(Store));
-};
-
 const loadImage = Store => (item, i) => {
     try {
         const img = new Image();
@@ -50,7 +31,7 @@ const loadImages = Store => i => {
 };
 
 export const initUI = Store => state => {
-    const { settings, items, keyListener } = Store.getState();
+    const { settings, items } = Store.getState();
     //write UI to target container
     //persistent UI:
         //buttons?
@@ -60,8 +41,10 @@ export const initUI = Store => state => {
     //items with image container, title, description
     const container = document.querySelector(settings.container);
     if (!container) return void console.warn(`Gallery cannot be initialised, ${settings.container} not found`);
-    container.appendChild(settings.templates.container());
+    container.appendChild(settings.templates.ui());
+    
 
+    //if (settings.preload) items.map(loadImage(Store));
 
 
     // Store.dispatch({ dom: {
@@ -123,64 +106,19 @@ const initUIButtons = Store => state => {
     });
 };
 
-export const keyListener = Store => e => {
-    const { isOpen } = Store.getState();
-    if (!isOpen) return;
-    switch (e.keyCode) {
-        case KEY_CODES.ESC:
-            close(Store);
-            break;
-        case KEY_CODES.TAB:
-            trapTab(Store, e);
-            break;
-        case KEY_CODES.LEFT:
-            previous(Store);
-            break;
-        case KEY_CODES.RIGHT:
-            next(Store);
-            break;
-        default:
-            break;
-    }
-};
-
-const trapTab = (Store, e) => {
-    const { dom } = Store.getState();
-    const focusedIndex = dom.focusableChildren.indexOf(document.activeElement);
-    if (e.shiftKey && focusedIndex === 0) {
-        /* istanbul ignore next */
-        e.preventDefault();
-        dom.focusableChildren[dom.focusableChildren.length - 1].focus();
-    }
-    /* istanbul ignore next */
-    if (!e.shiftKey && focusedIndex === dom.focusableChildren.length - 1) {
-        e.preventDefault();
-        dom.focusableChildren[0].focus();
-    }
-};
-
-const toggle = Store => state => {
-    const { dom, current, isOpen, settings } = Store.getState();
-    dom.overlay.classList.toggle('is--active');
-    dom.overlay.setAttribute('aria-hidden', !isOpen);
-    dom.overlay.setAttribute('tabindex', isOpen ? '0' : '-1');
-    isOpen !== null && dom.items[current].classList.add('is--active');
-    if (dom.focusableChildren && dom.focusableChildren.length > 0) window.setTimeout(() => { dom.focusableChildren[0].focus(); }, 0);
-
-    settings.fullscreen && toggleFullScreen(state);
-};
 
 const writeTotals = ({ dom, current, items, settings }) => {
     if (settings.totals) dom.totals.innerHTML = `${current + 1}/${items.length}`;
 };
 
-const toggleFullScreen = ({ isOpen, dom }) => {
-    if (isOpen){
-        dom.overlay.requestFullscreen && dom.overlay.requestFullscreen();
+export const toggleFullScreen = Store => {
+    const { isFullScreen, container } = Store.getState();
+    if (isFullScreen){
+        container.requestFullscreen && container.requestFullscreen();
         /* istanbul ignore next */
-        dom.overlay.webkitRequestFullscreen && dom.overlay.webkitRequestFullscreen();
+        container.webkitRequestFullscreen && container.webkitRequestFullscreen();
         /* istanbul ignore next */
-        dom.overlay.mozRequestFullScreen && dom.overlay.mozRequestFullScreen();
+        container.mozRequestFullScreen && container.mozRequestFullScreen();
     } else {
         /* istanbul ignore next */
         document.exitFullscreen && document.exitFullscreen();
