@@ -1,4 +1,4 @@
-import { KEYCODES } from './constants';
+import { KEYCODES, MODES } from './constants';
 
 /*
  * DOM side effects and mutations
@@ -43,7 +43,7 @@ const getPreviousTabIndex = ({ activeTabIndex, tabs }) => activeTabIndex === 0 ?
 const getNextTabIndex = ({ activeTabIndex, tabs }) => activeTabIndex === tabs.length - 1 ? 0 : activeTabIndex + 1;
 
 const initListeners = (tab, nextIndex, Store) => {
-    const isManualActivation = Store.getState().settings.activation === 'manual';
+    const isManualActivation = Store.getState().settings.activation === MODES.MANUAL;
     const onDirectionChangeFunction = (isManualActivation) ? changeTab : changePanel;
 
     tab.addEventListener('keydown', e => {

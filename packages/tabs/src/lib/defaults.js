@@ -1,3 +1,4 @@
+import { MODES } from './constants';
 /* istanbul ignore file */
 /*
  * Default settings used by a Tabs instance if not otherwise overwritten with config
@@ -13,6 +14,6 @@ export default {
     tabSelector: '[role=tab]',
     activeClass: 'is--active',
     updateURL: true,
-    activation: 'auto',
+    activation: MODES.AUTO,
     activeIndex: 0
 };
