@@ -1,0 +1,32 @@
+{
+  "name": "@stormid/modal-gallery",
+  "version": "1.0.0-y.0",
+  "description": "Accessible modal image gallery",
+  "author": "stormid",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "https://github.com/stormid/components/tree/master/packages/modal-gallery",
+  "private": false,
+  "main": "dist/index.js",
+  "source": "src/index.js",
+  "module": "dist/index.modern.mjs",
+  "unpkg": "dist/index.umd.js",
+  "browser": "dist/index.umd.js",
+  "keywords": [
+    "stormid",
+    "component",
+    "ui",
+    "modal",
+    "gallery"
+  ],
+  "scripts": {
+    "build": "npx microbundle --name ModalGallery",
+    "test": "node_modules/.bin/jest --coverage",
+    "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
+    "prod": "webpack --config example/webpack.config.js --mode production",
+    "prepublish": "npm run -s build"
+  },
+  "gitHead": "9042db4005411c4360ba3e8188e03333c10098f2"
+}
