@@ -1,6 +1,6 @@
 import validate from '../../../src';
 import defaults from '../../../src/lib/defaults';
-// import { DOTNET_CLASSNAMES } from '../../../src/lib/constants';
+import { DOTNET_CLASSNAMES } from '../../../src/lib/constants';
 
 
 describe('Validate > Integration > Real-time', () => {
@@ -36,16 +36,14 @@ describe('Validate > Integration > Real-time', () => {
         </form>`;
 
         const form = document.querySelector('form');
-        const label = document.querySelector('label');
         const input = document.querySelector('input');
-        const cachedLabel = label.innerHTML;
         const [ validator ] = validate(form);
         await validator.validate();
-        expect(label.innerHTML).not.toEqual(cachedLabel);
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`)).toBeDefined();
         input.value = 'Super';
         const event = new Event('input', { bubbles: false });
         input.dispatchEvent(event);
-        expect(label.innerHTML).toEqual(cachedLabel);
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`)).toBeNull();
     });
 
     
@@ -61,21 +59,20 @@ describe('Validate > Integration > Real-time', () => {
         </form>`;
 
         const form = document.querySelector('form');
-        const label = document.querySelector('label');
         const input = document.querySelector('input');
         const [ validator ] = validate(form);
         await validator.validate();
-        expect(label.lastElementChild.textContent).toEqual(defaults.messages.required());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.required());
         input.value = 'Super';
         const event = new Event('input', { bubbles: false });
         input.dispatchEvent(event);
         
         //have to game Jest to ensure that the error is rendered in time for the assertion
-        const nextLabel = await new Promise((resolve, reject) => setTimeout(() => {
-            resolve(label.lastElementChild.textContent);
+        const nextMsg = await new Promise((resolve, reject) => setTimeout(() => {
+            resolve(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent);
         }, 16));
 
-        expect(nextLabel).toEqual(defaults.messages.email());
+        expect(nextMsg).toEqual(defaults.messages.email());
     });
 
     it('should trigger real-time validation with appropriate event for the input type', async () => {
@@ -90,16 +87,14 @@ describe('Validate > Integration > Real-time', () => {
         </form>`;
 
         const form = document.querySelector('form');
-        const label = document.querySelector('label');
         const input = document.querySelector('input');
-        const cachedLabel = label.innerHTML;
         const [ validator ] = validate(form);
         await validator.validate();
-        expect(label.lastElementChild.textContent).toEqual(defaults.messages.required());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.required());
         input.checked = 'checked';
         const event = new Event('change', { bubbles: false });
         input.dispatchEvent(event);
-        expect(label.innerHTML).toEqual(cachedLabel);
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`)).toBeNull();
     });
 
     it('should run realtime validation after a new group is added post first validation', async () => {
@@ -114,13 +109,12 @@ describe('Validate > Integration > Real-time', () => {
         </form>`;
 
         const form = document.querySelector('form');
-        const label = document.querySelector('label');
         const [ validator ] = validate(form);
         await validator.validate();
-        expect(label.lastElementChild.textContent).toEqual(defaults.messages.required());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.required());
 
         const newLabel = document.createElement('label');
-        newLabel.textContent="Group2";
+        newLabel.textContent = 'Group2';
         newLabel.setAttribute('for', 'group2');
         form.appendChild(newLabel);
 
@@ -133,12 +127,12 @@ describe('Validate > Integration > Real-time', () => {
 
         validator.addGroup([newInput]);
         await validator.validate();
-        expect(newLabel.lastElementChild.textContent).toEqual(defaults.messages.required());
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.required());
 
-        newInput.value="Sample";
+        newInput.value = 'Sample';
         const event = new Event('input', { bubbles: false });
         newInput.dispatchEvent(event);
-        expect(newLabel.querySelector('span')).toBeNull();
+        expect([].slice.call(document.querySelectorAll(`.${DOTNET_CLASSNAMES.ERROR}`)).length).toEqual(1);
     });
     
 });

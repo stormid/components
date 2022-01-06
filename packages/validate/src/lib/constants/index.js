@@ -78,4 +78,4 @@ export const DOTNET_CLASSNAMES = {
     ERROR: 'error-message'
 };
 
-export const GROUP_ATTRIBUTE = "group";
+export const GROUP_ATTRIBUTE = 'group';

@@ -4,7 +4,7 @@ import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 describe('Validate > Integration >  api > validate > stringlength', () => {
     
     it('should validate a form based on the data-val stringlength validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is outwith the min and max length range', async () => {
-        expect.assertions(6);
+        expect.assertions(4);
         document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1">group1</label>
             <input
@@ -26,9 +26,7 @@ describe('Validate > Integration >  api > validate > stringlength', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(label.lastChild.nodeName).toEqual('SPAN');
-        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual('Stringlength error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Stringlength error message');
     });
 
     it('should validate a form based on the data-val stringlength validator returning true if within the min and max length range', async () => {

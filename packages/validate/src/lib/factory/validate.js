@@ -49,7 +49,6 @@ export const validate = Store => event => {
                 );
 
                 return resolve(false);
-            })
-            .catch(err => console.warn(err));
+            }).catch(err => console.warn(err));
     });
 };

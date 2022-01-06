@@ -4,7 +4,7 @@ import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
 describe('Validate > Integration >  api > validate > equalto', () => {
     
     it('should validate a form based on the data-val range validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if the value is out of range', async () => {
-        expect.assertions(6);
+        expect.assertions(4);
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">Label</label>
             <input
@@ -28,9 +28,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
         // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(label.lastChild.nodeName).toEqual('SPAN');
-        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual('Range error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Range error message');
     });
 
     it('should validate a form based on the data-val range validator returning true if value > min with no max', async () => {
@@ -52,7 +50,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
     });
 
     it('should validate a form based on the data-val range validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if the value <= min with no max', async () => {
-        expect.assertions(6);
+        expect.assertions(4);
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">DoubleConfirmEmail</label>
             <input
@@ -75,9 +73,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
         // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(label.lastChild.nodeName).toEqual('SPAN');
-        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual('Range error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Range error message');
     });
 
     it('should validate a form based on the data-val range validator returning true if value <= max with no min', async () => {
@@ -99,7 +95,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
     });
 
     it('should validate a form based on the data-val range validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if the value > max with no min', async () => {
-        expect.assertions(6);
+        expect.assertions(4);
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">DoubleConfirmEmail</label>
             <input
@@ -122,9 +118,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
         // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
         //render error message
-        expect(label.lastChild.nodeName).toEqual('SPAN');
-        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual('Range error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Range error message');
     });
 
     it('should validate a form based on the data-val range validator returning true if value is in range', async () => {

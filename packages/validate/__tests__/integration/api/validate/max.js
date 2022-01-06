@@ -5,7 +5,7 @@ import defaults from '../../../../src/lib/defaults';
 describe('Validate > Integration > api > validate > max', () => {
     
     it('should validate a form based on the HTML5 max validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
-        expect.assertions(6);
+        expect.assertions(4);
         document.body.innerHTML = `<form class="form">
         <label id="group1-label" for="group1">group1</label>
         <input
@@ -25,13 +25,11 @@ describe('Validate > Integration > api > validate > max', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(label.lastChild.nodeName).toEqual('SPAN');
-        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual(defaults.messages.max({ max: 2 }));
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.max({ max: 2 }));
     });
 
     it('should validate a form based on the data-val equalto validator returning true if valid', async () => {
-        expect.assertions(6);
+        expect.assertions(4);
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">group1</label>
             <input
@@ -53,9 +51,7 @@ describe('Validate > Integration > api > validate > max', () => {
         // // focus on first invalid node
         expect(document.activeElement).toEqual(input);
         // // render error message
-        expect(label.lastChild.nodeName).toEqual('SPAN');
-        expect(label.lastChild.className).toEqual(DOTNET_CLASSNAMES.ERROR);
-        expect(label.lastChild.textContent).toEqual('Max error message');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Max error message');
     });
 
     it('should validate a form based on the data-val max validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
