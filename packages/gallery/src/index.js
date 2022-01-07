@@ -1,3 +1,4 @@
+import defaults from './lib/defaults';
 import factory from './lib/factory';
 
 export default (src, options) => {
@@ -11,7 +12,6 @@ export default (src, options) => {
         if (!els.length) return void console.warn('Gallery cannot be initialised, no images found');
 		
         items = els.map(el => ({
-            trigger: el,
             src: el.getAttribute('href'),
             srcset: el.getAttribute('data-srcset') || null,
             sizes: el.getAttribute('data-sizes') || null,
