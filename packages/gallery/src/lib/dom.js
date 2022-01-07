@@ -41,7 +41,7 @@ export const initUI = Store => state => {
     //items with image container, title, description
     const container = document.querySelector(settings.container);
     if (!container) return void console.warn(`Gallery cannot be initialised, ${settings.container} not found`);
-    container.appendChild(settings.templates.ui());
+    container.appendChild(settings.templates.container(items));
     
 
     //if (settings.preload) items.map(loadImage(Store));
@@ -50,9 +50,7 @@ export const initUI = Store => state => {
     // Store.dispatch({ dom: {
     //     container,
     //     items,
-    //     totals,
-    //     focusableChildren: getFocusableChildren(container),
-    //     lastFocused: document.activeElement
+    //     totals
     // } }, [
     //     load(Store),
     //     initUIButtons(Store),
