@@ -1,150 +1,108 @@
+import { sanitise } from './utils';
+
 const loadImage = Store => (item, i) => {
+    //detect if loaded
+    //check for loaded data attribute
+    //src, srcset, sizes, or sources
+    const img = item.node.querySelector('img');
+    if (!img) return void console.warn('Gallery cannot find image');
+
     try {
-        const img = new Image();
+        //add support for picture tags (sources)
+        // const picture = item.node.querySelector('picture');
+        
         const loaded = () => {
-            const { imageCache } = Store.getState();
-            imageCache[i] = img;
-            Store.dispatch({ imageCache });
-            writeImage(Store.getState(), i);
+            const { items, loadingClassName } = Store.getState();
+            items[i].loaded = true;
+            console.log('loaded');
+            item.node.classList.remove(loadingClassName);
+            Store.dispatch({ items });
         };
         img.onload = loaded;
-        img.src = item.src;
+        if (item.srcset) img.setAttribute('srcset', item.srcset);
+        if (item.src) img.setAttribute('src', item.src);
+        if (item.sizes) img.setAttribute('sizes', item.sizes);
         if (img.complete) loaded();
     } catch (e) {
-        console.warn(e);
-    }
+        console.warn('Gallery cannot load image', e);
+    };
 };
 
 const loadImages = Store => i => {
-    const { imageCache, items, dom } = Store.getState();
+    const { items, loadingClassName } = Store.getState();
     const indexes = [i];
 
     if (items.length > 1) indexes.push(i === 0 ? items.length - 1 : i - 1);
     if (items.length > 2) indexes.push(i === items.length - 1 ? 0 : i + 1);
     indexes.forEach(idx => {
-        if (imageCache[idx] === undefined) {
-            dom.items[idx].classList.add('loading');
+        if (!items[idx].loaded) {
+            items[idx].node.classList.add(loadingClassName);
             loadImage(Store)(items[idx], idx);
         }
     });
 
 };
 
-export const initUI = Store => state => {
-    const { settings, items } = Store.getState();
-    //write UI to target container
-    //persistent UI:
-        //buttons?
-        //menu?
-        //totals?
-        //list
-    //items with image container, title, description
-    const container = document.querySelector(settings.container);
-    if (!container) return void console.warn(`Gallery cannot be initialised, ${settings.container} not found`);
-    container.appendChild(settings.templates.container(items));
+export const init = Store => () => {
+    const state = Store.getState();
+    const { settings, items, dom, current } = state;
     
+    //initialise buttons
+    if (!dom.total) console.warn(`A live region announcing current and total items is recommended for screen readers.`);
+    else writeTotals(state);
+    if (dom.fullscreen) dom.fullscreen.addEventListener('click', toggleFullScreen.bind(null, Store));
+    if (dom.previous) dom.previous.addEventListener('click', previous.bind(null, Store));
+    if (dom.next) dom.next.addEventListener('click', next.bind(null, Store));
 
-    //if (settings.preload) items.map(loadImage(Store));
-
-
-    // Store.dispatch({ dom: {
-    //     container,
-    //     items,
-    //     totals
-    // } }, [
-    //     load(Store),
-    //     initUIButtons(Store),
-    //     writeTotals
-    // ]);
-};
-
-const load = Store => state => {
-    const { imageCache, items, current } = Store.getState();
-    if (Object.keys(imageCache).length === items.length) imageCache.map((img, i) => { writeImage(state, i); });
+    //preload all images if setting is true, or just previous and next
+    if (settings.preload) items.map(loadImage(Store));
     else loadImages(Store)(current);
+
+    //ensure current item is active
+    if (!items[current].node.classList.contains(settings.currentClassName)) !items[current].node.classList.add(settings.currentClassName);
 };
 
-const writeImage = (state, i) => {
-    const { dom, settings, items } = state;
-    if (!dom) return;
-    const imageContainer = dom.items[i].querySelector('.js-modal-gallery__img-container');
-    const img = imageContainer.querySelector('.modal-gallery__img');
-    if (img) return;
-    const imageClassName = settings.scrollable ? 'modal-gallery__img modal-gallery__img--scrollable' : 'modal-gallery__img';
-    const srcsetAttribute = dom.items[i].srcset ? ` srcset="${dom.items[i].srcset}"` : '';
-    const sizesAttribute = dom.items[i].sizes ? ` sizes="${dom.items[i].sizes}"` : '';
-    
-    imageContainer.innerHTML = `<img class="${imageClassName}" src="${items[i].src}" alt="${items[i].title}"${srcsetAttribute}${sizesAttribute}>`;
-    dom.items[i].classList.remove('loading');
-};
-
-const initUIButtons = Store => state => {
-    const { dom } = Store.getState();
-    const closeBtn = dom.overlay.querySelector('.js-modal-gallery__close');
-    TRIGGER_EVENTS.forEach(ev => {
-        closeBtn.addEventListener(ev, e => {
-            if ((e.keyCode && e.keyCode !== KEY_CODES.ENTER) || (e.which && e.which === 3)) return;
-            close(Store);
-        });
-    });
-
-    const previousBtn = dom.overlay.querySelector('.js-modal-gallery__previous');
-    const nextBtn = dom.overlay.querySelector('.js-modal-gallery__next');
-    if (!previousBtn && !nextBtn) return;
-
-    TRIGGER_EVENTS.forEach(ev => {
-        previousBtn && previousBtn.addEventListener(ev, e => {
-            if (e.keyCode && e.keyCode !== KEY_CODES.ENTER) return;
-            previous(Store);
-        });
-        nextBtn && nextBtn.addEventListener(ev, e => {
-            if (e.keyCode && e.keyCode !== KEY_CODES.ENTER) return;
-            next(Store);
-        });
-    });
-};
-
-
-const writeTotals = ({ dom, current, items, settings }) => {
-    if (settings.totals) dom.totals.innerHTML = `${current + 1}/${items.length}`;
-};
+const writeTotals = ({ current, items, settings, dom }) => dom.total.innerHTML = sanitise(settings.announcement(current + 1, items.length));
 
 export const toggleFullScreen = Store => {
-    const { isFullScreen, container } = Store.getState();
-    if (isFullScreen){
-        container.requestFullscreen && container.requestFullscreen();
-        /* istanbul ignore next */
-        container.webkitRequestFullscreen && container.webkitRequestFullscreen();
-        /* istanbul ignore next */
-        container.mozRequestFullScreen && container.mozRequestFullScreen();
-    } else {
-        /* istanbul ignore next */
-        document.exitFullscreen && document.exitFullscreen();
-        /* istanbul ignore next */
-        document.mozCancelFullScreen && document.mozCancelFullScreen();
-        /* istanbul ignore next */
-        document.webkitExitFullscreen && document.webkitExitFullscreen();
-    }
+    const { node } = Store.getState();
+    if (!document.fullscreenElement) node.requestFullscreen && node.requestFullscreen();
+    else document.exitFullscreen && document.exitFullscreen();
 };
 
+//!refactor
+//lots of duplication between previous and next functions
 export const previous = Store => {
-    const { current, dom } = Store.getState();
-    const next = current === 0 ? dom.items.length - 1 : current - 1;
+    const { current, items } = Store.getState();
+    const next = current === 0 ? items.length - 1 : current - 1;
+    
     Store.dispatch({ current: next }, [
-        () => dom.items[current].classList.remove('is--active'),
-        () => dom.items[next].classList.add('is--active'),
-        load(Store),
+        () => {
+            items[current].node.classList.remove('is--active');
+            items[current].node.setAttribute('aria-hidden', 'true');
+        },
+        () => {
+            items[next].node.classList.add('is--active');
+            items[current].node.removeAttribute('aria-hidden');
+        },
+        () => loadImages(Store)(next),
         writeTotals
     ]);
 };
 
 export const next = Store => {
-    const { current, dom } = Store.getState();
-    const next = current === dom.items.length - 1 ? 0 : current + 1;
+    const { current, items } = Store.getState();
+    const next = current === items.length - 1 ? 0 : current + 1;
     Store.dispatch({ current: next }, [
-        () => dom.items[current].classList.remove('is--active'),
-        () => dom.items[next].classList.add('is--active'),
-        load(Store),
+        () => {
+            items[current].node.classList.remove('is--active');
+            items[current].node.setAttribute('aria-hidden', 'true');
+        },
+        () => {
+            items[next].node.classList.add('is--active');
+            items[current].node.removeAttribute('aria-hidden');
+        },
+        () => loadImages(Store)(next),
         writeTotals
     ]);
 };
@@ -160,9 +118,9 @@ export const close = Store => {
     ]);
 };
 
-export const open = Store => (i = 0) => {
-    Store.dispatch(
-        { current: i, isOpen: true },
-        [ initUI(Store) ]
-    );
-};
+// export const open = Store => (i = 0) => {
+//     Store.dispatch(
+//         { current: i, isOpen: true },
+//         [ initUI(Store) ]
+//     );
+// };
