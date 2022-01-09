@@ -1,3 +1,3 @@
 import gallery from '../../../src';
     
-gallery('.js-gallery');
+gallery('.js-gallery', { startIndex: 2 });
