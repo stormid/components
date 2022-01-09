@@ -1,5 +1,5 @@
 import { createStore } from './store';
-import { init, toggleFullScreen } from './dom';
+import { init, toggleFullScreen, goTo } from './dom';
 import { composeItems, composeDOM } from './utils';
 
 /* 
@@ -25,6 +25,7 @@ export default (node, settings) => {
     return {
         getState: Store.getState,
         initialise: init(Store),
+        goTo: goTo(Store),
         toggleFullScreen: toggleFullScreen.bind(null, Store)
     };
 };

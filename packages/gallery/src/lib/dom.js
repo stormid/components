@@ -1,23 +1,29 @@
 import { sanitise } from './utils';
 
-const loadImage = Store => (item, i) => {
-    //detect if loaded
-    //check for loaded data attribute
-    //src, srcset, sizes, or sources
-    const img = item.node.querySelector('img');
-    if (!img) return void console.warn('Gallery cannot find image');
+const loadSources = (picture, item) => {
+    if (item.sources && item.sources.length > 0) {
+        for (let i in item.sources){
+            const source = document.createElement('source');
+            if (item.sources[i].srcset) source.setAttribute('srcset', item.sources[i].srcset);
+            if (item.sources[i].media) source.setAttribute('media', item.sources[i].media);
+            if (item.sources[i].type) source.setAttribute('srcset', item.sources[i].type);
+            picture.insertBefore(source, picture.firstElementChild);
+        }
+    }
+};
 
+const loadImage = Store => (item, i) => {
+    const img = item.node.querySelector('img');
+    const picture = item.node.querySelector('picture');
     try {
-        //add support for picture tags (sources)
-        // const picture = item.node.querySelector('picture');
-        
         const loaded = () => {
             const { items, loadingClassName } = Store.getState();
             items[i].loaded = true;
-            console.log('loaded');
             item.node.classList.remove(loadingClassName);
             Store.dispatch({ items });
         };
+        if (picture) loadSources(item);
+
         img.onload = loaded;
         if (item.srcset) img.setAttribute('srcset', item.srcset);
         if (item.src) img.setAttribute('src', item.src);
@@ -70,12 +76,9 @@ export const toggleFullScreen = Store => {
     else document.exitFullscreen && document.exitFullscreen();
 };
 
-//!refactor
-//lots of duplication between previous and next functions
-export const previous = Store => {
+export const change = (Store, next) => {
     const { current, items } = Store.getState();
-    const next = current === 0 ? items.length - 1 : current - 1;
-    
+
     Store.dispatch({ current: next }, [
         () => {
             items[current].node.classList.remove('is--active');
@@ -88,39 +91,19 @@ export const previous = Store => {
         () => loadImages(Store)(next),
         writeTotals
     ]);
+};
+
+export const previous = Store => {
+    const { current, items } = Store.getState();
+    change(Store, (current === 0 ? items.length - 1 : current - 1));
 };
 
 export const next = Store => {
     const { current, items } = Store.getState();
-    const next = current === items.length - 1 ? 0 : current + 1;
-    Store.dispatch({ current: next }, [
-        () => {
-            items[current].node.classList.remove('is--active');
-            items[current].node.setAttribute('aria-hidden', 'true');
-        },
-        () => {
-            items[next].node.classList.add('is--active');
-            items[current].node.removeAttribute('aria-hidden');
-        },
-        () => loadImages(Store)(next),
-        writeTotals
-    ]);
+    change(Store, (current === items.length - 1 ? 0 : current + 1));
 };
 
-export const close = Store => {
-    const { keyListener, lastFocused, dom } = Store.getState();
-    Store.dispatch({ current: null, isOpen: false }, [
-        () => document.removeEventListener('keydown', keyListener),
-        () => { if (lastFocused) lastFocused.focus(); },
-        // () => dom.items[current].classList.remove('is--active'),
-        // toggle(Store),
-        () => dom.overlay.parentNode.removeChild(dom.overlay)
-    ]);
+export const goTo = Store => i => {
+    loadImages(Store)(i);
+    change(Store, i);
 };
-
-// export const open = Store => (i = 0) => {
-//     Store.dispatch(
-//         { current: i, isOpen: true },
-//         [ initUI(Store) ]
-//     );
-// };
