@@ -1,4 +1,4 @@
-import gallery from '../src';
+import gallery from '../../src';
 
 describe('Gallery > initialisation', () => {
 
@@ -179,3 +179,4 @@ describe('Gallery > initialisation', () => {
     });
 
 });
+
