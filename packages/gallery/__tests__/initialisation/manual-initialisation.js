@@ -1,10 +1,11 @@
-import gallery from '../src';
-import defaults from '../src/lib/defaults';
+import gallery from '../../src';
+import defaults from '../../src/lib/defaults';
+import { ATTRIBUTE } from '../../src/lib/constants';
 
-let instance;
+describe('Gallery > initialisation > manual initialisation', () => {
 
-beforeAll(() => {
-    document.body.innerHTML = `<section class="gallery js-gallery">
+    it('Should not set an active item, nor load any images', () => {
+        document.body.innerHTML = `<section class="gallery js-gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
                     <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-total>1 of 5</div>
@@ -13,46 +14,19 @@ beforeAll(() => {
                     </button>
                 </div>
                 <div class="gallery__main">
-                    <button class="gallery__previous" aria-label="Previous image" disabled data-gallery-previous>
+                    <button class="gallery__previous" aria-label="Previous image" data-gallery-previous>
                         <svg class="gallery__previous-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><rect fill="none" height="24" width="24"/><g><polygon points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"/></g></svg>
                     </button>
                     <ul class="gallery__list">
                         <li
-                            class="gallery__item is--active"
-                            data-gallery-item
-                            data-gallery-item-loaded
-                        >
-                            <div class="gallery__item-img-container">
-                                <img 
-                                    alt="Image one"
-                                    class="gallery__item-img"
-                                    decoding="async"
-                                    src="http://placehold.it/800x800"
-                                />
-                            </div>
-                            <div class="gallery__item-footer">
-                                <div class="gallery__item-meta">
-                                    <div class="gallery__item-description">
-                                        <h2 class="gallery__item-artist">Kate Murphy</h2>
-                                        <div class="gallery__item-category">Architecture - March</div>
-                                        <div class="gallery__item-title">Example project name here</div>
-                                    </div>
-                                    <ul class="gallery__item-tags">
-                                        <li class="gallery__item-tag">Example tag</li>
-                                        <li class="gallery__item-tag">Example tag</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                        <li
                             class="gallery__item"
                             data-gallery-item
-                            data-gallery-item-src="http://placehold.it/600x600"
+                            data-gallery-item-src="http://placehold.it/800x800"
                             aria-hidden="true"
                         >
                             <div class="gallery__item-img-container">
                                 <img 
-                                    alt="Image two"
+                                    alt="Image one"
                                     class="gallery__item-img"
                                     decoding="async"
                                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
@@ -62,7 +36,7 @@ beforeAll(() => {
                                 <div class="gallery__item-meta">
                                     <div class="gallery__item-description">
                                         <h2 class="gallery__item-artist">Kate Murphy</h2>
-                                        <div class="gallery__item-category">Architecture - April</div>
+                                        <div class="gallery__item-category">Architecture - March</div>
                                         <div class="gallery__item-title">Example project name here</div>
                                     </div>
                                     <ul class="gallery__item-tags">
@@ -106,41 +80,16 @@ beforeAll(() => {
                     </button>
                 </div>
             </section>`;
-    [ instance ] = gallery('.js-gallery');
-});
-
-describe('Gallery > API', () => {
-
-    it('Should have an API method getState', () => {
-        const node = document.querySelector('.js-gallery');
+        const [ instance ] = gallery('.js-gallery', { manualInitialisation: true });
         expect(instance.getState).toBeDefined();
-        expect(instance.getState().node).toEqual(node);
-        expect(instance.getState().current).toEqual(0);
-    });
+        const { items } = instance.getState();
+        expect(items[0].node.hasAttribute('aria-hidden')).toEqual(true);
+        expect(items[0].node.classList.contains(defaults.currentClassName)).toEqual(false);
 
-    it('Should have an API method initialise', () => {
-        expect(instance.initialise).toBeDefined();
-        //we will test the initialise function in the initialisation tests
-    });
-
-    it('Should have an API method goTo', () => {
-        expect(instance.goTo).toBeDefined();
-        expect(instance.getState().current).toEqual(0);
-        instance.goTo(2);
-        expect(instance.getState().current).toEqual(2);
-        const galleryItems = Array.from(document.querySelectorAll(defaults.selector.item));
-        expect(galleryItems[0].classList.contains(defaults.currentClassName)).toEqual(false);
-        expect(galleryItems[0].hasAttribute('aria-hidden')).toEqual(true);
-        expect(galleryItems[2].classList.contains(defaults.currentClassName)).toEqual(true);
-        expect(galleryItems[2].hasAttribute('aria-hidden')).toEqual(false);
-    });
-
-    it('Should have an API method toggleFullScreen', () => {
-        expect(instance.toggleFullScreen).toBeDefined();
-        const { node } = instance.getState();
-        node.requestFullscreen = jest.fn();
-        instance.toggleFullScreen();
-        expect(node.requestFullscreen).toHaveBeenCalled();
+        instance.initialise();
+        
+        expect(items[0].node.hasAttribute('aria-hidden')).toEqual(false);
+        expect(items[0].node.classList.contains(defaults.currentClassName)).toEqual(true);
     });
 
 });
