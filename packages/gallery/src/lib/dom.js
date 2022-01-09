@@ -63,9 +63,18 @@ export const init = Store => () => {
     //preload all images if setting is true, or just previous and next
     if (settings.preload) items.map(loadImage(Store));
     else loadImages(Store)(current);
-
-    //ensure current item is active
-    if (!items[current].node.classList.contains(settings.currentClassName)) !items[current].node.classList.add(settings.currentClassName);
+    
+    //set initial DOM state
+    items.forEach((item, i) => {
+        if (i === current) {
+            if (!item.node.classList.contains(settings.currentClassName)) item.node.classList.add(settings.currentClassName);
+            if (item.node.hasAttribute('aria-hidden')) item.node.removeAttribute('aria-hidden');
+        } else {
+            if (item.node.classList.contains(settings.currentClassName)) item.node.classList.remove(settings.currentClassName);
+            if (!item.node.hasAttribute('aria-hidden')) item.node.setAttribute('aria-hidden', 'true');
+        }
+    });
+    
 };
 
 const writeTotals = ({ current, items, settings, dom }) => dom.total.innerHTML = sanitise(settings.announcement(current + 1, items.length));
@@ -86,7 +95,7 @@ export const change = (Store, next) => {
         },
         () => {
             items[next].node.classList.add('is--active');
-            items[current].node.removeAttribute('aria-hidden');
+            items[next].node.removeAttribute('aria-hidden');
         },
         () => loadImages(Store)(next),
         writeTotals
