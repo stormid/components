@@ -4,7 +4,7 @@ import { ATTRIBUTE } from '../../src/lib/constants';
 
 describe('Gallery > initialisation > manual initialisation', () => {
 
-    it('Should not set an active item, nor load any images', () => {
+    it('Should not set an active item, nor load any images', async () => {
         document.body.innerHTML = `<section class="gallery js-gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
@@ -86,8 +86,9 @@ describe('Gallery > initialisation > manual initialisation', () => {
         expect(items[0].node.hasAttribute('aria-hidden')).toEqual(true);
         expect(items[0].node.classList.contains(defaults.currentClassName)).toEqual(false);
 
-        instance.initialise();
-        
+        const imgs = await instance.initialise();
+        console.log(imgs);
+        expect(items[0].node.hasAttribute(ATTRIBUTE.LOADED)).toEqual(false);
         expect(items[0].node.hasAttribute('aria-hidden')).toEqual(false);
         expect(items[0].node.classList.contains(defaults.currentClassName)).toEqual(true);
     });
