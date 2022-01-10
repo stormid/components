@@ -12,7 +12,12 @@ const loadSources = (picture, item) => {
     }
 };
 
-const loadImage = Store => (item, i) => {
+/*
+ * Returns an array of Promises
+ *
+ * @param i, Number, index of item
+ */
+const loadImage = Store => (item, i) => new Promise((resolve, reject) => {
     const img = item.node.querySelector('img');
     const picture = item.node.querySelector('picture');
     try {
@@ -21,6 +26,7 @@ const loadImage = Store => (item, i) => {
             items[i].loaded = true;
             item.node.classList.remove(loadingClassName);
             Store.dispatch({ items });
+            resolve(img);
         };
         if (picture) loadSources(item);
 
@@ -31,24 +37,35 @@ const loadImage = Store => (item, i) => {
         if (img.complete) loaded();
     } catch (e) {
         console.warn('Gallery cannot load image', e);
+        reject(img);
     };
-};
+});
 
+/*
+ * Returns an array of Promises
+ *
+ * @param i, Number, index of item
+ */
 const loadImages = Store => i => {
     const { items, loadingClassName } = Store.getState();
     const indexes = [i];
 
     if (items.length > 1) indexes.push(i === 0 ? items.length - 1 : i - 1);
     if (items.length > 2) indexes.push(i === items.length - 1 ? 0 : i + 1);
-    indexes.forEach(idx => {
+    return indexes.forEach(idx => {
         if (!items[idx].loaded) {
             items[idx].node.classList.add(loadingClassName);
-            loadImage(Store)(items[idx], idx);
+            return loadImage(Store)(items[idx], idx);
         }
     });
 
 };
 
+/*
+ * Returns a Promise wrapping the loading image Promises using Promise.all
+ *
+ * @param i, Number, index of item
+ */
 export const init = Store => () => {
     const state = Store.getState();
     const { settings, items, dom, current } = state;
@@ -59,10 +76,6 @@ export const init = Store => () => {
     if (dom.fullscreen) dom.fullscreen.addEventListener('click', toggleFullScreen.bind(null, Store));
     if (dom.previous) dom.previous.addEventListener('click', previous.bind(null, Store));
     if (dom.next) dom.next.addEventListener('click', next.bind(null, Store));
-
-    //preload all images if setting is true, or just previous and next
-    if (settings.preload) items.map(loadImage(Store));
-    else loadImages(Store)(current);
     
     //set initial DOM state
     items.forEach((item, i) => {
@@ -74,6 +87,10 @@ export const init = Store => () => {
             if (!item.node.hasAttribute('aria-hidden')) item.node.setAttribute('aria-hidden', 'true');
         }
     });
+
+    //preload all images if setting is true, or just previous and next
+    if (settings.preload) return Promise.all(items.map(loadImage(Store)));
+    return Promise.all(loadImages(Store)(current));
     
 };
 
