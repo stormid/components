@@ -10,7 +10,7 @@ export default {
         total: '[data-gallery-total]',
         previous: '[data-gallery-previous]',
         next: '[data-gallery-next]',
-        imgContainer: '[data-gallery-img-container]'
+        imgContainer: '[data-gallery-item-img-container]'
     },
     className: {
         active: 'is--active',

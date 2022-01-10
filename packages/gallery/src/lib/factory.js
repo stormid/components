@@ -17,7 +17,7 @@ export default (node, settings) => {
     Store.dispatch({
         node,
         settings,
-        items: composeItems(items),
+        items: composeItems(items, settings),
         dom: composeDOM(node, settings),
         activeIndex: settings.startIndex
     }, [ () => !settings.manualInitialisation && init(Store)() ]);
