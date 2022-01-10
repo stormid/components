@@ -22,7 +22,7 @@ beforeAll(() => {
                             data-gallery-item
                             data-gallery-item-loaded
                         >
-                            <div class="gallery__item-img-container" data-gallery-img-container>
+                            <div class="gallery__item-img-container" data-gallery-item-img-container>
                                 <img 
                                     alt="Image one"
                                     class="gallery__item-img"
@@ -50,7 +50,7 @@ beforeAll(() => {
                             data-gallery-item-src="http://placehold.it/600x600"
                             aria-hidden="true"
                         >
-                            <div class="gallery__item-img-container" data-gallery-img-container>
+                            <div class="gallery__item-img-container" data-gallery-item-img-container>
                                 <img 
                                     alt="Image two"
                                     class="gallery__item-img"
@@ -78,7 +78,7 @@ beforeAll(() => {
                             data-gallery-item-src="http://placehold.it/1200x1200"
                             aria-hidden="true"
                         >
-                            <div class="gallery__item-img-container" data-gallery-img-container>
+                            <div class="gallery__item-img-container" data-gallery-item-img-container>
                                 <img 
                                     alt="Image two"
                                     class="gallery__item-img"
