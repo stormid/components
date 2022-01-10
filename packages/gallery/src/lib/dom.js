@@ -18,17 +18,27 @@ const loadSources = (picture, item) => {
  * @param i, Number, index of item
  */
 const loadImage = Store => (item, i) => new Promise((resolve, reject) => {
-    const img = item.node.querySelector('img');
-    const picture = item.node.querySelector('picture');
+
+    /*
+    To do:
+    we cannot rely on img.complete if we are using a placeholder/spinner 
+    - replace the img with a new one? -> need to be sure that the current img is not the correct one already loaded
+
+    - assume picture tag is not present and  we need to create it if there are item.sources
+    */
+
+    const loadingImg = item.node.querySelector('img');
+    const img = new Image();
     try {
         const loaded = () => {
-            const { items, loadingClassName } = Store.getState();
+            const { items, settings } = Store.getState();
             items[i].loaded = true;
-            item.node.classList.remove(loadingClassName);
+            item.node.classList.remove(settings.className.loading);
             Store.dispatch({ items });
+            console.log('loaded');
             resolve(img);
         };
-        if (picture) loadSources(item);
+        if (item[i].sources && item[i].sources.length > 0) loadSources(item);
 
         img.onload = loaded;
         if (item.srcset) img.setAttribute('srcset', item.srcset);
@@ -47,14 +57,15 @@ const loadImage = Store => (item, i) => new Promise((resolve, reject) => {
  * @param i, Number, index of item
  */
 const loadImages = Store => i => {
-    const { items, loadingClassName } = Store.getState();
+    const { items, settings } = Store.getState();
     const indexes = [i];
 
     if (items.length > 1) indexes.push(i === 0 ? items.length - 1 : i - 1);
     if (items.length > 2) indexes.push(i === items.length - 1 ? 0 : i + 1);
-    return indexes.forEach(idx => {
+    
+    return indexes.map(idx => {
         if (!items[idx].loaded) {
-            items[idx].node.classList.add(loadingClassName);
+            items[idx].node.classList.add(settings.className.loading);
             return loadImage(Store)(items[idx], idx);
         }
     });
@@ -68,7 +79,7 @@ const loadImages = Store => i => {
  */
 export const init = Store => () => {
     const state = Store.getState();
-    const { settings, items, dom, current } = state;
+    const { settings, items, dom, activeIndex } = state;
     
     //initialise buttons
     if (!dom.total) console.warn(`A live region announcing current and total items is recommended for screen readers.`);
@@ -79,22 +90,22 @@ export const init = Store => () => {
     
     //set initial DOM state
     items.forEach((item, i) => {
-        if (i === current) {
-            if (!item.node.classList.contains(settings.currentClassName)) item.node.classList.add(settings.currentClassName);
+        if (i === activeIndex) {
+            if (!item.node.classList.contains(settings.className.active)) item.node.classList.add(settings.className.active);
             if (item.node.hasAttribute('aria-hidden')) item.node.removeAttribute('aria-hidden');
         } else {
-            if (item.node.classList.contains(settings.currentClassName)) item.node.classList.remove(settings.currentClassName);
+            if (item.node.classList.contains(settings.className.active)) item.node.classList.remove(settings.className.active);
             if (!item.node.hasAttribute('aria-hidden')) item.node.setAttribute('aria-hidden', 'true');
         }
     });
 
     //preload all images if setting is true, or just previous and next
     if (settings.preload) return Promise.all(items.map(loadImage(Store)));
-    return Promise.all(loadImages(Store)(current));
+    return Promise.all(loadImages(Store)(activeIndex));
     
 };
 
-const writeTotals = ({ current, items, settings, dom }) => dom.total.innerHTML = sanitise(settings.announcement(current + 1, items.length));
+const writeTotals = ({ activeIndex, items, settings, dom }) => dom.total.innerHTML = sanitise(settings.announcement(activeIndex + 1, items.length));
 
 export const toggleFullScreen = Store => {
     const { node } = Store.getState();
@@ -103,12 +114,12 @@ export const toggleFullScreen = Store => {
 };
 
 export const change = (Store, next) => {
-    const { current, items } = Store.getState();
+    const { activeIndex, items } = Store.getState();
 
-    Store.dispatch({ current: next }, [
+    Store.dispatch({ activeIndex: next }, [
         () => {
-            items[current].node.classList.remove('is--active');
-            items[current].node.setAttribute('aria-hidden', 'true');
+            items[activeIndex].node.classList.remove('is--active');
+            items[activeIndex].node.setAttribute('aria-hidden', 'true');
         },
         () => {
             items[next].node.classList.add('is--active');
@@ -120,13 +131,13 @@ export const change = (Store, next) => {
 };
 
 export const previous = Store => {
-    const { current, items } = Store.getState();
-    change(Store, (current === 0 ? items.length - 1 : current - 1));
+    const { activeIndex, items } = Store.getState();
+    change(Store, (activeIndex === 0 ? items.length - 1 : activeIndex - 1));
 };
 
 export const next = Store => {
-    const { current, items } = Store.getState();
-    change(Store, (current === items.length - 1 ? 0 : current + 1));
+    const { activeIndex, items } = Store.getState();
+    change(Store, (activeIndex === items.length - 1 ? 0 : activeIndex + 1));
 };
 
 export const goTo = Store => i => {
