@@ -22,7 +22,7 @@ beforeAll(() => {
                             data-gallery-item
                             data-gallery-item-loaded
                         >
-                            <div class="gallery__item-img-container">
+                            <div class="gallery__item-img-container" data-gallery-img-container>
                                 <img 
                                     alt="Image one"
                                     class="gallery__item-img"
@@ -50,7 +50,7 @@ beforeAll(() => {
                             data-gallery-item-src="http://placehold.it/600x600"
                             aria-hidden="true"
                         >
-                            <div class="gallery__item-img-container">
+                            <div class="gallery__item-img-container" data-gallery-img-container>
                                 <img 
                                     alt="Image two"
                                     class="gallery__item-img"
@@ -78,7 +78,7 @@ beforeAll(() => {
                             data-gallery-item-src="http://placehold.it/1200x1200"
                             aria-hidden="true"
                         >
-                            <div class="gallery__item-img-container">
+                            <div class="gallery__item-img-container" data-gallery-img-container>
                                 <img 
                                     alt="Image two"
                                     class="gallery__item-img"
@@ -115,7 +115,7 @@ describe('Gallery > API', () => {
         const node = document.querySelector('.js-gallery');
         expect(instance.getState).toBeDefined();
         expect(instance.getState().node).toEqual(node);
-        expect(instance.getState().current).toEqual(0);
+        expect(instance.getState().activeIndex).toEqual(0);
     });
 
     it('Should have an API method initialise', () => {
@@ -125,13 +125,13 @@ describe('Gallery > API', () => {
 
     it('Should have an API method goTo', () => {
         expect(instance.goTo).toBeDefined();
-        expect(instance.getState().current).toEqual(0);
+        expect(instance.getState().activeIndex).toEqual(0);
         instance.goTo(2);
-        expect(instance.getState().current).toEqual(2);
+        expect(instance.getState().activeIndex).toEqual(2);
         const galleryItems = Array.from(document.querySelectorAll(defaults.selector.item));
-        expect(galleryItems[0].classList.contains(defaults.currentClassName)).toEqual(false);
+        expect(galleryItems[0].classList.contains(defaults.className.active)).toEqual(false);
         expect(galleryItems[0].hasAttribute('aria-hidden')).toEqual(true);
-        expect(galleryItems[2].classList.contains(defaults.currentClassName)).toEqual(true);
+        expect(galleryItems[2].classList.contains(defaults.className.active)).toEqual(true);
         expect(galleryItems[2].hasAttribute('aria-hidden')).toEqual(false);
     });
 

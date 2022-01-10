@@ -19,7 +19,7 @@ export default (node, settings) => {
         settings,
         items: composeItems(items),
         dom: composeDOM(node, settings),
-        current: settings.startIndex
+        activeIndex: settings.startIndex
     }, [ () => !settings.manualInitialisation && init(Store)() ]);
 
     return {

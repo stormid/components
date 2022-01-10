@@ -24,5 +24,6 @@ export const composeDOM = (node, settings) => ({
     total: node.querySelector(settings.selector.total),
     fullscreen: node.querySelector(settings.selector.fullscreen),
     previous: node.querySelector(settings.selector.previous),
-    next: node.querySelector(settings.selector.next)
+    next: node.querySelector(settings.selector.next),
+    imgContainer: node.querySelector(settings.selector.imgContainer)
 });

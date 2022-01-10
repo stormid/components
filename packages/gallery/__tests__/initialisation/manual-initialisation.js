@@ -4,7 +4,7 @@ import { ATTRIBUTE } from '../../src/lib/constants';
 
 describe('Gallery > initialisation > manual initialisation', () => {
 
-    it('Should not set an active item, nor load any images', async () => {
+    it('Should not set an active item, nor load any images until manually initialised', async () => {
         document.body.innerHTML = `<section class="gallery js-gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
@@ -24,7 +24,7 @@ describe('Gallery > initialisation > manual initialisation', () => {
                             data-gallery-item-src="http://placehold.it/800x800"
                             aria-hidden="true"
                         >
-                            <div class="gallery__item-img-container">
+                            <div class="gallery__item-img-container" data-gallery-img-container>
                                 <img 
                                     alt="Image one"
                                     class="gallery__item-img"
@@ -52,7 +52,7 @@ describe('Gallery > initialisation > manual initialisation', () => {
                             data-gallery-item-src="http://placehold.it/1200x1200"
                             aria-hidden="true"
                         >
-                            <div class="gallery__item-img-container">
+                            <div class="gallery__item-img-container" data-gallery-img-container>
                                 <img 
                                     alt="Image two"
                                     class="gallery__item-img"
@@ -84,13 +84,13 @@ describe('Gallery > initialisation > manual initialisation', () => {
         expect(instance.getState).toBeDefined();
         const { items } = instance.getState();
         expect(items[0].node.hasAttribute('aria-hidden')).toEqual(true);
-        expect(items[0].node.classList.contains(defaults.currentClassName)).toEqual(false);
+        expect(items[0].node.classList.contains(defaults.className.active)).toEqual(false);
 
         const imgs = await instance.initialise();
         console.log(imgs);
         expect(items[0].node.hasAttribute(ATTRIBUTE.LOADED)).toEqual(false);
         expect(items[0].node.hasAttribute('aria-hidden')).toEqual(false);
-        expect(items[0].node.classList.contains(defaults.currentClassName)).toEqual(true);
+        expect(items[0].node.classList.contains(defaults.className.active)).toEqual(true);
     });
 
 });
