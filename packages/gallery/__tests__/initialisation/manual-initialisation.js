@@ -95,10 +95,12 @@ describe('Gallery > initialisation > manual initialisation', () => {
         expect(items[0].node.classList.contains(defaults.className.active)).toEqual(false);
 
         const imgs = await instance.initialise();
-        console.log(imgs);
         expect(items[0].node.hasAttribute(ATTRIBUTE.LOADED)).toEqual(false);
         expect(items[0].node.hasAttribute('aria-hidden')).toEqual(false);
         expect(items[0].node.classList.contains(defaults.className.active)).toEqual(true);
+        expect(imgs.length).toEqual(2);
+        expect(imgs[0].src).toEqual('http://placehold.it/800x800');
+        expect(imgs[1].src).toEqual('http://placehold.it/1200x1200');
     });
 
 });
