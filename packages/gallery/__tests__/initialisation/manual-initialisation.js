@@ -3,7 +3,15 @@ import defaults from '../../src/lib/defaults';
 import { ATTRIBUTE } from '../../src/lib/constants';
 
 describe('Gallery > initialisation > manual initialisation', () => {
-    
+    //mock image complete because JSDom cannot load images
+    beforeAll(() => {
+        Object.defineProperty(Image.prototype, 'complete', {
+            get() {
+                return true;
+            }
+        });
+    });
+
     it('Should not set an active item, nor load any images until manually initialised', async () => {
         document.body.innerHTML = `<section class="gallery js-gallery">
                 <h2 class="visually-hidden">Gallery</h2>
