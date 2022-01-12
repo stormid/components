@@ -12,7 +12,7 @@ export default (node, settings) => {
     const Store = createStore();
 
     const items = [].slice.call(node.querySelectorAll(settings.selector.item));
-    if (items.length === 0) return void console.warn('Gallery cannot be initialised, no items found');
+    if (items.length === 0) return console.warn('Gallery cannot be initialised, no items found'), null;
 
     Store.dispatch({
         node,
