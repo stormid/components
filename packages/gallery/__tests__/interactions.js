@@ -12,7 +12,7 @@ beforeAll(() => {
                     </button>
                 </div>
                 <div class="gallery__main">
-                    <button class="gallery__previous" aria-label="Previous image" disabled data-gallery-previous>
+                    <button class="gallery__previous" aria-label="Previous image" data-gallery-previous>
                         <svg class="gallery__previous-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><rect fill="none" height="24" width="24"/><g><polygon points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"/></g></svg>
                     </button>
                     <ul class="gallery__list">
@@ -108,7 +108,11 @@ beforeAll(() => {
     [ instance ] = gallery('.js-gallery');
 });
 
-describe('Gallery > interactions', () => {
+//Don't need to test keyboard interactions separately (the test won't work by dispatching an event anyway)
+//https://www.w3.org/TR/WCAG20-TECHS/SCR35.html
+//The onclick event is mapped to the default action of a link or button.
+//The default action occurs when the user clicks the element with a mouse, but it also occurs when the user focuses the element and hits enter or space, and when the element is triggered via the accessibility API.
+describe('Gallery > click interactions', () => {
 
     it('should navigate to the next item via the next button', () => {
         expect(instance.getState().activeIndex).toEqual(0);
@@ -117,6 +121,16 @@ describe('Gallery > interactions', () => {
         instance.getState().dom.next.click();
         expect(instance.getState().activeIndex).toEqual(2);
         instance.getState().dom.next.click();
+        expect(instance.getState().activeIndex).toEqual(0);
+    });
+
+    it('should navigate to the previous item via the previous button', () => {
+        expect(instance.getState().activeIndex).toEqual(0);
+        instance.getState().dom.previous.click();
+        expect(instance.getState().activeIndex).toEqual(2);
+        instance.getState().dom.previous.click();
+        expect(instance.getState().activeIndex).toEqual(1);
+        instance.getState().dom.previous.click();
         expect(instance.getState().activeIndex).toEqual(0);
     });
 
