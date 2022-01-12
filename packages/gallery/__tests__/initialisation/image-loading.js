@@ -3,6 +3,14 @@ import gallery from '../../src';
 let instance;
 
 beforeAll(() => {
+    //mock image complete because JSDom cannot load images
+    beforeAll(() => {
+        Object.defineProperty(Image.prototype, 'complete', {
+            get() {
+                return true;
+            }
+        });
+    });
     document.body.innerHTML = `<section class="gallery js-gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
@@ -114,7 +122,7 @@ describe('Gallery > image loading', () => {
         instance.getState().items.forEach(item => {
             //need to wait for the image to load
             //+ need to mock image loading
-            //expect(item.loaded).toEqual(true);
+            expect(item.loaded).toEqual(true);
         });
     });
 
