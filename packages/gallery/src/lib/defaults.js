@@ -15,7 +15,8 @@ export default {
     className: {
         active: 'is--active',
         loading: 'is--loading',
-        img: 'gallery-item__image'
+        img: 'gallery-item__image', //should be a data-attribute?
+        loader: 'gallery-item__loader' //should be a data-attribute?
     },
     manualInitialisation: false, //if the gallery is hidden (e.g. in a modal) we may wish to delay initialisation and image loading until it is activiated
     updateURL: true, //change URL when item changes

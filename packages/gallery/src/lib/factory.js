@@ -6,7 +6,7 @@ import { composeItems, composeDOM } from './utils';
  * @param node, HTMLElement, DOM node containing the gallery
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
  *
- * @returns Object, Gallery API
+ * @returns Object, Gallery API: getState, initialise (for deferred or manual initialisation), gotTo, toggleFullScreen
  */
 export default (node, settings) => {
     const Store = createStore();

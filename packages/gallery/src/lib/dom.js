@@ -6,7 +6,7 @@ const createPicture = item => {
         const source = document.createElement('source');
         if (item.sources[i].srcset) source.setAttribute('srcset', item.sources[i].srcset);
         if (item.sources[i].media) source.setAttribute('media', item.sources[i].media);
-        if (item.sources[i].type) source.setAttribute('srcset', item.sources[i].type);
+        if (item.sources[i].type) source.setAttribute('type', item.sources[i].type);
         picture.insertBefore(source, picture.firstElementChild);
     }
     return picture;
@@ -25,7 +25,8 @@ const loadImage = Store => (item, i) => new Promise((resolve, reject) => {
     // because the item does not have the ATTRIBUTE.LOADED attribute,
     // and the imgNode src does not match the item ATTRIBUTE.SRC
     // therefore we can assume that any img (or SVG) present is a loading state and should be removed when the 
-    const loadingImg = item.imgContainer.querySelector('img, svg');
+    const loadingIndicator = item.imgContainer.querySelector(`img, svg, .${settings.className.loader}`);
+    // const loadingIndicator = item.imgContainer.querySelector(`img, svg, .${settings.className.loader}`);
 
     const img = new Image();
     let picture = false;
@@ -33,22 +34,23 @@ const loadImage = Store => (item, i) => new Promise((resolve, reject) => {
         const loaded = () => {
             item.loaded = true;
             item.node.classList.remove(settings.className.loading);
-            Store.dispatch({ items });
-            if (loadingImg) loadingImg.parentNode.removeChild(loadingImg);
-            if (picture) {
-                picture.appendChild(img);
-                item.imgContainer.appendChild(picture);
-            } else item.imgContainer.appendChild(img);
-
+            item.img = img;
+            Store.dispatch({ items: items.map((_item, idx) => i === idx ? item : _item ) });
             resolve(img);
         };
         img.onload = loaded;
         if (item.srcset) img.setAttribute('srcset', item.srcset);
         if (item.src) img.setAttribute('src', item.src);
         if (item.sizes) img.setAttribute('sizes', item.sizes);
-        //assume picture tag is not present and  we need to create it if there are item.sources
+        //assume picture tag is not present and we need to create it if there are item.sources
         if (item.sources && item.sources.length > 0) picture = createPicture(item);
         if (img.complete) loaded();
+        if (loadingIndicator) loadingIndicator.parentNode.removeChild(loadingIndicator);
+        if (picture) {
+            picture.appendChild(img);
+            item.imgContainer.appendChild(picture);
+        } else item.imgContainer.appendChild(img);
+
     } catch (e) {
         console.warn('Gallery cannot load image', e);
         reject(img);
@@ -94,6 +96,7 @@ export const init = Store => () => {
     
     //set initial DOM state
     items.forEach((item, i) => {
+        if (!item.node.hasAttribute('tabindex')) item.node.setAttribute('tabindex', 0);
         if (i === activeIndex) {
             if (!item.node.classList.contains(settings.className.active)) item.node.classList.add(settings.className.active);
             if (item.node.hasAttribute('aria-hidden')) item.node.removeAttribute('aria-hidden');
@@ -120,6 +123,8 @@ export const toggleFullScreen = Store => {
 export const change = (Store, next) => {
     const { activeIndex, items } = Store.getState();
 
+    //set activeIndex in state,
+    //then run all side effects to change the DOM/show and hide items, manage focus, and load updated previous/next
     Store.dispatch({ activeIndex: next }, [
         () => {
             items[activeIndex].node.classList.remove('is--active');
@@ -130,6 +135,7 @@ export const change = (Store, next) => {
             items[next].node.removeAttribute('aria-hidden');
         },
         () => loadImages(Store)(next),
+        () => items[next].node.focus(),
         writeTotals
     ]);
 };
