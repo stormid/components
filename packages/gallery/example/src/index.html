@@ -16,8 +16,7 @@
         img {
             display: block;
         }
-        .visually-hidden,
-        .gallery__item:not(.is--active) {
+        .visually-hidden {
             position: absolute;
             width: 1px;
             height: 1px;
@@ -26,7 +25,10 @@
             border: 0;
             overflow: hidden;
             clip: rect(0 0 0 0);
-        }   
+        }
+        .gallery__item:not(.is--active) {
+            display: none;
+        }
 		*:focus {
 			outline: 1px solid red;
 		}
@@ -113,7 +115,30 @@
                         <div class="gallery__item-meta">
                             <div class="gallery__item-description">
                                 <h2 class="gallery__item-artist">Kate Murphy</h2>
-                                <div class="gallery__item-category">Architecture - April</div>
+                                <div class="gallery__item-category">Architecture - May</div>
+                                <div class="gallery__item-title">Example project name here</div>
+                            </div>
+                            <ul class="gallery__item-tags">
+                                <li class="gallery__item-tag">Example tag</li>
+                                <li class="gallery__item-tag">Example tag</li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li
+                    class="gallery__item"
+                    data-gallery-item
+                    data-gallery-item-src="https://via.placeholder.com/430x300.png"
+                    data-gallery-item-sources='[{ "srcset": "https://via.placeholder.com/740x200.png", "media": "(min-width:440px)" }, { "srcset": "https://via.placeholder.com/1400x200.png", "media": "(min-width:740px)" }, { "srcset": "https://via.placeholder.com/1640x200.jpg", "media": "(min-width:1400px)"}]'
+                >
+                    <div class="gallery__item-img-container" data-gallery-item-img-container>
+                        <div class="gallery-item__loader">Loading...</div>
+                    </div>
+                    <div class="gallery__item-footer">
+                        <div class="gallery__item-meta">
+                            <div class="gallery__item-description">
+                                <h2 class="gallery__item-artist">Kate Murphy</h2>
+                                <div class="gallery__item-category">Architecture - June</div>
                                 <div class="gallery__item-title">Example project name here</div>
                             </div>
                             <ul class="gallery__item-tags">
