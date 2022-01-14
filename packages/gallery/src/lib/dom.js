@@ -1,4 +1,5 @@
 import { sanitise } from './utils';
+import { ATTRIBUTE } from './constants';
 
 const createPicture = item => {
     const picture = document.createElement('picture');
@@ -34,6 +35,7 @@ const loadImage = Store => (item, i) => new Promise((resolve, reject) => {
         const loaded = () => {
             item.loaded = true;
             item.node.classList.remove(settings.className.loading);
+            item.node.setAttribute(ATTRIBUTE.LOADED, true);
             item.img = img;
             Store.dispatch({ items: items.map((_item, idx) => i === idx ? item : _item ) });
             resolve(img);

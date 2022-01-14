@@ -95,7 +95,7 @@ describe('Gallery > initialisation > manual initialisation', () => {
         expect(items[0].node.classList.contains(defaults.className.active)).toEqual(false);
 
         const imgs = await instance.initialise();
-        expect(items[0].node.hasAttribute(ATTRIBUTE.LOADED)).toEqual(false);
+        expect(items[0].node.hasAttribute(ATTRIBUTE.LOADED)).toEqual(true);
         expect(items[0].node.hasAttribute('aria-hidden')).toEqual(false);
         expect(items[0].node.classList.contains(defaults.className.active)).toEqual(true);
         expect(imgs.length).toEqual(2);
