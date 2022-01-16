@@ -90,8 +90,8 @@ export const init = Store => () => {
     const { settings, items, dom, activeIndex } = state;
     
     //initialise buttons
-    if (!dom.total) console.warn(`A live region announcing current and total items is recommended for screen readers.`);
-    else writeTotals(state);
+    if (!dom.liveRegion) console.warn(`A live region announcing current and total items is recommended for screen readers.`);
+    else writeLiveRegion(state);
     if (dom.fullscreen) dom.fullscreen.addEventListener('click', toggleFullScreen.bind(null, Store));
     if (dom.previous) dom.previous.addEventListener('click', previous.bind(null, Store));
     if (dom.next) dom.next.addEventListener('click', next.bind(null, Store));
@@ -114,7 +114,7 @@ export const init = Store => () => {
     
 };
 
-const writeTotals = ({ activeIndex, items, settings, dom }) => dom.total.innerHTML = sanitise(settings.announcement(activeIndex + 1, items.length));
+const writeLiveRegion = ({ activeIndex, items, settings, dom }) => dom.liveRegion.innerHTML = sanitise(settings.announcement(activeIndex + 1, items.length));
 
 export const toggleFullScreen = Store => {
     const { node } = Store.getState();
@@ -131,14 +131,12 @@ export const change = (Store, next) => {
         () => {
             items[activeIndex].node.classList.remove('is--active');
             items[activeIndex].node.setAttribute('aria-hidden', 'true');
-        },
-        () => {
             items[next].node.classList.add('is--active');
             items[next].node.removeAttribute('aria-hidden');
         },
         () => loadImages(Store)(next),
         () => items[next].node.focus(),
-        writeTotals
+        writeLiveRegion
     ]);
 };
 

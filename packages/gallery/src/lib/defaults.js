@@ -7,7 +7,7 @@ export default {
     selector: {
         item: '[data-gallery-item]',
         fullscreen: '[data-gallery-fullscreen]',
-        total: '[data-gallery-total]',
+        liveRegion: '[data-gallery-live-region]',
         previous: '[data-gallery-previous]',
         next: '[data-gallery-next]',
         imgContainer: '[data-gallery-item-img-container]'
