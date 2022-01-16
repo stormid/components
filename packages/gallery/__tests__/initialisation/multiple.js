@@ -6,7 +6,7 @@ describe('Gallery > initialisation > multiple', () => {
         document.body.innerHTML = `<section class="gallery js-gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
-                    <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-total>1 of 5</div>
+                    <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>
                     <button class="gallery__fullscreen" aria-label="Full screen" data-gallery-fullscreen>
                         <svg class="gallery__fullscreen-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
                     </button>
@@ -80,7 +80,7 @@ describe('Gallery > initialisation > multiple', () => {
             <section class="gallery js-gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
-                    <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-total>1 of 5</div>
+                    <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>
                     <button class="gallery__fullscreen" aria-label="Full screen" data-gallery-fullscreen>
                         <svg class="gallery__fullscreen-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
                     </button>
@@ -167,7 +167,7 @@ describe('Gallery > initialisation > multiple', () => {
         document.body.innerHTML = `<section class="gallery js-gallery__1">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
-                    <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-total>1 of 5</div>
+                    <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>
                     <button class="gallery__fullscreen" aria-label="Full screen" data-gallery-fullscreen>
                         <svg class="gallery__fullscreen-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
                     </button>
@@ -241,7 +241,7 @@ describe('Gallery > initialisation > multiple', () => {
             <section class="gallery js-gallery__2">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
-                    <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-total>1 of 5</div>
+                    <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>
                     <button class="gallery__fullscreen" aria-label="Full screen" data-gallery-fullscreen>
                         <svg class="gallery__fullscreen-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
                     </button>

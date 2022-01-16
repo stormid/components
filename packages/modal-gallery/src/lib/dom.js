@@ -68,7 +68,7 @@ export const initUI = store => state => {
         initUIButtons(store),
         () => document.addEventListener('keydown', keyListener),
         toggle(store),
-        writeTotals
+        writeLiveRegion
     ]);
 };
 
@@ -168,8 +168,8 @@ const toggle = store => state => {
     settings.fullscreen && toggleFullScreen(state);
 };
 
-const writeTotals = ({ dom, current, items, settings }) => {
-    if (settings.totals) dom.totals.innerHTML = `${current + 1}/${items.length}`;
+const writeLiveRegion = ({ dom, current, items, settings }) => {
+    if (settings.totals) dom.liveRegions.innerHTML = `${current + 1}/${items.length}`;
 };
 
 const toggleFullScreen = ({ isOpen, dom }) => {
@@ -199,7 +199,7 @@ export const previous = store => {
         () => dom.items[current].classList.remove('is--active'),
         () => dom.items[next].classList.add('is--active'),
         load(store),
-        writeTotals
+        writeLiveRegion
     ]);
 };
 
@@ -213,7 +213,7 @@ export const next = store => {
         () => dom.items[current].classList.remove('is--active'),
         () => dom.items[next].classList.add('is--active'),
         load(store),
-        writeTotals
+        writeLiveRegion
     ]);
 };
 
