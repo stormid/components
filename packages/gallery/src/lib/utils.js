@@ -36,7 +36,7 @@ export const composeItems = (nodes, settings) => nodes.map(node => {
 });
 
 export const composeDOM = (node, settings) => ({
-    total: node.querySelector(settings.selector.total),
+    liveRegion: node.querySelector(settings.selector.liveRegion),
     fullscreen: node.querySelector(settings.selector.fullscreen),
     previous: node.querySelector(settings.selector.previous),
     next: node.querySelector(settings.selector.next)
