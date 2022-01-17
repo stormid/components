@@ -1,6 +1,6 @@
 import { createStore } from './store';
 import { init, toggleFullScreen, goTo } from './dom';
-import { composeItems, composeDOM } from './utils';
+import { composeItems, composeDOM, getIndexFromURL, popstateHandler } from './utils';
 
 /* 
  * @param node, HTMLElement, DOM node containing the gallery
@@ -8,19 +8,24 @@ import { composeItems, composeDOM } from './utils';
  *
  * @returns Object, Gallery API: getState, initialise (for deferred or manual initialisation), gotTo, toggleFullScreen
  */
-export default (node, settings) => {
+export default (node, settings, index) => {
     const Store = createStore();
 
     const items = [].slice.call(node.querySelectorAll(settings.selector.item));
     if (items.length === 0) return console.warn('Gallery cannot be initialised, no items found'), null;
 
+    const name = `gallery-${index + 1}`;
     Store.dispatch({
         node,
+        name,
         settings,
         items: composeItems(items, settings),
         dom: composeDOM(node, settings),
-        activeIndex: settings.startIndex
-    }, [ () => !settings.manualInitialisation && init(Store)() ]);
+        activeIndex: getIndexFromURL(name, items, location.hash, settings.startIndex)
+    }, [
+        () => !settings.manualInitialisation && init(Store)(),
+        () => window.addEventListener('popstate', popstateHandler(Store))
+    ]);
 
     return {
         getState: Store.getState,
