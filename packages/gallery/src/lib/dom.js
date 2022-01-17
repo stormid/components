@@ -123,7 +123,7 @@ export const toggleFullScreen = Store => {
 };
 
 export const change = (Store, next) => {
-    const { activeIndex, items } = Store.getState();
+    const { activeIndex, items, settings, name } = Store.getState();
 
     //set activeIndex in state,
     //then run all side effects to change the DOM/show and hide items, manage focus, and load updated previous/next
@@ -136,7 +136,11 @@ export const change = (Store, next) => {
         },
         () => loadImages(Store)(next),
         () => items[next].node.focus(),
-        writeLiveRegion
+        writeLiveRegion,
+        () => {
+            const num = next + 1;
+            settings.updateURL && window.history.replaceState({ URL: `#${name}-${num}` }, '', `#${name}-${num}`);
+        }
     ]);
 };
 

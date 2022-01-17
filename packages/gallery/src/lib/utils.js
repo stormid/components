@@ -1,4 +1,5 @@
 import { ATTRIBUTE } from './constants';
+import { change } from './dom';
 
 export const sanitise = item => item.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -41,3 +42,23 @@ export const composeDOM = (node, settings) => ({
     previous: node.querySelector(settings.selector.previous),
     next: node.querySelector(settings.selector.next)
 });
+
+export const getIndexFromURL = (name, items, url, fallback = false) => {
+    const hash = url ? url.slice(1) : false;
+    if (!hash) return fallback;
+    if (hash.indexOf(`${name}-`) === -1) return fallback;
+    const num = Number(hash.split(`${name}-`)[1]);
+    if (isNaN(num)) return fallback;
+    const index = num - 1;
+    if (index < 0 || index > (items.length - 1)) return fallback;
+    return index;
+};
+
+export const popstateHandler = Store => e => {
+    if (!e.state) return;
+    const url = e.state.URL;
+    const { name, items } = Store.getState();
+    const index = getIndexFromURL(name, items, url);
+    if (index === false) return;
+    change(Store, index);
+};
