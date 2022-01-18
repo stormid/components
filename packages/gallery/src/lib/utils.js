@@ -44,13 +44,12 @@ export const composeDOM = (node, settings) => ({
 });
 
 export const getIndexFromURL = (name, items, url, fallback = false) => {
-    const hash = url ? url.slice(1) : false;
-    if (!hash) return fallback;
+    const hash = url.split(`#`)[1] || '';
     if (hash.indexOf(`${name}-`) === -1) return fallback;
     const num = Number(hash.split(`${name}-`)[1]);
-    if (isNaN(num)) return fallback;
+    if (isNaN(num)) return console.warn('Gallery hash not valid'), fallback;
     const index = num - 1;
-    if (index < 0 || index > (items.length - 1)) return fallback;
+    if (index < 0 || index > (items.length - 1)) return console.warn('Gallery index out of bounds'), fallback;
     return index;
 };
 
