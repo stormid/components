@@ -19,7 +19,7 @@ export default {
         loader: 'gallery-item__loader' //should be a data-attribute?
     },
     manualInitialisation: false, //if the gallery is hidden (e.g. in a modal) we may wish to delay initialisation and image loading until it is activiated
-    updateURL: true, //change URL when item changes
+    updateURL: false, //change URL when item changes
     announcement(current, total){
         return `${current} of ${total}`;
     }
