@@ -63,8 +63,10 @@ export const clearError = groupName => state => {
         const describedbyid = ((state.groups[groupName].serverErrorNode || state.errors[groupName]).id);
 
         //check whether the aria-describedby matches the id, if not another id must be present, only replace the removed error id
-        if (field.getAttribute('aria-describedby') === describedbyid) field.removeAttribute('aria-describedby');
-        else field.setAttribute('aria-describedby', field.getAttribute('aria-describedby').replace(` ${describedbyid}`, ''));
+        if(field.hasAttribute('aria-describedby')) {
+            if (field.getAttribute('aria-describedby') === describedbyid) field.removeAttribute('aria-describedby');
+            else field.setAttribute('aria-describedby', field.getAttribute('aria-describedby').replace(` ${describedbyid}`, ''));
+        }
     });
     delete state.errors[groupName];//shouldn't be doing this here...
 };
