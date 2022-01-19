@@ -114,23 +114,25 @@ export const renderError = groupName => state => {
     //shouldn't be updating state here...
     //to do: refactor to update state as a side effect afterwards?
     //would need to pass Store instead of state
-    if (state.groups[groupName].serverErrorNode) state.errors[groupName] = createErrorTextNode(state.groups[groupName], state.groups[groupName].errorMessages[0]);
-    else {
-        const label = document.querySelector(`[for="${state.groups[groupName].fields[state.groups[groupName].fields.length-1].getAttribute('id')}"]`);
-        state.errors[groupName] = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: `${groupName}-error-message` }, state.groups[groupName].errorMessages[0]), label.nextSibling);
-    }
-    const errorContainer = state.groups[groupName].serverErrorNode || state.errors[groupName];
-						
-    state.groups[groupName].fields.forEach(field => {
-        field.parentNode.classList.add('is--invalid');
-        field.setAttribute('aria-invalid', 'true');
-        if (!field.hasAttribute('aria-describedby') || !hasAriaDescribedbyValue(field, errorContainer.getAttribute('id'))) {
-            field.setAttribute('aria-describedby', (field.hasAttribute('aria-describedby')
-                ? `${field.getAttribute('aria-describedby')} ${errorContainer.getAttribute('id')}`
-                : errorContainer.getAttribute('id'))
-            );
+    if(typeof state.groups[groupName].errorMessages !== 'undefined') {
+        if (state.groups[groupName].serverErrorNode) state.errors[groupName] = createErrorTextNode(state.groups[groupName], state.groups[groupName].errorMessages[0]);
+        else {
+            const label = document.querySelector(`[for="${state.groups[groupName].fields[state.groups[groupName].fields.length-1].getAttribute('id')}"]`);
+            state.errors[groupName] = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: `${groupName}-error-message` }, state.groups[groupName].errorMessages[0]), label.nextSibling);
         }
-    });
+        const errorContainer = state.groups[groupName].serverErrorNode || state.errors[groupName];
+                            
+        state.groups[groupName].fields.forEach(field => {
+            field.parentNode.classList.add('is--invalid');
+            field.setAttribute('aria-invalid', 'true');
+            if (!field.hasAttribute('aria-describedby') || !hasAriaDescribedbyValue(field, errorContainer.getAttribute('id'))) {
+                field.setAttribute('aria-describedby', (field.hasAttribute('aria-describedby')
+                    ? `${field.getAttribute('aria-describedby')} ${errorContainer.getAttribute('id')}`
+                    : errorContainer.getAttribute('id'))
+                );
+            }
+        });
+    }
 };
 
 
