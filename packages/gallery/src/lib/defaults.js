@@ -10,13 +10,12 @@ export default {
         liveRegion: '[data-gallery-live-region]',
         previous: '[data-gallery-previous]',
         next: '[data-gallery-next]',
-        imgContainer: '[data-gallery-item-img-container]'
+        imgContainer: '[data-gallery-item-img-container]',
+        loader: '[data-gallery-item-loader]'
     },
     className: {
         active: 'is--active',
-        loading: 'is--loading',
-        img: 'gallery-item__image', //should be a data-attribute?
-        loader: 'gallery-item__loader' //should be a data-attribute?
+        loading: 'is--loading'
     },
     manualInitialisation: false, //if the gallery is hidden (e.g. in a modal) we may wish to delay initialisation and image loading until it is activiated
     updateURL: false, //change URL when item changes
