@@ -30,7 +30,7 @@ beforeAll(() => {
                             data-gallery-item-sources='[{ "srcset": "https://via.placeholder.com/700x200.png", "media": "(min-width:400px)" }, { "srcset": "https://via.placeholder.com/1000x200.png", "media": "(min-width:700px)" }, { "srcset": "https://via.placeholder.com/1600x200.jpg", "media": "(min-width:1000px)" }]'
                         >
                             <div class="gallery__item-img-container" data-gallery-item-img-container>
-                                <div class="gallery-item__loader">Loading...</div>
+                                <div data-gallery-item-loader>Loading...</div>
                             </div>
                             <div class="gallery__item-footer">
                                 <div class="gallery__item-meta">
@@ -53,7 +53,7 @@ beforeAll(() => {
                             data-gallery-item-sources='[{ "srcset": "https://via.placeholder.com/710x200.png", "media": "(min-width:400px)" }, { "srcset": "https://via.placeholder.com/1100x200.png", "media": "(min-width:710px)" }, { "srcset": "https://via.placeholder.com/1600x200.jpg", "media": "(min-width:1100px)" }]'
                         >
                             <div class="gallery__item-img-container" data-gallery-item-img-container>
-                                <div class="gallery-item__loader">Loading...</div>
+                                <div data-gallery-item-loader>Loading...</div>
                             </div>
                             <div class="gallery__item-footer">
                                 <div class="gallery__item-meta">
@@ -76,7 +76,7 @@ beforeAll(() => {
                             data-gallery-item-sources='[{ "srcset": "https://via.placeholder.com/730x200.png", "media": "(min-width:430px)" }, { "srcset": "https://via.placeholder.com/1300x200.png", "media": "(min-width:730px)" }, { "srcset": "https://via.placeholder.com/1630x200.jpg", "media": "(min-width:1300px)"}]'
                         >
                             <div class="gallery__item-img-container" data-gallery-item-img-container>
-                                <div class="gallery-item__loader">Loading...</div>
+                                <div data-gallery-item-loader>Loading...</div>
                             </div>
                             <div class="gallery__item-footer">
                                 <div class="gallery__item-meta">

@@ -26,8 +26,7 @@ const loadImage = Store => (item, i) => new Promise((resolve, reject) => {
     // because the item does not have the ATTRIBUTE.LOADED attribute,
     // and the imgNode src does not match the item ATTRIBUTE.SRC
     // therefore we can assume that any img (or SVG) present is a loading state and should be removed when the 
-    const loadingIndicator = item.imgContainer.querySelector(`img, svg, .${settings.className.loader}`);
-    // const loadingIndicator = item.imgContainer.querySelector(`img, svg, .${settings.className.loader}`);
+    const loadingIndicator = item.imgContainer.querySelector(`img, svg, ${settings.selector.loader}`);
 
     const img = new Image();
     let picture = false;
