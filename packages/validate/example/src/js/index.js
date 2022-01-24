@@ -13,16 +13,16 @@ import validate from '../../../src';
     //     }
     // });
     const inputs = [ document.querySelector('#f1'), document.querySelector('#f2') ];
-    validator.addMethod(
-        'CustomGroup',
-        (value, fields) => {
-            console.log(value);
-            console.log(inputs);
-            return inputs[0].value.trim() === 'potato' || inputs[1].value.trim() === 'potato';
-        },
-        'One of the inputs must be the word "potato"',
-        inputs
-    );
+    // validator.addMethod(
+    //     'CustomGroup',
+    //     (value, fields) => {
+    //         console.log(value);
+    //         console.log(inputs);
+    //         return inputs[0].value.trim() === 'potato' || inputs[1].value.trim() === 'potato';
+    //     },
+    //     'One of the inputs must be the word "potato"',
+    //     inputs
+    // );
 
     console.log(validator.getState());
 
