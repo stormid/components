@@ -302,6 +302,8 @@ If this element is not present a span is appended to the label for the field wit
 
 Fields without data-val error messages will show the default messages for the failed validator (see options below).
 
+To include the user input value in your error message, place a token "{{value}}" within the message string and the script will replace it at the time of validation.  eg "{{value}} is not a valid email address" will become "test@test is not a valid email address"
+
 
 ## Options
 
