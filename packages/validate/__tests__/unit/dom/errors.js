@@ -366,4 +366,31 @@ describe('Validate > Unit > DOM > updateMessageValues', () => {
         
     });
 
+    it('Should leave the error message unchanged if the {{value}} token is not found', async () => {
+        document.body.innerHTML = `<form class="form" method="post" action="">
+            <div>
+                <label id="test-label" for="group1">Text</label>
+                <input id="group1" name="group1" value="test" data-val="true" data-val-regex="These are not valid inputs" data-val-regex-pattern="^http(s)?">
+            </div>
+            <div>
+                <label id="test-label2" for="group2">Text</label>
+                <input id="group2" name="group1" value="test2" data-val="true" data-val-regex="These are not valid inputs" data-val-regex-pattern="^http(s)?">
+            </div>
+        </form>`;
+        const mockState = {
+            groups: {
+                group1: {
+                    serverErrorNode: false,
+                    fields: Array.from(document.getElementsByName('group1')),
+                    errorMessages: ['These are not valid inputs'],
+                    valid: false
+                }
+            },
+            errors: {}
+        };
+        let message = updateMessageValues(mockState, 'group1');
+        expect(message).toEqual('These are not valid inputs');
+        
+    });
+
 });
