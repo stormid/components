@@ -302,7 +302,10 @@ If this element is not present a span is appended to the label for the field wit
 
 Fields without data-val error messages will show the default messages for the failed validator (see options below).
 
-To include the user input value in your error message, place a token "{{value}}" within the message string and the script will replace it at the time of validation.  eg "{{value}} is not a valid email address" will become "test@test is not a valid email address"
+#### Including values in error messages
+To include the user input value in your error message, place a token "{{value}}" within the message string and the script will replace it at the time of validation.  e.g. "{{value}} is not a valid email address" will become "test@test is not a valid email address".  
+
+If a validation group contains more than one field, the values of these will be returned as a comma seperated list within the message.  For example:  "{{value}} are not valid inputs" becomes "test1, test2 are not valid inputs".
 
 
 ## Options
