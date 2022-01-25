@@ -108,9 +108,9 @@ export const renderErrors = state => {
     let msg = state.groups[groupName].errorMessages[0];
 
     let values = state.groups[groupName].fields.reduce((acc, field, index, array) => {
-        if(index === array.length-1) return acc;
-        return acc = acc + ", " + field.value;
-    }, state.groups[groupName].fields[0].value);
+        if(index === array.length-1) return acc + field.value;
+        return acc = field.value + ", ";
+    }, "");
 
     return msg.replace(TOKENS.VALUE, values);
 };

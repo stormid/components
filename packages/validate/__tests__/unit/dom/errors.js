@@ -3,7 +3,8 @@ import {
     clearError,
     clearErrors,
     renderError,
-    renderErrors
+    renderErrors,
+    updateMessageValues
 } from '../../../src/lib/dom';
 import { DOTNET_CLASSNAMES } from '../../../src/lib/constants';
 
@@ -306,6 +307,63 @@ describe('Validate > Unit > DOM > renderErrors', () => {
         expect(mockState.groups.group2.fields[0].parentNode.classList.contains('is--invalid')).toEqual(false);
         expect(mockState.groups.group2.fields[0].getAttribute('aria-invalid')).toEqual(null);
         expect(mockState.groups.group1.fields[0].getAttribute('aria-describedby')).toEqual(errorContainer.id);
+    });
+
+});
+
+
+//updateMessageValues
+describe('Validate > Unit > DOM > updateMessageValues', () => {
+    
+    it('Should return an error message string containing the input value if the {{value}} token is found in the error message', async () => {
+        document.body.innerHTML = `<form class="form" method="post" action="">
+            <div>
+                <label id="test-label" for="group1">Text</label>
+                <input id="group1" name="group1" value="test" data-val="true" type="email" data-val-email="{{value}} is not a valid email address">
+            </div>
+           
+        </form>`;
+        const mockState = {
+            groups: {
+                group1: {
+                    serverErrorNode: false,
+                    fields: Array.from(document.getElementsByName('group1')),
+                    errorMessages: ['{{value}} is not a valid email address'],
+                    valid: false
+                }
+            },
+            errors: {}
+        };
+        let message = updateMessageValues(mockState, 'group1');
+        expect(message).toEqual('test is not a valid email address');
+        
+    });
+
+    it('Should return an error message with a comma delimited string of values if more than one field is in a group', async () => {
+        document.body.innerHTML = `<form class="form" method="post" action="">
+            <div>
+                <label id="test-label" for="group1">Text</label>
+                <input id="group1" name="group1" value="test" data-val="true" data-val-regex="{{value}} are not valid inputs" data-val-regex-pattern="^http(s)?">
+            </div>
+            <div>
+                <label id="test-label2" for="group2">Text</label>
+                <input id="group2" name="group1" value="test2" data-val="true" data-val-regex="{{value}} are not valid inputs" data-val-regex-pattern="^http(s)?">
+            </div>
+        </form>`;
+        const mockState = {
+            groups: {
+                group1: {
+                    serverErrorNode: false,
+                    fields: Array.from(document.getElementsByName('group1')),
+                    errorMessages: ['{{value}} are not valid inputs'],
+                    valid: false
+                }
+            },
+            errors: {}
+        };
+        let message = updateMessageValues(mockState, 'group1');
+        expect(message).toEqual('test, test2 are not valid inputs');
+        
     });
 
 });
