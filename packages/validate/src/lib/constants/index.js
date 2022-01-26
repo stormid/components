@@ -79,3 +79,7 @@ export const DOTNET_CLASSNAMES = {
 };
 
 export const GROUP_ATTRIBUTE = 'group';
+
+export const TOKENS = {
+    VALUE: '{{value}}'
+}

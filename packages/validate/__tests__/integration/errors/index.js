@@ -68,4 +68,26 @@ describe('Validate > Integration > errors', () => {
         expect(errorContainer.firstChild.textContent).toEqual(defaults.messages.required());
     });
 
+    it('Should render the invalid input value in the error message if the {{value}} token is used in the supplied error message', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<form class="form">
+            <label id="group1-1-label" for="group1-1">group1</label>
+            <input
+                id="group1-1"
+                name="group1"
+                data-val="true"
+                data-val-email="{{value}} is not a valid email address"
+                value="test"
+                type="email"
+                aria-describedby="ssec"
+            />
+            <span id="ssec" data-valmsg-for="group1"></span>
+        </form>`;
+        const [ validator ] = validate('form');
+        await validator.validate();
+        const errorContainer = document.getElementById('ssec');
+        //render error message
+        expect(errorContainer.textContent).toEqual('test is not a valid email address');
+    });
+
 });

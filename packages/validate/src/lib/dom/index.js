@@ -1,4 +1,4 @@
-import { DOTNET_CLASSNAMES } from '../constants';
+import { DOTNET_CLASSNAMES, TOKENS } from '../constants';
 
 /**
  * Hypertext DOM factory function
@@ -30,7 +30,8 @@ export const h = (nodeName, attributes, text) => {
  * @returns node [Text node]
  * 
  */
-export const createErrorTextNode = (group, msg) => {
+export const createErrorTextNode = (group, msg) => {    
+
     let node = document.createTextNode(msg);
     group.serverErrorNode.classList.remove(DOTNET_CLASSNAMES.VALID);
     group.serverErrorNode.classList.add(DOTNET_CLASSNAMES.ERROR);
@@ -95,6 +96,26 @@ export const renderErrors = state => {
     });
 };
 
+
+/**
+ * Looks for any value tokens and replaces them within the error message
+ * 
+ * @param state [Object, validation state]
+ * @param groupName [String, validation group] 
+ * 
+ */
+ export const updateMessageValues = (state, groupName) => {
+    let msg = state.groups[groupName].errorMessages[0];
+
+    let values = state.groups[groupName].fields.reduce((newMsg, field, index, array) => {
+        if(index === array.length-1) return newMsg + field.value;
+        return newMsg = field.value + ", ";
+    }, "");
+
+    return msg.replace(TOKENS.VALUE, values);
+};
+
+
 /**
  * Adds an error message to the DOM and saves it to local scope
  * 
@@ -110,14 +131,16 @@ export const renderErrors = state => {
  */
 export const renderError = groupName => state => {
     if (state.errors[groupName]) clearError(groupName)(state);
-    
+
+    let msg = updateMessageValues(state, groupName);
+
     //shouldn't be updating state here...
     //to do: refactor to update state as a side effect afterwards?
     //would need to pass Store instead of state
-    if (state.groups[groupName].serverErrorNode) state.errors[groupName] = createErrorTextNode(state.groups[groupName], state.groups[groupName].errorMessages[0]);
+    if (state.groups[groupName].serverErrorNode) state.errors[groupName] = createErrorTextNode(state.groups[groupName], msg);
     else {
         const label = document.querySelector(`[for="${state.groups[groupName].fields[state.groups[groupName].fields.length-1].getAttribute('id')}"]`);
-        state.errors[groupName] = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: `${groupName}-error-message` }, state.groups[groupName].errorMessages[0]), label.nextSibling);
+        state.errors[groupName] = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: `${groupName}-error-message` }, msg), label.nextSibling);
     }
     const errorContainer = state.groups[groupName].serverErrorNode || state.errors[groupName];
 						
