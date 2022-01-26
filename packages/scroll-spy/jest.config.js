@@ -8,5 +8,5 @@ module.exports = {
     },
     displayName: pack.name,
     name: pack.name,
-    testEnvironment: './jsdom-env.js'
+    testEnvironment: 'jsdom'
 };

@@ -6,5 +6,5 @@ module.exports = {
         '^.+\\.js$': './tools/jest/babel-jest-wrapper.js'
     },
     projects: ['<rootDir>', '<rootDir>/packages/*'],
-    testEnvironment: './tools/jest/jsdom-env.js'
+    testEnvironment: 'jsdom'
 };
