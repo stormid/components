@@ -1,17 +1,6 @@
 import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
 describe('Validate > Integration > validator > number', () => {
-    it('should return the validityState false for HTML5 number validator with non-number', async () => {
-        expect.assertions(1);
-        document.body.innerHTML = `<input
-			id="group1"
-            name="group1"
-            value="not.a.number"
-			type="number">`;
-        const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
-    });
 
     it('should return the validityState true for HTML5 number validator with a number', async () => {
         expect.assertions(2);
