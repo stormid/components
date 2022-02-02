@@ -1,4 +1,5 @@
 import scrollPoints from '../src';
+import { getSelection } from '../src';
 
 let basic, withCallback;
 const init = () => {
@@ -73,6 +74,44 @@ describe('Scroll points > Options', () => {
     it('should be passed in options', () => {
         expect(withCallback[0].settings.callback).not.toBeNull();
         expect(basic[0].settings.callback).toEqual(false);
+    });
+
+});
+
+describe('Scroll points > Initialisation > Get Selection', () => {
+
+    const setupDOM = () => {
+        // Set up our document body
+        document.body.innerHTML = `<div class="js-scroll-point test"></div>`;
+    }
+
+    beforeAll(setupDOM);
+
+    it('should return an array when passed a DOM element', async () => {
+        const scroll = document.querySelector('.js-scroll-point');
+        const els = getSelection(scroll);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a NodeList element', async () => {
+        const scroll = document.querySelectorAll('.js-scroll-point');
+        const els = getSelection(scroll);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed an array of DOM elements', async () => {
+        const scroll = document.querySelector('.js-scroll-point');
+        const els = getSelection([scroll]);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a string', async () => {
+        const els = getSelection('.js-scroll-point');
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
     });
 
 });
