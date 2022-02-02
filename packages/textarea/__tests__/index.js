@@ -13,7 +13,6 @@ const init = () => {
     document.body.innerHTML = `<textarea rows="1"></textarea>`;
 
     Textareas = textarea('textarea');
-    
 };
 
 describe(`Textarea > initialisation`, () => {

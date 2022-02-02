@@ -1,5 +1,6 @@
 import validate from '../../src';
 import defaults from '../../src/lib/defaults';
+import { getSelection } from '../../src';
 
 let validators;
 const setUpDOM = () => {
@@ -104,6 +105,39 @@ describe('Validate > Initialisation > DOM element', () => {
         expect(validators[0].addMethod).not.toBeUndefined();
         expect(validators[0].getState).not.toBeUndefined();
     });
+
+    it('should initialise when passed a NodeList element', async () => {
+        expect.assertions(4);
+        setUpDOM();
+        const form = document.querySelectorAll('.form');
+        const validators = await validate(form);
+        expect(validators[0]).not.toBeNull();
+        expect(validators[0].validate).not.toBeUndefined();
+        expect(validators[0].addMethod).not.toBeUndefined();
+        expect(validators[0].getState).not.toBeUndefined();
+    });
+
+    it('should initialise when passed an array of DOM elements', async () => {
+        expect.assertions(4);
+        setUpDOM();
+        const form = document.querySelector('.form');
+        const validators = await validate([form]);
+        expect(validators[0]).not.toBeNull();
+        expect(validators[0].validate).not.toBeUndefined();
+        expect(validators[0].addMethod).not.toBeUndefined();
+        expect(validators[0].getState).not.toBeUndefined();
+    });
+
+    it('should initialise when passed a string', async () => {
+        expect.assertions(4);
+        setUpDOM();
+        const validators = await validate('.form');
+        expect(validators[0]).not.toBeNull();
+        expect(validators[0].validate).not.toBeUndefined();
+        expect(validators[0].addMethod).not.toBeUndefined();
+        expect(validators[0].getState).not.toBeUndefined();
+    });
+
 });
 
 describe('Validate > Initialisation > novalidate', () => {
@@ -132,4 +166,38 @@ describe('Validate > Initialisation > server-side errors', () => {
         expect(Object.keys(validator.getState().errors).length).toEqual(1);
         expect(validator.getState().errors.group1).toEqual(serverRenderedErrorMessage);
     });
+});
+
+describe('Validate > Initialisation > Get Selection', () => {
+    it('should return an array when passed a DOM element', async () => {
+        setUpDOM();
+        const form = document.querySelector('.form');
+        const els = getSelection(form);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a NodeList element', async () => {
+        setUpDOM();
+        const form = document.querySelectorAll('.form');
+        const els = getSelection(form);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed an array of DOM elements', async () => {
+        setUpDOM();
+        const form = document.querySelector('.form');
+        const els = getSelection([form]);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a string', async () => {
+        setUpDOM();
+        const els = getSelection('.form');
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
 });

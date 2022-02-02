@@ -7,18 +7,19 @@ import defaults from './lib/defaults';
  * @param selector, Can be a string, Array of DOM nodes, a NodeList or a single DOM element.
  */
 export const getSelection = (selector) => {
-    switch(selector) {
-        case (typeof selector === "string"):
-            return [].slice.call(document.querySelectorAll(selector));
-        case (selector instanceof Array):
-            return selector;
-        case (Object.prototype.isPrototypeOf.call(NodeList.prototype, selector)):
-            return [].slice.call(selector);
-        case (selector instanceof HTMLElement):
-            return [selector];
-        default:
-            return [];
+    let nodes = [];
+
+    if(typeof selector === "string") {
+        nodes = [].slice.call(document.querySelectorAll(selector));
+    } else if (selector instanceof Array) {
+        nodes = selector;
+    } else if (Object.prototype.isPrototypeOf.call(NodeList.prototype, selector)) {
+        nodes = [].slice.call(selector);
+    } else if (selector instanceof HTMLElement) {
+        nodes.push(selector)
     }
+
+    return nodes;
 }
 
 /*
