@@ -55,7 +55,8 @@ describe(`Toggle > Init`, () => {
 describe('Toggle > Initialisation > Get Selection', () => {
 
     // Set up our document body
-    document.body.innerHTML = `<a tabindex="0" id="btn-1-1" href="#target-1" class="js-toggle_btn">Test toggle</a>
+    const setupDOM = () => {
+        document.body.innerHTML = `<a tabindex="0" id="btn-1-1" href="#target-1" class="js-toggle_btn">Test toggle</a>
         <a href="#target-1" class="js-toggle_btn">Test toggle</a>
         <div id="target-1" class="js-toggle" data-toggle="js-toggle_btn">
             <div id="focusable-1-1" tabindex="0">Test focusable content</div>
@@ -65,7 +66,9 @@ describe('Toggle > Initialisation > Get Selection', () => {
         
         <button id="target-4" class="js-toggle__btn-2">Test toggle</button>
         <div id="target-4" class="js-toggle-local" data-toggle="js-toggle__btn-2" data-start-open="true"></div>`;
+    }
 
+    beforeAll(setupDOM);
 
     it('should return an array when passed a DOM element', async () => {
         const toggles = document.querySelector('.js-toggle');

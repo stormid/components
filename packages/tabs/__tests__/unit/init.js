@@ -1,4 +1,5 @@
 import tabs from '../../src';
+import { getSelection } from '../../src';
 
 let TabSet;
 
@@ -129,5 +130,59 @@ describe(`Tabs > init`, () => {
         expect(TabSet[0].getState().activeIndex).toEqual(2);
     });
 
+
+});
+
+describe('Validate > Initialisation > Get Selection', () => {
+
+    const setupDOM = () => {
+        document.body.innerHTML = `<div role="tablist">
+            <nav class="tabs__nav">
+                <a id="tab-1" class="tabs__nav-link js-tabs__link" href="#panel-1" role="tab">Tab 1</a>
+                <a id="tab-2" class="tabs__nav-link js-tabs__link" href="#panel-2" role="tab">Tab 2</a>
+                <a id="tab-3" class="tabs__nav-link js-tabs__link" href="#panel-3" role="tab">Tab 3</a>
+            </nav>
+            <section id="panel-1" class="tabs__section" role="tabpanel">Panel 1</section>
+            <section id="panel-2" class="tabs__section" role="tabpanel" hidden>
+                    <p>Panel 2</p>
+                    <p><a href="/">Test link</a></p>
+                    <p><a href="/">Test link</a></p>
+            </section>
+            <section id="panel-3" class="tabs__section" role="tabpanel" hidden>
+                <p>Panel 3</p>
+                <p><a href="/">Test link</a></p>
+                <p><a href="/">Test link</a></p>
+            </section>
+        </div>`;
+    }
+
+    beforeAll(setupDOM);
+
+    it('should return an array when passed a DOM element', async () => {
+        const tabs = document.querySelector('[role="tablist"]');
+        const els = getSelection(tabs);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a NodeList element', async () => {
+        const tabs = document.querySelectorAll('[role="tablist"]');
+        const els = getSelection(tabs);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed an array of DOM elements', async () => {
+        const tabs = document.querySelector('[role="tablist"]');
+        const els = getSelection([tabs]);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a string', async () => {
+        const els = getSelection('[role="tablist"]');
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
 
 });
