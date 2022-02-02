@@ -133,7 +133,7 @@ describe(`Tabs > init`, () => {
 
 });
 
-describe('Validate > Initialisation > Get Selection', () => {
+describe('Tabs > Initialisation > Get Selection', () => {
 
     const setupDOM = () => {
         document.body.innerHTML = `<div role="tablist">
