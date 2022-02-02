@@ -74,3 +74,40 @@ describe('Boilerplate > Options', () => {
     });
 
 });
+
+describe('Boilerplate > Initialisation > Get Selection', () => {
+
+    const setupDOM = () => {
+        document.body.innerHTML = `<div class="js-boilerplate test"></div>`;
+    }
+
+    beforeAll(setupDOM);
+
+    it('should return an array when passed a DOM element', async () => {
+        const boilerplate = document.querySelector('.js-boilerplate');
+        const els = getSelection(boilerplate);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a NodeList element', async () => {
+        const boilerplate = document.querySelectorAll('.js-boilerplate');
+        const els = getSelection(boilerplate);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed an array of DOM elements', async () => {
+        const boilerplate = document.querySelector('.js-boilerplate');
+        const els = getSelection([boilerplate]);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a string', async () => {
+        const els = getSelection('.js-boilerplate');
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+});
