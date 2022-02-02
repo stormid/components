@@ -13,9 +13,28 @@ const initObserver = el => {
     observer.observe(el.parentNode, { attributes: true, attributeOldValue: true, attributeFilter: ['class', 'hidden']  });
 };
 
+/*
+ * Converts a passed selector which can be of varying types into an array of DOM Objects
+ *
+ * @param selector, Can be a string, Array of DOM nodes, a NodeList or a single DOM element.
+ */
+export const getSelection = (selector) => {
+    switch(selector) {
+        case (typeof selector === "string"):
+            return [].slice.call(document.querySelectorAll(selector));
+        case (selector instanceof Array):
+            return selector;
+        case (Object.prototype.isPrototypeOf.call(NodeList.prototype, selector)):
+            return [].slice.call(selector);
+        case (selector instanceof HTMLElement):
+            return [selector];
+        default:
+            return [];
+    }
+}
 
 export default (selector, options) => {
-    const nodes = [].slice.call(document.querySelectorAll(selector));
+    const nodes = getSelection(selector);
     const events = options && options.events || defaults.events;
 
     return nodes.map(node => {
