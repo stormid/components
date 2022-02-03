@@ -19,13 +19,32 @@ Install the package
 npm i -S @stormid/validate
 ```
 
-Initialise the module
+Import the module
 ```
 import validate from '@stormid/validate';
+```
 
-//returns an array of instances for every selector matched
-//you can also pass in a DOM element as the first argument
+Initialise the module via selector string
+```
 const [ validator ] = validate('form:not([novalidate])');
+```
+
+Initialise with a DOM element
+```
+const element = document.querySelector('form:not([novalidate])');
+const [ validator ] = boilerplate(element);
+```
+
+Initialise with a Node list
+```
+const elements = document.querySelectorAll('form:not([novalidate])');
+const [ validator ] = validate(elements);
+```
+
+Initialise with an Array of elements
+```
+const elements = [].slice.call(document.querySelectorAll('form:not([novalidate])'));
+const [ validator ] = validate(elements);
 ```
 
 ## Validators

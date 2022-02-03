@@ -28,11 +28,32 @@ Install the package
 npm i -S @stormid/modal
 ```
 
-Inititialise the module
+Import the module
 ```
 import modal from '@stormid/modal';
+```
 
+Initialise the module via selector string
+```
 const [ instance ] = modal('.js-modal');
+```
+
+Initialise with a DOM element
+```
+const element = document.querySelector('.js-modal');
+const [ instance ] = modal(element);
+```
+
+Initialise with a Node list
+```
+const elements = document.querySelectorAll('.js-modal');
+const [ instance ] = modal(elements);
+```
+
+Initialise with an Array of elements
+```
+const elements = [].slice.call(document.querySelectorAll('.js-modal'));
+const [ instance ] = modal(elements);
 ```
 
 CSS

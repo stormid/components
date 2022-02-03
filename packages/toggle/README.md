@@ -18,13 +18,33 @@ Install the package
 npm i -S @stormid/toggle
 ```
 
-Initialise the module
+Import the module
 ```
 import toggle from '@stormid/toggle';
+```
 
+Initialise the module via selector string
+```
 const [ instance ] = toggle('.js-toggle');
 ```
 
+Initialise with a DOM element
+```
+const element = document.querySelector('.js-toggle');
+const [ instance ] = toggle(element);
+```
+
+Initialise with a Node list
+```
+const elements = document.querySelectorAll('.js-toggle');
+const [ instance ] = toggle(elements);
+```
+
+Initialise with an Array of elements
+```
+const elements = [].slice.call(document.querySelectorAll('.js-toggle'));
+const [ instance ] = toggle(elements);
+```
 
 ### Local toggle
 To localise a toggle state to part of the document (e.g. show/hide panel)
