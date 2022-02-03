@@ -1,4 +1,5 @@
 import modalGallery from '../../src';
+import { getSelection} from '../../src/lib/init'
 
 describe(`Modal Gallery > Initialisation > gallery`, () => {
 
@@ -17,7 +18,7 @@ describe(`Modal Gallery > Initialisation > gallery`, () => {
         expect(gallery.getState().current).toEqual(null);
     });
 
-    it('should return undefined when passed a DOM selector gthat does not match links', async () => {
+    it('should return undefined when passed a DOM selector that does not match links', async () => {
         expect(modalGallery('.js-not-found')).toBeUndefined();
     });
 	
@@ -56,7 +57,7 @@ describe(`Modal Gallery > Initisation > single`, () => {
         expect(gallery.length).toEqual(2);
     });
 
-    it('should return undefined when passed a DOM selector gthat does not match links', async () => {
+    it('should return undefined when passed a DOM selector that does not match links', async () => {
         expect(modalGallery('.js-not-found', { single: true })).toBeUndefined();
     });
 
@@ -93,13 +94,52 @@ describe(`Modal Gallery > Initialisation > gallery from code`, () => {
             title: el.getAttribute('data-title') || '',
             description: el.getAttribute('data-description') || ''
         }));
-
+        
         const gallery = modalGallery(items);
         expect(gallery).not.toBeUndefined();
         expect(gallery.getState).not.toBeUndefined();
         expect(gallery.getState().items.length).toEqual(2);
         expect(gallery.getState().isOpen).toEqual(false);
         expect(gallery.getState().current).toEqual(null);
+    });
+
+});
+
+describe('Modal gallery > Initialisation > Get Selection', () => {
+
+    const setupDOM = () => {
+        document.body.innerHTML = `<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w">
+            <img src="//placehold.it/200x200" alt="">
+        </a>`;
+    }
+
+    beforeAll(setupDOM);
+
+    it('should return an array when passed a DOM element', async () => {
+        const modal = document.querySelector('.js-modal-gallery');
+        const els = getSelection(modal);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a NodeList element', async () => {
+        const modal = document.querySelectorAll('.js-modal-gallery');
+        const els = getSelection(modal);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed an array of DOM elements', async () => {
+        const modal = document.querySelector('.js-modal-gallery');
+        const els = getSelection([modal]);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a string', async () => {
+        const els = getSelection('.js-modal-gallery');
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
     });
 
 });
