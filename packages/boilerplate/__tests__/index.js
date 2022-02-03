@@ -1,4 +1,5 @@
 import component from '../src';
+import { getSelection } from '../src';
 
 let basic, withCallback;
 const init = () => {
