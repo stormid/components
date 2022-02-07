@@ -27,8 +27,5 @@
     "prepublish": "npm run -s build",
     "test": "node_modules/.bin/jest --coverage"
   },
-  "jest": {
-    "testURL": "http://localhost"
-  },
   "gitHead": "9042db4005411c4360ba3e8188e03333c10098f2"
 }

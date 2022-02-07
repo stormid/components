@@ -32,9 +32,6 @@
     "prod": "webpack --config example/webpack.config.js --mode production",
     "prepublish": "npm run -s build"
   },
-  "jest": {
-    "testURL": "http://localhost"
-  },
   "dependencies": {
     "raf-throttle": "^2.0.3"
   },
