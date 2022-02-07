@@ -201,10 +201,23 @@
 <p>Install the package</p>
 <pre><code>npm i -S @stormid/textarea
 </code></pre>
-<p>Initialise the module</p>
+<p>Import the module</p>
 <pre><code>import textarea from '@stormid/textarea';
-
-const [ instance ] = textarea('textarea');
+</code></pre>
+<p>Initialise the module via selector string</p>
+<pre><code>const [ instance ] = boilerplate('.js-boilerplate');
+</code></pre>
+<p>Initialise with a DOM element</p>
+<pre><code>const element = document.querySelector('textarea');
+const [ instance ] = textarea(element);
+</code></pre>
+<p>Initialise with a Node list</p>
+<pre><code>const elements = document.querySelectorAll('textarea');
+const [ instance ] = textarea(elements);
+</code></pre>
+<p>Initialise with an Array of elements</p>
+<pre><code>const elements = [].slice.call(document.querySelectorAll('textarea'));
+const [ instance ] = textarea(elements);
 </code></pre>
 <h2 id="options">Options</h2>
 <pre><code>{

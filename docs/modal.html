@@ -216,10 +216,23 @@
 <p>Install the package</p>
 <pre><code>npm i -S @stormid/modal
 </code></pre>
-<p>Inititialise the module</p>
+<p>Import the module</p>
 <pre><code>import modal from '@stormid/modal';
-
-const [ instance ] = modal('.js-modal');
+</code></pre>
+<p>Initialise the module via selector string</p>
+<pre><code>const [ instance ] = modal('.js-modal');
+</code></pre>
+<p>Initialise with a DOM element</p>
+<pre><code>const element = document.querySelector('.js-modal');
+const [ instance ] = modal(element);
+</code></pre>
+<p>Initialise with a Node list</p>
+<pre><code>const elements = document.querySelectorAll('.js-modal');
+const [ instance ] = modal(elements);
+</code></pre>
+<p>Initialise with an Array of elements</p>
+<pre><code>const elements = [].slice.call(document.querySelectorAll('.js-modal'));
+const [ instance ] = modal(elements);
 </code></pre>
 <p>CSS
 The className ‘is–modal’ added to the document.body when the modal is open. This can be used to prevent the body from scrolling</p>

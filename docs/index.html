@@ -204,37 +204,60 @@
 <p>Install the package</p>
 <pre><code>npm i -S @stormid/boilerplate
 </code></pre>
-<p>Initialise the module</p>
+<p>Import the module</p>
 <pre><code>import boilerplate from '@stormid/boilerplate';
 
-const [ instance ] = boilerplate('.js-boilerplate');
+Initialise the module via selector string
 </code></pre>
-<h2 id="options">Options</h2>
-<pre><code>{
-    callback: null
+<p>const [ instance ] = boilerplate(’.js-boilerplate’);</p>
+<pre><code>
+Initialise with a DOM element
+</code></pre>
+<p>const element = document.querySelector(’.js-boilerplate’);
+const [ instance ] = boilerplate(element);</p>
+<pre><code>
+Initialise with a Node list
+</code></pre>
+<p>const elements = document.querySelectorAll(’.js-boilerplate’);
+const [ instance ] = boilerplate(elements);</p>
+<pre><code>
+Initialise with an Array of elements
+</code></pre>
+<p>const elements = [].slice.call(document.querySelectorAll(’.js-boilerplate’));
+const [ instance ] = boilerplate(elements);</p>
+<pre><code>
+## Options
+</code></pre>
+<p>{
+callback: null
+}</p>
+<pre><code>
+For example
+</code></pre>
+<p>boilerplate(’.js-selector’, {
+callback(){
+console.log(this);
 }
+});</p>
+<pre><code>
+## API
+boilerplate() returns an array of instances. Each instance exposes the interface
 </code></pre>
-<p>For example</p>
-<pre><code>boilerplate('.js-selector', {
-    callback(){
-        console.log(this);
-    }
-});
+<p>{
+node, DOMNode augmented by initialisation
+click, trigger the handleClick method
+}</p>
+<pre><code>
+## Tests
 </code></pre>
-<h2 id="api">API</h2>
-<p>boilerplate() returns an array of instances. Each instance exposes the interface</p>
-<pre><code>{
-    node, DOMNode augmented by initialisation
-    click, trigger the handleClick method
-}
-</code></pre>
-<h2 id="tests">Tests</h2>
-<pre><code>npm t
-</code></pre>
-<h2 id="browser-support">Browser support</h2>
-<h2 id="dependencies">Dependencies</h2>
-<h2 id="license">License</h2>
-<p>MIT</p>
+<p>npm t</p>
+<pre><code>
+## Browser support
+
+## Dependencies
+
+## License
+MIT</code></pre>
 
         <main>
     </body>

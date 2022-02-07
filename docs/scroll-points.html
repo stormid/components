@@ -204,10 +204,23 @@
 <p>Install the package</p>
 <pre><code>npm i -S @stormid/scroll-points
 </code></pre>
-<p>Initialise the module</p>
+<p>Import the module</p>
 <pre><code>import scrollPoints from '@stormid/scroll-points';
-
-const [ point ] = scrollPoints('.js-scroll-point');
+</code></pre>
+<p>Initialise the module via selector string</p>
+<pre><code>const [ instance ] = scrollPoints('.js-scroll-points');
+</code></pre>
+<p>Initialise with a DOM element</p>
+<pre><code>const element = document.querySelector('.js-scroll-points');
+const [ instance ] = scrollPoints(element);
+</code></pre>
+<p>Initialise with a Node list</p>
+<pre><code>const elements = document.querySelectorAll('.js-scroll-points');
+const [ instance ] = scrollPoints(elements);
+</code></pre>
+<p>Initialise with an Array of elements</p>
+<pre><code>const elements = [].slice.call(document.querySelectorAll('.js-scroll-points'));
+const [ instance ] = scrollPoints(elements);
 </code></pre>
 <h2 id="options">Options</h2>
 <pre><code>{

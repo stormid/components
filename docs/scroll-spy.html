@@ -221,10 +221,23 @@
 <p>Install the package</p>
 <pre><code>npm i -S @stormid/scroll-spy
 </code></pre>
-<p>Initialise the module</p>
+<p>Import the module</p>
 <pre><code>import scrollSpy from '@stormid/scroll-spy';
-
-const [ link ] = scrollSpy('.js-scroll-spy');
+</code></pre>
+<p>Initialise the module via selector string</p>
+<pre><code>const [ instance ] = scrollSpy('.js-scroll-spy');
+</code></pre>
+<p>Initialise with a DOM element</p>
+<pre><code>const element = document.querySelector('.js-scroll-spy');
+const [ instance ] = scrollSpy(element);
+</code></pre>
+<p>Initialise with a Node list</p>
+<pre><code>const elements = document.querySelectorAll('.js-scroll-spy');
+const [ instance ] = scrollSpy(elements);
+</code></pre>
+<p>Initialise with an Array of elements</p>
+<pre><code>const elements = [].slice.call(document.querySelectorAll('.js-scroll-spy'));
+const [ instance ] = scrollSpy(elements);
 </code></pre>
 <h2 id="options">Options</h2>
 <pre><code>{
