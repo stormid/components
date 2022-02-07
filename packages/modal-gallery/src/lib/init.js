@@ -12,19 +12,12 @@ const create = (items, options) => Object.create(factory({
  * @param selector, Can be a string, Array of DOM nodes, a NodeList or a single DOM element.
  */
 export const getSelection = (selector) => {
-    let nodes = [];
 
-    if(typeof selector === "string") {
-        nodes = [].slice.call(document.querySelectorAll(selector));
-    } else if (selector instanceof Array) {
-        nodes = selector;
-    } else if (Object.prototype.isPrototypeOf.call(NodeList.prototype, selector)) {
-        nodes = [].slice.call(selector);
-    } else if (selector instanceof HTMLElement) {
-        nodes.push(selector)
-    }
-
-    return nodes;
+    if (typeof selector === "string") return [].slice.call(document.querySelectorAll(selector));
+    if (selector instanceof Array) return selector;
+    if (Object.prototype.isPrototypeOf.call(NodeList.prototype, selector)) return [].slice.call(selector);
+    if (selector instanceof HTMLElement) return [selector]; 
+    return [];
 }
 
 export const singles = (src, opts) => {
