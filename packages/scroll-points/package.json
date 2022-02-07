@@ -1,6 +1,6 @@
 {
   "name": "@stormid/scroll-points",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "Trigger scroll events using IntersectionObservers",
   "author": "stormid",
   "license": "MIT",
