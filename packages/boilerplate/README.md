@@ -16,11 +16,31 @@ Install the package
 npm i -S @stormid/boilerplate
 ```
 
-Initialise the module
+Import the module
 ```
 import boilerplate from '@stormid/boilerplate';
 
+Initialise the module via selector string
+```
 const [ instance ] = boilerplate('.js-boilerplate');
+```
+
+Initialise with a DOM element
+```
+const element = document.querySelector('.js-boilerplate');
+const [ instance ] = boilerplate(element);
+```
+
+Initialise with a Node list
+```
+const elements = document.querySelectorAll('.js-boilerplate');
+const [ instance ] = boilerplate(elements);
+```
+
+Initialise with an Array of elements
+```
+const elements = [].slice.call(document.querySelectorAll('.js-boilerplate'));
+const [ instance ] = boilerplate(elements);
 ```
 
 ## Options

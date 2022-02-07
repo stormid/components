@@ -6,9 +6,22 @@ const create = (items, options) => Object.create(factory({
     settings: { ...defaults, ...options }
 }));
 
-export const singles = (src, opts) => {
-    let els = [].slice.call(document.querySelectorAll(src));
+/*
+ * Converts a passed selector which can be of varying types into an array of DOM Objects
+ *
+ * @param selector, Can be a string, Array of DOM nodes, a NodeList or a single DOM element.
+ */
+export const getSelection = (selector) => {
 
+    if (typeof selector === "string") return [].slice.call(document.querySelectorAll(selector));
+    if (selector instanceof Array) return selector;
+    if (Object.prototype.isPrototypeOf.call(NodeList.prototype, selector)) return [].slice.call(selector);
+    if (selector instanceof HTMLElement) return [selector]; 
+    return [];
+}
+
+export const singles = (src, opts) => {
+    let els = getSelection(src);
     if (!els.length) return void console.warn('Modal Gallery cannot be initialised, no images found');
 
     return els.map(el => create([{
@@ -22,22 +35,19 @@ export const singles = (src, opts) => {
 };
 
 export const galleries = (src, opts) => {
-    let items;
-
-    if (typeof src === 'string'){
-        const els = [].slice.call(document.querySelectorAll(src));
-
-        if (!els.length) return void console.warn('Modal Gallery cannot be initialised, no images found');
+    let els = getSelection(src);
+    if (!els.length) return void console.warn('Modal Gallery cannot be initialised, no images found');
 		
-        items = els.map(el => ({
+    let items = els.map((el) => {
+        return (el instanceof HTMLElement) ? {
             trigger: el,
             src: el.getAttribute('href'),
             srcset: el.getAttribute('data-srcset') || null,
             sizes: el.getAttribute('data-sizes') || null,
             title: el.getAttribute('data-title') || '',
             description: el.getAttribute('data-description') || ''
-        }));
-    } else items = src;
+        } : el;
+    });
 
     return create(items, opts);
 };

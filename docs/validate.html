@@ -412,6 +412,9 @@ const [ validator ] = validate('form:not([novalidate])');
 <h3 id="error-messages">Error messages</h3>
 <p>.Net error messages are extracted from data-val-[validator-type] data attributes, and apply to both HTML5 and .Net validators.</p>
 <p>Fields without data-val error messages will show the default messages for the failed validator (see options below).</p>
+<h4 id="including-values-in-error-messages">Including values in error messages</h4>
+<p>To include the user input value in your error message, place a token “{{value}}” within the message string and the script will replace it at the time of validation.  e.g. “{{value}} is not a valid email address” will become “test@test is not a valid email address”.</p>
+<p>If a validation group contains more than one field, the values of these will be returned as a comma seperated list within the message.  For example:  “{{value}} are not valid inputs” becomes “test1, test2 are not valid inputs”.</p>
 <h2 id="options">Options</h2>
 <pre><code>{
     preSubmitHook: false, //function, called on validation pass, before submit

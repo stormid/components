@@ -25,11 +25,32 @@ Install the package
 npm i -S @stormid/tabs
 ```
 
-Initialise the module
+Import the module
 ```
 import tabs from '@stormid/tabs';
+```
 
-const [ tablist ] = tabs('[role=tablist]');
+Initialise the module via selector string
+```
+const [ instance ] = tabs('.js-tabs');
+```
+
+Initialise with a DOM element
+```
+const element = document.querySelector('.js-tabs');
+const [ instance ] = tabs(element);
+```
+
+Initialise with a Node list
+```
+const elements = document.querySelectorAll('.js-tabs');
+const [ instance ] = tabs(elements);
+```
+
+Initialise with an Array of elements
+```
+const elements = [].slice.call(document.querySelectorAll('.js-tabs'));
+const [ instance ] = tabs(elements);
 ```
 
 ## Options

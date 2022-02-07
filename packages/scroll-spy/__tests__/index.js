@@ -1,4 +1,5 @@
 import scrollSpy from '../src';
+import { getSelection } from '../src';
 
 let basic, withCallback;
 const init = () => {
@@ -59,6 +60,55 @@ describe(`Scroll Spy > Initialisation`, () => {
 
     it('should initialisation with different settings if different options are passed', () => {
         expect(basic.getState().settings.callback).not.toEqual(withCallback.getState().settings.callback);
+    });
+
+});
+
+describe('Scroll spy > Initialisation > Get Selection', () => {
+
+    const setupDOM = () => {
+        // Set up our document body
+    document.body.innerHTML = `<header>
+        <nav>
+            <a class="js-scroll-spy" href="#section1">Section 1</a>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>Scroll Spy</h1>
+        <h2>Example</h2>
+        <p>Scroll down to see the menu to highlight the current section and to see example code.</p>
+        <section id="section1">
+            Section 1
+        </section>`;
+    }
+
+    beforeAll(setupDOM);
+
+    it('should return an array when passed a DOM element', async () => {
+        const scroll = document.querySelector('.js-scroll-spy');
+        const els = getSelection(scroll);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a NodeList element', async () => {
+        const scroll = document.querySelectorAll('.js-scroll-spy');
+        const els = getSelection(scroll);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed an array of DOM elements', async () => {
+        const scroll = document.querySelector('.js-scroll-spy');
+        const els = getSelection([scroll]);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a string', async () => {
+        const els = getSelection('.js-scroll-spy');
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
     });
 
 });

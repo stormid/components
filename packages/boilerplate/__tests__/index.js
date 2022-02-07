@@ -1,4 +1,5 @@
 import component from '../src';
+import { getSelection } from '../src';
 
 let basic, withCallback;
 const init = () => {
@@ -71,6 +72,43 @@ describe('Boilerplate > Options', () => {
         expect(withCallback[0].node.classList).not.toContain('callback-test');
         withCallback[0].node.click();
         expect(withCallback[0].node.classList).toContain('callback-test');
+    });
+
+});
+
+describe('Boilerplate > Initialisation > Get Selection', () => {
+
+    const setupDOM = () => {
+        document.body.innerHTML = `<div class="js-boilerplate test"></div>`;
+    }
+
+    beforeAll(setupDOM);
+
+    it('should return an array when passed a DOM element', async () => {
+        const boilerplate = document.querySelector('.js-boilerplate');
+        const els = getSelection(boilerplate);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a NodeList element', async () => {
+        const boilerplate = document.querySelectorAll('.js-boilerplate');
+        const els = getSelection(boilerplate);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed an array of DOM elements', async () => {
+        const boilerplate = document.querySelector('.js-boilerplate');
+        const els = getSelection([boilerplate]);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a string', async () => {
+        const els = getSelection('.js-boilerplate');
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
     });
 
 });
