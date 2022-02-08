@@ -1,5 +1,5 @@
-import { shouldReturn, writeCookie, groupValueReducer, deleteCookies } from './utils';
-import { TRIGGER_EVENTS, MEASUREMENTS } from './constants';
+import { writeCookie, groupValueReducer, deleteCookies } from './utils';
+import { ACCEPTED_TRIGGERS, MEASUREMENTS } from './constants';
 import { apply } from './consent';
 import { updateConsent } from './reducers';
 import { measure, composeMeasurementConsent } from './measurement';
@@ -20,10 +20,15 @@ export const initBannerListeners = Store => state => {
     const acceptBtns = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.acceptBtn}`));
     const optionsBtn = document.querySelector(`.${state.settings.classNames.optionsBtn}`);
 
-    TRIGGER_EVENTS.forEach(event => {
-        acceptBtns.forEach(acceptBtn => {
-            acceptBtn.addEventListener(event, e => {
-                if (shouldReturn(e)) return;
+    const checkTag = (el) => {
+        return ACCEPTED_TRIGGERS.reduce((acc, val, index) => {
+            return acc || (ACCEPTED_TRIGGERS[index] === el.tagName);
+        }, false);
+    } 
+
+    acceptBtns.forEach(acceptBtn => {  
+        if(checkTag(acceptBtn)) {
+            acceptBtn.addEventListener('click', e => {
 
                 Store.update(
                     updateConsent,
@@ -48,12 +53,18 @@ export const initBannerListeners = Store => state => {
                     ]
                 );
             });
-        });
-
-        //track options click
-        //shouldn't have to catch and replay the event since we're using beacons
-        if (optionsBtn && state.settings.tid) optionsBtn.addEventListener(event, e => measure(state, MEASUREMENTS.BANNER_OPTIONS));
+        } else {
+            console.warn('Banner accept element must be a Button or Anchor.  No trigger event added.');
+        }   
     });
+
+    //track options click
+    //shouldn't have to catch and replay the event since we're using beacons
+    if (optionsBtn && state.settings.tid && checkTag(optionsBtn)) {
+        optionsBtn.addEventListener('click', e => measure(state, MEASUREMENTS.BANNER_OPTIONS));
+    } else {
+        console.warn('No trigger added for options element.  Check that the element is a Button or Anchor and that your tid is set.');
+    }
 };
 
 const removeBanner = banner => () => (banner && banner.parentNode) && banner.parentNode.removeChild(banner);

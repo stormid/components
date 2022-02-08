@@ -1,5 +1,3 @@
-import { TRIGGER_KEYCODES } from './constants';
-
 //Modernizr cookie test
 export const cookiesEnabled = () => {
     try {
@@ -65,8 +63,6 @@ export const extractFromCookie = settings => {
         return [false, uuidv4(), {}];
     }
 };
-
-export const shouldReturn = event => (!!event.keyCode && !~TRIGGER_KEYCODES.indexOf(event.keyCode) || (event.which && event.which === 3));
 
 export const composeTypes = opts => (acc, curr) => {
     if (acc[curr]) {

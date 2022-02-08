@@ -1,7 +1,5 @@
 /* istanbul ignore file */
-export const TRIGGER_EVENTS = ['click', 'keydown'];
-
-export const TRIGGER_KEYCODES = [13, 32];
+export const ACCEPTED_TRIGGERS = ['BUTTON', 'A'];
 
 export const HOSTNAME = 'https://www.google-analytics.com';
 
