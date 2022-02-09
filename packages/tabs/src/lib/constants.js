@@ -1,7 +1,4 @@
 /* istanbul ignore file */
-// DOM events on a trigger that initiate toggle
-export const TRIGGER_EVENTS = window.PointerEvent ? ['pointerdown', 'keydown'] : ['ontouchstart' in window ? 'touchstart' : 'click', 'keydown' ];
-
 // Event keycodes that initiate toggle for keyboard events
 export const KEYCODES = {
     SPACE: 32,
@@ -11,6 +8,9 @@ export const KEYCODES = {
     RIGHT: 39,
     DOWN: 40
 };
+
+export const ACCEPTED_TRIGGERS = ['button', 'a'];
+
 
 /* @property activation, string, 'auto' or 'manual' describes tab activation method.  
  as per https://www.w3.org/TR/wai-aria-practices/examples/tabs/tabs-2/tabs.html or https://www.w3.org/TR/wai-aria-practices/examples/tabs/tabs-1/tabs.html */

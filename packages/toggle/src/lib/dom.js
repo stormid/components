@@ -1,4 +1,4 @@
-import { FOCUSABLE_ELEMENTS, TRIGGER_EVENTS, TRIGGER_KEYCODES, EVENTS } from './constants';
+import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, EVENTS } from './constants';
 
 /*
  * Sets aria attributes and adds eventListener on each toggle button
@@ -9,17 +9,15 @@ export const initUI = Store => () => {
     const { toggles, node } = Store.getState();
 
     toggles.forEach(toggle => {
-        if (toggle.tagName !== 'BUTTON') toggle.setAttribute('role', 'button');
         const id = node.getAttribute('id');
+        if (toggle.tagName !== 'BUTTON') toggle.setAttribute('role', 'button');
         if (!id) throw console.warn(`The toggle target should have an id.`);
         toggle.setAttribute('aria-controls', id);
         toggle.setAttribute('aria-expanded', 'false');
-        TRIGGER_EVENTS.forEach(ev => {
-            toggle.addEventListener(ev, e => {
-                if (!!e.keyCode && !~TRIGGER_KEYCODES.indexOf(e.keyCode) || (e.which && e.which === 3)) return;
-                e.preventDefault();
-                startToggleLifecycle(Store)();
-            });
+
+        toggle.addEventListener('click', e => {
+            e.preventDefault();
+            startToggleLifecycle(Store)();
         });
     });
 };
@@ -61,8 +59,16 @@ export const startToggleLifecycle = Store => () => {
  * @return Array of HTMLElements
  */
 export const findToggles = node => {
-    const toggles = node.getAttribute('data-toggle') && [].slice.call(document.querySelectorAll('.' + node.getAttribute('data-toggle')));
-    if (!toggles) console.warn(`Toggle cannot be initialised, no buttons found for ${node}. Does it have a data-toggle attribute that identifies toggle buttons?`);
+
+    const toggleSelector = node.getAttribute('data-toggle');
+    const query = ACCEPTED_TRIGGERS.reduce((sel, val, index) => {
+        const selector = sel + ACCEPTED_TRIGGERS[index]+"." + toggleSelector;
+        return (index === ACCEPTED_TRIGGERS.length-1) ? selector : selector+", ";
+    }, "");
+
+    const toggles = node.getAttribute('data-toggle') && [].slice.call(document.querySelectorAll(query));
+
+    if (!toggles) console.warn(`Toggle cannot be initialised, no buttons or anchors found for ${node}. Does it have a data-toggle attribute that identifies toggle buttons?`);
     return toggles;
 };
 
