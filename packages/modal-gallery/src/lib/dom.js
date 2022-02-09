@@ -1,4 +1,4 @@
-import { TRIGGER_EVENTS, KEY_CODES } from './constants';
+import { KEY_CODES, ACCEPTED_TRIGGERS } from './constants';
 import { getFocusableChildren } from './utils';
 
 export const initTriggers = Store => state => {
@@ -6,12 +6,9 @@ export const initTriggers = Store => state => {
     
     items.map((item, i) => {
         if (!item.trigger) return;
-        TRIGGER_EVENTS.map(ev => {
-            item.trigger.addEventListener(ev, e => {
-                if ((e.keyCode && e.keyCode !== KEY_CODES.ENTER) || (e.which && e.which === 3)) return;
-                e.preventDefault();
-                open(Store)(i);
-            });
+        item.trigger.addEventListener('click', e => {
+            e.preventDefault();
+            open(Store)(i);
         });
     });
     if (settings.preload) items.map(loadImage(Store));
@@ -93,27 +90,35 @@ const writeImage = (state, i) => {
 
 const initUIButtons = Store => state => {
     const { dom } = Store.getState();
-    const closeBtn = dom.overlay.querySelector('.js-modal-gallery__close');
-    TRIGGER_EVENTS.forEach(ev => {
-        closeBtn.addEventListener(ev, e => {
-            if ((e.keyCode && e.keyCode !== KEY_CODES.ENTER) || (e.which && e.which === 3)) return;
+
+    const findTriggers = (classSelector) => {
+        return ACCEPTED_TRIGGERS.reduce((sel, val, index) => {
+            const selector = sel + ACCEPTED_TRIGGERS[index]+"." + classSelector;
+            return (index === ACCEPTED_TRIGGERS.length-1) ? selector : selector+", ";
+        }, "");
+    }
+
+    const closeBtn = dom.overlay.querySelector(findTriggers("js-modal-gallery__close"));
+    if(closeBtn) {
+        closeBtn.addEventListener('click', e => {
             close(Store);
         });
+    } else {
+        console.warn('No close buttons or links found.')
+    }
+
+    const previousBtn = dom.overlay.querySelector(findTriggers("js-modal-gallery__previous"));
+    const nextBtn = dom.overlay.querySelector(findTriggers("js-modal-gallery__next"));
+    if (!previousBtn && !nextBtn) {
+        console.warn('No next or previous buttons or links found.')
+        return;
+    }
+
+    previousBtn && previousBtn.addEventListener('click', e => {
+        previous(Store);
     });
-
-    const previousBtn = dom.overlay.querySelector('.js-modal-gallery__previous');
-    const nextBtn = dom.overlay.querySelector('.js-modal-gallery__next');
-    if (!previousBtn && !nextBtn) return;
-
-    TRIGGER_EVENTS.forEach(ev => {
-        previousBtn && previousBtn.addEventListener(ev, e => {
-            if (e.keyCode && e.keyCode !== KEY_CODES.ENTER) return;
-            previous(Store);
-        });
-        nextBtn && nextBtn.addEventListener(ev, e => {
-            if (e.keyCode && e.keyCode !== KEY_CODES.ENTER) return;
-            next(Store);
-        });
+    nextBtn && nextBtn.addEventListener('click', e => {
+        next(Store);
     });
 };
 
