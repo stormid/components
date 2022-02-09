@@ -1,5 +1,5 @@
-import { writeCookie, groupValueReducer, deleteCookies } from './utils';
-import { ACCEPTED_TRIGGERS, MEASUREMENTS } from './constants';
+import { writeCookie, groupValueReducer, deleteCookies, checkTag } from './utils';
+import {  MEASUREMENTS } from './constants';
 import { apply } from './consent';
 import { updateConsent } from './reducers';
 import { measure, composeMeasurementConsent } from './measurement';
@@ -18,13 +18,7 @@ export const initBannerListeners = Store => state => {
     if (!banner) return;
     
     const acceptBtns = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.acceptBtn}`));
-    const optionsBtn = document.querySelector(`.${state.settings.classNames.optionsBtn}`);
-
-    const checkTag = (el) => {
-        return ACCEPTED_TRIGGERS.reduce((acc, val, index) => {
-            return acc || (ACCEPTED_TRIGGERS[index] === el.tagName);
-        }, false);
-    } 
+    const optionsBtn = document.querySelector(`.${state.settings.classNames.optionsBtn}`); 
 
     acceptBtns.forEach(acceptBtn => {  
         if(checkTag(acceptBtn)) {

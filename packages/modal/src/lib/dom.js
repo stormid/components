@@ -1,4 +1,4 @@
-import { FOCUSABLE_ELEMENTS, TRIGGER_EVENTS, KEYCODES } from './constants';
+import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS } from './constants';
 
 /*
  * Returns an HTMLElement child of the supplied node with a role of dialog

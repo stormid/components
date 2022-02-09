@@ -1,4 +1,4 @@
-import { groupValueReducer, removeSubdomain, extractFromCookie } from '../src/lib/utils';
+import { groupValueReducer, removeSubdomain, extractFromCookie, checkTag } from '../src/lib/utils';
 import defaults from '../src/lib/defaults';
 
 describe('Cookie > Utils > removeSubdomain', () => {
@@ -124,6 +124,34 @@ describe('Cookie > Utils > extractFromCookie > cookie not base64 encoded', () =>
         expect(hasCookie).toEqual(false);
         expect(cid).toBeDefined();
         expect(consent).toEqual({});
+    });
+
+});
+
+describe('Cookie > Utils > checkTag', () => {
+
+    it('should return true when passed a button', () => {
+        document.body.innerHTML = `<div>
+            <button id="el">Button</button>
+        </div>`;
+        const el = document.querySelector('#el');
+        expect(checkTag(el)).toEqual(true);
+    });
+
+    it('should return true when passed an anchor', () => {
+        document.body.innerHTML = `<div>
+            <a id="el" href="#">Button</a>
+        </div>`;
+        const el = document.querySelector('#el');
+        expect(checkTag(el)).toEqual(true);
+    });
+
+    it('should return false when passed a div', () => {
+        document.body.innerHTML = `<div>
+            <div id="el">Button</div>
+        </div>`;
+        const el = document.querySelector('#el');
+        expect(checkTag(el)).toEqual(false);
     });
 
 });
