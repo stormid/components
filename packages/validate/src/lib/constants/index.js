@@ -1,9 +1,3 @@
-export const TRIGGER_EVENTS = ['click', 'keydown'];
-
-export const KEY_CODES = {
-    ENTER: 13
-};
-
 export const PREHOOK_DELAY = 16;
 
 export const ACTIONS = {
