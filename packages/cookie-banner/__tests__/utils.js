@@ -1,4 +1,4 @@
-import { groupValueReducer, removeSubdomain, extractFromCookie, checkTag } from '../src/lib/utils';
+import { groupValueReducer, removeSubdomain, extractFromCookie } from '../src/lib/utils';
 import defaults from '../src/lib/defaults';
 
 describe('Cookie > Utils > removeSubdomain', () => {
