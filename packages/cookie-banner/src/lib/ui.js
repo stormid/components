@@ -1,5 +1,5 @@
-import { writeCookie, groupValueReducer, deleteCookies, checkTag } from './utils';
-import {  MEASUREMENTS } from './constants';
+import { writeCookie, groupValueReducer, deleteCookies } from './utils';
+import { ACCEPTED_TRIGGERS, MEASUREMENTS } from './constants';
 import { apply } from './consent';
 import { updateConsent } from './reducers';
 import { measure, composeMeasurementConsent } from './measurement';
@@ -16,14 +16,20 @@ export const initBanner = state => {
 export const initBannerListeners = Store => state => {
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
     if (!banner) return;
-    
-    const acceptBtns = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.acceptBtn}`));
-    const optionsBtn = document.querySelector(`.${state.settings.classNames.optionsBtn}`); 
+
+    const findTriggers = (classSelector) => {
+        return ACCEPTED_TRIGGERS.reduce((sel, val, index) => {
+            const selector = sel + ACCEPTED_TRIGGERS[index]+"." + classSelector;
+            return (index === ACCEPTED_TRIGGERS.length-1) ? selector : selector+", ";
+        }, "");
+    }
+
+    const acceptBtns = [].slice.call(document.querySelectorAll(findTriggers(state.settings.classNames.acceptBtn)));
+    const optionsBtn = document.querySelector(findTriggers(state.settings.classNames.optionsBtn)); 
 
     acceptBtns.forEach(acceptBtn => {  
-        if(checkTag(acceptBtn)) {
+        if(acceptBtns) {
             acceptBtn.addEventListener('click', e => {
-
                 Store.update(
                     updateConsent,
                     Object.keys(state.settings.types).reduce((acc, type) => {
@@ -54,7 +60,7 @@ export const initBannerListeners = Store => state => {
 
     //track options click
     //shouldn't have to catch and replay the event since we're using beacons
-    if (optionsBtn && state.settings.tid && checkTag(optionsBtn)) {
+    if (optionsBtn && state.settings.tid) {
         optionsBtn.addEventListener('click', e => measure(state, MEASUREMENTS.BANNER_OPTIONS));
     } else {
         console.warn('No trigger added for options element.  Check that the element is a Button or Anchor and that your tid is set.');

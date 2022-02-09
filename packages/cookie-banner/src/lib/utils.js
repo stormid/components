@@ -1,5 +1,3 @@
-import { ACCEPTED_TRIGGERS } from "./constants";
-
 //Modernizr cookie test
 export const cookiesEnabled = () => {
     try {
@@ -112,9 +110,3 @@ export const uuidv4 = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]
     const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
 });
-
-export const checkTag = (el) => {
-    return ACCEPTED_TRIGGERS.reduce((acc, val, index) => {
-        return acc || (ACCEPTED_TRIGGERS[index] === el.tagName);
-    }, false);
-}

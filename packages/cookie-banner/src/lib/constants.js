@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-export const ACCEPTED_TRIGGERS = ['BUTTON', 'A'];
+export const ACCEPTED_TRIGGERS = ['button', 'a'];
 
 export const HOSTNAME = 'https://www.google-analytics.com';
 
