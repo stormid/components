@@ -16,8 +16,16 @@ export const findDialog = node => (node.querySelector('[role=dialog]') || node.q
  * @return Array of HTMLElements
  */
 export const findToggles = (node, settings) => {
-    const toggles = node.getAttribute(settings.toggleSelectorAttribute) && [].slice.call(document.querySelectorAll('.' + node.getAttribute(settings.toggleSelectorAttribute)));
-    if (!toggles) console.warn(`Modal cannot be initialised, no modal toggle elements found. Does the modal have a ${settings.toggleSelectorAttribute} attribute that identifies toggle buttons?`);
+
+    const toggleSelector = node.getAttribute(settings.toggleSelectorAttribute);
+
+    const query = ACCEPTED_TRIGGERS.reduce((sel, val, index) => {
+        const selector = sel + ACCEPTED_TRIGGERS[index]+"." + toggleSelector;
+        return (index === ACCEPTED_TRIGGERS.length-1) ? selector : selector+", ";
+    }, "")
+
+    const toggles = toggleSelector && [].slice.call(document.querySelectorAll(query));
+    if (!toggles) console.warn(`Modal cannot be initialised, no modal toggle elements found. Does the modal have a ${settings.toggleSelectorAttribute} attribute that identifies toggle buttons or anchors?`);
     return toggles;
 };
 
@@ -128,15 +136,12 @@ export const initUI = Store => ({ node, dialog, toggles }) => {
     if (dialog.getAttribute('role') === 'alertdialog' && (!dialog.getAttribute('aria-describedby') || !document.querySelector(`#${dialog.getAttribute('aria-describedby')}`))) console.warn(`The alertdialog should have an aria-describedby attribute that matches the id of an element that contains text`);
     
     toggles.forEach(tgl => {
-        TRIGGER_EVENTS.forEach(event => {
-            tgl.addEventListener(event, e => {
-                if (!!e.keyCode && !~KEYCODES.indexOf(e.keyCode) || (e.which && e.which === 3)) return;
-                e.preventDefault();
-                Store.dispatch({
-                    isOpen: !Store.getState().isOpen,
-                    lastFocused: Store.getState().isOpen ? Store.getState().lastFocused : tgl
-                }, [ change(Store) ]);
-            });
+        tgl.addEventListener('click', e => {
+            e.preventDefault();
+            Store.dispatch({
+                isOpen: !Store.getState().isOpen,
+                lastFocused: Store.getState().isOpen ? Store.getState().lastFocused : tgl
+            }, [ change(Store) ]);
         });
     });
 };
