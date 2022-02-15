@@ -1,6 +1,6 @@
 import validate from '../../src';
 import defaults from '../../src/lib/defaults';
-import { getSelection } from '../../src';
+import { getSelection } from '../../src/lib/validator/utils';
 
 let validators;
 const setUpDOM = () => {
