@@ -1,5 +1,5 @@
 import scrollPoints from '../src';
-import { getSelection } from '../src';
+import { getSelection } from '../src/lib/utils';
 
 let basic, withCallback;
 const init = () => {

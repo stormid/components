@@ -1,5 +1,5 @@
 import tabs from '../../src';
-import { getSelection } from '../../src';
+import { getSelection } from '../../src/lib/utils';
 
 let TabSet;
 

@@ -1,5 +1,5 @@
 import modal from '../../src';
-import { getSelection } from '../../src';
+import { getSelection } from '../../src/lib/utils';
 
 let ModalSet;
 
