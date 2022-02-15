@@ -1,5 +1,5 @@
 import toggle from '../../src';
-import { getSelection } from '../../src';
+import { getSelection } from '../../src/lib/utils';
 
 let Toggles, ToggleLocals;
 
