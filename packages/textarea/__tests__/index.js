@@ -1,5 +1,5 @@
 import textarea from '../src';
-import { getSelection } from '../src';
+import { getSelection } from '../src/lib/utils';
 
 global.MutationObserver = class {
     // constructor(callback) {}
