@@ -1,5 +1,5 @@
 import { cookiesEnabled, extractFromCookie, noop } from './utils';
-import { initBanner, initForm, initBannerListeners } from './ui';
+import { showBanner, initBanner, initForm, initBannerListeners } from './ui';
 import { necessary, apply } from './consent';
 import { createStore } from './store';
 import { initialState } from './reducers';
@@ -21,17 +21,25 @@ export default settings => {
         initialState,
         {
             settings,
+            bannerOpen: false,
             persistentMeasurementParams: settings.tid ? composeParams(cid, settings.tid) : false,
             consent
         },
         [
             necessary,
             apply(Store),
-            hasCookie ? noop : initBanner,
+            hasCookie ? noop : initBanner(Store),
             initForm(Store),
             initBannerListeners(Store)
         ]
     );
 
-    return { getState: Store.getState } ;
+    return {
+        getState: Store.getState,
+        showBanner(cb) {
+            showBanner(Store)(cb);
+            initBannerListeners(Store)();
+        },
+        renderForm: initForm(Store)
+    };
 };

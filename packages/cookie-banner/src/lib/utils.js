@@ -1,4 +1,4 @@
-import { TRIGGER_KEYCODES } from './constants';
+import { TRIGGER_KEYCODES, FOCUSABLE_ELEMENTS } from './constants';
 
 //Modernizr cookie test
 export const cookiesEnabled = () => {
@@ -114,3 +114,5 @@ export const uuidv4 = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]
     const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
 });
+
+export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
