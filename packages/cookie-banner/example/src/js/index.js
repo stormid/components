@@ -69,4 +69,8 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    document.querySelector('.js-open-banner').addEventListener('click', e => {
+        window.__pb__.showBanner();
+    });
 });

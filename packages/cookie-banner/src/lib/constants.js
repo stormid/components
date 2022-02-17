@@ -3,6 +3,8 @@ export const TRIGGER_EVENTS = ['click', 'keydown'];
 
 export const TRIGGER_KEYCODES = [13, 32];
 
+export const FOCUSABLE_ELEMENTS = ['a[href]', 'area[href]', 'input:not([disabled])', 'select:not([disabled])', 'textarea:not([disabled])', 'button:not([disabled])', 'iframe', 'object', 'embed', '[contenteditable]', '[tabindex]:not([tabindex="-1"])'];
+
 export const HOSTNAME = 'https://www.google-analytics.com';
 
 export const MEASUREMENTS = {

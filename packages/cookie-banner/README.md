@@ -156,7 +156,9 @@ const cookieBanner = banner({
 The Object returned from initialisation exposes the interface
 ```
 {
-    getState, a Function that returns the current state Object
+    getState, Function that returns the current state Object
+    showBanner, Function to show the banner, accepts a callback function
+    renderForm, Function to render the consent form
 }
 ```
 
