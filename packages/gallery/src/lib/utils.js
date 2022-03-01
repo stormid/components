@@ -20,6 +20,7 @@ export const composeItems = (nodes, settings) => nodes.map(node => {
         sizes: node.getAttribute(ATTRIBUTE.SIZES),
         src: node.getAttribute(ATTRIBUTE.SRC),
         alt: node.getAttribute(ATTRIBUTE.ALT),
+        mediaType: node.getAttribute(ATTRIBUTE.MEDIA_TYPE),
     };
     //must contain an img container element
     const imgContainer = node.querySelector(settings.selector.imgContainer);
