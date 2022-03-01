@@ -27,7 +27,6 @@ const loadImage = Store => (item, i) => new Promise((resolve, reject) => {
     // and the imgNode src does not match the item ATTRIBUTE.SRC
     // therefore we can assume that any img (or SVG) present is a loading state and should be removed when the 
     const loadingIndicator = item.imgContainer.querySelector(`img, svg, ${settings.selector.loader}`);
-
     const img = new Image();
     let picture = false;
     try {
@@ -58,22 +57,43 @@ const loadImage = Store => (item, i) => new Promise((resolve, reject) => {
     };
 });
 
+const loadVideo = Store => (item, i) => new Promise((resolve, reject) => {
+    const { items, settings } = Store.getState();
+    
+    const loadingIndicator = item.imgContainer.querySelector(`img, svg, ${settings.selector.loader}`);
+    const video = document.createElement('iframe');
+    const videoSrc = item.src;
+
+    video.setAttribute('class','data-yt-iframe');
+    video.setAttribute('allowfullscreen','');
+    video.setAttribute('frameborder','0');
+    video.setAttribute('src','https://www.youtube.com/embed/'+ videoSrc +'?rel=0&showinfo=0&autoplay=0&enablejsapi=1');
+    
+    item.loaded = true;
+    item.node.classList.remove(settings.className.loading);
+    item.node.setAttribute(ATTRIBUTE.LOADED, true);
+    Store.dispatch({ items: items.map((_item, idx) => i === idx ? item : _item ) });
+    if (loadingIndicator) loadingIndicator.parentNode.removeChild(loadingIndicator);
+    item.imgContainer.appendChild(video);
+});
+
 /*
  * Returns an array of Promises
  *
  * @param i, Number, index of item
  */
-const loadImages = Store => i => {
+const loadItems = Store => i => {
     const { items, settings } = Store.getState();
     const indexes = [i];
 
     if (items.length > 1) indexes.push(i === 0 ? items.length - 1 : i - 1);
     if (items.length > 2) indexes.push(i === items.length - 1 ? 0 : i + 1);
+
     
     return indexes.map(idx => {
         if (!items[idx].loaded) {
             items[idx].node.classList.add(settings.className.loading);
-            return loadImage(Store)(items[idx], idx);
+            return items[idx].mediaType === ATTRIBUTE.MEDIA_TYPE_VIDEO ?  loadVideo(Store)(items[idx], idx) : loadImage(Store)(items[idx], idx);
         }
     });
 
@@ -109,7 +129,7 @@ export const init = Store => () => {
 
     //preload all images if setting is true, or just previous and next
     if (settings.preload) return Promise.all(items.map(loadImage(Store)));
-    return Promise.all(loadImages(Store)(activeIndex));
+    return Promise.all(loadItems(Store)(activeIndex));
     
 };
 
@@ -124,6 +144,15 @@ export const toggleFullScreen = Store => {
 export const change = (Store, next) => {
     const { activeIndex, items, settings, name } = Store.getState();
 
+    // Ensure any YouTube videos are stopped
+    let targetOrigin = 'https://www.youtube.com';
+    let youtube_iframes = [...document.querySelectorAll('.data-yt-iframe')];
+    if(youtube_iframes.length){
+        youtube_iframes.forEach(youtube_iframe => {
+            youtube_iframe.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', targetOrigin);
+        })
+    }
+
     //set activeIndex in state,
     //then run all side effects to change the DOM/show and hide items, manage focus, and load updated previous/next
     Store.dispatch({ activeIndex: next }, [
@@ -133,7 +162,7 @@ export const change = (Store, next) => {
             items[next].node.classList.add('is--active');
             items[next].node.removeAttribute('aria-hidden');
         },
-        () => loadImages(Store)(next),
+        () => loadItems(Store)(next),
         () => items[next].node.focus(),
         writeLiveRegion,
         () => {
@@ -154,6 +183,6 @@ export const next = Store => {
 };
 
 export const goTo = Store => i => {
-    loadImages(Store)(i);
+    loadItems(Store)(i);
     change(Store, i);
 };
