@@ -4,7 +4,7 @@ describe('Gallery > announcements', () => {
     
     it('should warn if no live region is found', () => {
 
-        document.body.innerHTML = `<section class="gallery js-gallery">
+        document.body.innerHTML = `<section class="gallery js-gallery" id="gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
                     <button class="gallery__fullscreen" aria-label="Full screen" data-gallery-fullscreen>
@@ -85,7 +85,7 @@ describe('Gallery > announcements', () => {
 
     it('Should update the live region when navigation occurs', () => {
 
-        document.body.innerHTML = `<section class="gallery js-gallery">
+        document.body.innerHTML = `<section class="gallery js-gallery" id="gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
                     <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 3</div>
@@ -199,7 +199,7 @@ describe('Gallery > announcements', () => {
 
     it('Should render a custom announcement based on settings', () => {
 
-        document.body.innerHTML = `<section class="gallery js-gallery">
+        document.body.innerHTML = `<section class="gallery js-gallery" id="gallery-2">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
                     <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>Now viewing item 1 of 3</div>

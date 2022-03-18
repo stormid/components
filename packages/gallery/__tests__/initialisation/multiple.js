@@ -3,7 +3,7 @@ import gallery from '../../src';
 describe('Gallery > initialisation > multiple', () => {
 
     it('Should return an array of gallery objects each with a distinct API affecting only that instance', () => {
-        document.body.innerHTML = `<section class="gallery js-gallery">
+        document.body.innerHTML = `<section class="gallery js-gallery" id="gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
                     <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>
@@ -77,7 +77,7 @@ describe('Gallery > initialisation > multiple', () => {
                     </button>
                 </div>
             </section>
-            <section class="gallery js-gallery">
+            <section class="gallery js-gallery" id="gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
                     <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>
@@ -164,7 +164,7 @@ describe('Gallery > initialisation > multiple', () => {
     });
 
     it('Should initialise separate instances with differnt settings', () => {
-        document.body.innerHTML = `<section class="gallery js-gallery__1">
+        document.body.innerHTML = `<section class="gallery js-gallery__1" id="gallery-1">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
                     <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>
@@ -238,7 +238,7 @@ describe('Gallery > initialisation > multiple', () => {
                     </button>
                 </div>
             </section>
-            <section class="gallery js-gallery__2">
+            <section class="gallery js-gallery__2" id="gallery-2">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
                     <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>
