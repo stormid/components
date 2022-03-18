@@ -1,3 +1,5 @@
 import gallery from '../../../src';
     
-gallery('.js-gallery');
+const [ instance ] = gallery('.js-gallery');
+
+console.log(instance.getState());

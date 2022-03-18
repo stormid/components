@@ -13,7 +13,7 @@ describe('Gallery > initialisation > manual initialisation', () => {
     });
 
     it('Should not set an active item, nor load any images until manually initialised', async () => {
-        document.body.innerHTML = `<section class="gallery js-gallery">
+        document.body.innerHTML = `<section class="gallery js-gallery" id="gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
                     <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>

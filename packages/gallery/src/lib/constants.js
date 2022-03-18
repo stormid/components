@@ -5,7 +5,13 @@ export const ATTRIBUTE = {
     SRC: 'data-gallery-item-src',
     ALT: 'data-gallery-item-alt',
     LOADED: 'data-gallery-item-loaded',
+    NAVIGATE: 'data-gallery-navigate',
     MEDIA_TYPE: 'data-gallery-media-type',
     MEDIA_TYPE_IMAGE: 'image',
     MEDIA_TYPE_VIDEO: 'video'
+};
+
+export const EVENTS = {
+    CHANGE: 'gallery.change',
+    TRIGGERED: 'gallery.triggered'
 };

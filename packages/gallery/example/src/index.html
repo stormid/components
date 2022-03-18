@@ -11,10 +11,12 @@
         }
         html,
         body {
-            height:100%;
+            /* height:100%; */
+            line-height: 1.4;
         }
         img {
             display: block;
+            max-width: 100%;
         }
         .visually-hidden {
             position: absolute;
@@ -37,21 +39,196 @@
             font-size:1rem;
             border:0 none;
         }
+        :root {
+            --gutter: 24px;
+            --baseline: 1.5rem;
+
+            --light-grey-1: hsl(0, 0%, 96%);
+            --light-grey-2: hsl(0, 0%, 90%);
+            --light-grey-3: hsl(0, 0%, 80%);
+            --mid-grey-1: hsl(0, 0%, 70%);
+            --mid-grey-2: hsl(0, 0%, 60%);
+            --mid-grey-3: hsl(0, 0%, 50%);
+            --dark-grey-1: hsl(0, 0%, 44%);
+            --dark-grey-2: hsl(0, 0%, 30%);
+            --dark-grey-3: hsl(0, 0%, 20%);
+        }
+
+        .gallery {
+            display: flex;
+            flex-direction: column;
+            color: #fff;
+            width: 100%;
+            background-color: var(--dark-grey-3);
+            height: 100vh;
+            position: relative;
+        }
+        .gallery__header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 var(--gutter);
+                
+        }
+        @media(min-width: 768px) {
+            .gallery__header {
+                padding :0;
+            }
+        }
+        .gallery__total {
+            color: #fff;
+            padding-right: calc(var(--gutter)*1.5);
+        }
+        .gallery__share {
+            color: #fff;
+            margin-left: calc(var(--gutter)*1.5);
+            height: 40px;
+            background-color: transparent;
+        }
+        .gallery__fullscreen {
+            background-color: transparent;
+        }
+        .gallery__fullscreen-icon {
+            display: block;
+            fill: #fff;
+            width: 32px;
+            height: 32px;
+        }
+        .gallery__item {
+            display: none;
+        }
+        .gallery__item.is--active {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .gallery__item.is--active:focus {
+            outline: 0 none !important;
+            box-shadow: none !important;
+        }
+        .gallery__previous,
+        .gallery__next {
+            position: absolute;
+            bottom: calc(var(--baseline)*2);
+            background-color: transparent;
+            fill: #fff;
+        }
+        @media(min-width: 768px){
+            .gallery__previous,
+            .gallery__next {
+                top: calc(50% - 16px);
+                bottom: auto
+            }
+        }
+        .gallery__previous-icon, 
+        .gallery__next-icon {
+            display: block;
+            width: 32px;
+            height: 32px;
+        }
+        .gallery__previous {
+            left: calc(var(--gutter)/4);
+        }
+        .gallery__next {
+            right: calc(var(--gutter)/4);
+        }
+        .gallery__main {
+            display: flex;
+            flex-grow: 1;
+            padding-top: var(--baseline);
+            width: 100%;
+            margin: auto;
+        }
+        @media(min-width: 768px){
+            .gallery__main {
+                width: calc(100% - 120px);
+            }
+        }
+        .gallery__list {
+            display: flex;
+            width: 100%;
+        }
+        .gallery__item-img-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .gallery__item-img-container img {
+            max-height: calc(100vh - 225px);
+        }
+        .gallery__item-footer {
+            padding: calc(var(--baseline)/2) calc(var(--gutter)*2.5) var(--baseline) calc(var(--gutter)*2.5);
+        }
+        @media(min-width: 768px){
+            .gallery__item-footer {
+                padding-left:0;
+                padding-right:0
+            }
+        }
+        .gallery__item-meta {
+            display: flex;
+        }
+        .gallery__item-category {
+            color: var(--light-grey-3);
+        }
+        .gallery__item-description {
+            flex-grow: 1
+        }
+        .gallery__item-link {
+            color: var(--light-grey-1);
+            text-decoration: underline;
+        }
+        .gallery__item-link:hover {
+            text-decoration: none;
+        }
+        .gallery__item-tags {
+            display: flex;
+        }
+        .gallery__item-tag + .gallery__item-tag {
+            margin-left: var(--gutter);
+        }
+        .gallery__item-tag-link {
+            display: block;
+            padding: 0 var(--gutter);
+            height: 36px;
+            line-height: 36px;
+            border: 1px solid var(--mid-grey-2);
+            border-radius: 18px;
+            color: var(--light-grey-1);
+            text-decoration: none;
+            transition: background-color 60ms ease, color 60ms ease;
+        }
+        .gallery__item-tag-link:hover {
+            background-color: var(--mid-grey-1);
+            color: var(--dark-grey-3);
+        }
+        .is--fullscreen .gallery__previous,
+        .is--fullscreen .gallery__next,
+        .is--fullscreen .gallery__item-footer,
+        .is--fullscreen .gallery__total,
+        .is--fullscreen .gallery__share {
+            display: none;
+        }
+        .is--fullscreen .gallery__header {
+            padding:calc(var(--baseline)/2) var(--gutter)
+        }
     </style>
   </head>
   <body>
-    <section class="gallery js-gallery">
-        <h2 class="visually-hidden">Gallery</h2>
+    <div class="gallery js-gallery" id="gallery">
         <div class="gallery__header">
             <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>
             <button class="gallery__fullscreen" aria-label="Full screen" data-gallery-fullscreen>
-                <svg class="gallery__fullscreen-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+                <svg class="gallery__fullscreen-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="33.547" height="33.281" viewBox="0 0 33.547 33.281">
+                    <g transform="translate(-1434 -40.572)">
+                        <path d="M7.334,13.243a.919.919,0,0,0,.007-1.294L3.073,7.667l9.847,0a.914.914,0,0,0,0-1.828l-9.847,0L7.348,1.557A.925.925,0,0,0,7.341.263.91.91,0,0,0,6.054.27L.26,6.106h0a1.026,1.026,0,0,0-.19.288A.872.872,0,0,0,0,6.746a.916.916,0,0,0,.26.64l5.794,5.836A.9.9,0,0,0,7.334,13.243Z" transform="translate(1467.547 50.119) rotate(135)" fill="#fff"/>
+                        <path d="M7.334,13.243a.919.919,0,0,0,.007-1.294L3.073,7.667l9.847,0a.914.914,0,0,0,0-1.828l-9.847,0L7.348,1.557A.925.925,0,0,0,7.341.263.91.91,0,0,0,6.054.27L.26,6.106h0a1.026,1.026,0,0,0-.19.288A.872.872,0,0,0,0,6.746a.916.916,0,0,0,.26.64l5.794,5.836A.9.9,0,0,0,7.334,13.243Z" transform="translate(1434 64.307) rotate(-45)" fill="#fff"/>
+                    </g>
+                </svg>
             </button>
         </div>
         <div class="gallery__main">
-            <button class="gallery__previous" aria-label="Previous image" data-gallery-previous>
-                <svg class="gallery__previous-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><rect fill="none" height="24" width="24"/><g><polygon points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"/></g></svg>
-            </button>
             <ul class="gallery__list">
 
                 <li
@@ -77,7 +254,7 @@
                     </div>
                 </li>
 
-                <li
+                <!-- <li
                     class="gallery__item"
                     data-gallery-item
                     data-gallery-item-src="HC9kFY-upK0"
@@ -98,7 +275,7 @@
                             </ul>
                         </div>
                     </div>
-                </li>
+                </li> -->
 
 
 
@@ -107,7 +284,7 @@
                     class="gallery__item"
                     data-gallery-item
                     data-gallery-item-src="https://via.placeholder.com/500x200.png"
-                    data-gallery-item-sources='[{ "srcset": "https://via.placeholder.com/700x200.png", "media": "(min-width:400px)" }, { "srcset": "https://via.placeholder.com/1000x200.png", "media": "(min-width:700px)" }, { "srcset": "https://via.placeholder.com/1600x200.jpg", "media": "(min-width:1000px)" }]'
+                    data-gallery-item-sources='[{ "srcset": "https://via.placeholder.com/700x400.png", "media": "(min-width:400px)" }, { "srcset": "https://via.placeholder.com/1000x600.png", "media": "(min-width:700px)" }, { "srcset": "https://via.placeholder.com/1600x1000.jpg", "media": "(min-width:1000px)" }]'
                 >
                     <div class="gallery__item-img-container" data-gallery-item-img-container>
                         <div data-gallery-item-loader>Loading...</div>
@@ -119,10 +296,10 @@
                                 <div class="gallery__item-category">Architecture - March</div>
                                 <div class="gallery__item-title">Example project name here</div>
                             </div>
-                            <ul class="gallery__item-tags">
+                            <!-- <ul class="gallery__item-tags">
                                 <li class="gallery__item-tag">Example tag</li>
                                 <li class="gallery__item-tag">Example tag</li>
-                            </ul>
+                            </ul> -->
                         </div>
                     </div>
                 </li>
@@ -130,7 +307,7 @@
                     class="gallery__item"
                     data-gallery-item
                     data-gallery-item-src="https://via.placeholder.com/420x300.png"
-                    data-gallery-item-sources='[{ "srcset": "https://via.placeholder.com/710x200.png", "media": "(min-width:400px)" }, { "srcset": "https://via.placeholder.com/1100x200.png", "media": "(min-width:710px)" }, { "srcset": "https://via.placeholder.com/1600x200.jpg", "media": "(min-width:1100px)" }]'
+                    data-gallery-item-sources='[{ "srcset": "https://via.placeholder.com/710x900.png", "media": "(min-width:400px)" }, { "srcset": "https://via.placeholder.com/1100x1000.png", "media": "(min-width:710px)" }, { "srcset": "https://via.placeholder.com/1600x1400.jpg", "media": "(min-width:1100px)" }]'
                 >
                     <div class="gallery__item-img-container" data-gallery-item-img-container>
                         <div data-gallery-item-loader>Loading...</div>
@@ -142,10 +319,10 @@
                                 <div class="gallery__item-category">Architecture - April</div>
                                 <div class="gallery__item-title">Example project name here</div>
                             </div>
-                            <ul class="gallery__item-tags">
+                            <!-- <ul class="gallery__item-tags">
                                 <li class="gallery__item-tag">Example tag</li>
                                 <li class="gallery__item-tag">Example tag</li>
-                            </ul>
+                            </ul> -->
                         </div>
                     </div>
                 </li>
@@ -153,7 +330,7 @@
                     class="gallery__item"
                     data-gallery-item
                     data-gallery-item-src="https://via.placeholder.com/430x300.png"
-                    data-gallery-item-sources='[{ "srcset": "https://via.placeholder.com/730x200.png", "media": "(min-width:430px)" }, { "srcset": "https://via.placeholder.com/1300x200.png", "media": "(min-width:730px)" }, { "srcset": "https://via.placeholder.com/1630x200.jpg", "media": "(min-width:1300px)"}]'
+                    data-gallery-item-sources='[{ "srcset": "https://via.placeholder.com/730x300.png", "media": "(min-width:430px)" }, { "srcset": "https://via.placeholder.com/1300x1200.png", "media": "(min-width:730px)" }, { "srcset": "https://via.placeholder.com/1630x1500.jpg", "media": "(min-width:1300px)"}]'
                 >
                     <div class="gallery__item-img-container" data-gallery-item-img-container>
                         <div data-gallery-item-loader>Loading...</div>
@@ -165,10 +342,10 @@
                                 <div class="gallery__item-category">Architecture - May</div>
                                 <div class="gallery__item-title">Example project name here</div>
                             </div>
-                            <ul class="gallery__item-tags">
+                            <!-- <ul class="gallery__item-tags">
                                 <li class="gallery__item-tag">Example tag</li>
                                 <li class="gallery__item-tag">Example tag</li>
-                            </ul>
+                            </ul> -->
                         </div>
                     </div>
                 </li>
@@ -176,7 +353,7 @@
                     class="gallery__item"
                     data-gallery-item
                     data-gallery-item-src="https://via.placeholder.com/430x300.png"
-                    data-gallery-item-sources='[{ "srcset": "https://via.placeholder.com/740x200.png", "media": "(min-width:440px)" }, { "srcset": "https://via.placeholder.com/1400x200.png", "media": "(min-width:740px)" }, { "srcset": "https://via.placeholder.com/1640x200.jpg", "media": "(min-width:1400px)"}]'
+                    data-gallery-item-sources='[{ "srcset": "https://via.placeholder.com/740x1200.png", "media": "(min-width:440px)" }, { "srcset": "https://via.placeholder.com/1400x2200.png", "media": "(min-width:740px)" }, { "srcset": "https://via.placeholder.com/1640x2400.jpg", "media": "(min-width:1400px)"}]'
                 >
                     <div class="gallery__item-img-container" data-gallery-item-img-container>
                         <div data-gallery-item-loader>Loading...</div>
@@ -188,20 +365,25 @@
                                 <div class="gallery__item-category">Architecture - June</div>
                                 <div class="gallery__item-title">Example project name here</div>
                             </div>
-                            <ul class="gallery__item-tags">
+                            <!-- <ul class="gallery__item-tags">
                                 <li class="gallery__item-tag">Example tag</li>
                                 <li class="gallery__item-tag">Example tag</li>
-                            </ul>
+                            </ul> -->
                         </div>
                     </div>
                 </li>
 
 
             </ul>
-            <button class="gallery__previous" aria-label="Next image" data-gallery-next>
-                <svg class="gallery__previous-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12"/></g></svg>
+            
+            <button class="gallery__previous" aria-label="Previous image" data-gallery-previous>
+                <svg class="gallery__previous-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><rect fill="none" height="24" width="24"/><g><polygon points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"/></g></svg>
+            </button>
+            <button class="gallery__next" aria-label="Next image" data-gallery-next>
+                <svg class="gallery__next-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12"/></g></svg>
             </button>
         </div>
-    </section>
+    </div>
+    <div style="height:1000px"></div>
   </body>
 </html>
