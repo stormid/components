@@ -14,7 +14,7 @@ describe('Gallery > preload', () => {
     });
 
     it('Should preload all images', async () => {
-        document.body.innerHTML = `<section class="gallery js-gallery">
+        document.body.innerHTML = `<section class="gallery js-gallery" id="gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
                     <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>

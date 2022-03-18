@@ -3,7 +3,9 @@ import gallery from '../src';
 let instance;
 
 beforeAll(() => {
-    document.body.innerHTML = `<section class="gallery js-gallery">
+    document.body.innerHTML = `<button data-gallery-navigate="1">1</button>
+    <button data-gallery-navigate="2">2</button>
+    <section class="gallery js-gallery" id="gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
                     <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>
@@ -132,6 +134,14 @@ describe('Gallery > click interactions', () => {
         expect(instance.getState().activeIndex).toEqual(1);
         instance.getState().dom.previous.click();
         expect(instance.getState().activeIndex).toEqual(0);
+    });
+
+    it('should navigate to a specific item via a navigation button', () => {
+        expect(instance.getState().activeIndex).toEqual(0);
+        document.querySelector('[data-gallery-navigate="1"]').click();
+        expect(instance.getState().activeIndex).toEqual(1);
+        document.querySelector('[data-gallery-navigate="2"]').click();
+        expect(instance.getState().activeIndex).toEqual(2);
     });
 
 });

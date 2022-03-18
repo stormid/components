@@ -1,5 +1,5 @@
 import { sanitise } from './utils';
-import { ATTRIBUTE } from './constants';
+import { ATTRIBUTE, EVENTS } from './constants';
 
 const createPicture = item => {
     const picture = document.createElement('picture');
@@ -88,12 +88,12 @@ const loadItems = Store => i => {
 
     if (items.length > 1) indexes.push(i === 0 ? items.length - 1 : i - 1);
     if (items.length > 2) indexes.push(i === items.length - 1 ? 0 : i + 1);
-
     
     return indexes.map(idx => {
         if (!items[idx].loaded) {
             items[idx].node.classList.add(settings.className.loading);
             return items[idx].mediaType === ATTRIBUTE.MEDIA_TYPE_VIDEO ?  loadVideo(Store)(items[idx], idx) : loadImage(Store)(items[idx], idx);
+            // return loadImage(Store)(items[idx], idx);
         }
     });
 
@@ -111,9 +111,20 @@ export const init = Store => () => {
     //initialise buttons
     if (!dom.liveRegion) console.warn(`A live region announcing current and total items is recommended for screen readers.`);
     else writeLiveRegion(state);
-    if (dom.fullscreen) dom.fullscreen.addEventListener('click', toggleFullScreen.bind(null, Store));
+    if (dom.fullscreen) {
+        dom.fullscreen.addEventListener('click', toggleFullScreen.bind(null, Store));
+        document.addEventListener('fullscreenchange', e => {
+            if (document.fullscreenElement) document.documentElement.classList.add(settings.className.fullscreen);
+            else document.documentElement.classList.remove(settings.className.fullscreen);
+        });
+    }
     if (dom.previous) dom.previous.addEventListener('click', previous.bind(null, Store));
     if (dom.next) dom.next.addEventListener('click', next.bind(null, Store));
+    if (dom.triggers.length) {
+        dom.triggers.forEach(trigger => trigger.addEventListener('click', () => {
+            goTo(Store)(+trigger.getAttribute(ATTRIBUTE.NAVIGATE));
+        }));
+    }
     
     //set initial DOM state
     items.forEach((item, i) => {
@@ -137,8 +148,9 @@ const writeLiveRegion = ({ activeIndex, items, settings, dom }) => dom.liveRegio
 
 export const toggleFullScreen = Store => {
     const { node } = Store.getState();
-    if (!document.fullscreenElement) node.requestFullscreen && node.requestFullscreen();
-    else document.exitFullscreen && document.exitFullscreen();
+    if (!document.fullscreenElement) {
+        if (node.requestFullscreen) node.requestFullscreen();
+    } else if (document.exitFullscreen) document.exitFullscreen();
 };
 
 export const change = (Store, next) => {
@@ -168,8 +180,19 @@ export const change = (Store, next) => {
         () => {
             const num = next + 1;
             settings.updateURL && window.history.replaceState({ URL: `#${name}-${num}` }, '', `#${name}-${num}`);
-        }
+        },
+        broadcast(Store, EVENTS.CHANGE)
     ]);
+};
+
+export const broadcast = (Store, eventType) => state => {
+    const event = new CustomEvent(eventType, {
+        bubbles: true,
+        detail: {
+            getState: Store.getState
+        }
+    });
+    state.node.dispatchEvent(event);
 };
 
 export const previous = Store => {
@@ -185,4 +208,5 @@ export const next = Store => {
 export const goTo = Store => i => {
     loadItems(Store)(i);
     change(Store, i);
+    broadcast(Store, EVENTS.TRIGGERED);
 };
