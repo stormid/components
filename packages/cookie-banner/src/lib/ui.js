@@ -1,5 +1,5 @@
 import { writeCookie, groupValueReducer, deleteCookies, getFocusableChildren } from './utils';
-import { MEASUREMENTS } from './constants';
+import { ACCEPTED_TRIGGERS, MEASUREMENTS } from './constants';
 import { apply } from './consent';
 import { updateConsent, updateBannerOpen } from './reducers';
 import { measure, composeMeasurementConsent } from './measurement';
