@@ -1,19 +1,30 @@
-import { writeCookie, groupValueReducer, deleteCookies } from './utils';
-import { ACCEPTED_TRIGGERS, MEASUREMENTS } from './constants';
+import { writeCookie, groupValueReducer, deleteCookies, getFocusableChildren } from './utils';
+import { MEASUREMENTS } from './constants';
 import { apply } from './consent';
-import { updateConsent } from './reducers';
+import { updateConsent, updateBannerOpen } from './reducers';
 import { measure, composeMeasurementConsent } from './measurement';
 
-export const initBanner = state => {
-    if (state.settings.hideBannerOnFormPage && document.querySelector(`.${state.settings.classNames.formContainer}`)) return;
+export const initBanner = Store => () => {
+    const state = Store.getState();
+    if (state.bannerOpen || (state.settings.hideBannerOnFormPage && document.querySelector(`.${state.settings.classNames.formContainer}`))) return;
     document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
-    
     //track banner display
     if (state.settings.tid) measure(state, MEASUREMENTS.BANNER_DISPLAY);
+    
+    Store.update(updateBannerOpen, true);
 };
 
+export const showBanner = Store => cb => {
+    initBanner(Store)();
+    const { bannerOpen } = Store.getState();
+    if (!bannerOpen) return;
+    const focusableChildren = getFocusableChildren(document.body.firstElementChild);
+    if (focusableChildren.length > 0) focusableChildren[0].focus();
+    if (cb && cb.call) cb(Store.getState());
+};
 
-export const initBannerListeners = Store => state => {
+export const initBannerListeners = Store => () => {
+    const state = Store.getState();
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
     if (!banner) return;
 
@@ -39,7 +50,7 @@ export const initBannerListeners = Store => state => {
                     [
                         writeCookie,
                         apply(Store),
-                        removeBanner(banner),
+                        removeBanner(Store, banner),
                         initForm(Store, false),
                         //track banner accept click
                         state => {
@@ -67,7 +78,12 @@ export const initBannerListeners = Store => state => {
     }
 };
 
-const removeBanner = banner => () => (banner && banner.parentNode) && banner.parentNode.removeChild(banner);
+const removeBanner = (Store, banner) => () => {
+    if (banner && banner.parentNode) {
+        banner.parentNode.removeChild(banner);
+        Store.update(updateBannerOpen, false);
+    }
+};
 
 const suggestedConsent = state => Object.keys(state.consent).length > 0
     ? state
@@ -78,7 +94,8 @@ const suggestedConsent = state => Object.keys(state.consent).length > 0
         }, {})
     });
 
-export const initForm = (Store, track = true) => state => {
+export const initForm = (Store, track = true) => () => {
+    const state = Store.getState();
     const formContainer = document.querySelector(`.${state.settings.classNames.formContainer}`);
     if (!formContainer) return;
 
@@ -120,7 +137,7 @@ export const initForm = (Store, track = true) => state => {
                 deleteCookies,
                 writeCookie,
                 apply(Store),
-                removeBanner(banner),
+                removeBanner(Store, banner),
                 renderMessage(button),
                 state => {
                     if (!state.settings.tid) return;
@@ -137,7 +154,7 @@ export const initForm = (Store, track = true) => state => {
         );
     });
 
-    if(window.location.hash.substring(1) === form.id) {
+    if (window.location.hash.substring(1) === form.id) {
         window.scrollTo(0, form.getBoundingClientRect().top + window.scrollY);
     }
 };

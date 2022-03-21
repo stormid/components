@@ -1,5 +1,5 @@
-import cookieBanner from '../src';
-import defaults from '../src/lib/defaults';
+import cookieBanner from '../../src';
+import defaults from '../../src/lib/defaults';
 
 const init = () => {
     // Set up our document body
