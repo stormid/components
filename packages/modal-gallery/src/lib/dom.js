@@ -91,14 +91,9 @@ const writeImage = (state, i) => {
 const initUIButtons = Store => state => {
     const { dom } = Store.getState();
 
-    const findTriggers = (classSelector) => {
-        return ACCEPTED_TRIGGERS.reduce((sel, val, index) => {
-            const selector = sel + ACCEPTED_TRIGGERS[index]+"." + classSelector;
-            return (index === ACCEPTED_TRIGGERS.length-1) ? selector : selector+", ";
-        }, "");
-    }
+    const composeSelector = classSelector => { return ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(", "); }
 
-    const closeBtn = dom.overlay.querySelector(findTriggers("js-modal-gallery__close"));
+    const closeBtn = dom.overlay.querySelector(composeSelector("js-modal-gallery__close"));
     if(closeBtn) {
         closeBtn.addEventListener('click', e => {
             close(Store);
@@ -107,8 +102,8 @@ const initUIButtons = Store => state => {
         console.warn('No close buttons or links found.')
     }
 
-    const previousBtn = dom.overlay.querySelector(findTriggers("js-modal-gallery__previous"));
-    const nextBtn = dom.overlay.querySelector(findTriggers("js-modal-gallery__next"));
+    const previousBtn = dom.overlay.querySelector(composeSelector("js-modal-gallery__previous"));
+    const nextBtn = dom.overlay.querySelector(composeSelector("js-modal-gallery__next"));
     if (!previousBtn && !nextBtn) {
         console.warn('No next or previous buttons or links found.')
         return;

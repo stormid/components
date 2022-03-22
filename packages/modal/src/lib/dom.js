@@ -18,13 +18,9 @@ export const findDialog = node => (node.querySelector('[role=dialog]') || node.q
 export const findToggles = (node, settings) => {
 
     const toggleSelector = node.getAttribute(settings.toggleSelectorAttribute);
+    const composeSelector = classSelector => { return ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(", "); }
 
-    const query = ACCEPTED_TRIGGERS.reduce((sel, val, index) => {
-        const selector = sel + ACCEPTED_TRIGGERS[index]+"." + toggleSelector;
-        return (index === ACCEPTED_TRIGGERS.length-1) ? selector : selector+", ";
-    }, "");
-
-    const toggles = toggleSelector && [].slice.call(document.querySelectorAll(query));
+    const toggles = toggleSelector && [].slice.call(document.querySelectorAll(composeSelector(toggleSelector)));
     if (!toggles) console.warn(`Modal cannot be initialised, no modal toggle elements found. Does the modal have a ${settings.toggleSelectorAttribute} attribute that identifies toggle buttons or anchors?`);
     return toggles;
 };

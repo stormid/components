@@ -28,15 +28,10 @@ export const initBannerListeners = Store => () => {
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
     if (!banner) return;
 
-    const findTriggers = (classSelector) => {
-        return ACCEPTED_TRIGGERS.reduce((sel, val, index) => {
-            const selector = sel + ACCEPTED_TRIGGERS[index]+"." + classSelector;
-            return (index === ACCEPTED_TRIGGERS.length-1) ? selector : selector+", ";
-        }, "");
-    }
+    const composeSelector = classSelector => { return ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(", "); }
 
-    const acceptBtns = [].slice.call(document.querySelectorAll(findTriggers(state.settings.classNames.acceptBtn)));
-    const optionsBtn = document.querySelector(findTriggers(state.settings.classNames.optionsBtn)); 
+    const acceptBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
+    const optionsBtn = document.querySelector(composeSelector(state.settings.classNames.optionsBtn)); 
 
     acceptBtns.forEach(acceptBtn => {  
         if(acceptBtns) {

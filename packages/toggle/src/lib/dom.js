@@ -61,12 +61,9 @@ export const startToggleLifecycle = Store => () => {
 export const findToggles = node => {
 
     const toggleSelector = node.getAttribute('data-toggle');
-    const query = ACCEPTED_TRIGGERS.reduce((sel, val, index) => {
-        const selector = sel + ACCEPTED_TRIGGERS[index]+"." + toggleSelector;
-        return (index === ACCEPTED_TRIGGERS.length-1) ? selector : selector+", ";
-    }, "");
+    const composeSelector = classSelector => { return ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(", "); }
 
-    const toggles = node.getAttribute('data-toggle') && [].slice.call(document.querySelectorAll(query));
+    const toggles = node.getAttribute('data-toggle') && [].slice.call(document.querySelectorAll(composeSelector(toggleSelector)));
 
     if (!toggles) console.warn(`Toggle cannot be initialised, no buttons or anchors found for ${node}. Does it have a data-toggle attribute that identifies toggle buttons?`);
     return toggles;
