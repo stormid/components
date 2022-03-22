@@ -11,5 +11,6 @@ export default {
     onClassName: 'is--active',
     toggleSelectorAttribute: 'data-modal-toggle',
     callback: false,
+    startOpen: false,
     delay: 0
 };

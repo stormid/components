@@ -66,12 +66,14 @@ The className 'is--modal' added to the document.body when the modal is open. Thi
 ```
 
 ## Options
+Options can be set during initialising in an Object passed as the second argument to the modal function, e.g. `modal('.js-modal', { startOpen: true })`, or as data-attributes on the modal element (the element passed to the modal function), e.g. `data-start-open="true"`
 ```
 {
     onClassName: 'is--active', //className added to node when modal is open
     toggleSelectorAttribute: 'data-modal-toggle', //attribute on node to use as toggle selector
     callback: false, //optional function called after modal state change
-    delay: 0 //ms delay before focus on first focuable element
+    delay: 0, //ms delay before focus on first focuable element
+    startOpen //boolean, to trigger modal to open when initialised    
 }
 ```
 
@@ -80,6 +82,8 @@ modal() returns an array of instances. Each instance exposes the interface
 ```
 {
     getState, a Function that returns the current state Object
+    open, a Function that opens the modal
+    close a Function that closes the modal
 }
 ```
 

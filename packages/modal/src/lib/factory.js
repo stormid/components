@@ -4,7 +4,8 @@ import {
     findToggles,
     initUI,
     getFocusableChildren,
-    keyListener
+    keyListener,
+    lifecycle
 } from './dom';
 
 
@@ -26,9 +27,20 @@ export default ({ node, settings }) => {
         keyListener: keyListener(Store),
         lastFocused: false,
         isOpen: false
-    }, [ initUI(Store) ]);
+    }, [
+        initUI(Store),
+        () => settings.startOpen && lifecycle(Store)
+    ]);
 
     return {
-        getState: Store.getState
+        getState: Store.getState,
+        open() {
+            if (Store.getState().isOpen) return;
+            lifecycle(Store);
+        },
+        close() {
+            if (!Store.getState().isOpen) return;
+            lifecycle(Store);
+        }
     };
 };

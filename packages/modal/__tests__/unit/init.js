@@ -127,6 +127,7 @@ describe(`Modal > Initialisation`, () => {
 
 });
 
+
 describe('Modal > Initialisation > Get Selection', () => {
 
     const setupDOM = () => {
@@ -177,3 +178,47 @@ describe('Modal > Initialisation > Get Selection', () => {
 
 });
 
+
+describe('Modal > Initialisation > Start open', () => {
+
+    it('should start open based on initialisation option', async () => {
+        document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle">
+            <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label">
+                <h1 id="modal-label">Modal</h1>
+                <button>Focusable element</button>
+                <input type="text">
+                <input type="text">
+                <button aria-label="close" class="modal__close-btn js-modal-toggle" data-id="toggle-2">
+                    <svg fill="#fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                    </svg>
+                </button>
+            </div>
+        </div>`;
+        
+        const [ instance ] = modal('.js-modal', { startOpen: true });
+        expect(instance.getState().isOpen).toBe(true);
+    });
+
+    it('should start open based on data-attribute', async () => {
+        document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle" data-start-open="true">
+            <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label">
+                <h1 id="modal-label">Modal</h1>
+                <button>Focusable element</button>
+                <input type="text">
+                <input type="text">
+                <button aria-label="close" class="modal__close-btn js-modal-toggle" data-id="toggle-2">
+                    <svg fill="#fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                    </svg>
+                </button>
+            </div>
+        </div>`;
+        
+        const [ instance ] = modal('.js-modal');
+        expect(instance.getState().isOpen).toBe(true);
+    });
+
+});

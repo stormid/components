@@ -72,13 +72,13 @@ describe(`Modal > Mouse events`, () => {
         expect(ModalSet[0].getState().node.hasAttribute('hidden')).toEqual(false);
         expect(document.body.firstElementChild).toEqual(ModalSet[0].getState().node);
         Array.from(document.querySelectorAll('.container')).forEach(container => expect(container.getAttribute('aria-hidden')).toEqual('true'));
-        expect(document.documentElement.classList.contains('is--modal')).toEqual(true)
+        expect(document.documentElement.classList.contains('is--modal')).toEqual(true);
         
         ModalSet[0].getState().toggles[0].click();
         expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
         expect(ModalSet[0].getState().node.hasAttribute('hidden')).toEqual(true);
         Array.from(document.querySelectorAll('.container')).forEach(container => expect(container.hasAttribute('aria-hidden')).toEqual(false));
-        expect(document.documentElement.classList.contains('is--modal')).toEqual(false)
+        expect(document.documentElement.classList.contains('is--modal')).toEqual(false);
         
     });
 

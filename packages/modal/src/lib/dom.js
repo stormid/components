@@ -18,7 +18,7 @@ export const findDialog = node => (node.querySelector('[role=dialog]') || node.q
 export const findToggles = (node, settings) => {
 
     const toggleSelector = node.getAttribute(settings.toggleSelectorAttribute);
-    const composeSelector = classSelector => { return ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(", "); }
+    const composeSelector = classSelector => ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(', ');
 
     const toggles = toggleSelector && [].slice.call(document.querySelectorAll(composeSelector(toggleSelector)));
     if (!toggles) console.warn(`Modal cannot be initialised, no modal toggle elements found. Does the modal have a ${settings.toggleSelectorAttribute} attribute that identifies toggle buttons or anchors?`);
@@ -82,9 +82,10 @@ const toggle = state => {
 };
 
 /* 
- * @param state, Object, the current state or model of the instance
+ * @param Store, Object, model or store of the current instance
  */
-const open = state => {
+const open = Store => () => {
+    const state = Store.getState();
     if (state.dialog.hasAttribute('aria-hidden')) state.dialog.removeAttribute('aria-hidden'); // past implementations encouraged having aria-hidden on dialog when closed
     const ref = document.body.firstElementChild || null;
     if (ref !== state.node) document.body.insertBefore(state.node, ref);
@@ -96,13 +97,15 @@ const open = state => {
 };
 
 /* 
- * @param state, Object, the current state or model of the instance
+ * @param Store, Object, model or store of the current instance
  */
-const close = state => {
+const close = Store => () => {
+    const state = Store.getState();
     document.removeEventListener('keydown', state.keyListener);
     toggle(state);
     state.lastFocused.focus();
 };
+
 
 /* 
  * Partially applied function that returns a function
@@ -112,8 +115,8 @@ const close = state => {
  *
  */
 export const change = Store => state => {
-    if (state.isOpen) open(state);
-    else close(state);
+    if (state.isOpen) open(Store)();
+    else close(Store)(state);
     typeof state.settings.callback === 'function' &&  state.settings.callback.call(state);
 };
 
@@ -134,10 +137,12 @@ export const initUI = Store => ({ node, dialog, toggles }) => {
     toggles.forEach(tgl => {
         tgl.addEventListener('click', e => {
             e.preventDefault();
-            Store.dispatch({
-                isOpen: !Store.getState().isOpen,
-                lastFocused: Store.getState().isOpen ? Store.getState().lastFocused : tgl
-            }, [ change(Store) ]);
+            lifecycle(Store);
         });
     });
 };
+
+export const lifecycle = Store => Store.dispatch({
+    isOpen: !Store.getState().isOpen,
+    lastFocused: Store.getState().isOpen ? Store.getState().lastFocused : document.activeElement
+}, [ change(Store) ]);
