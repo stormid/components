@@ -8,15 +8,15 @@ Accessible tabbed panelled content areas
 
 Create a tablist in HTML
 ```
-<div role="tablist">
-    <nav class="tabs__nav">
-        <a id="tab-1" class="tabs__nav-link" href="#panel-1" role="tab">Tab 1</a>
-        <a id="tab-2" class="tabs__nav-link" href="#panel-2" role="tab">Tab 2</a>
-        <a id="tab-3" class="tabs__nav-link" href="#panel-3" role="tab">Tab 3</a>
-    </nav>
-    <section id="panel-1" class="tabs__section" role="tabpanel">Panel 1</section>
-    <section id="panel-2" class="tabs__section" role="tabpanel" hidden>Panel 2</section>
-    <section id="panel-3" class="tabs__section" role="tabpanel" hidden>Panel 3</section>
+<div class="tabs js-tabs">
+    <div class="tabs__tabslist" role="tablist">
+        <a id="tab-1" class="tabs__tab js-tabs__link" href="#panel-1" role="tab">Tab 1</a>
+        <a id="tab-2" class="tabs__tab js-tabs__link" href="#panel-2" role="tab">Tab 2</a>
+        <a id="tab-3" class="tabs__tab js-tabs__link" href="#panel-3" role="tab">Tab 3</a>
+    </div>
+    <div id="panel-1" class="tabs__tabpanel" role="tabpanel">Panel 1</div>
+    <div id="panel-2" class="tabs__tabpanel" role="tabpanel" hidden>Panel 2</div>
+    <div id="panel-3" class="tabs__tabpanel" role="tabpanel" hidden>Panel 3</div>
 </div>
 ```
 
