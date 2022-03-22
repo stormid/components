@@ -1,4 +1,4 @@
-import { TRIGGER_KEYCODES, FOCUSABLE_ELEMENTS } from './constants';
+import { FOCUSABLE_ELEMENTS } from './constants';
 
 //Modernizr cookie test
 export const cookiesEnabled = () => {
@@ -65,8 +65,6 @@ export const extractFromCookie = settings => {
         return [false, uuidv4(), {}];
     }
 };
-
-export const shouldReturn = event => (!!event.keyCode && !~TRIGGER_KEYCODES.indexOf(event.keyCode) || (event.which && event.which === 3));
 
 export const composeTypes = opts => (acc, curr) => {
     if (acc[curr]) {
