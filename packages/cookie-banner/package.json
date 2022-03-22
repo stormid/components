@@ -1,6 +1,6 @@
 {
   "name": "@stormid/cookie-banner",
-  "version": "1.0.0-alpha.19",
+  "version": "1.0.0-alpha.20",
   "description": "GDPR compliant cookie banner",
   "author": "stormid",
   "license": "MIT",
