@@ -14,7 +14,7 @@ describe('Validate > Integration > validator > minlength', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for data-val minlength validator with value length greater than the min', async () => {
@@ -29,7 +29,7 @@ describe('Validate > Integration > validator > minlength', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for unrequired data-val minlength validator with no value', async () => {
@@ -44,7 +44,7 @@ describe('Validate > Integration > validator > minlength', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState false for HTML5 minlength validator with value length less than min length', async () => {
@@ -57,7 +57,7 @@ describe('Validate > Integration > validator > minlength', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState false for HTML5 minlength validator with value length greater than min length', async () => {
@@ -70,7 +70,7 @@ describe('Validate > Integration > validator > minlength', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for unrequired HTML5 minlength validator with no value', async () => {
@@ -83,7 +83,7 @@ describe('Validate > Integration > validator > minlength', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
 });

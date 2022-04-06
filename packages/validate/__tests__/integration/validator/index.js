@@ -23,7 +23,7 @@ describe('Validate > Integration > validator > error handling', () => {
                     }
                 }]
         };
-        validate(group, group.validators[0]);
+        await validate(group, group.validators[0]);
         expect(console.warn).toHaveBeenCalledWith(errorMessage);
     });
 

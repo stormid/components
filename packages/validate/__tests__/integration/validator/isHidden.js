@@ -16,7 +16,7 @@ describe('Validate > Integration > assembleValidationGroup > With hidden element
             value=""
             type="hidden">`;
         const inputs = [].slice.call(document.querySelectorAll('[name="group1"]'));
-        const group = inputs.reduce(assembleValidationGroup, {}); 
+        const group = inputs.reduce(assembleValidationGroup, {});
         expect(group.group1.fields).toEqual([inputs[0]]);
     });
 

@@ -25,7 +25,7 @@ describe('Validate > Integration > validator > equalto', () => {
             />`;
         const input = document.querySelector('#VERIFY-EMAIL');
         const group = assembleValidationGroup({}, input)['VERIFY-EMAIL'];
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for data-val equalto validator with a value matching another single field', async () => {
@@ -51,7 +51,7 @@ describe('Validate > Integration > validator > equalto', () => {
             />`;
         const input = document.querySelector('#VERIFY-EMAIL');
         const group = assembleValidationGroup({}, input)['VERIFY-EMAIL'];
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState false for data-val equalto validator with a value not matching the other field(s)', async () => {
@@ -72,7 +72,7 @@ describe('Validate > Integration > validator > equalto', () => {
                 value="not.the.same.email.address@stormid.com" />`;
         const input = document.querySelector('#DoubleConfirmEmail');
         const group = assembleValidationGroup({}, input).DoubleConfirmEmail;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState false for data-val equalto validator with a value not matching the other field(s) with an empty value', async () => {
@@ -93,7 +93,7 @@ describe('Validate > Integration > validator > equalto', () => {
                 value="example@stormid.com" />`;
         const input = document.querySelector('#DoubleConfirmEmail');
         const group = assembleValidationGroup({}, input).DoubleConfirmEmail;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for data-val equalto validator with a value matching the other field(s)', async () => {
@@ -114,7 +114,7 @@ describe('Validate > Integration > validator > equalto', () => {
                 value="example@stormid.com" />`;
         const input = document.querySelector('#DoubleConfirmEmail');
         const group = assembleValidationGroup({}, input).DoubleConfirmEmail;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for an unrequired data-val equalto validator with no value', async () => {
@@ -135,7 +135,7 @@ describe('Validate > Integration > validator > equalto', () => {
                 value="" />`;
         const input = document.querySelector('#DoubleConfirmEmail');
         const group = assembleValidationGroup({}, input).DoubleConfirmEmail;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
 });

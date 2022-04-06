@@ -154,19 +154,20 @@ export const normaliseValidators = input => input.getAttribute('data-val') === '
  * @returns validityState [Boolean]
  * 
  */
-export const validate = (group, validator) => {
+export const validate = (group, validator) => new Promise((resolve, reject) => {
     try {
-        return validator.type === 'custom'
-            ? methods.custom(validator.method, group)
-            : methods[validator.type](group, validator.params);
+        validator.type === 'custom'
+            ? resolve(methods.custom(validator.method, group))
+            : resolve(methods[validator.type](group, validator.params));
     } catch (err) {
         console.warn(err);
+        resolve(err);
     }
-};
+});
 
 /**
  * Reducer constructing an validation Object for a group of DOM nodes
- * 
+ *  
  * @param input [DOM node]
  * 
  * @returns validation object [Object] consisting of
@@ -292,25 +293,15 @@ export const getValidityState = groups => Promise.all(
  * 
  */
 export const getGroupValidityState = group => {
-    let hasError = false;
     //check if group is disabled
     if (groupIsDisabled(group.fields)) return Promise.resolve([true]);
     return Promise.all(group.validators.map(validator => new Promise((resolve, reject) => {
-        if (validator.type !== 'remote'){
-            if (validate(group, validator)) resolve(true);
-            else {
-                hasError = true;
-                resolve(false);
-            }
-        } else if (hasError) resolve(false);
-        else {
-            validate(group, validator)
-                .then(res => {
-                    if (res === 'true') resolve(true);
-                    if (res === 'false') resolve(false);
-                    resolve(res);
-                });
-        }
+        validate(group, validator)
+            .then(res => {
+                if (String(res) !== 'true') resolve(String(res) === 'false' ? false : res);
+                else resolve(true);
+            })
+            .catch(err => console.warn(err));
     })));
 };
 
