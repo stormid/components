@@ -151,7 +151,7 @@ export const normaliseValidators = input => input.getAttribute('data-val') === '
  * @param group [Array] DOM nodes with the same name attribute
  * @param validator [String] The type of validator matching it to validation method function
  * 
- * @returns validityState [Boolean]
+ * @returns  validityState [Promise]
  * 
  */
 export const validate = (group, validator) => new Promise((resolve, reject) => {
@@ -289,7 +289,7 @@ export const getValidityState = groups => Promise.all(
  * 
  * @params groups [Object]
  * 
- * @return validation results [Promise] aggregated promise
+ * @return validation results [Promises] aggregated promise
  * 
  */
 export const getGroupValidityState = group => {
