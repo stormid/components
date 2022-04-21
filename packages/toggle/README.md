@@ -52,7 +52,7 @@ To localise a toggle state to part of the document (e.g. show/hide panel)
 Create a target and related button(s) in HTML
 ```
 <div class="parent">
-    <button class="js-toggle__btn"></a>
+    <button type="button" class="js-toggle__btn"></button>
     <div id="child" class="js-toggle__local" data-toggle="js-toggle__btn"></div>
 </div>
 ```
@@ -91,7 +91,7 @@ const [ instance ] = toggle('.js-toggle', {
 Options can also be set on an instance by adding data-attributes to the toggle element, e.g. 
 ```
 <div class="parent">
-    <button class="js-toggle__btn"></a>
+    <button type="button" class="js-toggle__btn"></button>
     <div class="js-toggle__local" data-toggle="js-toggle__btn" data-start-open="true"></div>
 </div>
 ```
@@ -99,7 +99,7 @@ Options can also be set on an instance by adding data-attributes to the toggle e
 A toggle can also be started open usng the active className alone, e.g.
 ```
 <div class="parent is--active">
-    <button class="js-toggle__btn"></a>
+    <button type="button" class="js-toggle__btn"></button>
     <div class="js-toggle__local" data-toggle="js-toggle__btn"></div>
 </div>
 ```
