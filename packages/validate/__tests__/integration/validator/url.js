@@ -12,7 +12,7 @@ describe('Validate > Integration > validator > url', () => {
 			type="url">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState false for data-val url validator with non-spec url', async () => {
@@ -26,7 +26,7 @@ describe('Validate > Integration > validator > url', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
     
     it('should return the validityState true for non-required empty HTML5 url validator field', async () => {
@@ -38,7 +38,7 @@ describe('Validate > Integration > validator > url', () => {
 			type="url">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for non-required empty data-val url validator field', async () => {
@@ -52,7 +52,7 @@ describe('Validate > Integration > validator > url', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState false for HTML5 url validator with an on-spec url', async () => {
@@ -64,7 +64,7 @@ describe('Validate > Integration > validator > url', () => {
 			type="url">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
 

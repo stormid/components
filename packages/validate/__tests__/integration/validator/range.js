@@ -15,7 +15,7 @@ describe('Validate > Integration > validator > range', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for data-val range validator with value inside the specified range', async () => {
@@ -31,7 +31,7 @@ describe('Validate > Integration > validator > range', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for an unrequired data-val range validator with no value', async () => {
@@ -47,7 +47,7 @@ describe('Validate > Integration > validator > range', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for data-val range validator with value > min with no max', async () => {
@@ -62,7 +62,7 @@ describe('Validate > Integration > validator > range', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState false for data-val range validator with value <= min with no max', async () => {
@@ -77,7 +77,7 @@ describe('Validate > Integration > validator > range', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for data-val range validator with value <= max with no min', async () => {
@@ -92,7 +92,7 @@ describe('Validate > Integration > validator > range', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState false for data-val range validator with value > max with no min', async () => {
@@ -107,7 +107,7 @@ describe('Validate > Integration > validator > range', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
 });

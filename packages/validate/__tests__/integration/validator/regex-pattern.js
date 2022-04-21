@@ -11,7 +11,7 @@ describe('Validate > Integration > validator > regex/pattern', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
     
     it('should return the validityState false for HTML5 pattern validator with matching value', async () => {
@@ -24,7 +24,7 @@ describe('Validate > Integration > validator > regex/pattern', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for non-required empty HTML5 pattern validator field', async () => {
@@ -37,7 +37,7 @@ describe('Validate > Integration > validator > regex/pattern', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState false for data-val regex validator with non-matching value', async () => {
@@ -52,7 +52,7 @@ describe('Validate > Integration > validator > regex/pattern', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for data-val regex validator with a matching value', async () => {
@@ -67,7 +67,7 @@ describe('Validate > Integration > validator > regex/pattern', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for non-required empty data-val pattern validator field', async () => {
@@ -82,7 +82,7 @@ describe('Validate > Integration > validator > regex/pattern', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
 });

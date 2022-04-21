@@ -12,7 +12,7 @@ describe('Validate > Integration > validator > email', () => {
 			type="email">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for HTML5 email validator with an on-spec email address', async () => {
@@ -24,7 +24,7 @@ describe('Validate > Integration > validator > email', () => {
 			type="email">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for non-required empty HTML5 email validator field', async () => {
@@ -36,7 +36,7 @@ describe('Validate > Integration > validator > email', () => {
 			type="email">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState false for data-val email validator with non-spec email address', async () => {
@@ -50,7 +50,7 @@ describe('Validate > Integration > validator > email', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for data-val email validator with an on-spec email address', async () => {
@@ -64,7 +64,7 @@ describe('Validate > Integration > validator > email', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for non-required empty data-val email validator field', async () => {
@@ -78,7 +78,7 @@ describe('Validate > Integration > validator > email', () => {
 			type="email">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
 });

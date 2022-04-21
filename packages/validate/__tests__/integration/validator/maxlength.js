@@ -14,7 +14,7 @@ describe('Validate > Integration > validator > maxlength', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState true for data-val maxlength validator with value length less than the max', async () => {
@@ -29,7 +29,7 @@ describe('Validate > Integration > validator > maxlength', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for unrequired data-val maxlength validator with no value', async () => {
@@ -44,7 +44,7 @@ describe('Validate > Integration > validator > maxlength', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState false for HTML5 maxlength validator with value length greater than max', async () => {
@@ -57,7 +57,7 @@ describe('Validate > Integration > validator > maxlength', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
     it('should return the validityState false for HTML5 maxlength validator with value length less than max', async () => {
@@ -70,7 +70,7 @@ describe('Validate > Integration > validator > maxlength', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
     it('should return the validityState true for unrequired HTML5 maxlength validator with no value', async () => {
@@ -83,7 +83,7 @@ describe('Validate > Integration > validator > maxlength', () => {
 			type="text">`;
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
-        expect(validate(group, group.validators[0])).toEqual(true);
+        expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
 });

@@ -22,7 +22,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 name="DoubleConfirmEmail"
                 value="not.the.same.email.address@stormid.com" /></form>`;
         const input = document.querySelector('#DoubleConfirmEmail');
-        const label = document.getElementById('DoubleConfirmEmail-label');
+        // const label = document.getElementById('DoubleConfirmEmail-label');
         const validator = library('form')[0];
         const validityState = await validator.validate();
         // //validityState
@@ -54,7 +54,7 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 value="example@stormid.com" />`;
         const input = document.querySelector('#DoubleConfirmEmail');
         const group = assembleValidationGroup({}, input).DoubleConfirmEmail;
-        expect(validate(group, group.validators[0])).toEqual(false);
+        expect(await validate(group, group.validators[0])).toEqual(false);
     });
 
 });

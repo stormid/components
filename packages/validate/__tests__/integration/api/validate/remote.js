@@ -13,7 +13,7 @@ describe('Validate > Integration > api > validate > remote', () => {
  
         mock.post('/api/validate', {
             status: 201,
-            body: 'false'
+            body: 'Remote error message'
         });
         document.body.innerHTML = `<form class="form">
             <label id="group1-label" for="group1">Label</label>
