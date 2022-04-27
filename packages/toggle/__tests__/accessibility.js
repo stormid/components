@@ -35,11 +35,19 @@ describe(`Toggle > Accessibility`, () => {
         expect(Toggles[0].getState().toggles[0].getAttribute('aria-expanded')).toEqual('false');
     });
 
+    it('should initially add a hidden attribute on the node', async () => {
+        expect(Toggles[0].getState().node.hidden).toBeTruthy();
+    });
 
     it('should focus on the first focusable child node fo the target when toggled open', () => {
         Toggles[0].getState().toggles[0].click();
         Toggles[0].getState().toggles[0].click();
         expect(document.activeElement.getAttribute('id')).toEqual('focusable-1-1');
+    });
+
+    it('should change the add a hidden attribute on the node when clicked', async () => {
+        Toggles[0].getState().toggles[0].click();
+        expect(Toggles[0].getState().node.hidden).toBeFalsy();
     });
 
 });
