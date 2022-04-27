@@ -4,7 +4,7 @@ import { getInitialState } from '../validator';
 import { validate }  from './validate';
 import { clearErrors, addAXAttributes }  from '../dom';
 import { addMethod } from './add-method';
-import { addGroup, removeGroup } from './group';
+import { addGroup, validateGroup, removeGroup } from './group';
 
 
 /**
@@ -26,6 +26,7 @@ export default (form, settings) => {
         validate: validate(Store),
         addMethod: addMethod(Store),
         addGroup: addGroup(Store),
+        validateGroup: validateGroup(Store),
         removeGroup: removeGroup(Store)
     };
 };

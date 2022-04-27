@@ -1,5 +1,6 @@
 import validate from '../../../src';
-import { GROUP_ATTRIBUTE } from '../../../src/lib/constants';
+import { GROUP_ATTRIBUTE, DOTNET_CLASSNAMES } from '../../../src/lib/constants';
+import defaults from '../../../src/lib/defaults';
 
 describe('Validate > Integration > API > addGroup', () => {
 
@@ -82,6 +83,33 @@ describe('Validate > Integration > API > removeGroup', () => {
         validator.removeGroup('group1');
         expect(validator.getState().groups).toEqual({});
 
+    });
+
+});
+
+describe('Validate > Integration > API > validateGroup', () => {
+
+    it('should validate an individual validation group when called', async () => {
+        // expect.assertions(6);
+        document.body.innerHTML = `<form class="form">
+            <label id="group1-1-label" for="group1-1">group1</label>
+            <input
+                id="group1-1"
+                name="group1"
+                required
+                value=""
+                type="text" />
+        </form>`;
+        // const form = document.querySelector('.form');
+        const input = document.querySelector('#group1-1');
+        const validator = validate('form')[0];
+        await validator.validateGroup('group1');
+
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.required());
+
+        input.value = "test";
+        await validator.validateGroup('group1');
+        expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`)).toBeNull();
     });
 
 });

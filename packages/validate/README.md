@@ -355,6 +355,7 @@ validate() returns an array of instances. Each instance exposes the interface
 {
     validate
     addMethod
+    validateGroup
     addGroup
     removeGroup
 }
@@ -393,6 +394,16 @@ const fieldsArray = Array.from(document.querySelector('.new-fields'))
 //add by passing an array of fields
 //if these fields span multiple groups they will be collected into the correct validation groups internally by the validator
 validator.addGroup(fieldsArray);
+```
+
+### validateGroup
+Immediately validates an individual group within the form:
+```
+const [ validator ] = validate('.my-form');
+const validator.validateGroup('myInput');
+
+//pass in the name or data-val-group value that corresponds to the group you're looking to validate
+//returns a promise which resolves with the validity state of the group (true if valid, false if invalid)
 ```
 
 ### removeGroup
