@@ -228,7 +228,7 @@ const [ instance ] = toggle(elements);
 <p>To localise a toggle state to part of the document (e.g. show/hide panel)</p>
 <p>Create a target and related button(s) in HTML</p>
 <pre><code>&lt;div class=&quot;parent&quot;&gt;
-    &lt;button class=&quot;js-toggle__btn&quot;&gt;&lt;/a&gt;
+    &lt;button type=&quot;button&quot; class=&quot;js-toggle__btn&quot;&gt;&lt;/button&gt;
     &lt;div id=&quot;child&quot; class=&quot;js-toggle__local&quot; data-toggle=&quot;js-toggle__btn&quot;&gt;&lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
@@ -260,13 +260,13 @@ const [ instance ] = toggle(elements);
 </code></pre>
 <p>Options can also be set on an instance by adding data-attributes to the toggle element, e.g.</p>
 <pre><code>&lt;div class=&quot;parent&quot;&gt;
-    &lt;button class=&quot;js-toggle__btn&quot;&gt;&lt;/a&gt;
+    &lt;button type=&quot;button&quot; class=&quot;js-toggle__btn&quot;&gt;&lt;/button&gt;
     &lt;div class=&quot;js-toggle__local&quot; data-toggle=&quot;js-toggle__btn&quot; data-start-open=&quot;true&quot;&gt;&lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
 <p>A toggle can also be started open usng the active className alone, e.g.</p>
 <pre><code>&lt;div class=&quot;parent is--active&quot;&gt;
-    &lt;button class=&quot;js-toggle__btn&quot;&gt;&lt;/a&gt;
+    &lt;button type=&quot;button&quot; class=&quot;js-toggle__btn&quot;&gt;&lt;/button&gt;
     &lt;div class=&quot;js-toggle__local&quot; data-toggle=&quot;js-toggle__btn&quot;&gt;&lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
