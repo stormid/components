@@ -151,7 +151,8 @@ const targetIsToggle = (toggles, target) => toggles.reduce((acc, toggle) => {
  * @param Event, event dispatched from document
  */
 export const focusInListener = Store => e => {
-    if (!Store.getState().node.contains(e.target)) toggle(Store)();
+    const state = Store.getState();
+    if (!state.node.contains(e.target) && !targetIsToggle(state.toggles, e.target)) toggle(Store)();
 };
 
 /*
