@@ -19,8 +19,9 @@ export default ({ node, settings }) => {
         //activeTabIndex should initially match the active panel, so initialising here to the same value
         activeTabIndex: activeIndex !== undefined ? +activeIndex : +settings.activeIndex, 
         tabs,
-        panels
-    }, [ initUI(Store), open ]);
+        panels,
+        loaded: false
+    }, [ initUI(Store), open(Store) ]);
 
     return {
         getState: Store.getState

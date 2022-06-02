@@ -9,11 +9,13 @@ import { MODES } from './constants';
  * @property activation, string, 'auto' or 'manual' describes tab activation method.  
  * as per https://www.w3.org/TR/wai-aria-practices/examples/tabs/tabs-2/tabs.html or https://www.w3.org/TR/wai-aria-practices/examples/tabs/tabs-1/tabs.html
  * @property active, Number, index of initially active tab
+ * @property focusOnLoad, Boolean, sets whether the page should focus on the first tab on load
  */
 export default {
     tabSelector: '[role=tab]',
     activeClass: 'is--active',
     updateURL: true,
     activation: MODES.AUTO,
-    activeIndex: 0
+    activeIndex: 0,
+    focusOnLoad: true
 };
