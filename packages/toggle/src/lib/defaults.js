@@ -11,6 +11,7 @@
  * @property trapTab, Boolean, the toggled element should trap tab (tabbing from last child item returns focus to the first) when open
  * @property closeOnBlur, Boolean, the toggled element should close when focus moves to a non-child element
  * @property closeOnClick, Boolean, the toggled element should close when a non-child element is clicked
+ * @property useHidden, Boolean, set to true to add the html 'hidden' attribute to the toggled element
  */
 export default {
     delay: 0,
@@ -21,5 +22,6 @@ export default {
     focus: true,
     trapTab: false,
     closeOnBlur: false,
-    closeOnClick: false
+    closeOnClick: false,
+    useHidden: false
 };

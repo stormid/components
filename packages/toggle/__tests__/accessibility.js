@@ -19,7 +19,8 @@ const init = () => {
     Toggles = toggle('.js-toggle', {
         trapTab: true,
         closeOnBlur: true,
-        focus: true
+        focus: true,
+        useHidden: true
     });
     // TogglesLocal = toggle('.js-toggle-local', {
     //     local: true
@@ -45,7 +46,7 @@ describe(`Toggle > Accessibility`, () => {
         expect(document.activeElement.getAttribute('id')).toEqual('focusable-1-1');
     });
 
-    it('should change the add a hidden attribute on the node when clicked', async () => {
+    it('should change the hidden attribute on the node when clicked', async () => {
         Toggles[0].getState().toggles[0].click();
         expect(Toggles[0].getState().node.hidden).toBeFalsy();
     });
