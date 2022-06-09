@@ -6,8 +6,8 @@ import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, EVENTS } from './constants';
  * @param Store, Object, model or state of the current instance
  */
 export const initUI = Store => () => {
-    const { toggles, node } = Store.getState();
-    node.hidden = true;
+    const { toggles, node, settings } = Store.getState();
+    if(settings.useHidden) node.hidden = true;
     toggles.forEach(toggle => {
         const id = node.getAttribute('id');
         if (toggle.tagName !== 'BUTTON') toggle.setAttribute('role', 'button');
@@ -82,11 +82,11 @@ export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(
  * 
  * @param props, Object, composed of properties of current state required to accessibly change node toggles attributes
  */
-export const toggleAttributes = ({ toggles, isOpen, node, classTarget, animatingClass, statusClass }) => {
+export const toggleAttributes = ({ toggles, isOpen, node, classTarget, animatingClass, statusClass, settings }) => {
     toggles.forEach(toggle => toggle.setAttribute('aria-expanded', isOpen));
     classTarget.classList.remove(animatingClass);
     classTarget.classList[isOpen ? 'add' : 'remove'](statusClass);
-    node.hidden = !isOpen;
+    if(settings.useHidden) node.hidden = !isOpen;
 };
 
 /*
