@@ -137,11 +137,20 @@ export const renderError = groupName => state => {
     //shouldn't be updating state here...
     //to do: refactor to update state as a side effect afterwards?
     //would need to pass Store instead of state
-    if (state.groups[groupName].serverErrorNode) state.errors[groupName] = createErrorTextNode(state.groups[groupName], msg);
-    else {
+    if (state.groups[groupName].serverErrorNode) {
+        state.errors[groupName] = createErrorTextNode(state.groups[groupName], msg);
+    } else {
+        //No server error node found, so attempt to render inside the label.  If no label found, log error to console.
         const label = document.querySelector(`[for="${state.groups[groupName].fields[state.groups[groupName].fields.length-1].getAttribute('id')}"]`);
-        state.errors[groupName] = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: `${groupName}-error-message` }, msg), label.nextSibling);
+
+        if(label !== null) {
+            state.errors[groupName] = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: `${groupName}-error-message` }, msg), label.nextSibling);
+        } else {
+            console.error("No matching HTML label or server error node found for validation group: " +groupName+".  Error message: '" + msg + "' cannot be displayed.  Form will not be submitted.");
+            return; 
+        }        
     }
+
     const errorContainer = state.groups[groupName].serverErrorNode || state.errors[groupName];
 						
     state.groups[groupName].fields.forEach(field => {
