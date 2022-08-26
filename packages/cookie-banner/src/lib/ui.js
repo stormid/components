@@ -18,7 +18,7 @@ export const showBanner = Store => cb => {
     initBanner(Store)();
     const { bannerOpen } = Store.getState();
     if (!bannerOpen) return;
-    initForm(Store);
+    initForm(Store)();
     const focusableChildren = getFocusableChildren(document.body.firstElementChild);
     if (focusableChildren.length > 0) focusableChildren[0].focus();
     if (cb && cb.call) cb(Store.getState());
