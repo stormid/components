@@ -1,5 +1,7 @@
-import { groupValueReducer, removeSubdomain, extractFromCookie } from '../src/lib/utils';
+import { groupValueReducer, removeSubdomain, extractFromCookie, broadcast } from '../src/lib/utils';
 import defaults from '../src/lib/defaults';
+import { EVENTS } from '../src/lib/constants';
+import { createStore } from '../src/lib/store';
 
 describe('Cookie > Utils > removeSubdomain', () => {
     it('should return the same vaule for a root domain', async () => {
@@ -124,6 +126,28 @@ describe('Cookie > Utils > extractFromCookie > cookie not base64 encoded', () =>
         expect(hasCookie).toEqual(false);
         expect(cid).toBeDefined();
         expect(consent).toEqual({});
+    });
+
+});
+
+describe(`Cookie banner > Utils > broadcast`, () => {
+
+    it('should dispatch a custom event with a detail Object with a reference to Store.getState', async () => {
+        const Store = createStore();
+        const state = {
+            consent: {},
+            bannerOpen: true,
+            settings: defaults
+        };
+        Store.update(_ => _, state);
+        const listener = jest.fn();
+        document.addEventListener(EVENTS.OPEN, listener);
+        document.addEventListener(EVENTS.OPEN, e => {
+            expect(e.detail).toEqual({ getState: Store.getState });
+        });
+
+        broadcast(EVENTS.OPEN, Store)(state);
+        expect(listener).toHaveBeenCalled();
     });
 
 });
