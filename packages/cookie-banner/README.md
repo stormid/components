@@ -169,7 +169,7 @@ There are three custom events that an instance of the cookie banner dispatches:
 - `banner.hide` when it is hidden
 - `banner.consent` when consent is ste or updated
 
-The events are dispatched on the document. Areference to the getState function of the instance is contained in the custom event detail.
+The events are dispatched on the document. A reference to the getState function of the instance is contained in the custom event detail.
 
 ```
 const instance = banner(options);
