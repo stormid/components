@@ -167,7 +167,7 @@ The Object returned from initialisation exposes the interface
 There are three custom events that an instance of the cookie banner dispatches:
 - `banner.show` when the banner is displayed
 - `banner.hide` when it is hidden
-- `banner.consent` when consent is ste or updated
+- `banner.consent` when consent is set or updated
 
 The events are dispatched on the document. A reference to the getState function of the instance is contained in the custom event detail.
 
