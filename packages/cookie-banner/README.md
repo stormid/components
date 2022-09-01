@@ -162,6 +162,27 @@ The Object returned from initialisation exposes the interface
 }
 ```
 
+## Events
+
+There are three custom events that an instance of the cookie banner dispatches:
+- `banner.show` when the banner is displayed
+- `banner.hide` when it is hidden
+- `banner.consent` when consent is ste or updated
+
+The events are dispatched on the document. A reference to the getState function of the instance is contained in the custom event detail.
+
+```
+const instance = banner(options);
+
+document.addEventListener('banner.show', e => {
+    //e.g. initialise toggle for form-in-banner implementation
+    const [ bannerToggle ] = toggle('.js-banner-toggle'); 
+    const state = e.detail.getState();
+    // do something with state if we want to
+});
+
+```
+
 ## Tests
 ```
 npm t
