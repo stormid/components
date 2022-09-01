@@ -115,7 +115,7 @@ export const uuidv4 = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]
 
 export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
 
-export const broadcast = (type, Store) => state => {
+export const broadcast = (type, Store) => () => {
     const event = new CustomEvent(type, {
         bubbles: true,
         detail: {
