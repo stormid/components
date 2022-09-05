@@ -17,9 +17,9 @@ const loadItems = Store => i => {
     return indexes.map(idx => {
         if (!items[idx].loaded) {
             items[idx].node.classList.add(settings.className.loading);
-            // return items[idx].mediaType === ATTRIBUTE.MEDIA_TYPE_VIDEO ?  loadVideo(Store)(items[idx], idx) : loadImage(Store)(items[idx], idx);
-            return loaders[items[idx].mediaType];
-            // return loadImage(Store)(items[idx], idx);
+            return loaders[items[idx].mediaType]
+                ? loaders[items[idx].mediaType](Store)(items[idx], idx)
+                : items[idx].mediaType(Store)(items[idx], idx); //use a named loader
         }
     });
 
@@ -65,7 +65,7 @@ export const init = Store => () => {
     });
 
     //preload all images if setting is true, or just previous and next
-    if (settings.preload) return Promise.all(items.map(loadImage(Store)));
+    if (settings.preload) return Promise.all(items.map(loadItems(Store)(activeIndex)));
     return Promise.all(loadItems(Store)(activeIndex));
     
 };
@@ -83,13 +83,13 @@ export const change = (Store, next) => {
     const { activeIndex, items, settings, name } = Store.getState();
 
     // Ensure any YouTube videos are stopped
-    let targetOrigin = 'https://www.youtube.com';
-    let youtube_iframes = [...document.querySelectorAll('.data-yt-iframe')];
-    if(youtube_iframes.length){
-        youtube_iframes.forEach(youtube_iframe => {
-            youtube_iframe.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', targetOrigin);
-        })
-    }
+    // let targetOrigin = 'https://www.youtube.com';
+    // let youtube_iframes = [...document.querySelectorAll('.data-yt-iframe')];
+    // if(youtube_iframes.length){
+    //     youtube_iframes.forEach(youtube_iframe => {
+    //         youtube_iframe.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', targetOrigin);
+    //     })
+    // }
 
     //set activeIndex in state,
     //then run all side effects to change the DOM/show and hide items, manage focus, and load updated previous/next

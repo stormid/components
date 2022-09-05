@@ -3,6 +3,12 @@ import { change } from './dom';
 
 export const sanitise = item => item.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+export const findMediaType = node => {
+    if (node.getAttribute(ATTRIBUTE.MEDIA_TYPE)) return node.getAttribute(ATTRIBUTE.MEDIA_TYPE);
+    if ((node.getAttribute(ATTRIBUTE.SRC) || node.getAttribute(ATTRIBUTE.SOURCES))) return 'image';
+    return null; // assume that media rendering managed elsewhere
+};
+
 export const composeItems = (nodes, settings) => nodes.map(node => {
     const sourcesValue = node.getAttribute(ATTRIBUTE.SOURCES);
     let sources = false;
@@ -13,14 +19,16 @@ export const composeItems = (nodes, settings) => nodes.map(node => {
             console.warn('Gallery cannot parse sources', e);
         }
     }
+    const mediaType = findMediaType(node);
     let item = {
         node,
         sources,
         srcset: node.getAttribute(ATTRIBUTE.SRCSET),
         sizes: node.getAttribute(ATTRIBUTE.SIZES),
         src: node.getAttribute(ATTRIBUTE.SRC),
-        alt: node.getAttribute(ATTRIBUTE.ALT),
-        mediaType: node.getAttribute(ATTRIBUTE.MEDIA_TYPE)
+        alt: node.getAttribute(ATTRIBUTE.ALT) || console.warn('A gallery image should have an alt description'),
+        mediaType,
+        loaded: mediaType === null
     };
     //must contain an img container element
     const imgContainer = node.querySelector(settings.selector.imgContainer);
@@ -30,7 +38,7 @@ export const composeItems = (nodes, settings) => nodes.map(node => {
     item = {
         ...item,
         imgContainer,
-        loaded: node.hasAttribute(ATTRIBUTE.LOADED) || (imgNode && imgNode.getAttribute('src') === node.getAttribute(ATTRIBUTE.SRC))
+        loaded: node.hasAttribute(ATTRIBUTE.LOADED) || (imgNode && imgNode.getAttribute('src') === node.getAttribute(ATTRIBUTE.SRC) || item.mediaType === null)
     };
     if (!item.sources && !item.srcset && !item.src && !item.loaded) return void console.warn('Gallery cannot be initialised, no image sources found'), item;
 

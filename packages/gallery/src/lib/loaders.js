@@ -14,7 +14,6 @@ const createPicture = item => {
 
 /*
  * Returns an array of Promises
- *
  * 
  * @param i, Number, index of item
  */
@@ -56,6 +55,9 @@ export const loadImage = Store => (item, i) => new Promise((resolve, reject) => 
     };
 });
 
+/*
+//we need to wrap this in cookie consent
+//either delegate all video rendering to cookie banner or somehow use event system from banner to connect correct consent event with video rendering
 export const loadYT = Store => (item, i) => new Promise((resolve, reject) => {
     const { items, settings } = Store.getState();
     
@@ -77,8 +79,9 @@ export const loadYT = Store => (item, i) => new Promise((resolve, reject) => {
 
     resolve(item);
 });
+*/
 
 export default {
     image: loadImage,
-    youtube: loadYT
+    // youtube: loadYT
 };
