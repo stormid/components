@@ -104,6 +104,11 @@ A toggle can also be started open usng the active className alone, e.g.
 </div>
 ```
 
+### Developer note 06 Sep 2022:  Use of closeOnBlur
+It should be noted that at the time of writing, the availaibility of the blur event was limited on mobile assistive tech, specifically iOS VoiceOver.  
+
+When a user is swiping through content in VoiceOver, the focus/blur events will only fire if the focus is moving to or from a form input element or button.  The focus/blur events will not fire when moving between links, headings or in-page content.  Any use of the closeOnBlur setting should be carefully tested to make sure that the behaviour is as expected on these devices.   
+
 ## API
 
 toggle() returns an array of instances. Each instance exposes the interface
