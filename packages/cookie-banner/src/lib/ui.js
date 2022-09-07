@@ -140,7 +140,7 @@ export const initForm = (Store, track = true) => () => {
                 removeBanner(Store, banner),
                 broadcast(EVENTS.CONSENT, Store),
                 renderMessage(button),
-                renderAnnoucement(formAnnouncement),
+                renderAnnouncement(formAnnouncement),
                 state => {
                     if (!state.settings.tid) return;
                     const consentString = composeMeasurementConsent(state.consent);
@@ -171,6 +171,10 @@ export const renderMessage = button => state => {
     }, 3000);
 };
 
-export const renderAnnoucement = container => state => {
+export const renderAnnouncement = container => state => {
     container.textContent = state.settings.savedMessage;
+    /* istanbul ignore next */
+    window.setTimeout(() => {
+        container.textContent = '';
+    }, 3000);
 };

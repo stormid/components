@@ -15,6 +15,8 @@ The cookie banner renders itself if no consent preferences are recorded in the b
 
 The consent form renders into a DOMElement with a particular className configurable options (classNames.formContainer).
 
+A page containing a cookie consent form should include a visually hidden live region (role=alert) with a particular className (classNames.formAnnouncement), default: 'privacy-banner__form-announcement'.
+
 
 Install the package
 ```
@@ -87,6 +89,7 @@ const cookieBanner = banner({
         legend: 'privacy-banner__legend',
         formContainer: 'privacy-banner__form-container', //where the form is rendered
         formMessage: 'privacy-banner__form-msg',
+        formAnnouncement: 'privacy-banner__form-announcement', //screen reader announcement
         title: 'privacy-banner__form-title',
         description: 'privacy-banner__form-description'
     },
