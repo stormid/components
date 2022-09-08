@@ -22,6 +22,7 @@ export default {
         legend: 'privacy-banner__legend',
         formContainer: 'privacy-banner__form-container',
         formMessage: 'privacy-banner__form-msg',
+        formAnnouncement: 'privacy-banner__form-announcement',
         title: 'privacy-banner__form-title',
         description: 'privacy-banner__form-description'
     },
@@ -43,7 +44,7 @@ export default {
         </section>`;
     },
     messageTemplate(model){
-        return `<div class="${model.settings.classNames.formMessage}" aria-role="alert">${model.settings.savedMessage}</div>`;
+        return `<div class="${model.settings.classNames.formMessage}" aria-hidden="true">${model.settings.savedMessage}</div>`;
     },
     formTemplate(model){
         return `<form id="preferences" class="${model.settings.classNames.form}" novalidate>

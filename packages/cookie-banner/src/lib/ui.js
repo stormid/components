@@ -29,13 +29,13 @@ export const initBannerListeners = Store => () => {
     const banner = document.querySelector(`.${state.settings.classNames.banner}`);
     if (!banner) return;
 
-    const composeSelector = classSelector => { return ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(", "); }
+    const composeSelector = classSelector => ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(', ');
 
     const acceptBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
-    const optionsBtn = document.querySelector(composeSelector(state.settings.classNames.optionsBtn)); 
+    const optionsBtn = document.querySelector(composeSelector(state.settings.classNames.optionsBtn));
 
-    acceptBtns.forEach(acceptBtn => {  
-        if(acceptBtns) {
+    acceptBtns.forEach(acceptBtn => {
+        if (acceptBtns) {
             acceptBtn.addEventListener('click', e => {
                 Store.update(
                     updateConsent,
@@ -63,7 +63,7 @@ export const initBannerListeners = Store => () => {
             });
         } else {
             console.warn('Banner accept element must be a Button or Anchor.  No trigger event added.');
-        }   
+        }
     });
 
     //track options click
@@ -111,6 +111,9 @@ export const initForm = (Store, track = true) => () => {
         else groups[groupName] = [field];
         return groups;
     }, {});
+    const formAnnouncement = document.querySelector(`.${state.settings.classNames.formAnnouncement}`)
+                            || document.body.appendChild(Object.assign(document.createElement('div'), { className: state.settings.classNames.formAnnouncement, role: 'alert' }));
+
 
     const extractConsent = () => Object.keys(groups).reduce((acc, key) => {
         const value = groups[key].reduce(groupValueReducer, '');
@@ -137,6 +140,7 @@ export const initForm = (Store, track = true) => () => {
                 removeBanner(Store, banner),
                 broadcast(EVENTS.CONSENT, Store),
                 renderMessage(button),
+                renderAnnouncement(formAnnouncement),
                 state => {
                     if (!state.settings.tid) return;
                     const consentString = composeMeasurementConsent(state.consent);
@@ -164,5 +168,13 @@ export const renderMessage = button => state => {
     window.setTimeout(() => {
         button.parentNode.removeChild(button.nextElementSibling);
         button.removeAttribute('disabled');
+    }, 3000);
+};
+
+export const renderAnnouncement = container => state => {
+    container.textContent = state.settings.savedMessage;
+    /* istanbul ignore next */
+    window.setTimeout(() => {
+        container.textContent = '';
     }, 3000);
 };

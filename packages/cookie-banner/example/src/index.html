@@ -70,20 +70,32 @@
         .privacy-banner__btn:hover {
             background-color: blue
         }
+        .privacy-banner__form-announcement {
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            border: 0;
+        }
     </style>
   </head>
   <body>
       <button class="js-open-banner">Open banner</button>
-    <div class="container">
-        <div class="privacy-banner__update"></div>
-        <div class="">
-            <h1>Cookies</h1>
-            <p>Cookies are a common feature used on almost all websites. A cookie is a small text file that is downloaded onto a device to allow a website to recognise it and to store some information about your preferences.</p>
-            <p>We use cookies for different reasons, including for managing your shopping cart, measuring your visits on our sites, recognising and remembering your preferences and showing you personalised ads. Learn more about cookies and how we use them.</p>
-            <div class="privacy-banner__form-container"></div>
+        <div class="container">
+            <div class="privacy-banner__update"></div>
+            <div class="">
+                <h1>Cookies</h1>
+                <p>Cookies are a common feature used on almost all websites. A cookie is a small text file that is downloaded onto a device to allow a website to recognise it and to store some information about your preferences.</p>
+                <p>We use cookies for different reasons, including for managing your shopping cart, measuring your visits on our sites, recognising and remembering your preferences and showing you personalised ads. Learn more about cookies and how we use them.</p>
+                <div class="privacy-banner__form-container"></div>
+                <div class="privacy-banner__form-announcement" style="position: absolute;width:1px;height:1px;opacity:0;" role="alert"></div>
 
 
+            </div>
         </div>
-    </div>
   </body>
 </html>

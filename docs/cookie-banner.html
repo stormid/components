@@ -339,6 +339,24 @@ const cookieBanner = banner({
     renderForm, Function to render the consent form
 }
 </code></pre>
+<h2 id="events">Events</h2>
+<p>There are three custom events that an instance of the cookie banner dispatches:</p>
+<ul>
+<li><code>banner.show</code> when the banner is displayed</li>
+<li><code>banner.hide</code> when it is hidden</li>
+<li><code>banner.consent</code> when consent is set or updated</li>
+</ul>
+<p>The events are dispatched on the document. A reference to the getState function of the instance is contained in the custom event detail.</p>
+<pre><code>const instance = banner(options);
+
+document.addEventListener('banner.show', e =&gt; {
+    //e.g. initialise toggle for form-in-banner implementation
+    const [ bannerToggle ] = toggle('.js-banner-toggle'); 
+    const state = e.detail.getState();
+    // do something with state if we want to
+});
+
+</code></pre>
 <h2 id="tests">Tests</h2>
 <pre><code>npm t
 </code></pre>
