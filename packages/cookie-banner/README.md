@@ -28,6 +28,11 @@ Create a container element for the consent form.
 <div class="privacy-banner__form-container"></div>
 ```
 
+Create a visually hidden live region for the screen reader announcement.
+```
+<div class="visually-hidden privacy-banner__form-announcement" role="alert"></div>
+```
+
 Initialise the module (example configuration shown below)
 ```
 import banner from '@stormid/cookie-banner';
