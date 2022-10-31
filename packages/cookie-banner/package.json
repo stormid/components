@@ -28,5 +28,5 @@
     "prod": "webpack --config example/webpack.config.js --mode production",
     "prepublish": "npm run -s build"
   },
-  "gitHead": "9042db4005411c4360ba3e8188e03333c10098f2"
+  "gitHead": "042ec0cbf12848b50c5962a5c8ab139cfb04df39"
 }

@@ -166,10 +166,10 @@ const cookieBanner = banner({
 ## Utility functions
 There are two utility functions provided by the library designed to be invoked following user consent.
 
-### Render iFrame
+### Render iframe
 `state.utils.renderIframe`
 
-Renders an iFrame from a placeholder element with specific data attributes:
+Renders an iframe from a placeholder element with specific data attributes:
 
 ```
 <div data-iframe-src="https://www.youtube.com/embed/qpLKTUQev30" data-iframe-title="Test video" data-iframe-height="1600px" data-iframe-width="900px">
@@ -194,7 +194,7 @@ cookieBanner({
 ### Google Tag Manager Snippet
 `state.utils.gtmSnippet`
 
-Invokes a GTM snippet to load the GTM library via an script element, just pass the Tag Manager ID/UA number an argument
+Invokes a GTM snippet to load the GTM library via an script element, just pass the Tag Manager ID/UA number as an argument
 
 In the cookie banner configuration:
 ```
