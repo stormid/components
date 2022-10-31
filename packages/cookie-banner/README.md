@@ -173,7 +173,8 @@ Renders an iFrame from a placeholder element with specific data attributes:
 
 ```
 <div data-iframe-src="https://www.youtube.com/embed/qpLKTUQev30" data-iframe-title="Test video" data-iframe-height="1600px" data-iframe-width="900px">
-    <button class="js-preferences-update">Update your cookie preferemces to view this content.</button>
+    <p>Update your cookie preferences to view this content</p>
+    <button class="js-preferences-update">Update</button>
 </div>
 ```
 In the cookie banner configuration:
