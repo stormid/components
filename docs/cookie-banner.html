@@ -341,9 +341,9 @@ const cookieBanner = banner({
 </code></pre>
 <h2 id="utility-functions">Utility functions</h2>
 <p>There are two utility functions provided by the library designed to be invoked following user consent.</p>
-<h3 id="render-iframe">Render iFrame</h3>
+<h3 id="render-iframe">Render iframe</h3>
 <p><code>state.utils.renderIframe</code></p>
-<p>Renders an iFrame from a placeholder element with specific data attributes:</p>
+<p>Renders an iframe from a placeholder element with specific data attributes:</p>
 <pre><code>&lt;div data-iframe-src=&quot;https://www.youtube.com/embed/qpLKTUQev30&quot; data-iframe-title=&quot;Test video&quot; data-iframe-height=&quot;1600px&quot; data-iframe-width=&quot;900px&quot;&gt;
     &lt;p&gt;Update your cookie preferences to view this content&lt;/p&gt;
     &lt;button class=&quot;js-preferences-update&quot;&gt;Update&lt;/button&gt;
@@ -363,7 +363,7 @@ cookieBanner({
 </code></pre>
 <h3 id="google-tag-manager-snippet">Google Tag Manager Snippet</h3>
 <p><code>state.utils.gtmSnippet</code></p>
-<p>Invokes a GTM snippet to load the GTM library via an script element, just pass the Tag Manager ID/UA number an argument</p>
+<p>Invokes a GTM snippet to load the GTM library via an script element, just pass the Tag Manager ID/UA number as an argument</p>
 <p>In the cookie banner configuration:</p>
 <pre><code>import cookieBanner from '@stormid/cookie-banner';
 
