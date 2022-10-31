@@ -1,4 +1,5 @@
-import cookieBanner from '../../../src';
+import cookieBanner from '../../../dist';
+
 const writeCookie = state => {
     document.cookie = [
         `${state.settings.name}=${btoa(JSON.stringify(state))};`,
@@ -15,16 +16,17 @@ window.addEventListener('DOMContentLoaded', () => {
         tid: 'UA-401849-33',
         secure: false,
         hideBannerOnFormPage: false,
-        necessary: [ () => {
-            // console.log('Necessary fn');
-            writeCookie({
-                settings: {
-                    name: '.Test.NecessaryCookie',
-                    expiry: 3
-                },
-                consent: '666',
-            });
-        } ],
+        necessary: [
+            () => {
+                writeCookie({
+                    settings: {
+                        name: '.Test.NecessaryCookie',
+                        expiry: 3
+                    },
+                    consent: '666',
+                });
+            }
+        ],
         types: {
             performance: {
                 suggested: 1,
@@ -44,7 +46,9 @@ window.addEventListener('DOMContentLoaded', () => {
                             },
                             consent: '666',
                         });
-                    }
+                    },
+                    state => state.utils.renderIframe(),
+                    state => state.utils.gtmSnippet('12345666')
                 ]
             },
             ads: {

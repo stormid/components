@@ -1,4 +1,4 @@
-import { groupValueReducer, removeSubdomain, extractFromCookie, broadcast } from '../src/lib/utils';
+import { groupValueReducer, removeSubdomain, extractFromCookie, broadcast, renderIframe, gtmSnippet } from '../src/lib/utils';
 import defaults from '../src/lib/defaults';
 import { EVENTS } from '../src/lib/constants';
 import { createStore } from '../src/lib/store';
@@ -148,6 +148,41 @@ describe(`Cookie banner > Utils > broadcast`, () => {
 
         broadcast(EVENTS.OPEN, Store)(state);
         expect(listener).toHaveBeenCalled();
+    });
+
+});
+
+describe(`Cookie banner > Utils > renderIframe`, () => {
+
+    it('should render an iframe to an element based on data attributes', async () => {
+        const SRC = 'https://www.youtube.com/embed/qpLKTUQev30';
+        const TITLE = 'Test video';
+        const HEIGHT = `500px`;
+        const WIDTH = `500px`;
+        document.body.innerHTML = `<div
+            data-iframe-src="${SRC}"
+            data-iframe-title="${TITLE}"
+            data-iframe-height="${HEIGHT}"
+            data-iframe-width="${WIDTH}"
+             />`;
+        renderIframe();
+        const iframe = document.querySelector('iframe');
+        expect(iframe.getAttribute('src')).toEqual(SRC);
+        expect(iframe.getAttribute('title')).toEqual(TITLE);
+        expect(iframe.style.height).toEqual(HEIGHT);
+        expect(iframe.style.width).toEqual(WIDTH);
+    });
+
+});
+
+describe(`Cookie banner > Utils > gtmSnippet`, () => {
+
+    it('should render a Google Tag Manager script tag', async () => {
+        document.body.innerHTML = `<script></script>`; //gtm snippet needs a script already on the page to insertBefore
+        gtmSnippet('ua-1234-5678');
+        const gtmScript = document.querySelector('script');
+        expect(gtmScript).toBeDefined();
+        expect(gtmScript.src).toEqual('https://www.googletagmanager.com/gtm.js?id=ua-1234-5678');
     });
 
 });

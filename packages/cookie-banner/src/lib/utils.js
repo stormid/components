@@ -1,4 +1,4 @@
-import { FOCUSABLE_ELEMENTS, EVENTS } from './constants';
+import { FOCUSABLE_ELEMENTS } from './constants';
 
 //Modernizr cookie test
 export const cookiesEnabled = () => {
@@ -123,4 +123,33 @@ export const broadcast = (type, Store) => () => {
         }
     });
     window.document.dispatchEvent(event);
+};
+
+export const renderIframe = () => {
+    [].slice.call(document.querySelectorAll('[data-iframe-src]')).forEach(node => {
+        const iframe = document.createElement('iframe');
+        iframe.src = node.getAttribute('data-iframe-src');
+        if (node.hasAttribute('data-iframe-height')) iframe.style.height = node.getAttribute('data-iframe-height');
+        iframe.setAttribute('title', node.getAttribute('data-iframe-title') || 'iFrame embed');
+        if (node.hasAttribute('data-iframe-width')) iframe.style.width =  node.getAttribute('data-iframe-width' || '100%');
+        iframe.setAttribute('tabindex', '0');
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('webkitallowfullscreen', 'webkitallowfullscreen');
+        iframe.setAttribute('mozallowfullscreen', 'mozallowfullscreen');
+        iframe.setAttribute('allowfullscreen', 'allowfullscreen');
+        node.parentNode.appendChild(iframe);
+        node.parentNode.removeChild(node);
+    });
+};
+
+export const gtmSnippet = id => {
+    !function(e, t, c, n, w, o) {
+        e[n] = e[n] || [], e[n].push({
+            "gtm.start": (new Date).getTime(),
+            event: "gtm.js"
+        });
+        var r = t.getElementsByTagName(c)[0], 
+            s = t.createElement(c);
+        s.async = !0, s.src = 'https://www.googletagmanager.com/gtm.js?id=' + w, r.parentNode.insertBefore(s, r)
+    }(window, document, "script", "dataLayer", id);
 };

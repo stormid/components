@@ -4,6 +4,7 @@ import { necessary, apply } from './consent';
 import { createStore } from './store';
 import { initialState } from './reducers';
 import { composeParams } from './measurement';
+import { renderIframe, gaSnippet } from './utils';
 
 export default settings => {
     /* istanbul ignore next */
@@ -23,7 +24,8 @@ export default settings => {
             settings,
             bannerOpen: false,
             persistentMeasurementParams: settings.tid ? composeParams(cid, settings.tid) : false,
-            consent
+            consent,
+            utils: { renderIframe, gaSnippet }
         },
         [
             necessary,
