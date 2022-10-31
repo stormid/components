@@ -210,6 +210,9 @@
 <p>Create a container element for the consent form.</p>
 <pre><code>&lt;div class=&quot;privacy-banner__form-container&quot;&gt;&lt;/div&gt;
 </code></pre>
+<p>Create a visually hidden live region for the screen reader announcement.</p>
+<pre><code>&lt;div class=&quot;visually-hidden privacy-banner__form-announcement&quot; role=&quot;alert&quot;&gt;&lt;/div&gt;
+</code></pre>
 <p>Initialise the module (example configuration shown below)</p>
 <pre><code>import banner from '@stormid/cookie-banner';
 
@@ -225,9 +228,10 @@ const cookieBanner = banner({
                 no: 'Pages you visit and actions you take will not be measured and used to improve the service'
             },
             fns: [
-                model =&gt; { 
+                state =&gt; { 
                     //function that depends upon or creates a 'performance' cookie
-                }
+                },
+                state =&gt; state.utils.gtmSnippet(&lt;UA-CODE&gt;)
             ]
         },
         'thirdParty': {
@@ -240,7 +244,9 @@ const cookieBanner = banner({
             fns: [
                 model =&gt; { 
                     //function that depends upon or creates a 'performance' cookie
-                }
+                },
+                state =&gt; state.utils.renderIframe(),
+                state =&gt; state.utils.gtmSnippet(&lt;UA-CODE&gt;)
             ]
         }
     }
@@ -332,6 +338,43 @@ const cookieBanner = banner({
         &lt;/form&gt;`;
     }
 }
+</code></pre>
+<h2 id="utility-functions">Utility functions</h2>
+<p>There are two utility functions provided by the library designed to be invoked following user consent.</p>
+<h3 id="render-iframe">Render iFrame</h3>
+<p><code>state.utils.renderIframe</code></p>
+<p>Renders an iFrame from a placeholder element with specific data attributes:</p>
+<pre><code>&lt;div data-iframe-src=&quot;https://www.youtube.com/embed/qpLKTUQev30&quot; data-iframe-title=&quot;Test video&quot; data-iframe-height=&quot;1600px&quot; data-iframe-width=&quot;900px&quot;&gt;
+    &lt;p&gt;Update your cookie preferences to view this content&lt;/p&gt;
+    &lt;button class=&quot;js-preferences-update&quot;&gt;Update&lt;/button&gt;
+&lt;/div&gt;
+</code></pre>
+<p>In the cookie banner configuration:</p>
+<pre><code>import cookieBanner from '@stormid/cookie-banner';
+
+cookieBanner({
+    ...lots of other config
+    type: {
+        thirdParty: [
+            state =&gt; state.utils.renderIframe()
+        ]
+    }
+})
+</code></pre>
+<h3 id="google-tag-manager-snippet">Google Tag Manager Snippet</h3>
+<p><code>state.utils.gtmSnippet</code></p>
+<p>Invokes a GTM snippet to load the GTM library via an script element, just pass the Tag Manager ID/UA number an argument</p>
+<p>In the cookie banner configuration:</p>
+<pre><code>import cookieBanner from '@stormid/cookie-banner';
+
+cookieBanner({
+    ...lots of other config
+    type: {
+        thirdParty: [
+            state =&gt; state.utils.gtmSnippet(`UA-1234-5678`)
+        ]
+    }
+})
 </code></pre>
 <h2 id="api">API</h2>
 <p>The Object returned from initialisation exposes the interface</p>
