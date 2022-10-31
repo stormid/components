@@ -1,4 +1,4 @@
-import { cookiesEnabled, extractFromCookie, noop } from './utils';
+import { cookiesEnabled, extractFromCookie, noop, renderIframe, gtmSnippet } from './utils';
 import { showBanner, initBanner, initForm, initBannerListeners } from './ui';
 import { necessary, apply } from './consent';
 import { createStore } from './store';
@@ -23,7 +23,8 @@ export default settings => {
             settings,
             bannerOpen: false,
             persistentMeasurementParams: settings.tid ? composeParams(cid, settings.tid) : false,
-            consent
+            consent,
+            utils: { renderIframe, gtmSnippet }
         },
         [
             necessary,
