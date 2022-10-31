@@ -1,10 +1,9 @@
-import { cookiesEnabled, extractFromCookie, noop } from './utils';
+import { cookiesEnabled, extractFromCookie, noop, renderIframe, gtmSnippet } from './utils';
 import { showBanner, initBanner, initForm, initBannerListeners } from './ui';
 import { necessary, apply } from './consent';
 import { createStore } from './store';
 import { initialState } from './reducers';
 import { composeParams } from './measurement';
-import { renderIframe, gaSnippet } from './utils';
 
 export default settings => {
     /* istanbul ignore next */
@@ -25,7 +24,7 @@ export default settings => {
             bannerOpen: false,
             persistentMeasurementParams: settings.tid ? composeParams(cid, settings.tid) : false,
             consent,
-            utils: { renderIframe, gaSnippet }
+            utils: { renderIframe, gtmSnippet }
         },
         [
             necessary,
