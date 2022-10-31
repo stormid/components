@@ -49,9 +49,10 @@ const cookieBanner = banner({
                 no: 'Pages you visit and actions you take will not be measured and used to improve the service'
             },
             fns: [
-                model => { 
+                state => { 
                     //function that depends upon or creates a 'performance' cookie
-                }
+                },
+                state => state.utils.gtmSnippet(<UA-CODE>)
             ]
         },
         'thirdParty': {
@@ -64,7 +65,9 @@ const cookieBanner = banner({
             fns: [
                 model => { 
                     //function that depends upon or creates a 'performance' cookie
-                }
+                },
+                state => state.utils.renderIframe(),
+                state => state.utils.gtmSnippet(<UA-CODE>)
             ]
         }
     }
@@ -159,6 +162,53 @@ const cookieBanner = banner({
     }
 }
 ```
+
+## Utility functions
+There are two utility functions provided by the library designed to be invoked following user consent.
+
+### Render iFrame
+`state.utils.renderIframe`
+
+Renders an iFrame from a placeholder element with specific data attributes:
+
+```
+<div data-iframe-src="https://www.youtube.com/embed/qpLKTUQev30" data-iframe-title="Test video" data-iframe-height="1600px" data-iframe-width="900px">
+    <button class="js-preferences-update">Update your cookie preferemces to view this content.</button>
+</div>
+```
+In the cookie banner configuration:
+```
+import cookieBanner from '@stormid/cookie-banner';
+
+cookieBanner({
+    ...lots of other config
+    type: {
+        thirdParty: [
+            state => state.utils.renderIframe()
+        ]
+    }
+})
+```
+
+### Google Tag Manager Snippet
+`state.utils.gtmSnippet`
+
+Invokes a GTM snippet to load the GTM library via an script element, just pass the Tag Manager ID/UA number an argument
+
+In the cookie banner configuration:
+```
+import cookieBanner from '@stormid/cookie-banner';
+
+cookieBanner({
+    ...lots of other config
+    type: {
+        thirdParty: [
+            state => state.utils.gtmSnippet(`UA-1234-5678`)
+        ]
+    }
+})
+```
+
 
 ## API
 The Object returned from initialisation exposes the interface
