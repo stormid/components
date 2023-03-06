@@ -1,0 +1,30 @@
+{
+  "name": "@stormid/ga4",
+  "version": "1.0.0-alpha.1",
+  "description": "GA4 measurement library",
+  "author": "stormid",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "https://github.com/stormid/components/tree/master/packages/ga4",
+  "private": false,
+  "main": "dist/index.js",
+  "source": "src/index.js",
+  "module": "dist/index.modern.mjs",
+  "unpkg": "dist/index.umd.js",
+  "browser": "dist/index.umd.js",
+  "keywords": [
+    "stormid",
+    "component",
+    "analytics",
+    "ga4"
+  ],
+  "scripts": {
+    "build": "microbundle --name ga4",
+    "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
+    "prod": "webpack --config example/webpack.config.js --mode production",
+    "prepublish": "npm run -s build",
+    "test": "node_modules/.bin/jest --coverage"
+  }
+}
