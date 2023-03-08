@@ -18,7 +18,7 @@ export const PARAMS = {
     EVENT_PARAM: 'ep', // prefix for event parameter
     EVENT_PARAM_NUMBER: 'epn', // prefix fpr event parameter number, eg percent_scrolled
     SCREEN_RESOLUTION: 'sr', // Screen Resolution
-    ENGAGEMENT_TIME: '_et',
+    ENGAGEMENT_TIME: '_et', // engagement time
 };
 
 export  const FILE_EXTENSIONS = [
