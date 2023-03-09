@@ -86,11 +86,11 @@ export const timer = () => {
 
 export const findLink = element => {
     let target = element;
-    while (target && target) {
-        if (target.tagName && target.tagName.toLowerCase() === 'a') break;
+    while (target && target.tagName) {
+        if (target.tagName && target.tagName.toLowerCase() === 'a') return target;
         target = target.parentNode;
     }
-    return target;
+    return false;
 };
 
 export const getUrlParts = url => {

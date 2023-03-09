@@ -1,4 +1,5 @@
 import ga4 from '../../../src';
     
-const library = ga4('UA-141774857-1');
+const library = ga4('G-XPD8YC5FYF');
+console.log(library);
 // library.track({ type: 'potato' })

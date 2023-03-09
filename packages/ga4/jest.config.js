@@ -8,5 +8,8 @@ module.exports = {
     },
     displayName: pack.name,
     name: pack.name,
-    testEnvironment: 'jsdom'
+    testEnvironment: 'jsdom',
+    globals: {
+        tid: 'G-XPD8YC5FYF'
+    }
 };

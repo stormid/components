@@ -57,20 +57,23 @@ export default ({ tid, settings }) => {
 
         //7. and 8. form_start and form_submit
         const forms = [].slice.call(document.querySelectorAll('form'));
-        if (forms.length === 0) return;
-
-        state.handlers.forms = forms.map((form, idx) => {
-            state.forms[idx] = { started: false };
-            const startHandler = formStart(state, form, idx);
-            form.addEventListener('change', startHandler);
-            form.addEventListener('submit', formSubmit(state, form, idx));
-            return startHandler;
-        });
+        if (forms.length > 0) {
+            state.handlers.forms = forms.map((form, idx) => {
+                state.forms[idx] = { started: false };
+                const startHandler = formStart(state, form, idx);
+                form.addEventListener('change', startHandler);
+                form.addEventListener('submit', formSubmit(state, form, idx));
+                return startHandler;
+            });
+        }
     }
 
 
     return {
         track: track.bind(null, state),
-        queue: queue.bind(null, state)
+        queue: queue.bind(null, state),
+        getState() {
+            return state;
+        }
     };
 };
