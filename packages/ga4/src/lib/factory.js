@@ -1,14 +1,7 @@
-import { send, add, debounce, timer, hasSearchParams } from './shared';
+import { queue, track } from './shared';
+import { hasSearchParams, debounce, timer } from './utils';
 import { GA4_EVENTS, PARAMS, SEARCH_QUERY_PARAMS } from './constants';
-import { scroll, engagement, click } from './handlers';
-
-const flush = debounce(send, 1000);
-
-export const track = (state, event) => {
-    state.data = add(state, event);
-    flush(state);
-};
-
+import { scroll, engagement, click, formStart, formSubmit } from './handlers';
 
 /*
  *
@@ -22,21 +15,22 @@ export default ({ tid, settings }) => {
         firstEvent: true,
         data: { base: [], events: [] },
         handlers: {},
+        forms: [],
         hitcount: 1,
         timer: timer()
     };
     state.timer.start();
     if (settings.autoTrack) {
 
-        //page view
-        track(state, { name: GA4_EVENTS.PAGE_VIEW });
+        //1. page view
+        queue(state, { name: GA4_EVENTS.PAGE_VIEW });
        
-        //view search results
+        //2. view search results
         const search = document.location.search;
         if (hasSearchParams(search)) {
             const searchParams = new URLSearchParams(search);
             const searchTerm = SEARCH_QUERY_PARAMS.find(term => searchParams.get(term));
-            track(state, {
+            queue(state, {
                 name: GA4_EVENTS.VIEW_SEARCH_RESULTS,
                 params: [
                     { name: `${PARAMS.EVENT_PARAM}.search_term`, value: searchParams.get(searchTerm) },
@@ -46,23 +40,37 @@ export default ({ tid, settings }) => {
         }
 
         //EventListeners
-        //1. scroll
+        //3. scroll
         state.handlers.scroll = debounce(scroll(state));
         document.addEventListener('scroll', state.handlers.scroll);
 
-        //2. user_engagement
+        //4. user_engagement
         window.addEventListener('focus', state.timer.start);
         window.addEventListener('blur', state.timer.stop);
-        window.addEventListener('pagehide', () => engagement(state));
+        // window.addEventListener('pagehide', () => engagement(state));
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'hidden') engagement(state);
         });
-        document.addEventListener('click', () => click(state));
 
+        //5. and 6. click and file_download
+        document.addEventListener('click', click(state));
+
+        //7. and 8. form_start and form_submit
+        const forms = [].slice.call(document.querySelectorAll('form'));
+        if (forms.length === 0) return;
+
+        state.handlers.forms = forms.map((form, idx) => {
+            state.forms[idx] = { started: false };
+            const startHandler = formStart(state, form, idx);
+            form.addEventListener('change', startHandler);
+            form.addEventListener('submit', formSubmit(state, form, idx));
+            return startHandler;
+        });
     }
 
 
     return {
-        track: track.bind(null, state)
+        track: track.bind(null, state),
+        queue: queue.bind(null, state)
     };
 };

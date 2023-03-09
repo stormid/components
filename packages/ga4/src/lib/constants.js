@@ -21,16 +21,13 @@ export const PARAMS = {
     ENGAGEMENT_TIME: '_et', // engagement time
 };
 
-export  const FILE_EXTENSIONS = [
-    'pdf|xlsx?|docx?|txt|rtf|csv|exe|key|pp(s|t|tx)|7z|pkg|rar|gz|zip|avi',
-    'mov|mp4|mpe?g|wmv|midi?|mp3|wav|wma',
-];
+export const FILE_EXTENSIONS =  'pdf|xlsx?|docx?|txt|rtf|csv|exe|key|pp(s|t|tx)|7z|pkg|rar|gz|zip|avi|mov|mp4|mpe?g|wmv|midi?|mp3|wav|wma';
 
 export const ENDPOINT = 'https://www.google-analytics.com/g/collect';
 
 export const SEARCH_QUERY_PARAMS = ['q', 's', 'search', 'query', 'keyword'];
 
-export const CLICK_TARGETS = 'a, button, input[type=submit], input[type=button]';
+// export const CLICK_TARGETS = 'a, button, input[type=submit], input[type=button]';
 
 export const GA4_EVENTS = {
     PAGE_VIEW: 'page_view',
@@ -38,5 +35,8 @@ export const GA4_EVENTS = {
     CLICK: 'click',
     VIEW_SEARCH_RESULTS: 'view_search_results',
     USER_ENGAGEMENT: 'user_engagement',
-    FILE_DOWNLOAD: 'file_download'
+    FILE_DOWNLOAD: 'file_download',
+    FORM_START: 'form_start',
+    FORM_SUBMIT: 'form_submit'
 };
+

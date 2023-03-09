@@ -1,8 +1,6 @@
-import { ENDPOINT, PARAMS, SEARCH_QUERY_PARAMS } from './constants';
+import { ENDPOINT, PARAMS } from './constants';
+import { filterUnusedParams, debounce, getSessionState, generateId, getId } from './utils';
 
-export const hasSearchParams = str => SEARCH_QUERY_PARAMS.some(si => str.includes(`&${si}=`) || str.includes(`?${si}=`));
-
-export const filterUnusedParams = params => params.filter(([, value]) => value);
 
 export const send = state => {
     if (!state.data.base.length) return;
@@ -13,7 +11,7 @@ export const send = state => {
     const data = state.data.events.length <= 1 ? undefined : new URLSearchParams(state.data.events);
     
     if (navigator.sendBeacon) navigator.sendBeacon(url, data);
-    //to do xhr version for no sendBeacon support
+    //to do xhr version for no sendBeacon support?
 
     //mutaaaate...
     state.data.base = [];
@@ -22,21 +20,25 @@ export const send = state => {
     state.hitCount = state.hitCount + 1;
 };
 
-/*
-Event structure
-{
-    name: '',
-    params: [
-        {name: '', value: ''}
-    ]
-}
-*/
+const debounceSend = debounce(send, 1000);
+
+export const queue = (state, event) => {
+    state.data = add(state, event);
+    debounceSend(state);
+};
+
+export const track = (state, event) => {
+    state.data = add(state, event);
+    send(state);
+};
+
+
 export const composeEventData = event => {
-    const data = [];
+    let data = [];
     if (event) {
         if (!event.name) console.warn(`GA4: Missing event name`);
         else data.push([PARAMS.EVENT_NAME, event.name]);
-        if (event.params) event.params.forEach(param => data.push([param.name, param.value]));
+        if (event.params) data = [ ...data, ...event.params ];
     }
 
     return data;
@@ -74,111 +76,3 @@ export const add = (state, event) => ({
     base: state.data.base.length === 0 ? composeBaseData(state) : state.data.base,
     events: [ ...state.data.events, ...composeEventData(event)]
 });
-
-
-export const getDocumentInfo = () => {
-    const { hostname, origin, pathname, search } = document.location;
-    const title = document.title;
-    const referrer = document.referrer;
-  
-    return { location: origin + pathname + search, hostname, pathname, referrer, title };
-};
-
-export const generateId = (length = 16) => {
-    const id = `${Math.floor(Math.random() * 1e16)}`;
-    length = length > 16 ? 16 : length;
-    return id.padStart(length, '0').substring(-1, length);
-};
-
-export const getId = (type, storage = localStorage) => {
-    const stored = storage.getItem(type);
-    if (stored) return stored;
-
-    const newId = generateId();
-    storage.setItem(type, newId);
-
-    return newId;
-};
-
-export const getSessionState = state => {
-    const firstVisit = !localStorage.getItem(PARAMS.CLIENT_ID) ? '1' : void 0;
-    const sessionStart = !sessionStorage.getItem(PARAMS.SESSION_ID) ? '1' : void 0;
-    const sessionCount = getSessionCount(state);
-    
-    return { firstVisit, sessionStart, sessionCount };
-};
-
-export const getSessionCount = state => {
-    const count = +(sessionStorage.getItem(PARAMS.SESSION_COUNT) || 0) + 1;
-    
-    if (state.firstEvent) sessionStorage.setItem(PARAMS.SESSION_COUNT, count);
-
-    return count;
-};
-
-export function debounce(callback, frequency = 300, timer = 0) {
-    return (...args) => (clearTimeout(timer), (timer = setTimeout(callback, frequency, ...args)));
-}
-
-
-export const getScrollPercentage = () => {
-    const body = document.body;
-    const scrollTop = window.pageYOffset || body.scrollTop;
-    const { scrollHeight, offsetHeight, clientHeight } = document.documentElement;
-    const documentHeight = Math.max(
-        body.scrollHeight,
-        scrollHeight,
-        body.offsetHeight,
-        offsetHeight,
-        body.clientHeight,
-        clientHeight
-    );
-    const trackLength = documentHeight - window.innerHeight;
-  
-    return Math.floor(Math.abs(scrollTop / trackLength) * 100);
-};
-
-export const timer = () => {
-    let value = 0;
-    let startTime;
-    let isRunning = false;
-    const start = () => {
-        if (isRunning) return;
-        startTime = new Date(Date.now()).getTime();
-        isRunning = true;
-    };
-    const stop = () => {
-        if (!isRunning) return;
-        value = get();
-        isRunning = false;
-    };
-    const get = () => (value + (new Date(Date.now()).getTime() - startTime));
-
-    return { start, stop, get };
-};
-
-export const findTarget = element => {
-    let target = element;
-
-    while (target) {
-        if (target?.matches && target?.matches('a, button, input[type=submit], input[type=button]')) break;
-        target = target?.parentNode;
-    }
-
-    return target;
-};
-
-export const getUrlParts = url => {
-    let hostname, pathname;
-    let isExternal = false;
-  
-    try {
-        ({ hostname, pathname } = (url && new URL(url)) || {});
-    } catch {
-        // no-op
-    }
-  
-    if (hostname) isExternal = hostname !== window.location.host;
-  
-    return { isExternal, hostname, pathname };
-};
