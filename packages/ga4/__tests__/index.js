@@ -1,6 +1,5 @@
 import ga4 from '../src';
 
-
 describe(`GA4 > Initialisation`, () => {
 
     it('should return without throwing if tid is not supplied', () => {

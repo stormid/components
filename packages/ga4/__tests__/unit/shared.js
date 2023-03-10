@@ -1,22 +1,7 @@
 import { send, composeEventData } from '../../src/lib/shared';
-
-
-//send
-
+import { GA4_EVENTS, PARAMS, ENDPOINT } from '../../src/lib/constants';
 
 //composeEventData
-/*
-export const composeEventData = event => {
-    let data = [];
-    if (event) {
-        if (!event.name) console.warn(`GA4: Missing event name`);
-        else data.push([PARAMS.EVENT_NAME, event.name]);
-        if (event.params) data = [ ...data, ...event.params ];
-    }
-
-    return data;
-};
-*/
 describe('GA4 > Shared > composeEventData', () => {
 
     it('should return an empty array if no data', () => {
@@ -29,8 +14,124 @@ describe('GA4 > Shared > composeEventData', () => {
         expect(warningSpy).toHaveBeenCalledWith('GA4: Missing event name');
     });
 
-    //add event to array
-    //add event with params
+    it('should add an event to an array', () => {
+        expect(composeEventData({ name: GA4_EVENTS.PAGE_VIEW })).toEqual([[ PARAMS.EVENT_NAME, 'page_view']]);
+    });
+
+    it('should add event with params to an array', () => {
+        expect(composeEventData({
+            name: GA4_EVENTS.VIEW_SEARCH_RESULTS,
+            params: [[ `${PARAMS.EVENT_PARAM}.search_term`, 'search term' ]]
+        })).toEqual([
+            [ PARAMS.EVENT_NAME, GA4_EVENTS.VIEW_SEARCH_RESULTS ],
+            [ `${PARAMS.EVENT_PARAM}.search_term`, 'search term'],
+        ]);
+    });
+
     //add event with mulitple params
+    it('should add event with multiple params to an array', () => {
+        expect(composeEventData({
+            name: GA4_EVENTS.FORM_SUBMIT,
+            params: [
+                [`${PARAMS.EVENT_PARAM}.form_id`, 'my-form' ],
+                [`${PARAMS.EVENT_PARAM}.form_name`, 'my-form' ],
+                [`${PARAMS.EVENT_PARAM}.form_destination`, '/submit' ],
+                [`${PARAMS.EVENT_PARAM}.form_submit_text`, 'Submit' ],
+                [ PARAMS.ENGAGEMENT_TIME, 12345 ]
+            ]
+        })).toEqual([
+            [ PARAMS.EVENT_NAME, GA4_EVENTS.FORM_SUBMIT ],
+            [`${PARAMS.EVENT_PARAM}.form_id`, 'my-form' ],
+            [`${PARAMS.EVENT_PARAM}.form_name`, 'my-form' ],
+            [`${PARAMS.EVENT_PARAM}.form_destination`, '/submit' ],
+            [`${PARAMS.EVENT_PARAM}.form_submit_text`, 'Submit' ],
+            [ PARAMS.ENGAGEMENT_TIME, 12345 ]
+        ]);
+    });
+
+});
+
+
+//send
+/*
+export const send = state => {
+    if (!state.data.base.length) return;
+    const params = state.data.events.length === 1
+        ? new URLSearchParams(filterUnusedParams([ ...state.data.base, ...state.data.events]))
+        : new URLSearchParams(filterUnusedParams(state.data.base));
+    const url = `${ENDPOINT}?${params}`;
+    const data = state.data.events.length <= 1 ? undefined : new URLSearchParams(state.data.events);
+    
+    if (navigator.sendBeacon) navigator.sendBeacon(url, data);
+    //to do xhr version for no sendBeacon support?
+
+    //mutaaaate...
+    state.data.base = [];
+    state.data.events = [];
+    state.firstEvent = false;
+    state.hitCount = state.hitCount + 1;
+};
+*/
+
+describe('GA4 > Shared > send', () => {
+    Object.defineProperty(window, 'navigator', {
+        value: navigator,
+        writable: true
+    });
+
+    it('should return if there is no base data', () => {
+        global.navigator = {
+            sendBeacon: jest.fn()
+        };
+        send({ data: { base: [] } });
+        expect(global.navigator.sendBeacon).not.toHaveBeenCalled();
+    });
+
+    it('should merge event data with base data if only one event', () => {
+        global.navigator = {
+            sendBeacon: jest.fn()
+        };
+        send({ data: { base: [[PARAMS.PROTOCOL_VERSION, '2']], events: [[ PARAMS.EVENT_NAME, GA4_EVENTS.PAGE_VIEW]] } });
+        expect(global.navigator.sendBeacon).toHaveBeenCalledWith(`${ENDPOINT}?${PARAMS.PROTOCOL_VERSION}=2&${PARAMS.EVENT_NAME}=${GA4_EVENTS.PAGE_VIEW}`, undefined);
+    });
+
+    it('should only send data with the beacon if more than 1 event', () => {
+        global.navigator = {
+            sendBeacon: jest.fn()
+        };
+        send({ data: {
+            base: [[PARAMS.PROTOCOL_VERSION, '2']],
+            events: [
+                [ PARAMS.EVENT_NAME, GA4_EVENTS.PAGE_VIEW],
+                [ PARAMS.EVENT_NAME, GA4_EVENTS.VIEW_SEARCH_RESULTS ],
+                [ `${PARAMS.EVENT_PARAM}.search_term`, 'search term'],
+            ]
+        } });
+        expect(global.navigator.sendBeacon).toHaveBeenCalledWith(`${ENDPOINT}?${PARAMS.PROTOCOL_VERSION}=2`, new URLSearchParams([
+            [ PARAMS.EVENT_NAME, GA4_EVENTS.PAGE_VIEW],
+            [ PARAMS.EVENT_NAME, GA4_EVENTS.VIEW_SEARCH_RESULTS ],
+            [ `${PARAMS.EVENT_PARAM}.search_term`, 'search term'],
+        ]));
+    });
+
+    it('should mutate state - clear queued base and event data from state, update firstEvent state, increment hitCount', () => {
+        expect(send({
+            data: {
+                base: [[PARAMS.PROTOCOL_VERSION, '2']],
+                events: [
+                    [ PARAMS.EVENT_NAME, GA4_EVENTS.PAGE_VIEW],
+                    [ PARAMS.EVENT_NAME, GA4_EVENTS.VIEW_SEARCH_RESULTS ],
+                    [ `${PARAMS.EVENT_PARAM}.search_term`, 'search term'],
+                ]
+            },
+            firstEvent: true,
+            hitCount: 0
+        })).toEqual({
+            data: { base: [], events: [] },
+            firstEvent: false,
+            hitCount: 1
+        });
+
+    });
 
 });

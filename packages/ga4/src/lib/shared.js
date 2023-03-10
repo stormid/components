@@ -12,12 +12,12 @@ export const send = state => {
     
     if (navigator.sendBeacon) navigator.sendBeacon(url, data);
     //to do xhr version for no sendBeacon support?
-
     //mutaaaate...
     state.data.base = [];
     state.data.events = [];
     state.firstEvent = false;
     state.hitCount = state.hitCount + 1;
+    return state;
 };
 
 const debounceSend = debounce(send, 1000);

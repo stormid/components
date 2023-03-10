@@ -33,8 +33,8 @@ export default ({ tid, settings }) => {
             queue(state, {
                 name: GA4_EVENTS.VIEW_SEARCH_RESULTS,
                 params: [
-                    { name: `${PARAMS.EVENT_PARAM}.search_term`, value: searchParams.get(searchTerm) },
-                    { name: `${PARAMS.ENGAGEMENT_TIME}`, value: state.timer.get() }
+                    [ `${PARAMS.EVENT_PARAM}.search_term`, searchParams.get(searchTerm) ],
+                    [ `${PARAMS.ENGAGEMENT_TIME}`, state.timer.get() ]
                 ]
             });
         }
