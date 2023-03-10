@@ -1,4 +1,4 @@
-import { hasSearchParams, filterUnusedParams, generateId, getId, findLink, getUrlParts, getSubmitButtonText } from '../../src/lib/utils';
+import { hasSearchParams, filterUnusedParams, generateId, getId, findLink, getUrlParts, isSubmitButton, getSubmitButtonText } from '../../src/lib/utils';
 
 describe('GA4 > utils > hasSearchParams', () => {
 
@@ -105,7 +105,6 @@ describe('GA4 > utils > getId', () => {
 
 });
 
-
 describe('GA4 > utils > findLink', () => {
     document.body.innerHTML = `<div>
         <div>
@@ -135,7 +134,116 @@ describe('GA4 > utils > findLink', () => {
 
 });
 
+describe('GA4 > utils > getUrlParts', () => {
 
-//getUrlParts
-//isSubmitButton
-//getSubmitButtonText
+    it('should return isExternal, hostname and pathname for an absolute URL', () => {
+        expect(getUrlParts('https://stormid.com/test')).toEqual({
+            isExternal: true,
+            hostname: 'stormid.com',
+            pathname: '/test'
+        });
+    });
+
+    it('should handle non-URLs', () => {
+        expect(getUrlParts('not a url')).toEqual({
+            isExternal: true,
+            hostname: undefined,
+            pathname: undefined
+        });
+    });
+
+    it('should recognise non-external links', () => {
+        delete global.window.location;
+        global.window = Object.create(window);
+        global.window.location = {
+            protocol: 'https:',
+            hostname: 'stormid.com',
+            host: 'stormid.com'
+        };
+        expect(getUrlParts('https://stormid.com/test')).toEqual({
+            isExternal: false,
+            hostname: 'stormid.com',
+            pathname: '/test'
+        });
+    });
+
+});
+
+describe('GA4 > utils > isSubmitButton', () => {
+    document.body.innerHTML += `<button type="submit">Submit</button>
+        <button class="no-type">Submit</button>
+        <input type="submit" />
+        <button type="button">Not submit</button>
+    `;
+
+    it('should recognise a button with type of submit', () => {
+        const candidate = document.querySelector('button[type=submit]');
+        expect(isSubmitButton(candidate)).toEqual(true);
+    });
+
+    it('should recognise a button without type of button', () => {
+        const candidate = document.querySelector('button.no-type');
+        expect(isSubmitButton(candidate)).toEqual(true);
+    });
+
+    it('should recognise an input with type of submit', () => {
+        const candidate = document.querySelector('input[type=submit]');
+        expect(isSubmitButton(candidate)).toEqual(true);
+    });
+
+    it('should rejcet a button with type of button', () => {
+        const candidate = document.querySelector('button[type=button]');
+        expect(isSubmitButton(candidate)).toEqual(false);
+    });
+    
+});
+
+describe('GA4 > utils > getSubmitButtonText', () => {
+
+    document.body.innerHTML += `<form id="test-form">
+        <input type="text id="test-field" />
+        <button type="submit" id="submit-btn">Submit via button</button>
+        <button type="button" id="not-submit-btn">Not submit</button>
+        <input type="submit" id="submit-input" />
+        <input type="submit" id="submit-input-with-value" value="test" />
+        <button type="submit" id="submit-btn-with-children">Submit <span>button</span> with messy <b>innerHTML</b></button>
+    </form>`;
+    const form = document.querySelector('#test-form');
+    // const input = document.querySelector('#test-field');
+    const submitButtonWithChildren = document.querySelector('#submit-btn-with-children');
+    const notSubmitButton = document.querySelector('#not-submit-btn');
+    const submitInput = document.querySelector('#submit-input');
+    const submitInputWithValue = document.querySelector('#submit-input-with-value');
+
+    /*
+    const submitNode = isSubmitButton(document.activeElement) ? document.activeElement : form.querySelector(`button:not([type=button]), input[type=submit]`);
+    if (!submitNode) return '';
+    if (submitNode.nodeName === 'BUTTON') return (submitNode.innerText || submitNode.textContent).trim();
+    return submitNode.value || 'Submit';
+    */
+    it('should get the text value of the activeElement if it is a submit button/input', () => {
+        submitInput.focus();
+        expect(getSubmitButtonText(form)).toEqual('Submit');
+    });
+
+    it('should get the value of a submit input', () => {
+        submitInputWithValue.focus();
+        expect(getSubmitButtonText(form)).toEqual('test');
+    });
+
+    it('should get not return the value of a non-submit type button', () => {
+        notSubmitButton.focus();
+        expect(getSubmitButtonText(form)).not.toEqual('Not submit');
+    });
+
+    it('should get return the value of the first submit type button if not the activeElement', () => {
+        expect(getSubmitButtonText(form)).toEqual('Submit via button');
+    });
+
+    it('should get the text value from the child nodes of a button', () => {
+        submitButtonWithChildren.focus();
+        expect(getSubmitButtonText(form)).toEqual('Submit button with messy innerHTML');
+    });
+
+
+});

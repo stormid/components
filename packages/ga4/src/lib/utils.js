@@ -105,7 +105,7 @@ export const getUrlParts = url => {
     return { isExternal: hostname !== window.location.host, hostname, pathname };
 };
 
-export const isSubmitButton = node =>  (node && node.getAttribute('type') === 'submit') || node.nodeName === 'BUTTON';
+export const isSubmitButton = node =>  (node && node.getAttribute('type') === 'submit') || (node.nodeName === 'BUTTON' && node.getAttribute('type') !== 'button');
 
 export const getSubmitButtonText = form => {
     const submitNode = isSubmitButton(document.activeElement) ? document.activeElement : form.querySelector(`button:not([type=button]), input[type=submit]`);
