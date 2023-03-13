@@ -20,8 +20,8 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             title: pkg.name,
-            template: './example/src/google.html',
-            filename: 'google.html'
+            template: './example/src/form.html',
+            filename: 'form.html'
         })
     ],
     module: {

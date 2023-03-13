@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+	<head>
+	<title>Storm ID - GA4</title>
+	<meta name="custom-dimension-1" content="11th dimension" />
+	<meta name="custom-metric-1" content="11" />
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=Object.assign%2CArray.prototype.includes"></script>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: sans-serif;
+        }
+		body {
+        	font:100%/1.4 "AvenirNextLTW01-Regular", Helvetica, "Lucida Grande", sans-serif;
+		}
+		.container {
+			margin:48px auto;
+			max-width: 960px;
+			padding:0 24px;
+		}
+        form {
+			width:100%;
+        }
+        label {
+            display: block;
+			font-size:.825rem;
+			font-weight:400;
+			color: #666;
+            margin-bottom: 4px;
+        }
+        .row {
+            margin-bottom: 32px;
+        }
+        fieldset {
+            display: block;
+            border: 0 none;
+        }
+        fieldset .row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        fieldset .row:last-child{
+            margin-bottom: 0;
+        }
+        input,
+        textarea,
+        select {
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid #777;
+            padding: 8px 4px;
+			font-size:1rem;
+        }
+        input[type=checkbox],
+        input[type=radio] {
+            width:18px;
+            height:18px;
+            margin-right:4px;
+        }
+        input[type=checkbox] + label,
+        input[type=radio] + label {
+            margin-bottom: 0;
+            line-height: 18px;
+        }
+        legend {
+            display: block;
+            margin-bottom: 12px;
+        }
+        button {
+            display: inline-block;
+            padding: 8px 24px;
+            background-color: #121212;
+            border: 1px solid #121212;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #fff;
+            color:  #121212;
+        }
+    </style>
+</head>
+<body>
+	<div class="container">
+        <form>
+            <div class="row">
+                <label for="textinput">Text input</label>
+                <input name="textinput" id="textinput" />
+            </div>
+            <div class="row">
+                <label for="select">Select</label>
+                <select id="select" name="select">
+                    <option value="option 1">Option 1</option>
+                    <option value="option 2">Option 2</option>
+                </select>
+            </div>
+            <div class="row">
+                <fieldset>
+                    <legend>Checkboxes</legend>
+                    <div class="row">
+                        <input type="checkbox" name="checkboxes" id="checkboxes-1" />
+                        <label for="checkboxes-1">Checkbox 1</label>
+                    </div>
+                    <div class="row">
+                        <input type="checkbox" name="checkboxes" id="checkboxes-2" />
+                        <label for="checkboxes-2">Checkbox 2</label>
+                    </div>
+                    <div class="row">
+                        <input type="checkbox" name="checkboxes" id="checkboxes-3" />
+                        <label for="checkboxes-3">Checkbox 3</label>
+                    </div>
+                    <div class="row">
+                        <input type="checkbox" name="checkboxes" id="checkboxes-4" />
+                        <label for="checkboxes-4">Checkbox 4</label>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="row">
+                <fieldset>
+                    <legend>Radios</legend>
+                    <div class="row">
+                        <input type="radio" name="radios" id="radios-1" />
+                        <label for="radios-1">Radio 1</label>
+                    </div>
+                    <div class="row">
+                        <input type="radio" name="radios" id="radios-2" />
+                        <label for="radios-2">Radio 2</label>
+                    </div>
+                    <div class="row">
+                        <input type="radio" name="radios" id="radios-3" />
+                        <label for="radios-3">Radio 3</label>
+                    </div>
+                    <div class="row">
+                        <input type="radio" name="radios" id="radios-4" />
+                        <label for="radios-4">Radio 4</label>
+                    </div>
+                    <div class="row">
+                        <input type="radio" name="radios" id="radios-5" />
+                        <label for="radios-5">Radio 5</label>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="row">
+                <label for="textarea">Textarea</label>
+                <textarea id="textarea" name="textarea"></textarea>
+            </div>
+            <button>Submit</button>
+        </form>
+	</div>
+</body>
+</html>

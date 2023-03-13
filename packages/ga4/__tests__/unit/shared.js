@@ -53,26 +53,6 @@ describe('GA4 > Shared > composeEventData', () => {
 
 
 //send
-/*
-export const send = state => {
-    if (!state.data.base.length) return;
-    const params = state.data.events.length === 1
-        ? new URLSearchParams(filterUnusedParams([ ...state.data.base, ...state.data.events]))
-        : new URLSearchParams(filterUnusedParams(state.data.base));
-    const url = `${ENDPOINT}?${params}`;
-    const data = state.data.events.length <= 1 ? undefined : new URLSearchParams(state.data.events);
-    
-    if (navigator.sendBeacon) navigator.sendBeacon(url, data);
-    //to do xhr version for no sendBeacon support?
-
-    //mutaaaate...
-    state.data.base = [];
-    state.data.events = [];
-    state.firstEvent = false;
-    state.hitCount = state.hitCount + 1;
-};
-*/
-
 describe('GA4 > Shared > send', () => {
     Object.defineProperty(window, 'navigator', {
         value: navigator,
