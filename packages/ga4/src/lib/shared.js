@@ -46,7 +46,7 @@ export const composeEventData = event => {
 
 export const composeBaseData = state => {
     const { firstVisit, sessionStart, sessionCount } = getSessionState(state);
-    const { tid, debug } = state;
+    const { tid, settings } = state;
     
     return [
         [PARAMS.PROTOCOL_VERSION, '2'],
@@ -60,7 +60,7 @@ export const composeBaseData = state => {
         [PARAMS.SESSION_COUNT, sessionCount],
         [PARAMS.SESSION_ENGAGEMENT, '1'],
         [PARAMS.SESSION_START, sessionStart],
-        [PARAMS.DEBUG, debug],
+        [PARAMS.DEBUG, settings.debug && 1],
         [PARAMS.REFERRER, document.referrer],
         [PARAMS.LOCATION, document.location.origin + document.location.pathname + document.location.search],
         [PARAMS.TITLE, document.title],

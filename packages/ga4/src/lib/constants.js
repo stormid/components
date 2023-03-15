@@ -1,7 +1,7 @@
 export const PARAMS = {
     PROTOCOL_VERSION: 'v', // Measurement Protocol Version 2 for GA4
     TRACKING_ID: 'tid', // Measurement ID for GA4 or Stream ID
-    PAGE_ID: '_p', // random number, hold in sessionStorage, unknown use
+    PAGE_ID: '_p', // unknown use
     LANGUAGE: 'ul', // User Language
     CLIENT_ID: 'cid', // client ID, hold in localStorage
     FIRST_VISIT: '_fv', // first_visit, identify returning users based on existance of client ID in localStorage
@@ -9,7 +9,7 @@ export const PARAMS = {
     SESSION_ID: 'sid', // session ID random generated, hold in sessionStorage
     SESSION_COUNT: 'sct', // session count for a user, increase +1 in new interaction
     SESSION_ENGAGEMENT: 'seg', // session engaged (interacted for at least 10 seconds), assume yes
-    SESSION_START: '_ss',
+    SESSION_START: '_ss', //first hit of the session, store in sessionStorage
     DEBUG: '_dbg', //debug
     REFERRER: 'dr', // document referrer
     LOCATION: 'dl', // document location

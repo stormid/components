@@ -35,6 +35,7 @@ export const getId = (type, storage = localStorage) => {
 export const getSessionState = state => {
     const firstVisit = !localStorage.getItem(PARAMS.CLIENT_ID) ? '1' : void 0;
     const sessionStart = !sessionStorage.getItem(PARAMS.SESSION_ID) ? '1' : void 0;
+    if (sessionStart) sessionStorage.setItem(PARAMS.SESSION_ID, '1');
     const sessionCount = getSessionCount(state);
     
     return { firstVisit, sessionStart, sessionCount };
