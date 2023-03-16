@@ -25,7 +25,7 @@ export const click = state => evt => {
     if (!link) return;
 
     const { isExternal, hostname, pathname } = getUrlParts(link);
-    const downloadExtension = link.href.match(new RegExp(FILE_EXTENSIONS, 'g'));
+    const downloadExtension = link.href.split('.').pop().match(new RegExp(FILE_EXTENSIONS));
 
     //is an internal link or not matching download regex
     if (!isExternal && !downloadExtension) return;
