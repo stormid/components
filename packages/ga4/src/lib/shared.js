@@ -1,20 +1,15 @@
 import { ENDPOINT, PARAMS } from './constants';
 import { filterUnusedParams, debounce, getSessionState, generateId, getId, getUserAgentData } from './utils';
 
-
 export const send = state => {
     if (!state.data.base.length) return;
-    const params = state.data.events.length === 1
-        ? new URLSearchParams(filterUnusedParams([ ...state.data.base, ...state.data.events]))
-        : new URLSearchParams(filterUnusedParams(state.data.base));
-    const url = `${ENDPOINT}?${params}`;
-    const data = state.data.events.length <= 1 ? undefined : new URLSearchParams(state.data.events);
+    const url = `${ENDPOINT}?${new URLSearchParams(filterUnusedParams(state.data.base))}`;
     
-    if (navigator.sendBeacon) navigator.sendBeacon(url, data);
+    if (navigator.sendBeacon) navigator.sendBeacon(url, state.data.events || undefined);
     //to do xhr version for no sendBeacon support?
     //mutaaaate...
     state.data.base = [];
-    state.data.events = [];
+    state.data.events = '';
     state.firstEvent = false;
     state.hitCount = state.hitCount + 1;
     return state;
@@ -34,14 +29,18 @@ export const track = async (state, event) => {
 
 
 export const composeEventData = event => {
-    let data = [];
-    if (event) {
-        if (!event.name) console.warn(`GA4: Missing event name`);
-        else data.push([PARAMS.EVENT_NAME, event.name]);
-        if (event.params) data = [ ...data, ...event.params ];
-    }
+    if (!event) return;
+    if (!event.name) return void console.warn(`GA4: Missing event name`);
 
-    return data;
+    /*
+    * Google Analytics API expects a return/newline separated string of event data
+    * e.g.
+        en=page_view
+        en=view_search_results&ep.search_term=test&_et=9
+        en=scroll&epn.percent_scrolled=90&_et=324
+    */
+
+    return [`${PARAMS.EVENT_NAME}=${event.name}${event.params ? `&${event.params.map(param => `${param[0]}${param[1] ? `=${param[1]}` : ''}`).join('&')}` : ''}`];
 };
 
 export const composeBaseData = async state => {
@@ -85,6 +84,6 @@ export const add = async (state, event) => {
     const baseData = state.data.base.length === 0 ? await composeBaseData(state) : state.data.base;
     return {
         base: baseData,
-        events: [ ...state.data.events, ...composeEventData(event)]
+        events: [ state.data.events, composeEventData(event) ].join('\r\n')
     };
 };

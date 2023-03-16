@@ -13,10 +13,10 @@ export default async ({ tid, settings }) => {
         tid,
         settings,
         firstEvent: true,
-        data: { base: [], events: [] },
+        data: { base: [], events: '' },
         handlers: {},
         forms: [],
-        hitcount: 1,
+        hitCount: 1,
         timer: timer()
     };
     state.timer.start();
@@ -43,6 +43,7 @@ export default async ({ tid, settings }) => {
         //3. scroll
         state.handlers.scroll = debounce(scroll(state));
         document.addEventListener('scroll', state.handlers.scroll);
+        state.handlers.scroll();
 
         //4. user_engagement
         window.addEventListener('focus', state.timer.start);

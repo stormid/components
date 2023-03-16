@@ -22,6 +22,11 @@ module.exports = {
             title: pkg.name,
             template: './example/src/form.html',
             filename: 'form.html'
+        }),
+        new HtmlWebpackPlugin({
+            title: pkg.name,
+            template: './example/src/google.html',
+            filename: 'google.html'
         })
     ],
     module: {
