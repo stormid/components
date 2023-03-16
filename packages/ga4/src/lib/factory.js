@@ -8,7 +8,7 @@ import { scroll, engagement, click, formStart, formSubmit } from './handlers';
  * @param tid, tracking id, 
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
  */
-export default ({ tid, settings }) => {
+export default async ({ tid, settings }) => {
     const state = {
         tid,
         settings,
@@ -23,14 +23,14 @@ export default ({ tid, settings }) => {
     if (settings.autoTrack) {
 
         //1. page view
-        queue(state, { name: GA4_EVENTS.PAGE_VIEW });
+        await queue(state, { name: GA4_EVENTS.PAGE_VIEW });
        
         //2. view search results
         const search = document.location.search;
         if (hasSearchParams(search)) {
             const searchParams = new URLSearchParams(search);
             const searchTerm = SEARCH_QUERY_PARAMS.find(term => searchParams.get(term));
-            queue(state, {
+            await queue(state, {
                 name: GA4_EVENTS.VIEW_SEARCH_RESULTS,
                 params: [
                     [ `${PARAMS.EVENT_PARAM}.search_term`, searchParams.get(searchTerm) ],

@@ -19,7 +19,17 @@ export const PARAMS = {
     EVENT_PARAM_NUMBER: 'epn', // prefix fpr event parameter number, eg percent_scrolled
     SCREEN_RESOLUTION: 'sr', // Screen Resolution
     ENGAGEMENT_TIME: '_et', // engagement time
+    UA_ARCHITECTURE: 'uaa', //user agent architecture from NavigatorUAData
+    UA_BITNESS: 'uab', //user agent bitness from NavigatorUAData
+    UA_FULL_VERSION_LIST: 'uafvl', //user agent full version list from NavigatorUAData
+    UA_MOBILE: 'uamb', //is mobile, from NavigatorUAData
+    UA_MODEL: 'uam', //model, from NavigatorUAData
+    UA_PLATFORM: 'uap', //platform, from NavigatorUAData
+    UA_PLATFORM_VERSION: 'uapv', //platformVersion, from NavigatorUAData
+    UA_WOW64: 'uaw', //WoW64, from NavigatorUAData
 };
+
+export const USER_AGENT_HINTS = ['platform', 'platformVersion', 'architecture', 'model', 'uaFullVersion', 'bitness', 'uaFullVersion', 'bitness', 'fullVersionList', 'wow64'];
 
 export const FILE_EXTENSIONS =  'pdf|xlsx?|docx?|txt|rtf|csv|exe|key|pp(s|t|tx)|7z|pkg|rar|gz|zip|avi|mov|mp4|mpe?g|wmv|midi?|mp3|wav|wma';
 

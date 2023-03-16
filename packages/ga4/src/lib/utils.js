@@ -1,4 +1,4 @@
-import { SEARCH_QUERY_PARAMS, PARAMS } from './constants';
+import { SEARCH_QUERY_PARAMS, PARAMS, USER_AGENT_HINTS } from './constants';
 
 export const hasSearchParams = str => SEARCH_QUERY_PARAMS.some(si => str.includes(`&${si}=`) || str.includes(`?${si}=`));
 
@@ -113,4 +113,9 @@ export const getSubmitButtonText = form => {
     if (!submitNode) return '';
     if (submitNode.nodeName === 'BUTTON') return (submitNode.innerText || submitNode.textContent).trim();
     return submitNode.value || 'Submit';
+};
+
+export const getUserAgentData = async () => {
+    if (!navigator.userAgentData) return {};
+    return navigator.userAgentData.getHighEntropyValues(USER_AGENT_HINTS);
 };

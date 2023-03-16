@@ -1,5 +1,5 @@
 import { ENDPOINT, PARAMS } from './constants';
-import { filterUnusedParams, debounce, getSessionState, generateId, getId } from './utils';
+import { filterUnusedParams, debounce, getSessionState, generateId, getId, getUserAgentData } from './utils';
 
 
 export const send = state => {
@@ -22,13 +22,13 @@ export const send = state => {
 
 const debounceSend = debounce(send, 1000);
 
-export const queue = (state, event) => {
-    state.data = add(state, event);
+export const queue = async (state, event) => {
+    state.data = await add(state, event);
     debounceSend(state);
 };
 
-export const track = (state, event) => {
-    state.data = add(state, event);
+export const track = async (state, event) => {
+    state.data = await add(state, event);
     send(state);
 };
 
@@ -44,10 +44,11 @@ export const composeEventData = event => {
     return data;
 };
 
-export const composeBaseData = state => {
+export const composeBaseData = async state => {
     const { firstVisit, sessionStart, sessionCount } = getSessionState(state);
     const { tid, settings } = state;
-    
+    const { architecture, bitness, fullVersionList, mobile, model, platform, platformVersion, wow64 } = await getUserAgentData();
+
     return [
         [PARAMS.PROTOCOL_VERSION, '2'],
         [PARAMS.TRACKING_ID, tid],
@@ -64,7 +65,15 @@ export const composeBaseData = state => {
         [PARAMS.REFERRER, document.referrer],
         [PARAMS.LOCATION, document.location.origin + document.location.pathname + document.location.search],
         [PARAMS.TITLE, document.title],
-        [PARAMS.SCREEN_RESOLUTION, `${screen.width}x${screen.height}`]
+        [PARAMS.SCREEN_RESOLUTION, `${screen.width}x${screen.height}`],
+        [PARAMS.UA_ARCHITECTURE, architecture],
+        [PARAMS.UA_BITNESS, bitness],
+        [PARAMS.UA_FULL_VERSION_LIST, fullVersionList && fullVersionList.map(item => `${item.brand} ${item.version}`).join(' ')],
+        [PARAMS.UA_MOBILE, mobile],
+        [PARAMS.UA_MODEL, model],
+        [PARAMS.UA_PLATFORM, platform],
+        [PARAMS.UA_PLATFORM_VERSION, platformVersion],
+        [PARAMS.UA_WOW64, wow64]
     ];
 };
 
@@ -72,7 +81,10 @@ export const composeBaseData = state => {
 /*
  * return base data (if none exists already), and event data
  */
-export const add = (state, event) => ({
-    base: state.data.base.length === 0 ? composeBaseData(state) : state.data.base,
-    events: [ ...state.data.events, ...composeEventData(event)]
-});
+export const add = async (state, event) => {
+    const baseData = state.data.base.length === 0 ? await composeBaseData(state) : state.data.base;
+    return {
+        base: baseData,
+        events: [ ...state.data.events, ...composeEventData(event)]
+    };
+};

@@ -6,9 +6,9 @@ import factory from './lib/factory';
  *
  * @params options, Object, to be merged with defaults to become the settings propery of the instance
  */
-export default (tid, options) => {
+export default async (tid, options) => {
     if (!tid) return console.warn(`GA4: Missing tracking Id`);
-    return Object.create(factory({
+    return Object.create(await factory({
         tid,
         settings: { ...defaults, ...options }
     }));
