@@ -1,6 +1,6 @@
 {
   "name": "@stormid/validate",
-  "version": "1.0.0-alpha.27",
+  "version": "1.0.0-alpha.26",
   "description": "Client-side form validation",
   "author": "stormid",
   "license": "MIT",
@@ -32,5 +32,5 @@
     "prod": "webpack --config example/webpack.config.js --mode production",
     "prepublish": "npm run -s build"
   },
-  "gitHead": "abe0972401189817445fb4e7d36ca51490ddc33b"
+  "gitHead": "946d630c5e4305c47fedab448cb135d95c7b03af"
 }
