@@ -76,4 +76,4 @@ export const GROUP_ATTRIBUTE = 'group';
 
 export const TOKENS = {
     VALUE: '{{value}}'
-}
+};
