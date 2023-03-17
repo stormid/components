@@ -37,8 +37,6 @@ export const ENDPOINT = 'https://www.google-analytics.com/g/collect';
 
 export const SEARCH_QUERY_PARAMS = ['q', 's', 'search', 'query', 'keyword'];
 
-// export const CLICK_TARGETS = 'a, button, input[type=submit], input[type=button]';
-
 export const GA4_EVENTS = {
     PAGE_VIEW: 'page_view',
     SCROLL: 'scroll',
@@ -49,4 +47,3 @@ export const GA4_EVENTS = {
     FORM_START: 'form_start',
     FORM_SUBMIT: 'form_submit'
 };
-
