@@ -32,7 +32,7 @@ const [ validator ] = validate('form:not([novalidate])');
 Initialise with a DOM element
 ```
 const element = document.querySelector('form:not([novalidate])');
-const [ validator ] = boilerplate(element);
+const [ validator ] = validate(element);
 ```
 
 Initialise with a Node list
@@ -76,11 +76,13 @@ Multiple validators can be used on a single field. Custom validators can be adde
   - [Errors](#errors)
     - [Error message container](#error-message-container)
     - [Error messages](#error-messages)
+      - [Including values in error messages](#including-values-in-error-messages)
   - [Options](#options)
   - [API](#api)
     - [addMethod](#addmethod)
     - [validate](#validate-1)
     - [addGroup](#addgroup)
+    - [validateGroup](#validategroup)
     - [removeGroup](#removegroup)
   - [Tests](#tests)
   - [License](#license)
