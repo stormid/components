@@ -30,7 +30,7 @@ export const h = (nodeName, attributes, text) => {
  * @returns node [Text node]
  * 
  */
-export const createErrorTextNode = (group, msg) => {    
+export const createErrorTextNode = (group, msg) => {
 
     let node = document.createTextNode(msg);
     group.serverErrorNode.classList.remove(DOTNET_CLASSNAMES.VALID);
@@ -64,7 +64,7 @@ export const clearError = groupName => state => {
         const describedbyid = ((state.groups[groupName].serverErrorNode || state.errors[groupName]).id);
 
         //check whether the aria-describedby matches the id, if not another id must be present, only replace the removed error id
-        if(field.hasAttribute('aria-describedby')) {
+        if (field.hasAttribute('aria-describedby')) {
             if (field.getAttribute('aria-describedby') === describedbyid) field.removeAttribute('aria-describedby');
             else field.setAttribute('aria-describedby', field.getAttribute('aria-describedby').replace(` ${describedbyid}`, ''));
         }
@@ -104,13 +104,13 @@ export const renderErrors = state => {
  * @param groupName [String, validation group] 
  * 
  */
- export const updateMessageValues = (state, groupName) => {
+export const updateMessageValues = (state, groupName) => {
     let msg = state.groups[groupName].errorMessages[0];
 
     let values = state.groups[groupName].fields.reduce((newMsg, field, index, array) => {
-        if(index === array.length-1) return newMsg + field.value;
-        return newMsg = field.value + ", ";
-    }, "");
+        if (index === array.length-1) return newMsg + field.value;
+        return newMsg = field.value + ', ';
+    }, '');
 
     return msg.replace(TOKENS.VALUE, values);
 };
@@ -143,12 +143,12 @@ export const renderError = groupName => state => {
         //No server error node found, so attempt to render inside the label.  If no label found, log error to console.
         const label = document.querySelector(`[for="${state.groups[groupName].fields[state.groups[groupName].fields.length-1].getAttribute('id')}"]`);
 
-        if(label !== null) {
+        if (label !== null) {
             state.errors[groupName] = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: `${groupName}-error-message` }, msg), label.nextSibling);
         } else {
-            console.error("No matching HTML label or server error node found for validation group: " +groupName+".  Error message: '" + msg + "' cannot be displayed.  Form will not be submitted.");
-            return; 
-        }        
+            console.error(`No matching HTML label or server error node found for validation group: ${groupName}. Error message: '${msg}' cannot be displayed. Form will not be submitted.`);
+            return;
+        }
     }
 
     const errorContainer = state.groups[groupName].serverErrorNode || state.errors[groupName];
@@ -216,6 +216,27 @@ export const cleanupButtonValueNode = node => {
 };
 
 /**
+ * Add aria-required attribute to fields if appropriate (has required/data-val-required, is not a checkbox or radio group) 
+ * 
+ * @param fields [Array of DOMElements]
+ * 
+ * @returns fields
+ */
+export const addAriaRequired = fields => {
+    fields.forEach(field => {
+        if (
+            (field.hasAttribute('required') || field.hasAttribute('data-val-required'))
+            && ((field.getAttribute('type') !== 'radio' && field.getAttribute('type') !== 'checkbox')
+                || (field.getAttribute('type') === 'checkbox' && fields.length === 1))
+        ) {
+            field.setAttribute('aria-required', 'true');
+        }
+    });
+
+    return fields;
+};
+
+/**
  * Adds attributes to input and error nodes to help accessibility
  * 
  * @param state [Object]
@@ -225,8 +246,7 @@ export const addAXAttributes = state => {
         //ensure error message has an id for aria-describedby
         if (state.groups[groupName].serverErrorNode && !state.groups[groupName].serverErrorNode.hasAttribute('id')) state.groups[groupName].serverErrorNode.setAttribute('id', `${groupName}-error-message`);
 
-        state.groups[groupName].fields.forEach(field => {
-            if (field.hasAttribute('required') || field.hasAttribute('data-val-required')) field.setAttribute('aria-required', 'true');
-        });
+        //Add aria-required to inputs that are not radios, nor checkbox groups (single checkbox gets the attribute added)
+        addAriaRequired(state.groups[groupName].fields);
     });
 };
