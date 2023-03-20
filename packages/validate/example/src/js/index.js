@@ -1,6 +1,15 @@
 import validate from '../../../src';
+import { isValidDate } from '../../../src/lib/plugins/methods/date';
+
 {
     const [ validator ] = validate('form');
+
+    validator.addMethod(
+        'date', //name of custom validation group
+        isValidDate, // date validation method imported from the library 
+        'Enter a valid date', // error message
+        [ document.getElementById('dateDay'), document.getElementById('dateMonth'), document.getElementById('dateYear') ] //date fields array [day, month, year]
+    );
 
     // const later = document.getElementById('Later');
     // document.querySelector('.js-add').addEventListener('click', e => {
@@ -12,7 +21,7 @@ import validate from '../../../src';
     //         validator[0].addGroup([later]);
     //     }
     // });
-    const inputs = [ document.querySelector('#f1'), document.querySelector('#f2') ];
+    // const inputs = [ document.querySelector('#f1'), document.querySelector('#f2') ];
     // validator.addMethod(
     //     'CustomGroup',
     //     (value, fields) => {

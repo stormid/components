@@ -11,6 +11,7 @@ Client-side form validation library to support .NET validation using data-val at
 - [Errors](#errors)
 - [Options](#options)
 - [API](#api)
+- [Plugins](#plugins)
 
 ## Usage
 
@@ -84,6 +85,8 @@ Multiple validators can be used on a single field. Custom validators can be adde
     - [addGroup](#addgroup)
     - [validateGroup](#validategroup)
     - [removeGroup](#removegroup)
+  - [Plugins](#plugins)
+    - [isValidDate](#isvaliddate)
   - [Tests](#tests)
   - [License](#license)
 
@@ -419,6 +422,46 @@ validator.addGroup(fieldsArray);
 
 //remove by passing the name of a group
 validator.removeGroup('new-fields');
+```
+
+## Plugins
+Plugins are a set of pre-built custom validators that are included in the package but not in the default build. They can be imported and used in [addMethod](#addmethod) you would your own custom validation method.
+
+### isValidDate
+Validate three separate day/month/year fields (similar to the govuk design system date component) as a single valid date.
+
+The minimum accepted year value in the isValidDate plugin is 1000. To set a different (more recent) minimum value consider using the [min](#min) validator on the year input. 
+
+HTML
+```
+<fieldset>
+    <legend>
+        <span>Date</span>
+        <span data-valmsg-for="date" id="date-error-message"></span>
+        <span data-valmsg-for="dateDay" id="date-Day-error-message"></span>
+        <span data-valmsg-for="dateMonth" id="date-Month-error-message"></span>
+        <span data-valmsg-for="dateYear" id="date-Year-error-message"></span>
+    </legend>
+    <div class="flex">
+        <input id="dateDay" name="dateDay" inputmode="numeric" data-val="true" data-val-required="Enter a day" aria-required="true"/>
+        <input id="dateMonth" name="dateMonth" inputmode="numeric" data-val="true" data-val-required="Enter a month" aria-required="true"/>
+        <input id="dateYear" name="dateYear" inputmode="numeric" data-val="true" data-val-required="Enter a year" aria-required="true" />
+    </div>
+</fieldset>
+```
+
+JS
+```
+import validate from '@stormid/validate';
+import { isValidDate } from '@stormid/validate/src/lib/plugins/methods/date';
+
+const [ validator ] = validate('.my-form');
+validator.addMethod(
+  'date', //name of custom validation group
+  isValidDate, // date validation method imported from the library 
+  'Enter a valid date', // error message
+  [ document.getElementById('dateDay'), document.getElementById('dateMonth'), document.getElementById('dateYear') ] //date fields array [day, month, year]
+);
 ```
 
 ## Tests

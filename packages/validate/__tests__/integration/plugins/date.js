@@ -1,5 +1,5 @@
 import validate from '../../../src';
-import date from '../../../src/lib/plugins/methods/date';
+import { isValidDate } from '../../../src/lib/plugins/methods/date';
 
 describe('Validate > Integration > Plugins > Date', () => {
 
@@ -53,7 +53,7 @@ describe('Validate > Integration > Plugins > Date', () => {
         });
         const dateFields = [ dayInput, monthInput, yearInput ];
         const message = 'Enter a valid date';
-        validator.addMethod('date', date, message, dateFields);
+        validator.addMethod('date', isValidDate, message, dateFields);
 
         expect(validator.getState().groups).toEqual({
             dateDay: {
@@ -76,7 +76,7 @@ describe('Validate > Integration > Plugins > Date', () => {
             },
             date: {
                 serverErrorNode: dateErrorNode,
-                validators: [{ type: 'custom', method: date, message }],
+                validators: [{ type: 'custom', method: isValidDate, message }],
                 fields: dateFields,
                 valid: false
             }
@@ -109,7 +109,7 @@ describe('Validate > Integration > Plugins > Date', () => {
 
         const dateFields = [ dayInput, monthInput, yearInput ];
         const message = 'Enter a valid date';
-        validator.addMethod('date', date, message, dateFields);
+        validator.addMethod('date', isValidDate, message, dateFields);
         const validityState = await validator.validate();
         expect(validityState).toEqual(false);
         expect(dateErrorNode.textContent).toEqual(message);
@@ -141,7 +141,7 @@ describe('Validate > Integration > Plugins > Date', () => {
 
         const dateFields = [ dayInput, monthInput, yearInput ];
         const message = 'Enter a valid date';
-        validator.addMethod('date', date, message, dateFields);
+        validator.addMethod('date', isValidDate, message, dateFields);
 
         const invalidDates = [
             ['-1', '1', '2000'],
@@ -186,7 +186,7 @@ describe('Validate > Integration > Plugins > Date', () => {
 
         const dateFields = [ dayInput, monthInput, yearInput ];
         const message = 'Enter a valid date';
-        validator.addMethod('date', date, message, dateFields);
+        validator.addMethod('date', isValidDate, message, dateFields);
         const validityState = await validator.validate();
         expect(validityState).toEqual(true);
     });

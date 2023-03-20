@@ -1,4 +1,4 @@
-export default (value, fields) => {
+export const isValidDate = (value, fields) => {
     const day = fields[0].value;
     const month = fields[1].value;
     const year = fields[2].value;
@@ -8,7 +8,7 @@ export default (value, fields) => {
     const currentDate = new Date();
 
     const yearValue = Number((year) ? year : currentDate.getFullYear());
-    if (yearValue < 1900) return false;
+    if (yearValue < 1000) return false;
 
     const monthValue = Number((month) ? month : currentDate.getMonth());
     if (monthValue < 1 || monthValue > 12) {
