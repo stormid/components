@@ -217,7 +217,7 @@
 </code></pre>
 <p>Initialise with a DOM element</p>
 <pre><code>const element = document.querySelector('form:not([novalidate])');
-const [ validator ] = boilerplate(element);
+const [ validator ] = validate(element);
 </code></pre>
 <p>Initialise with a Node list</p>
 <pre><code>const elements = document.querySelectorAll('form:not([novalidate])');
@@ -258,7 +258,11 @@ const [ validator ] = validate(elements);
 <li><a href="#errors">Errors</a>
 <ul>
 <li><a href="#error-message-container">Error message container</a></li>
-<li><a href="#error-messages">Error messages</a></li>
+<li><a href="#error-messages">Error messages</a>
+<ul>
+<li><a href="#including-values-in-error-messages">Including values in error messages</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#options">Options</a></li>
@@ -267,6 +271,7 @@ const [ validator ] = validate(elements);
 <li><a href="#addmethod">addMethod</a></li>
 <li><a href="#validate-1">validate</a></li>
 <li><a href="#addgroup">addGroup</a></li>
+<li><a href="#validategroup">validateGroup</a></li>
 <li><a href="#removegroup">removeGroup</a></li>
 </ul>
 </li>
