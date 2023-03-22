@@ -258,6 +258,20 @@
                 <label for="checkbox">option 1</label>
             </div>
         </fieldset>
+        <fieldset>
+            <legend>
+                <span>Date</span>
+                <span data-valmsg-for="date" id="date-error-message"></span>
+                <span data-valmsg-for="dateDay" id="date-Day-error-message"></span>
+                <span data-valmsg-for="dateMonth" id="date-Month-error-message"></span>
+                <span data-valmsg-for="dateYear" id="date-Year-error-message"></span>
+            </legend>
+            <div class="flex">
+                <input id="dateDay" name="dateDay" inputmode="numeric" data-val="true" data-val-required="Enter a day" aria-required="true"/>
+                <input id="dateMonth" name="dateMonth" inputmode="numeric" data-val="true" data-val-required="Enter a month" aria-required="true"/>
+                <input id="dateYear" name="dateYear" inputmode="numeric" data-val="true" data-val-required="Enter a year" aria-required="true" />
+            </div>
+        </fieldset>
         <input type="submit" value="Submit">
     </form>
   </body>
