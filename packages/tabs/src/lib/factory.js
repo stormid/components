@@ -16,8 +16,7 @@ export default ({ node, settings }) => {
         settings,
         node,
         activeIndex: activeIndex !== undefined ? +activeIndex : +settings.activeIndex,
-        //activeTabIndex should initially match the active panel, so initialising here to the same value
-        activeTabIndex: activeIndex !== undefined ? +activeIndex : +settings.activeIndex, 
+        activeTabIndex: activeIndex !== undefined ? +activeIndex : +settings.activeIndex,
         tabs,
         panels,
         loaded: false
