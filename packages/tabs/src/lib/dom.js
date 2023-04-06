@@ -84,11 +84,13 @@ const initListeners = (tab, nextIndex, Store) => {
 };
 
 const changePanel = (Store, previousActiveIndex) => {
-    const { activeIndex, updateURL, tabs } = Store.getState();
+    const { activeIndex, settings, tabs } = Store.getState();
     close(Store.getState(), previousActiveIndex);
     open(Store)(Store.getState());
     focusTab(Store);
-    (updateURL && window.history) && window.history.replaceState({ URL: tabs[activeIndex].getAttribute('href') }, '', tabs[activeIndex].getAttribute('href'));
+    if (settings.updateURL && window.history) {
+        window.history.replaceState({ URL: tabs[activeIndex].getAttribute('href') }, '', tabs[activeIndex].getAttribute('href'));
+    }
 };
 
 const close = ({ settings, tabs, panels }, previousActiveIndex) => {
