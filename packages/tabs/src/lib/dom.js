@@ -44,39 +44,29 @@ const getNextTabIndex = ({ activeTabIndex, tabs }) => activeTabIndex === tabs.le
 
 const initListeners = (tab, nextIndex, Store) => {
     const isManualActivation = Store.getState().settings.activation === MODES.MANUAL;
-    const onDirectionChangeFunction = (isManualActivation) ? changeTab : changePanel;
+    const onDirectionChangeFunction = (isManualActivation) ? () => focusTab(Store) : changePanel;
 
     tab.addEventListener('keydown', e => {
-        const previousActiveIndex = Store.getState().activeTabIndex;
+        const previousIndex = Store.getState().activeIndex;
         switch (e.keyCode) {
         case KEYCODES.LEFT:
-            Store.dispatch({ 
-                activeTabIndex: getPreviousTabIndex(Store.getState()), 
+            Store.dispatch({
+                activeTabIndex: getPreviousTabIndex(Store.getState()),
                 activeIndex: (isManualActivation) ? Store.getState().activeIndex : getPreviousTabIndex(Store.getState())
-            }, [() => onDirectionChangeFunction(Store)(previousActiveIndex)]);
-            break;
-        case KEYCODES.DOWN:
-            e.preventDefault();
-            e.stopPropagation();
-            Store.dispatch({activeTabIndex: Store.getState().activeIndex}, [() => {
-                const state = Store.getState();
-                blurTab(state, previousActiveIndex);
-                activateTab(state, state.activeTabIndex);
-                state.panels[state.activeIndex].focus();
-            }]);
+            }, [() => onDirectionChangeFunction(Store, previousIndex)]);
             break;
         case KEYCODES.RIGHT:
-            Store.dispatch({ 
+            Store.dispatch({
                 activeTabIndex: getNextTabIndex(Store.getState()) ,
                 activeIndex: (isManualActivation) ? Store.getState().activeIndex : getNextTabIndex(Store.getState())
-            }, [() => onDirectionChangeFunction(Store)(previousActiveIndex)]);
+            }, [() => onDirectionChangeFunction(Store, previousIndex)]);
             break;
         case KEYCODES.ENTER:
-            Store.dispatch({ activeIndex: nextIndex, activeTabIndex: nextIndex }, [() => changePanel(Store)(previousActiveIndex)]);
+            (previousIndex !== nextIndex) && Store.dispatch({ activeIndex: nextIndex, activeTabIndex: nextIndex }, [() => changePanel(Store, previousIndex)]);
             break;
         case KEYCODES.SPACE:
             e.preventDefault();
-            Store.dispatch({ activeIndex: nextIndex, activeTabIndex: nextIndex }, [() => changePanel(Store)(previousActiveIndex)]);
+            (previousIndex !== nextIndex) && Store.dispatch({ activeIndex: nextIndex, activeTabIndex: nextIndex }, [() => changePanel(Store, previousIndex)]);
             break;
         default:
             break;
@@ -86,35 +76,27 @@ const initListeners = (tab, nextIndex, Store) => {
     tab.addEventListener('click', e => {
         e.preventDefault();
         const previousActiveIndex = Store.getState().activeTabIndex;
-        Store.getState().activeIndex !== nextIndex && Store.dispatch({ 
+        Store.getState().activeIndex !== nextIndex && Store.dispatch({
             activeIndex: nextIndex,
             activeTabIndex: nextIndex
-        }, [() => changePanel(Store)(previousActiveIndex)]);
+        }, [() => changePanel(Store, previousActiveIndex)]);
     }, false);
 };
 
-const changePanel = (Store) => (previousActiveIndex) => {
-    const { activeIndex, updateURL, tabs } = Store.getState();
-    close(Store.getState(), previousActiveIndex, previousActiveIndex);
+const changePanel = (Store, previousActiveIndex) => {
+    const { activeIndex, settings, tabs } = Store.getState();
+    close(Store.getState(), previousActiveIndex);
     open(Store)(Store.getState());
-    (updateURL && window.history) && window.history.replaceState({ URL: tabs[activeIndex].getAttribute('href') }, '', tabs[activeIndex].getAttribute('href'));
+    focusTab(Store);
+    if (settings.updateURL && window.history) {
+        window.history.replaceState({ URL: tabs[activeIndex].getAttribute('href') }, '', tabs[activeIndex].getAttribute('href'));
+    }
 };
 
-const changeTab = Store => (previousActiveTabIndex) => {
-    const state = Store.getState();
-    blurTab(state, previousActiveTabIndex);
-    activateTab(state);
-    focusTab(state);
-}
-
-const blurTab = ({ settings, tabs }, previousActiveTabIndex) => {
-    tabs[previousActiveTabIndex].classList.remove(settings.activeClass);
-    tabs[previousActiveTabIndex].setAttribute('tabindex', '-1');
-};
-
-const close = ({ settings, tabs, panels }, previousActiveIndex, previousActiveTabIndex) => {
-    blurTab({settings, tabs}, previousActiveTabIndex);
-    tabs[previousActiveTabIndex].setAttribute('aria-selected', false);
+const close = ({ settings, tabs, panels }, previousActiveIndex) => {
+    tabs[previousActiveIndex].classList.remove(settings.activeClass);
+    tabs[previousActiveIndex].setAttribute('tabindex', '-1');
+    tabs[previousActiveIndex].setAttribute('aria-selected', false);
     panels[previousActiveIndex].classList.remove(settings.activeClass);
     panels[previousActiveIndex].setAttribute('hidden', 'hidden');
     panels[previousActiveIndex].setAttribute('tabindex', '-1');
@@ -123,22 +105,23 @@ const close = ({ settings, tabs, panels }, previousActiveIndex, previousActiveTa
 const activateTab = ({ settings, tabs, activeTabIndex }) => {
     tabs[activeTabIndex].classList.add(settings.activeClass);
     tabs[activeTabIndex].setAttribute('tabindex', 0);
-}
+};
 
-const focusTab = ({ tabs, activeTabIndex }) => {
-    window.setTimeout(() => { tabs[activeTabIndex].focus(); }, 16);
+const focusTab = Store => {
+    const { tabs, activeTabIndex } = Store.getState();
+    window.setTimeout(() => { tabs[activeTabIndex].focus(); }, 0);
 };
 
 export const open = Store => () => {
     const { settings, tabs, panels, activeIndex, activeTabIndex, loaded } = Store.getState();
-    activateTab({settings, tabs, activeTabIndex});
-    if(settings.focusOnLoad && !loaded) focusTab({tabs, activeTabIndex});
+    activateTab({ settings, tabs, activeTabIndex });
+    if (settings.focusOnLoad && !loaded) focusTab(Store);
     tabs[activeTabIndex].setAttribute('aria-selected', true);
     panels[activeIndex].classList.add(settings.activeClass);
     panels[activeIndex].removeAttribute('hidden');
     panels[activeIndex].setAttribute('tabindex', 0);
 
-    Store.dispatch({loaded: true}, []);
+    Store.dispatch({ loaded: true }, []);
 };
 
 

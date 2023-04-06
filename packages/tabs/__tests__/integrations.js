@@ -108,16 +108,12 @@ describe(`Tabs > Accessibility > keyboard events manual `, () => {
 
     it('should add keyboard event listener for the left and right keys to each tab', () => {
         const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
-        const left = new window.KeyboardEvent('keydown', { keyCode: 37, bubbles: true });
 
         TabSet[0].getState().tabs[0].dispatchEvent(right);
+        //should not change the active tab (just move focus)
         expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('false');
         expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
         expect(TabSet[0].getState().tabs[1].classList.contains('is--active'));
-        TabSet[0].getState().tabs[1].dispatchEvent(left);
-        expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('false');
-        expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
-        expect(TabSet[0].getState().tabs[0].classList.contains('is--active'));
     });
     
 });
@@ -139,14 +135,6 @@ describe(`Tabs > Accessibility > keyboard events both `, () => {
 
         TabSet[0].getState().tabs[2].dispatchEvent(enter);
         expect(TabSet[0].getState().tabs[2].getAttribute('aria-selected')).toEqual('true');
-        
-    });
-
-    it('should add keyboard event listener for the down key to each tab', () => {
-        const down = new window.KeyboardEvent('keydown', { keyCode: 40, bubbles: true });
-
-        TabSet[0].getState().tabs[2].dispatchEvent(down);
-        expect(document.activeElement).toEqual(TabSet[0].getState().panels[2]);
         
     });
 

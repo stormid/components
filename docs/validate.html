@@ -204,6 +204,7 @@
 <li><a href="#errors">Errors</a></li>
 <li><a href="#options">Options</a></li>
 <li><a href="#api">API</a></li>
+<li><a href="#plugins">Plugins</a></li>
 </ul>
 <h2 id="usage">Usage</h2>
 <p>Install the package</p>
@@ -273,6 +274,11 @@ const [ validator ] = validate(elements);
 <li><a href="#addgroup">addGroup</a></li>
 <li><a href="#validategroup">validateGroup</a></li>
 <li><a href="#removegroup">removeGroup</a></li>
+</ul>
+</li>
+<li><a href="#plugins">Plugins</a>
+<ul>
+<li><a href="#isvaliddate">isValidDate</a></li>
 </ul>
 </li>
 <li><a href="#tests">Tests</a></li>
@@ -506,6 +512,39 @@ validator.addGroup(fieldsArray);
 
 //remove by passing the name of a group
 validator.removeGroup('new-fields');
+</code></pre>
+<h2 id="plugins">Plugins</h2>
+<p>Plugins are a set of pre-built custom validators that are included in the package but not in the default build. They can be imported and used in <a href="#addmethod">addMethod</a> you would your own custom validation method.</p>
+<h3 id="isvaliddate">isValidDate</h3>
+<p>Validate three separate day/month/year fields (similar to the govuk design system date component) as a single valid date.</p>
+<p>The minimum accepted year value in the isValidDate plugin is 1000. To set a different (more recent) minimum value consider using the <a href="#min">min</a> validator on the year input.</p>
+<p>HTML</p>
+<pre><code>&lt;fieldset&gt;
+    &lt;legend&gt;
+        &lt;span&gt;Date&lt;/span&gt;
+        &lt;span data-valmsg-for=&quot;date&quot; id=&quot;date-error-message&quot;&gt;&lt;/span&gt;
+        &lt;span data-valmsg-for=&quot;dateDay&quot; id=&quot;date-Day-error-message&quot;&gt;&lt;/span&gt;
+        &lt;span data-valmsg-for=&quot;dateMonth&quot; id=&quot;date-Month-error-message&quot;&gt;&lt;/span&gt;
+        &lt;span data-valmsg-for=&quot;dateYear&quot; id=&quot;date-Year-error-message&quot;&gt;&lt;/span&gt;
+    &lt;/legend&gt;
+    &lt;div class=&quot;flex&quot;&gt;
+        &lt;input id=&quot;dateDay&quot; name=&quot;dateDay&quot; inputmode=&quot;numeric&quot; data-val=&quot;true&quot; data-val-required=&quot;Enter a day&quot; aria-required=&quot;true&quot;/&gt;
+        &lt;input id=&quot;dateMonth&quot; name=&quot;dateMonth&quot; inputmode=&quot;numeric&quot; data-val=&quot;true&quot; data-val-required=&quot;Enter a month&quot; aria-required=&quot;true&quot;/&gt;
+        &lt;input id=&quot;dateYear&quot; name=&quot;dateYear&quot; inputmode=&quot;numeric&quot; data-val=&quot;true&quot; data-val-required=&quot;Enter a year&quot; aria-required=&quot;true&quot; /&gt;
+    &lt;/div&gt;
+&lt;/fieldset&gt;
+</code></pre>
+<p>JS</p>
+<pre><code>import validate from '@stormid/validate';
+import { isValidDate } from '@stormid/validate/src/lib/plugins/methods/date';
+
+const [ validator ] = validate('.my-form');
+validator.addMethod(
+  'date', //name of custom validation group
+  isValidDate, // date validation method imported from the library 
+  'Enter a valid date', // error message
+  [ document.getElementById('dateDay'), document.getElementById('dateMonth'), document.getElementById('dateYear') ] //date fields array [day, month, year]
+);
 </code></pre>
 <h2 id="tests">Tests</h2>
 <pre><code>npm t
