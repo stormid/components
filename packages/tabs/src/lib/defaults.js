@@ -17,5 +17,5 @@ export default {
     updateURL: true,
     activation: MODES.AUTO,
     activeIndex: 0,
-    focusOnLoad: true
+    focusOnLoad: false
 };
