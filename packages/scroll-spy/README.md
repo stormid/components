@@ -40,13 +40,13 @@ import scrollSpy from '@stormid/scroll-spy';
 
 Initialise the module via selector string
 ```
-const [ instance ] = scrollSpy('.js-scroll-spy');
+const instance = scrollSpy('.js-scroll-spy');
 ```
 
 Initialise with a DOM element
 ```
 const element = document.querySelector('.js-scroll-spy');
-const [ instance ] = scrollSpy(element);
+const instance = scrollSpy(element);
 ```
 
 Initialise with a Node list
@@ -58,7 +58,7 @@ const [ instance ] = scrollSpy(elements);
 Initialise with an Array of elements
 ```
 const elements = [].slice.call(document.querySelectorAll('.js-scroll-spy'));
-const [ instance ] = scrollSpy(elements);
+const instance = scrollSpy(elements);
 ```
 
 ## Options
