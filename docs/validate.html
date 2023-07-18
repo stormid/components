@@ -279,6 +279,8 @@ const [ validator ] = validate(elements);
 <li><a href="#plugins">Plugins</a>
 <ul>
 <li><a href="#isvaliddate">isValidDate</a></li>
+<li><a href="#isDateInFuture">isDateInFuture</a></li>
+<li><a href="#isDateInPast">isDateInPast</a></li>
 </ul>
 </li>
 <li><a href="#tests">Tests</a></li>
@@ -518,6 +520,10 @@ validator.removeGroup('new-fields');
 <h3 id="isvaliddate">isValidDate</h3>
 <p>Validate three separate day/month/year fields (similar to the govuk design system date component) as a single valid date.</p>
 <p>The minimum accepted year value in the isValidDate plugin is 1000. To set a different (more recent) minimum value consider using the <a href="#min">min</a> validator on the year input.</p>
+<h3 id="isDateInFuture">isDateInFuture</h3>
+<p>Validate three separate day/month/year fields (similar to the govuk design system date component) as a single date in the future.</p>
+<h3 id="isDateInPast">isDateInPast</h3>
+<p>Validate three separate day/month/year fields (similar to the govuk design system date component) as a single date in the past. (Today's date is valid)</p>
 <p>HTML</p>
 <pre><code>&lt;fieldset&gt;
     &lt;legend&gt;
@@ -536,13 +542,27 @@ validator.removeGroup('new-fields');
 </code></pre>
 <p>JS</p>
 <pre><code>import validate from '@stormid/validate';
-import { isValidDate } from '@stormid/validate/src/lib/plugins/methods/date';
+import { isValidDate, isDateInFuture, isDateInPast } from '@stormid/validate/src/lib/plugins/methods/date';
 
 const [ validator ] = validate('.my-form');
 validator.addMethod(
   'date', //name of custom validation group
   isValidDate, // date validation method imported from the library 
   'Enter a valid date', // error message
+  [ document.getElementById('dateDay'), document.getElementById('dateMonth'), document.getElementById('dateYear') ] //date fields array [day, month, year]
+);
+
+validator.addMethod(
+  'date', //name of custom validation group
+  isDateInFuture, // date validation method imported from the library 
+  'Enter a date in the future', // error message
+  [ document.getElementById('dateDay'), document.getElementById('dateMonth'), document.getElementById('dateYear') ] //date fields array [day, month, year]
+);
+
+validator.addMethod(
+  'date', //name of custom validation group
+  isDateInPast, // date validation method imported from the library 
+  'Enter a date in the past', // error message
   [ document.getElementById('dateDay'), document.getElementById('dateMonth'), document.getElementById('dateYear') ] //date fields array [day, month, year]
 );
 </code></pre>
