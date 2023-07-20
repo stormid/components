@@ -4,6 +4,7 @@ import defaults from '../../src/lib/defaults';
 describe(`Cookie banner > DOM > form > not render`, () => {
     document.body.innerHTML = `<div></div>`;
     cookieBanner({
+        tid: 'UA-XXXXX-Y',
         types: {
             test: {
                 title: 'Test title',

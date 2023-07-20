@@ -11,12 +11,12 @@ describe(`Cookie banner > state > init`, () => {
     beforeAll(init);
 
     it('Should return the Store.getState method on initialisation', async () => {
-        const Store = cookieBanner({ types: {} });
+        const Store = cookieBanner({ types: {}, tid: 'UA-XXXXX-Y' });
         expect(Store.getState).not.toBeUndefined();
     });
 
     it('Should return the state Object from Store.getState', async () => {
-        const Store = cookieBanner({ types: {} });
+        const Store = cookieBanner({ types: {}, tid: 'UA-XXXXX-Y' });
 
         expect(Store.getState()).toBeDefined();
         expect(Store.getState().consent).toEqual({});
@@ -43,7 +43,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 ]
             }
         };
-        const Store = cookieBanner({ types });
+        const Store = cookieBanner({ tid: 'UA-XXXXX-Y', types });
 
         expect(Store.getState().settings.types).toEqual(types);
     });
@@ -74,13 +74,16 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 ]
             }
         };
-        const state = { types };
+        const state = { settings: {tid: 'UA-XXXXX-Y', types} };
         const data = { test: 1, test2: 0 };
         expect(updateConsent(state, data)).toEqual({
             consent: {
                 test: 1, test2: 0
             },
-            types
+            settings: {
+                types,
+                tid: 'UA-XXXXX-Y'
+            }
         });
     });
 
@@ -105,7 +108,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 fns: []
             }
         };
-        const state = { settings: { types }, consent: { test: 1, test2: 0 } };
+        const state = { settings: { types, tid: 'UA-XXXXX-Y' }, consent: { test: 1, test2: 0 } };
         const data = {
             test: {
                 executed: true,
@@ -131,6 +134,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
         expect(updateExecuted(state, data)).toEqual({
             consent: { test: 1, test2: 0 },
             settings: {
+                tid: 'UA-XXXXX-Y',
                 types: {
                     test: {
                         executed: true,
@@ -155,7 +159,5 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 }
             }
         });
-    });
-
- 
+    }); 
 });
