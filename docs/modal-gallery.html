@@ -215,7 +215,7 @@
 <p>Initialise the module</p>
 <pre><code>import modalGallery from '@stormid/modal-gallery';
 
-const gallery = modalGallery('.js-modal-gallery');
+const [ gallery ] = modalGallery('.js-modal-gallery');
 </code></pre>
 <p>Example MVP CSS</p>
 <pre><code>.modal-gallery__outer {
@@ -294,7 +294,7 @@ const gallery = modalGallery('.js-modal-gallery');
 <p>To create from a JavaScript Object</p>
 <pre><code>import modalGallery from '@stormid/modal-gallery';
 
-const gallery = modalGallery([
+const [ gallery ] = modalGallery([
     {
         src: '//placehold.it/500x500',
         srcset:'//placehold.it/800x800 800w, //placehold.it/500x500 320w',
@@ -310,7 +310,7 @@ const gallery = modalGallery([
 ]);
 
 //e.g. Open the gallery at the second item (index 1) by clicking on a button with the className 'js-modal-gallery__trigger'
-if( gallery ) document.querySelector('.js-modal-gallery__trigger').addEventListener('click', () =&gt; gallery.open(1));
+document.querySelector('.js-modal-gallery__trigger').addEventListener('click', () =&gt; gallery.open(1));
 </code></pre>
 <h2 id="options">Options</h2>
 <pre><code>{
