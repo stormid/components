@@ -1,5 +1,5 @@
 import validate from '../../../src';
-import { isValidDate, isDateInFuture, isDateInPast } from '../../../src/lib/plugins/methods/date';
+import { isValidDate, isFuture, isPast } from '../../../src/lib/plugins/methods/date';
 
 {
     const [ validator ] = validate('form');
@@ -13,7 +13,7 @@ import { isValidDate, isDateInFuture, isDateInPast } from '../../../src/lib/plug
 
     validator.addMethod(
         'date', //name of custom validation group
-        isDateInFuture, // date validation method imported from the library 
+        isFuture, // date validation method imported from the library 
         'Enter a valid date in the future', // error message
         [ document.getElementById('dateDay'), document.getElementById('dateMonth'), document.getElementById('dateYear') ] //date fields array [day, month, year]
     );

@@ -1,5 +1,5 @@
 import validate from '../../../src';
-import { isValidDate, isDateInFuture, isDateInPast } from '../../../src/lib/plugins/methods/date';
+import { isValidDate, isFuture, isPast } from '../../../src/lib/plugins/methods/date';
 
 describe('Validate > Integration > Plugins > Valid Date', () => {
 
@@ -246,7 +246,7 @@ describe('Validate > Integration > Plugins > Date in future', () => {
         });
         const dateFields = [ dayInput, monthInput, yearInput ];
         const message = 'Enter a date in the future';
-        validator.addMethod('date', isDateInFuture, message, dateFields);
+        validator.addMethod('date', isFuture, message, dateFields);
 
         expect(validator.getState().groups).toEqual({
             dateDay: {
@@ -269,7 +269,7 @@ describe('Validate > Integration > Plugins > Date in future', () => {
             },
             date: {
                 serverErrorNode: dateErrorNode,
-                validators: [{ type: 'custom', method: isDateInFuture, message }],
+                validators: [{ type: 'custom', method: isFuture, message }],
                 fields: dateFields,
                 valid: false
             }
@@ -302,7 +302,7 @@ describe('Validate > Integration > Plugins > Date in future', () => {
 
         const dateFields = [ dayInput, monthInput, yearInput ];
         const message = 'Enter a date in the future';
-        validator.addMethod('date', isDateInFuture, message, dateFields);
+        validator.addMethod('date', isFuture, message, dateFields);
 
         const validityState = await validator.validate();
         expect(validityState).toEqual(false);
@@ -336,7 +336,7 @@ describe('Validate > Integration > Plugins > Date in future', () => {
 
         const dateFields = [ dayInput, monthInput, yearInput ];
         const message = 'Enter a date in the future';
-        validator.addMethod('date', isDateInFuture, message, dateFields);
+        validator.addMethod('date', isFuture, message, dateFields);
         const validityState = await validator.validate();
         expect(validityState).toEqual(true);
     });
@@ -370,7 +370,7 @@ describe('Validate > Integration > Plugins > Date in future', () => {
 
         const dateFields = [ dayInput, monthInput, yearInput ];
         const message = 'Enter a date in the future';
-        validator.addMethod('date', isDateInFuture, message, dateFields);
+        validator.addMethod('date', isFuture, message, dateFields);
         const validityState = await validator.validate();
         expect(validityState).toEqual(false);
     });
@@ -429,7 +429,7 @@ describe('Validate > Integration > Plugins > Date in Past', () => {
         });
         const dateFields = [ dayInput, monthInput, yearInput ];
         const message = 'Enter a date in the past';
-        validator.addMethod('date', isDateInPast, message, dateFields);
+        validator.addMethod('date', isPast, message, dateFields);
 
         expect(validator.getState().groups).toEqual({
             dateDay: {
@@ -452,7 +452,7 @@ describe('Validate > Integration > Plugins > Date in Past', () => {
             },
             date: {
                 serverErrorNode: dateErrorNode,
-                validators: [{ type: 'custom', method: isDateInPast, message }],
+                validators: [{ type: 'custom', method: isPast, message }],
                 fields: dateFields,
                 valid: false
             }
@@ -486,7 +486,7 @@ describe('Validate > Integration > Plugins > Date in Past', () => {
 
         const dateFields = [ dayInput, monthInput, yearInput ];
         const message = 'Enter a date in the past';
-        validator.addMethod('date', isDateInPast, message, dateFields);
+        validator.addMethod('date', isPast, message, dateFields);
 
         const validityState = await validator.validate();
         expect(validityState).toEqual(false);
@@ -518,7 +518,7 @@ describe('Validate > Integration > Plugins > Date in Past', () => {
 
         const dateFields = [ dayInput, monthInput, yearInput ];
         const message = 'Enter a date in the past';
-        validator.addMethod('date', isDateInPast, message, dateFields);
+        validator.addMethod('date', isPast, message, dateFields);
         const validityState = await validator.validate();
         expect(validityState).toEqual(true);
     });
@@ -552,7 +552,7 @@ describe('Validate > Integration > Plugins > Date in Past', () => {
 
         const dateFields = [ dayInput, monthInput, yearInput ];
         const message = 'Enter a date in the past';
-        validator.addMethod('date', isDateInPast, message, dateFields);
+        validator.addMethod('date', isPast, message, dateFields);
         const validityState = await validator.validate();
         expect(validityState).toEqual(true);
     });
