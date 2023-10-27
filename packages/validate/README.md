@@ -87,6 +87,8 @@ Multiple validators can be used on a single field. Custom validators can be adde
     - [removeGroup](#removegroup)
   - [Plugins](#plugins)
     - [isValidDate](#isvaliddate)
+    - [isFuture](#isfuture)
+    - [isPast](#ispast)
   - [Tests](#tests)
   - [License](#license)
 
@@ -431,6 +433,12 @@ Plugins are a set of pre-built custom validators that are included in the packag
 Validate three separate day/month/year fields (similar to the govuk design system date component) as a single valid date.
 
 The minimum accepted year value in the isValidDate plugin is 1000. To set a different (more recent) minimum value consider using the [min](#min) validator on the year input. 
+
+### isFuture
+Validate three separate day/month/year fields (similar to the govuk design system date component) as a single date in the future.
+
+### isPast
+Validate three separate day/month/year fields (similar to the govuk design system date component) as a single date in the past- today's date is valid.
 
 HTML
 ```

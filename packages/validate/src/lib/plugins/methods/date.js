@@ -27,3 +27,17 @@ export const isValidDate = (value, fields) => {
 
     return true;
 };
+
+//A function to make sure dates are in the future
+export const isFuture = (value, fields) => {
+    const inputDate = new Date(fields[2].value, fields[1].value - 1, fields[0].value).getTime();
+    const currentDate = new Date().getTime();
+    return inputDate > currentDate;
+};
+
+//A function to make sure dates are in the past
+export const isPast = (value, fields) => {
+    const inputDate = new Date(fields[2].value, fields[1].value - 1, fields[0].value).getTime();
+    const currentDate = new Date().getTime();
+    return inputDate < currentDate;
+};
