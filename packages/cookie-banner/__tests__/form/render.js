@@ -7,6 +7,7 @@ describe(`Cookie banner > DOM > form > render`, () => {
         cookieBanner({
             secure: false,
             hideBannerOnFormPage: false,
+            tid: 'UA-XXXXX-Y',
             types: {
                 test: {
                     suggested: true,

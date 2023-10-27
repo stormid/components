@@ -1,4 +1,4 @@
-import cookieBanner from '../../../dist';
+import cookieBanner from '../../../src/index';
 
 const writeCookie = state => {
     document.cookie = [
