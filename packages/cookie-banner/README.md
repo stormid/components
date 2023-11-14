@@ -99,7 +99,9 @@ const cookieBanner = banner({
         formMessage: 'privacy-banner__form-msg',
         formAnnouncement: 'privacy-banner__form-announcement', //screen reader announcement
         title: 'privacy-banner__form-title',
-        description: 'privacy-banner__form-description'
+        description: 'privacy-banner__form-description',
+        bannerToggle: 'on--privacy-banner-toggle', //the class that's applied to the body tag when an inner toggles is open (if used)
+        bannerToggleTrigger: 'js-toggle-btn' //the class of the button which opens the inner toggle (if used)
     },
     hideBannerOnFormPage: false, //don't show the banner when the user is on the same page as a consent form
     savedMessage: 'Your settings have been saved.', //displayed after consent form update,
