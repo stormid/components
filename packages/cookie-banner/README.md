@@ -102,7 +102,9 @@ const cookieBanner = banner({
         description: 'privacy-banner__form-description'
     },
     hideBannerOnFormPage: false, //don't show the banner when the user is on the same page as a consent form
-    savedMessage: 'Your settings have been saved.', //displayed after consent form update 
+    savedMessage: 'Your settings have been saved.', //displayed after consent form update,
+    trapTab: false, //trap the user's keyboard tab within the banner when open
+    usesToggle: false, //some banner designs may use a javascript toggle to display options inside the banner.  Set this to true if in use to allow tab trapping to move inside the toggle.
     bannerTemplate(model){
         return `<section role="dialog" aria-live="polite" aria-label="Your privacy" class="${model.classNames.banner}">
             <div class="privacy-content">

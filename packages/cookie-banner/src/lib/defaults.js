@@ -24,9 +24,13 @@ export default {
         formMessage: 'privacy-banner__form-msg',
         formAnnouncement: 'privacy-banner__form-announcement',
         title: 'privacy-banner__form-title',
-        description: 'privacy-banner__form-description'
+        description: 'privacy-banner__form-description',
+        bannerToggle: 'on--privacy-banner-toggle',
+        bannerToggleTrigger: 'js-toggle-btn'
     },
     hideBannerOnFormPage: true,
+    trapTab: false,
+    usesToggle: false,
     savedMessage: 'Your settings have been saved.',
     bannerTemplate(model){
         return `<section role="dialog" aria-live="polite" aria-label="Your privacy" class="${model.classNames.banner}">

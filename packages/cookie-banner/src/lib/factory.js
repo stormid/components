@@ -1,5 +1,5 @@
-import { cookiesEnabled, extractFromCookie, noop, renderIframe, gtmSnippet } from './utils';
-import { showBanner, initBanner, initForm, initBannerListeners } from './ui';
+import { cookiesEnabled, extractFromCookie, noop, renderIframe, gtmSnippet} from './utils';
+import { showBanner, initBanner, initForm, initBannerListeners, keyListener } from './ui';
 import { necessary, apply } from './consent';
 import { createStore } from './store';
 import { initialState } from './reducers';
@@ -22,6 +22,7 @@ export default settings => {
         {
             settings,
             bannerOpen: false,
+            keyListener: keyListener(Store),
             persistentMeasurementParams: settings.tid ? composeParams(cid, settings.tid) : false,
             consent,
             utils: { renderIframe, gtmSnippet }
