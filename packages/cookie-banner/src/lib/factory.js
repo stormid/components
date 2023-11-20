@@ -1,4 +1,4 @@
-import { cookiesEnabled, extractFromCookie, noop, renderIframe, gtmSnippet} from './utils';
+import { cookiesEnabled, extractFromCookie, noop, renderIframe, gtmSnippet } from './utils';
 import { showBanner, initBanner, initForm, initBannerListeners, keyListener } from './ui';
 import { necessary, apply } from './consent';
 import { createStore } from './store';

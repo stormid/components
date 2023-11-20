@@ -30,7 +30,6 @@ export default {
     },
     hideBannerOnFormPage: true,
     trapTab: false,
-    usesToggle: false,
     savedMessage: 'Your settings have been saved.',
     bannerTemplate(model){
         return `<section role="dialog" aria-live="polite" aria-label="Your privacy" class="${model.classNames.banner}">

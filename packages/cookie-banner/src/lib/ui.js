@@ -35,7 +35,7 @@ export const initBannerListeners = Store => () => {
     const acceptBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
     const optionsBtn = document.querySelector(composeSelector(state.settings.classNames.optionsBtn));
 
-    if(state.settings.trapTab) document.addEventListener('keydown', state.keyListener);
+    if (state.settings.trapTab) document.addEventListener('keydown', state.keyListener);
 
     acceptBtns.forEach(acceptBtn => {
         if (acceptBtns) {
@@ -86,7 +86,7 @@ const trapTab = state => event => {
     if (event.shiftKey && focusedIndex === 0) {
         event.preventDefault();
         focusableChildren[focusableChildren.length - 1].focus();
-    } else if ((!event.shiftKey && focusedIndex === focusableChildren.length - 1) || (state.settings.usesToggle && (!document.body.classList.contains(state.settings.classNames.bannerToggle) && (document.activeElement.classList.contains(state.settings.classNames.bannerToggleTrigger))))) {
+    } else if (!event.shiftKey && focusedIndex === focusableChildren.length - 1) {
         event.preventDefault();
         focusableChildren[0].focus();
     }
@@ -96,15 +96,14 @@ export const keyListener = Store => event => {
     if (Store.getState().banner && event.keyCode === 9) trapTab(Store.getState())(event);
 };
 
-const removeBanner = (Store) => () => {
+const removeBanner = Store => () => {
     const state = Store.getState();
     const banner = state.banner;
     if (banner && banner.parentNode) {
         banner.parentNode.removeChild(banner);
         Store.update(updateBannerOpen, false, [ broadcast(EVENTS.HIDE, Store) ]);
     }
-    form.removeEventListener('change', enableButton);
-    if(state.settings.trapTab) document.removeEventListener('keydown', state.keyListener);
+    if (state.settings.trapTab) document.removeEventListener('keydown', state.keyListener);
 };
 
 const suggestedConsent = state => Object.keys(state.consent).length > 0
@@ -128,7 +127,6 @@ export const initForm = (Store, track = true) => () => {
     if (state.settings.tid && track) measure(state, MEASUREMENTS.FORM_DISPLAY);
 
     const form = document.querySelector(`.${state.settings.classNames.form}`);
-    const banner = state.banner;
     const button = document.querySelector(`.${state.settings.classNames.submitBtn}`);
     const groups = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.field}`)).reduce((groups, field) => {
         const groupName = field.getAttribute('name').replace('privacy-', '');
