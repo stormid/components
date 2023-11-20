@@ -81,11 +81,21 @@
             clip: rect(0 0 0 0);
             border: 0;
         }
+        .privacy-banner__panel {
+            display:none;
+        }
+        .on--preferences .privacy-banner__panel {
+            display:block;
+        }
+        .on--preferences .privacy-banner__summary,
+        .on--preferences .privacy-banner__actions {
+            display: none;
+        }
     </style>
   </head>
   <body>
         <div class="embed"><div class="embed__placeholder" data-iframe-src="https://www.youtube.com/embed/qpLKTUQev30" data-iframe-title="test video"><p>Update your cookie preferences to view this content.</p><button type="button" class="embed__placeholder-btn js-preferences-update">Update preferences</button></div></div>
-      <button class="js-open-banner">Open banner</button>
+      <button class="js-preferences-update">Open banner</button>
         <div class="container">
             <div class="privacy-banner__update"></div>
             <div class="">

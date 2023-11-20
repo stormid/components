@@ -1,7 +1,7 @@
 import { writeCookie, groupValueReducer, deleteCookies, getFocusableChildren, broadcast } from './utils';
 import { ACCEPTED_TRIGGERS, MEASUREMENTS, EVENTS } from './constants';
 import { apply } from './consent';
-import { updateConsent, updateBannerOpen } from './reducers';
+import { updateConsent, updateBannerOpen, updateBanner } from './reducers';
 import { measure, composeMeasurementConsent } from './measurement';
 
 export const initBanner = Store => () => {
@@ -11,6 +11,7 @@ export const initBanner = Store => () => {
     //track banner display
     if (state.settings.tid) measure(state, MEASUREMENTS.BANNER_DISPLAY);
     
+    Store.update(updateBanner, document.querySelector(`.${state.settings.classNames.banner}`));
     Store.update(updateBannerOpen, true, [ broadcast(EVENTS.SHOW, Store) ]);
 };
 
@@ -26,13 +27,15 @@ export const showBanner = Store => cb => {
 
 export const initBannerListeners = Store => () => {
     const state = Store.getState();
-    const banner = document.querySelector(`.${state.settings.classNames.banner}`);
+    const banner = state.banner;
     if (!banner) return;
 
     const composeSelector = classSelector => ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(', ');
 
     const acceptBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
     const optionsBtn = document.querySelector(composeSelector(state.settings.classNames.optionsBtn));
+
+    if (state.settings.trapTab) document.addEventListener('keydown', state.keyListener);
 
     acceptBtns.forEach(acceptBtn => {
         if (acceptBtns) {
@@ -46,7 +49,7 @@ export const initBannerListeners = Store => () => {
                     [
                         writeCookie,
                         apply(Store),
-                        removeBanner(Store, banner),
+                        removeBanner(Store),
                         initForm(Store, false),
                         broadcast(EVENTS.CONSENT, Store),
                         //track banner accept click
@@ -75,11 +78,32 @@ export const initBannerListeners = Store => () => {
     }
 };
 
-const removeBanner = (Store, banner) => () => {
+
+const trapTab = state => event => {
+    const focusableChildren = getFocusableChildren(state.banner);
+    const focusedIndex = focusableChildren.indexOf(document.activeElement);
+
+    if (event.shiftKey && focusedIndex === 0) {
+        event.preventDefault();
+        focusableChildren[focusableChildren.length - 1].focus();
+    } else if (!event.shiftKey && focusedIndex === focusableChildren.length - 1) {
+        event.preventDefault();
+        focusableChildren[0].focus();
+    }
+};
+
+export const keyListener = Store => event => {
+    if (Store.getState().banner && event.keyCode === 9) trapTab(Store.getState())(event);
+};
+
+const removeBanner = Store => () => {
+    const state = Store.getState();
+    const banner = state.banner;
     if (banner && banner.parentNode) {
         banner.parentNode.removeChild(banner);
         Store.update(updateBannerOpen, false, [ broadcast(EVENTS.HIDE, Store) ]);
     }
+    if (state.settings.trapTab) document.removeEventListener('keydown', state.keyListener);
 };
 
 const suggestedConsent = state => Object.keys(state.consent).length > 0
@@ -103,7 +127,6 @@ export const initForm = (Store, track = true) => () => {
     if (state.settings.tid && track) measure(state, MEASUREMENTS.FORM_DISPLAY);
 
     const form = document.querySelector(`.${state.settings.classNames.form}`);
-    const banner = document.querySelector(`.${state.settings.classNames.banner}`);
     const button = document.querySelector(`.${state.settings.classNames.submitBtn}`);
     const groups = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.field}`)).reduce((groups, field) => {
         const groupName = field.getAttribute('name').replace('privacy-', '');
@@ -137,7 +160,7 @@ export const initForm = (Store, track = true) => () => {
                 deleteCookies,
                 writeCookie,
                 apply(Store),
-                removeBanner(Store, banner),
+                removeBanner(Store),
                 broadcast(EVENTS.CONSENT, Store),
                 renderMessage(button),
                 renderAnnouncement(formAnnouncement),
