@@ -86,7 +86,8 @@ const config = {
                             <p class="privacy-banner__summary">Find out more from our <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="/privacy">privacy policy</a> and <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="${model.policyURL}">cookie policy</a>.</p>
                         </div>
                         <div class="privacy-banner__actions">
-                            <button type="button" class="privacy-banner__btn ${model.classNames.acceptBtn}">Accept and close</button>
+                            <button type="button" class="privacy-banner__btn ${model.classNames.acceptBtn}">Accept all</button>
+                            <button type="button" class="privacy-banner__btn ${model.classNames.rejectBtn}">Reject all</button>
                             <button type="button" class="privacy-banner__link js-toggle__preferences ${model.classNames.optionsBtn}">Your options</button>
                         </div>
                         <div id="preferences" class="privacy-banner__panel js-toggle-banner" data-toggle="js-toggle__preferences">
