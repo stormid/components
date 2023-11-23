@@ -14,6 +14,7 @@ export default {
     classNames: {
         banner: 'privacy-banner',
         acceptBtn: 'privacy-banner__accept',
+        rejectBtn: 'privacy-banner__reject',
         submitBtn: 'privacy-banner__submit',
         optionsBtn: 'privacy-banner__options',
         field: 'privacy-banner__field',
@@ -39,7 +40,8 @@ export default {
                     <div class="privacy-banner__title">Cookies</div>
                     <p>We use cookies to improve your experience on our site and show you personalised advertising.</p>
                     <p>Find out more from our <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="/privacy-policy">privacy policy</a> and <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="${model.policyURL}">cookie policy</a>.</p>
-                    <button type="button" class="btn btn--primary ${model.classNames.acceptBtn}">Accept and close</button>
+                    <button type="button" class="btn btn--primary ${model.classNames.acceptBtn}">Accept all</button>
+                    <button type="button" class="btn btn--primary ${model.classNames.rejectBtn}">Reject all</button>
                     <a class="privacy-banner__link ${model.classNames.optionsBtn}" rel="noopener noreferrer nofollow" href="${model.policyURL}">Your options</a>
                     <!--googleon: all-->
                 </div>

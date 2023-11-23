@@ -33,40 +33,64 @@ export const initBannerListeners = Store => () => {
     const composeSelector = classSelector => ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(', ');
 
     const acceptBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
+    const rejectBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.rejectBtn)));
     const optionsBtn = document.querySelector(composeSelector(state.settings.classNames.optionsBtn));
 
     if (state.settings.trapTab) document.addEventListener('keydown', state.keyListener);
 
     acceptBtns.forEach(acceptBtn => {
-        if (acceptBtns) {
-            acceptBtn.addEventListener('click', e => {
-                Store.update(
-                    updateConsent,
-                    Object.keys(state.settings.types).reduce((acc, type) => {
-                        acc[type] = 1;
-                        return acc;
-                    }, {}),
-                    [
-                        writeCookie,
-                        apply(Store),
-                        removeBanner(Store),
-                        initForm(Store, false),
-                        broadcast(EVENTS.CONSENT, Store),
-                        //track banner accept click
-                        state => {
-                            if (state.settings.tid) {
-                                measure(state, {
-                                    ...MEASUREMENTS.BANNER_ACCEPT,
-                                    cd2: composeMeasurementConsent(Store.getState().consent)
-                                });
-                            }
+        acceptBtn.addEventListener('click', e => {
+            Store.update(
+                updateConsent,
+                Object.keys(state.settings.types).reduce((acc, type) => {
+                    acc[type] = 1;
+                    return acc;
+                }, {}),
+                [
+                    writeCookie,
+                    apply(Store),
+                    removeBanner(Store),
+                    initForm(Store, false),
+                    broadcast(EVENTS.CONSENT, Store),
+                    //track banner accept click
+                    state => {
+                        if (state.settings.tid) {
+                            measure(state, {
+                                ...MEASUREMENTS.BANNER_ACCEPT,
+                                cd2: composeMeasurementConsent(Store.getState().consent)
+                            });
                         }
-                    ]
-                );
-            });
-        } else {
-            console.warn('Banner accept element must be a Button or Anchor.  No trigger event added.');
-        }
+                    }
+                ]
+            );
+        });
+    });
+
+    rejectBtns.forEach(rejectBtn => {
+        rejectBtn.addEventListener('click', e => {
+            Store.update(
+                updateConsent,
+                Object.keys(state.settings.types).reduce((acc, type) => {
+                    acc[type] = 0;
+                    return acc;
+                }, {}),
+                [
+                    writeCookie,
+                    apply(Store),
+                    removeBanner(Store),
+                    initForm(Store, false),
+                    broadcast(EVENTS.CONSENT, Store),
+                    state => {
+                        if (state.settings.tid) {
+                            measure(state, {
+                                ...MEASUREMENTS.SAVE_PREFERENCES,
+                                cd2: composeMeasurementConsent(Store.getState().consent)
+                            });
+                        }
+                    }
+                ]
+            );
+        });
     });
 
     //track options click
