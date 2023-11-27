@@ -76,7 +76,6 @@ export const initBannerListeners = Store => () => {
                 }, {}),
                 [
                     writeCookie,
-                    apply(Store),
                     removeBanner(Store),
                     initForm(Store, false),
                     broadcast(EVENTS.CONSENT, Store),
