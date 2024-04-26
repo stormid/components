@@ -81,4 +81,33 @@ describe('Validate > Integration > validator > email', () => {
         expect(await validate(group, group.validators[0])).toEqual(true);
     });
 
+    it('should return the validityState true for emails names containing accents and diacritic marks', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<input
+            id="group1"
+            name="group1"
+            data-val="true"
+            data-val-email="Email error message"
+            value="Žöé.Štévè@example.com"
+			type="email">`;
+        const input = document.querySelector('#group1');
+        const group = assembleValidationGroup({}, input).group1;
+        expect(await validate(group, group.validators[0])).toEqual(true);
+    });
+
+    it('should return the validityState false for emails containing accents and diacritic marks in the domain name', async () => {
+        expect.assertions(1);
+        document.body.innerHTML = `<input
+            id="group1"
+            name="group1"
+            data-val="true"
+            data-val-email="Email error message"
+            value="test@exämple.com"
+			type="email">`;
+        const input = document.querySelector('#group1');
+        const group = assembleValidationGroup({}, input).group1;
+        expect(await validate(group, group.validators[0])).toEqual(false);
+    });
+
+
 });
