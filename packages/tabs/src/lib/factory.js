@@ -1,6 +1,6 @@
 import { createStore } from './store';
 import { findTabsAndPanels, initUI, open } from './dom';
-import { getActiveIndexByHash } from './utils';
+import { getActiveIndexOnLoad } from './utils';
 
 /* 
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
@@ -11,7 +11,7 @@ import { getActiveIndexByHash } from './utils';
 export default ({ node, settings }) => {
     const Store = createStore();
     const { tabs, panels } = findTabsAndPanels(node, settings);
-    const activeIndex = getActiveIndexByHash(panels);
+    const activeIndex = getActiveIndexOnLoad(panels, settings);
     Store.dispatch({
         settings,
         node,
