@@ -11,11 +11,11 @@ import { getActiveIndexOnLoad } from './utils';
 export default ({ node, settings }) => {
     const Store = createStore();
     const { tabs, panels } = findTabsAndPanels(node, settings);
-    const activeIndex = getActiveIndexOnLoad(panels, settings);
+    const activeIndex = getActiveIndexOnLoad(panels, node);
     Store.dispatch({
         settings,
         node,
-        activeIndex: activeIndex !== undefined ? +activeIndex : +settings.activeIndex,
+        activeIndex: activeIndex !== undefined  ? +activeIndex : +settings.activeIndex,
         activeTabIndex: activeIndex !== undefined ? +activeIndex : +settings.activeIndex,
         tabs,
         panels,

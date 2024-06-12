@@ -8,19 +8,8 @@ export const getActiveIndexByHash = panels => {
     }, undefined);
 };
 
-export const getActiveIndexByClass = (panels, settings) => {
-    let activeIndex;
-    for(let i = 0; i <= panels.length-1; i++) {
-        if (panels[i].classList.contains(settings.activeClass)) {
-            activeIndex = i;
-            break;
-        }
-    }
-    return activeIndex;    
-};
-
-export const getActiveIndexOnLoad = (panels, settings) => {
-    return (location.hash) ? getActiveIndexByHash(panels) : getActiveIndexByClass(panels, settings);
+export const getActiveIndexOnLoad = (panels, node) => {
+     return (location.hash) ? getActiveIndexByHash(panels) : (node.getAttribute("data-active-index")) ? parseInt(node.getAttribute("data-active-index")) : undefined;
 };
 
 /*
