@@ -64,6 +64,14 @@ const [ instance ] = tabs(elements);
 }
 ```
 
+## Setting the active tab
+```
+On page load the active tab will be set by (in order of precedence):
+1. The page hash.  If the page hash in the address bar matches the ID of a panel, it will be activated on page load
+2. The data-active-index attribute.  If the tabs node found to have a <pre>data-active-index</pre> attribute, that tab will be activated on page load.  This is a zero-based index.   
+3. The tab specified by the activeIndex in the settings. This is a zero-based index.
+4. The first tab in the set.
+
 ## API
 
 tabs() returns an array of instances. Each instance exposes the interface
