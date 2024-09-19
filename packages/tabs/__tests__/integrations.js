@@ -49,8 +49,9 @@ const init = (mode) => {
 describe(`Tabs > Initialisation`, () => {
     
     beforeAll(() => {init()});
+    console.log(TabSet)
 
-    it('should return array of length 1', async () => {
+    it('should return array of length 2', async () => {
         expect(TabSet.length).toEqual(2);
     });
 
@@ -66,6 +67,26 @@ describe(`Tabs > Initialisation`, () => {
     });
 
 });
+
+describe(`Tabs > Initialisation no panel markup`, () => {
+    
+    beforeAll(() => {
+        document.body.innerHTML = `
+            <div role="tablist">
+                <nav class="tabs__nav">
+                    <a id="tab-4" class="tabs__nav-link js-tabs__link" href="#panel-4" role="tab">Tab 4</a>
+                </nav>
+            </div>`;
+
+        TabSet = tabs('[role=tablist]');
+    });
+
+    it('should return array of length 0', async () => {
+        expect(TabSet.length).toEqual(0);
+    });
+});
+
+
     
 describe(`Tabs > Accessibility > ARIA`, () => {
 

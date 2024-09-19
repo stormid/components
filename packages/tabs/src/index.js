@@ -19,8 +19,15 @@ export default (selector, options) => {
     //return array of Objects, one for each DOM node found
     //each Object has a prototype consisting of the node (HTMLElement),
     //and a settings property composed from defaults, data-attributes on the node, and options passed to init
-    return nodes.map(node => Object.create(factory({
-        settings: { ...defaults, ...node.dataset, ...options },
-        node
-    })));
+    return nodes.map(node => {
+        const instance = factory({
+            settings: { ...defaults, ...node.dataset, ...options },
+            node
+        });
+        if(instance) {
+            return Object.create(instance);
+        } else {
+            console.warn("Tabset not initialised, required markup not found");
+        }
+    }).filter((instance) => typeof instance !== "undefined");
 };
