@@ -13,7 +13,7 @@ import { KEYCODES, MODES } from './constants';
  */
 export const findTabsAndPanels = (node, settings) => {
     const tabs = [].slice.call(node.querySelectorAll(settings.tabSelector));
-    const panels = tabs.map(tab => document.getElementById(tab.getAttribute('href').substr(1)) || console.warn(`Tab panel for ${tab}`));
+    const panels = tabs.map(tab => document.getElementById(tab.getAttribute('href').substr(1)) || console.warn(`Tab panel not found for ${tab}`));
     return { tabs, panels };
 };
  
