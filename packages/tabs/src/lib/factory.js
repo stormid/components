@@ -11,6 +11,9 @@ import { getActiveIndexOnLoad } from './utils';
 export default ({ node, settings }) => {
     const Store = createStore();
     const { tabs, panels } = findTabsAndPanels(node, settings);
+   
+    if(!tabs.length || !panels.length || panels.includes(undefined)) return false;
+
     const activeIndex = getActiveIndexOnLoad(panels, node);
     Store.dispatch({
         settings,
