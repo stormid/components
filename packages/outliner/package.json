@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "build": "microbundle --name Outliner",
-    "test": "node_modules/.bin/jest --coverage",
+    "test": "jest --coverage",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",
     "prepublish": "npm run -s build"
