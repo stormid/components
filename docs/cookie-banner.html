@@ -217,7 +217,6 @@
 <pre><code>import banner from '@stormid/cookie-banner';
 
 const cookieBanner = banner({
-    tid: 'UA-XXXXXXXX-X',
     types: {
         'performance': {
             suggested: true, //set as pre-checked on consent form as a suggested response
@@ -255,7 +254,6 @@ const cookieBanner = banner({
 <h2 id="options">Options</h2>
 <pre><code>{
     name: '.CookiePreferences', //name of the cookie set to record user consent
-    tid: '', // Google Analytics tracking id for Measurement API event tracking
     path: '/', //path of the preferences cookie
     domain: window.location.hostname === 'localhost' ? '' : `.${removeSubdomain(window.location.hostname)}`, //domain of the preferences cookie, defaults to .&lt;root-domain&gt;
     secure: true, //preferences cookie secure

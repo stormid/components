@@ -8,7 +8,6 @@ const init = () => {
     document.body.innerHTML = `<main></main>`;
     instance = cookieBanner({
         secure: false,
-        tid: 'UA-XXXXX-Y',
         types: {
             test: {
                 title: 'Test title',

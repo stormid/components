@@ -29,7 +29,7 @@ describe(`Cookie banner > consent > callback`, () => {
             }
         };
 
-        const state = { settings: {tid: 'UA-XXXXX-Y', types}, consent: { test: 1, test2: 0 }};
+        const state = { settings: { types }, consent: { test: 1, test2: 0 }};
         applyEffects(state);
         expect(document.getElementById('test').textContent).toEqual("Consent given");
         expect(document.getElementById('test2').textContent).toEqual("");

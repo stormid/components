@@ -80,10 +80,9 @@ describe('Cookie > Utils > groupValueReducer', () => {
 
 describe('Cookie > Utils > extractFromCookie > no cookie', () => {
 
-    it('should return default hasCookie, cid, and content properties if no cookie', () => {
-        const [hasCookie, cid, consent ] = extractFromCookie(defaults);
+    it('should return default hasCookie and content properties if no cookie', () => {
+        const [hasCookie, consent ] = extractFromCookie(defaults);
         expect(hasCookie).toEqual(false);
-        expect(cid).toBeDefined();
         expect(consent).toEqual({});
     });
 
@@ -92,39 +91,36 @@ describe('Cookie > Utils > extractFromCookie > no cookie', () => {
     
 describe('Cookie > Utils > extractFromCookie > malformed JSON cookie', () => {
     
-    it('should return default hasCookie, cid, and content properties if cookie is not JSON and throws when decoding', () => {
+    it('should return default hasCookie and content properties if cookie is not JSON and throws when decoding', () => {
         document.cookie = `${defaults.name}=${btoa(test)}`;
-        const [hasCookie, cid, consent ] = extractFromCookie(defaults);
+        const [hasCookie, consent ] = extractFromCookie(defaults);
         expect(hasCookie).toEqual(false);
-        expect(cid).toBeDefined();
         expect(consent).toEqual({});
     });
     
 });
 
 describe('Cookie > Utils > extractFromCookie > well-formed JSON cookie', () => {
-    it('should return hasCookie, cid, and content properties from well-formed JSON cookie', () => {
-        document.cookie = `${defaults.name}=${btoa(JSON.stringify({ cid: '12345', consent: { performance: 1, thirdParty: 0 } }))}`;
-        const [hasCookie, cid, consent ] = extractFromCookie(defaults);
+    it('should return hasCookie and content properties from well-formed JSON cookie', () => {
+        document.cookie = `${defaults.name}=${btoa(JSON.stringify({ consent: { performance: 1, thirdParty: 0 } }))}`;
+        const [hasCookie, consent ] = extractFromCookie(defaults);
         
         expect(hasCookie).toEqual(true);
-        expect(cid).toEqual('12345');
         expect(consent).toEqual({ performance: 1, thirdParty: 0 });
     });
 });
 
 describe('Cookie > Utils > extractFromCookie > cookie not base64 encoded', () => {
 
-    it('should return default hasCookie, cid, and content properties if cookie is not base64 encoded and throws when decoding', () => {
+    it('should return default hasCookie, and content properties if cookie is not base64 encoded and throws when decoding', () => {
         window.atob = jest.fn();
         window.atob.mockImplementation(() => {
             throw new Error();
         });
         document.cookie = `${defaults.name}="test"`;
-        const [hasCookie, cid, consent ] = extractFromCookie(defaults);
+        const [hasCookie, consent ] = extractFromCookie(defaults);
         expect(window.atob).toHaveBeenCalled();
         expect(hasCookie).toEqual(false);
-        expect(cid).toBeDefined();
         expect(consent).toEqual({});
     });
 
