@@ -163,6 +163,9 @@ export const setGoogleConsent = (Store, pushType = 'update') => () => {
     if (!euConsentTypes) return;
     
     const euConsent = Object.keys(euConsentTypes).reduce((acc, type) => {
+        if (Object.keys(consent).length > 0 && consent[euConsentTypes[type]] === undefined) {
+            console.warn(`Cannot find consent type '${euConsentTypes[type]}' in preferences cookie, check your euConsentTypes configuration matches your cookie types`);
+        }
         acc[type] = (consent[euConsentTypes[type]] && pushType === 'update') ? 'granted' : 'denied';
         return acc;
     }, {});
