@@ -148,3 +148,28 @@ export const gtmSnippet = id => {
         s.async = !0, s.src = 'https://www.googletagmanager.com/gtm.js?id=' + w, r.parentNode.insertBefore(s, r)
     }(window, document, "script", "dataLayer", id);
 };
+
+/* eslint-disable prefer-rest-params */
+function gtag() {
+    window.dataLayer = window.dataLayer || [];
+    //The Google libraries that use the dataLayer do not work if arguments are spread
+    //or data is passed in as an array
+    window.dataLayer.push(arguments);
+}
+
+export const setGoogleConsent = (Store, pushType = 'update') => () => {
+    const { settings, consent } = Store.getState();
+    const { euConsentTypes } = settings;
+    if (!euConsentTypes) return;
+    
+    const euConsent = Object.keys(euConsentTypes).reduce((acc, type) => {
+        if (Object.keys(consent).length > 0 && consent[euConsentTypes[type]] === undefined) {
+            console.warn(`Cannot find consent type '${euConsentTypes[type]}' in preferences cookie, check your euConsentTypes configuration matches your cookie types`);
+        }
+        acc[type] = (consent[euConsentTypes[type]] && pushType === 'update') ? 'granted' : 'denied';
+        return acc;
+    }, {});
+    if (pushType !== 'update') euConsent['wait_for_update'] = 500;
+
+    gtag('consent', pushType, euConsent);
+};

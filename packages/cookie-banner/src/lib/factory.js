@@ -1,4 +1,4 @@
-import { cookiesEnabled, extractFromCookie, noop, renderIframe, gtmSnippet } from './utils';
+import { cookiesEnabled, extractFromCookie, noop, renderIframe, gtmSnippet, setGoogleConsent } from './utils';
 import { showBanner, initBanner, initForm, initBannerListeners, keyListener } from './ui';
 import { necessary, apply } from './consent';
 import { createStore } from './store';
@@ -25,10 +25,12 @@ export default settings => {
         },
         [
             necessary,
+            setGoogleConsent(Store, 'default'),
             apply(Store),
             hasCookie ? noop : initBanner(Store),
             initForm(Store),
-            initBannerListeners(Store)
+            initBannerListeners(Store),
+            hasCookie ? setGoogleConsent(Store) : noop
         ]
     );
 

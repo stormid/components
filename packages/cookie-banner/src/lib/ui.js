@@ -1,4 +1,4 @@
-import { writeCookie, groupValueReducer, deleteCookies, getFocusableChildren, broadcast } from './utils';
+import { writeCookie, groupValueReducer, deleteCookies, getFocusableChildren, broadcast, setGoogleConsent } from './utils';
 import { ACCEPTED_TRIGGERS, EVENTS } from './constants';
 import { apply } from './consent';
 import { updateConsent, updateBannerOpen, updateBanner } from './reducers';
@@ -47,7 +47,8 @@ export const initBannerListeners = Store => () => {
                     apply(Store),
                     removeBanner(Store),
                     initForm(Store, false),
-                    broadcast(EVENTS.CONSENT, Store)
+                    broadcast(EVENTS.CONSENT, Store),
+                    setGoogleConsent(Store),
                 ]
             );
         });
@@ -65,7 +66,8 @@ export const initBannerListeners = Store => () => {
                     writeCookie,
                     removeBanner(Store),
                     initForm(Store, false),
-                    broadcast(EVENTS.CONSENT, Store)
+                    broadcast(EVENTS.CONSENT, Store),
+                    setGoogleConsent(Store),
                 ]
             );
         });
@@ -153,7 +155,8 @@ export const initForm = (Store, track = true) => () => {
                 removeBanner(Store),
                 broadcast(EVENTS.CONSENT, Store),
                 renderMessage(button),
-                renderAnnouncement(formAnnouncement)
+                renderAnnouncement(formAnnouncement),
+                setGoogleConsent(Store),
             ]
         );
     });
