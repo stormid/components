@@ -15,6 +15,12 @@ const writeCookie = state => {
 const config = {
     name: '.Components.Dev.Consent',
     secure: false,
+    euConsentTypes: {
+        ad_storage: 'ads',
+        ad_user_data: 'ads',
+        ad_personalization: 'ads',
+        analytics_storage: 'performance'
+    },
     hideBannerOnFormPage: false,
     trapTab: true,
     necessary: [
