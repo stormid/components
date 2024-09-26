@@ -15,7 +15,7 @@ The consent form renders into a DOMElement with a particular className configura
 
 A page containing a cookie consent form should include a visually hidden live region (role=alert) with a particular className (classNames.formAnnouncement), default: 'privacy-banner__form-announcement'.
 
-Optionally the banner also supports basic Google EU consent mode [https://developers.google.com/tag-platform/security/guides/consent?consentmode=basic], and can push user consent preferences to the dataLayer for Google libraries to use. All that ius necessary to suport Google consent mode is to map Google consent categories to the cookie categories in the configuration.
+Optionally the banner also supports basic Google EU consent mode [https://developers.google.com/tag-platform/security/guides/consent?consentmode=basic], and can push user consent preferences to the dataLayer for Google libraries to use. All that is necessary to suport Google consent mode is to map Google consent categories to the cookie categories in the configuration.
 
 For example, to map the ad_storage, ad_user_data, and ad_personalisation to an 'ads' consent category defined in the banner config, add a `euConsentTypes` object to the configuration like this:
 
