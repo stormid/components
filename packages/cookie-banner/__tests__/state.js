@@ -11,16 +11,15 @@ describe(`Cookie banner > state > init`, () => {
     beforeAll(init);
 
     it('Should return the Store.getState method on initialisation', async () => {
-        const Store = cookieBanner({ types: {}, tid: 'UA-XXXXX-Y' });
+        const Store = cookieBanner({ types: {} });
         expect(Store.getState).not.toBeUndefined();
     });
 
     it('Should return the state Object from Store.getState', async () => {
-        const Store = cookieBanner({ types: {}, tid: 'UA-XXXXX-Y' });
+        const Store = cookieBanner({ types: {} });
 
         expect(Store.getState()).toBeDefined();
         expect(Store.getState().consent).toEqual({});
-        expect(Store.getState().persistentMeasurementParams).toBeDefined();
         expect(Store.getState().settings).toBeDefined();
     });
 
@@ -43,7 +42,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 ]
             }
         };
-        const Store = cookieBanner({ tid: 'UA-XXXXX-Y', types });
+        const Store = cookieBanner({ types });
 
         expect(Store.getState().settings.types).toEqual(types);
     });
@@ -74,15 +73,14 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 ]
             }
         };
-        const state = { settings: {tid: 'UA-XXXXX-Y', types} };
+        const state = { settings: { types } };
         const data = { test: 1, test2: 0 };
         expect(updateConsent(state, data)).toEqual({
             consent: {
                 test: 1, test2: 0
             },
             settings: {
-                types,
-                tid: 'UA-XXXXX-Y'
+                types
             }
         });
     });
@@ -108,7 +106,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 fns: []
             }
         };
-        const state = { settings: { types, tid: 'UA-XXXXX-Y' }, consent: { test: 1, test2: 0 } };
+        const state = { settings: { types }, consent: { test: 1, test2: 0 } };
         const data = {
             test: {
                 executed: true,
@@ -134,7 +132,6 @@ describe(`Cookie banner > state > update/reducers`, () => {
         expect(updateExecuted(state, data)).toEqual({
             consent: { test: 1, test2: 0 },
             settings: {
-                tid: 'UA-XXXXX-Y',
                 types: {
                     test: {
                         executed: true,
@@ -159,5 +156,5 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 }
             }
         });
-    }); 
+    });
 });

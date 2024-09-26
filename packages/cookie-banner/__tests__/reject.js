@@ -7,7 +7,6 @@ const init = () => {
     window.__cb__ = cookieBanner({
         secure: false,
         hideBannerOnFormPage: false,
-        tid: 'UA-141774857-1',
         types: {
             test: {
                 title: 'Test title',
@@ -41,9 +40,7 @@ describe(`Cookie banner > reject`, () => {
 
     it('Should reject all cookies whe the reject button is clicked', async () => {
         document.querySelector(`.${defaults.classNames.rejectBtn}`).click();
-        //get the cid from state
-        const cid = window.__cb__.getState().persistentMeasurementParams.cid;
-        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":0,"performance":0},"cid":"${cid}"}`)}`);
+        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":0,"performance":0}}`)}`);
     });
 
 });

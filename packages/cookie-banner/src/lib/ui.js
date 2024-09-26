@@ -1,15 +1,12 @@
 import { writeCookie, groupValueReducer, deleteCookies, getFocusableChildren, broadcast } from './utils';
-import { ACCEPTED_TRIGGERS, MEASUREMENTS, EVENTS } from './constants';
+import { ACCEPTED_TRIGGERS, EVENTS } from './constants';
 import { apply } from './consent';
 import { updateConsent, updateBannerOpen, updateBanner } from './reducers';
-import { measure, composeMeasurementConsent } from './measurement';
 
 export const initBanner = Store => () => {
     const state = Store.getState();
     if (state.bannerOpen || (state.settings.hideBannerOnFormPage && document.querySelector(`.${state.settings.classNames.formContainer}`))) return;
     document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
-    //track banner display
-    if (state.settings.tid) measure(state, MEASUREMENTS.BANNER_DISPLAY);
     
     Store.update(updateBanner, document.querySelector(`.${state.settings.classNames.banner}`));
     Store.update(updateBannerOpen, true, [ broadcast(EVENTS.SHOW, Store) ]);
@@ -34,7 +31,6 @@ export const initBannerListeners = Store => () => {
 
     const acceptBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
     const rejectBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.rejectBtn)));
-    const optionsBtn = document.querySelector(composeSelector(state.settings.classNames.optionsBtn));
 
     if (state.settings.trapTab) document.addEventListener('keydown', state.keyListener);
 
@@ -51,16 +47,7 @@ export const initBannerListeners = Store => () => {
                     apply(Store),
                     removeBanner(Store),
                     initForm(Store, false),
-                    broadcast(EVENTS.CONSENT, Store),
-                    //track banner accept click
-                    state => {
-                        if (state.settings.tid) {
-                            measure(state, {
-                                ...MEASUREMENTS.BANNER_ACCEPT,
-                                cd2: composeMeasurementConsent(Store.getState().consent)
-                            });
-                        }
-                    }
+                    broadcast(EVENTS.CONSENT, Store)
                 ]
             );
         });
@@ -78,27 +65,11 @@ export const initBannerListeners = Store => () => {
                     writeCookie,
                     removeBanner(Store),
                     initForm(Store, false),
-                    broadcast(EVENTS.CONSENT, Store),
-                    state => {
-                        if (state.settings.tid) {
-                            measure(state, {
-                                ...MEASUREMENTS.SAVE_PREFERENCES,
-                                cd2: composeMeasurementConsent(Store.getState().consent)
-                            });
-                        }
-                    }
+                    broadcast(EVENTS.CONSENT, Store)
                 ]
             );
         });
     });
-
-    //track options click
-    //shouldn't have to catch and replay the event since we're using beacons
-    if (optionsBtn && state.settings.tid) {
-        optionsBtn.addEventListener('click', e => measure(state, MEASUREMENTS.BANNER_OPTIONS));
-    } else {
-        console.warn('No trigger added for options element.  Check that the element is a Button or Anchor and that your tid is set.');
-    }
 };
 
 
@@ -145,10 +116,6 @@ export const initForm = (Store, track = true) => () => {
 
     formContainer.innerHTML = state.settings.formTemplate(suggestedConsent(state));
 
-    //measure form display
-    //track flag is false if a re-render from a banner acceptance
-    if (state.settings.tid && track) measure(state, MEASUREMENTS.FORM_DISPLAY);
-
     const form = document.querySelector(`.${state.settings.classNames.form}`);
     const button = document.querySelector(`.${state.settings.classNames.submitBtn}`);
     const groups = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.field}`)).reduce((groups, field) => {
@@ -186,18 +153,7 @@ export const initForm = (Store, track = true) => () => {
                 removeBanner(Store),
                 broadcast(EVENTS.CONSENT, Store),
                 renderMessage(button),
-                renderAnnouncement(formAnnouncement),
-                state => {
-                    if (!state.settings.tid) return;
-                    const consentString = composeMeasurementConsent(state.consent);
-                    const consent = consentString === '' ? 'None' : consentString;
-                    measure(state, {
-                        ...MEASUREMENTS.SAVE_PREFERENCES,
-                        cd2: consent,
-                        cm2: state.consent.performance ? state.consent.performance : 0,
-                        cm3: state.consent.thirdParty ? state.consent.thirdParty : 0
-                    });
-                }
+                renderAnnouncement(formAnnouncement)
             ]
         );
     });

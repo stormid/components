@@ -13,7 +13,6 @@ describe(`Cookie banner > DOM > form interactions`, () => {
         window.__cb__ = cookieBanner({
             secure: false,
             hideBannerOnFormPage: false,
-            tid: 'UA-141774857-1',
             types: {
                 test: {
                     title: 'Test title',
@@ -59,9 +58,7 @@ describe(`Cookie banner > DOM > form interactions`, () => {
 
     it('Submit button should set the cookie and hide the banner', async () => {
         document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-        //get the cid from state
-        const cid = window.__cb__.getState().persistentMeasurementParams.cid;
-        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":1,"performance":1},"cid":"${cid}"}`)}`);
+        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":1,"performance":1}}`)}`);
         expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull();
     });
 });

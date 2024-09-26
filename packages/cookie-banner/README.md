@@ -4,8 +4,6 @@ GDPR compliant cookie banner and consent form.
 
 Renders a cookie banner and a consent form based on configuration settings, and conditionally invokes cookie-reliant functionality based on user consent.
 
-Optionally send anonymous [predefined cookie banner and consent form interaction measurements](./measurements.md) to a specified Google Analytics using the Google Measurement API.
-
 ---
 
 ## Usage
@@ -38,7 +36,6 @@ Initialise the module (example configuration shown below)
 import banner from '@stormid/cookie-banner';
 
 const cookieBanner = banner({
-    tid: 'UA-XXXXXXXX-X',
     types: {
         'performance': {
             suggested: true, //set as pre-checked on consent form as a suggested response
@@ -78,7 +75,6 @@ const cookieBanner = banner({
 ```
 {
     name: '.CookiePreferences', //name of the cookie set to record user consent
-    tid: '', // Google Analytics tracking id for Measurement API event tracking
     path: '/', //path of the preferences cookie
     domain: window.location.hostname === 'localhost' ? '' : `.${removeSubdomain(window.location.hostname)}`, //domain of the preferences cookie, defaults to .<root-domain>
     secure: true, //preferences cookie secure

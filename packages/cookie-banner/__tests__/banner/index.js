@@ -7,7 +7,6 @@ const init = () => {
     cookieBanner({
         secure: false,
         hideBannerOnFormPage: false,
-        tid: 'UA-XXXXX-Y',
         types: {
             test: {
                 title: 'Test title',
@@ -51,7 +50,6 @@ describe(`Cookie banner > DOM > not render`, () => {
         cookieBanner({
             secure: false,
             hideBannerOnFormPage: true,
-            tid: 'UA-XXXXX-Y',
             types: {
                 test: {
                     title: 'Test title',

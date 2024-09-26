@@ -14,7 +14,6 @@ const writeCookie = state => {
     
 const config = {
     name: '.Components.Dev.Consent',
-    tid: 'UA-401849-33',
     secure: false,
     hideBannerOnFormPage: false,
     trapTab: true,

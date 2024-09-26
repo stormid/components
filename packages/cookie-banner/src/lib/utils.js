@@ -14,7 +14,7 @@ export const cookiesEnabled = () => {
 
 export const writeCookie = state => {
     document.cookie = [
-        `${state.settings.name}=${btoa(JSON.stringify({ consent: state.consent, cid: state.persistentMeasurementParams.cid }))};`,
+        `${state.settings.name}=${btoa(JSON.stringify({ consent: state.consent }))};`,
         `expires=${(new Date(new Date().getTime() + (state.settings.expiry*24*60*60*1000))).toGMTString()};`,
         state.settings.path ? `path=${state.settings.path};` : '',
         state.settings.domain ? `domain=${state.settings.domain};` : '',
@@ -53,16 +53,16 @@ export const deleteCookies = state => {
         .map(updateCookie(state));
 };
 
-//@return array [hasCookie<Boolean>, cid<UUID>, consent<{}>]
+//@return array [hasCookie<Boolean>, consent<{}>]
 export const extractFromCookie = settings => {
     try {
         const cookie = readCookie(settings);
-        if (!cookie) return [false, uuidv4(), {}];
-        const { cid, consent } = JSON.parse(cookie);
+        if (!cookie) return [false, {}];
+        const { consent } = JSON.parse(cookie);
         const hasCookie = consent !== undefined;
-        return [hasCookie, cid || uuidv4(), consent || {}];
+        return [hasCookie, consent || {}];
     } catch (e){
-        return [false, uuidv4(), {}];
+        return [false, {}];
     }
 };
 
@@ -107,11 +107,6 @@ export const removeSubdomain = s => {
 
     return parts.join('.');
 };
-
-export const uuidv4 = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-});
 
 export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(','))).filter(el => el.offsetWidth > 0 || el.offsetHeight > 0);
 
