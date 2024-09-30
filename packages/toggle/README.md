@@ -53,7 +53,7 @@ Create a target and related button(s) in HTML
 ```
 <div class="parent">
     <button type="button" class="js-toggle__btn"></button>
-    <div id="child" class="js-toggle__local" data-toggle="js-toggle__btn"></div>
+    <div id="child" class="js-toggle__local child" data-toggle="js-toggle__btn"></div>
 </div>
 ```
 
