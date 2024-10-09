@@ -4,7 +4,6 @@ import { getSelection } from './lib/utils';
 const isHidden = el => el.offsetParent === null;
 
 const update = ({ target }) => {
-    target.style.height = 'auto';
     target.style.height = `${target.scrollHeight}px`;
 };
 const initObserver = el => {
