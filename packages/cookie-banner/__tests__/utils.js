@@ -4,7 +4,7 @@ import { EVENTS } from '../src/lib/constants';
 import { createStore } from '../src/lib/store';
 
 describe('Cookie > Utils > removeSubdomain', () => {
-    it('should return the same vaule for a root domain', async () => {
+    it('should return the same value for a root domain', async () => {
         expect(removeSubdomain('stormid.com')).toEqual('stormid.com');
     });
 

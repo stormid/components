@@ -1,4 +1,5 @@
 import cookieBanner from '../src';
+import sampleTemplates from '../example/src/js/sample-templates';
 import { updateConsent, updateExecuted } from '../src/lib/reducers';
 
 const init = () => {
@@ -10,13 +11,18 @@ const init = () => {
 describe(`Cookie banner > state > init`, () => {
     beforeAll(init);
 
-    it('Should return the Store.getState method on initialisation', async () => {
+    it('Should return undefined if mandatory options are missing', async () => {
         const Store = cookieBanner({ types: {} });
+        expect(Store).toBeUndefined();
+    });
+
+    it('Should return the Store.getState method on initialisation', async () => {
+        const Store = cookieBanner({ ...sampleTemplates, types: {} });
         expect(Store.getState).not.toBeUndefined();
     });
 
     it('Should return the state Object from Store.getState', async () => {
-        const Store = cookieBanner({ types: {} });
+        const Store = cookieBanner({ ...sampleTemplates, types: {} });
 
         expect(Store.getState()).toBeDefined();
         expect(Store.getState().consent).toEqual({});
@@ -42,7 +48,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 ]
             }
         };
-        const Store = cookieBanner({ types });
+        const Store = cookieBanner({ ...sampleTemplates, types });
 
         expect(Store.getState().settings.types).toEqual(types);
     });
