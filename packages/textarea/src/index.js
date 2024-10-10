@@ -4,7 +4,10 @@ import { getSelection } from './lib/utils';
 const isHidden = el => el.offsetParent === null;
 
 const update = ({ target }) => {
-    target.style.height = `${target.scrollHeight}px`;
+    const scrollCache = window.scrollY;
+	target.style.height = 'auto';
+	target.style.height = `${target.scrollHeight}px`;
+	window.scrollTo(0, scrollCache);
 };
 const initObserver = el => {
     const observer = new MutationObserver(mutationsList => {
