@@ -37,10 +37,9 @@ const init = () => {
 describe(`Cookie banner > cookies > Google EU consent > no EU consent settings`, () => {
     beforeAll(init);
 
-    it('No errors or pushes to dataLayer if no consent options configured', async () => {
+    it('No errors if no consent options configured', async () => {
         const banner = document.querySelector(`.${defaults.classNames.banner}`);
         expect(banner).not.toBeNull();
-        expect(window.dataLayer).toBeUndefined();
     });
 
 });

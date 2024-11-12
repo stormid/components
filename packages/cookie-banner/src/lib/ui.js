@@ -10,6 +10,9 @@ export const initBanner = Store => () => {
     
     Store.update(updateBanner, document.querySelector(`.${state.settings.classNames.banner}`));
     Store.update(updateBannerOpen, true, [ broadcast(EVENTS.SHOW, Store) ]);
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({'event': 'stormcb_display'});
 };
 
 export const showBanner = Store => cb => {
@@ -29,6 +32,21 @@ export const initBannerListeners = Store => () => {
 
     const composeSelector = classSelector => ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(', ');
 
+    const composeConsentObjects = (event, consentVal) => {
+        const consentObject = Object.keys(state.settings.types).reduce((acc, type) => {
+            acc[type] = consentVal;
+            return acc;
+        },{});
+        const analyticsObject = Object.entries(consentObject).reduce((acc, [key, value]) => {
+            acc['stormcb_'+key] = value;
+            return acc;
+        }, {'event': `stormcb_${event}_all`});
+        return {
+            consentObject: consentObject,
+            analyticsObject: analyticsObject
+        }
+    }
+
     const acceptBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
     const rejectBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.rejectBtn)));
 
@@ -36,17 +54,19 @@ export const initBannerListeners = Store => () => {
 
     acceptBtns.forEach(acceptBtn => {
         acceptBtn.addEventListener('click', e => {
+            const {consentObject, analyticsObject} = composeConsentObjects('accept', 1);
             Store.update(
                 updateConsent,
-                Object.keys(state.settings.types).reduce((acc, type) => {
-                    acc[type] = 1;
-                    return acc;
-                }, {}),
+                consentObject,
                 [
                     writeCookie,
                     apply(Store),
                     removeBanner(Store),
                     initForm(Store, false),
+                    () => {
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push(analyticsObject);
+                    },
                     broadcast(EVENTS.CONSENT, Store),
                     setGoogleConsent(Store),
                 ]
@@ -56,16 +76,18 @@ export const initBannerListeners = Store => () => {
 
     rejectBtns.forEach(rejectBtn => {
         rejectBtn.addEventListener('click', e => {
+            const {consentObject, analyticsObject} = composeConsentObjects('reject', 0);
             Store.update(
                 updateConsent,
-                Object.keys(state.settings.types).reduce((acc, type) => {
-                    acc[type] = 0;
-                    return acc;
-                }, {}),
+                consentObject,
                 [
                     writeCookie,
                     removeBanner(Store),
                     initForm(Store, false),
+                    () => {
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push(analyticsObject);
+                    },
                     broadcast(EVENTS.CONSENT, Store),
                     setGoogleConsent(Store),
                 ]
@@ -130,14 +152,26 @@ export const initForm = (Store, track = true) => () => {
                             || document.body.appendChild(Object.assign(document.createElement('div'), { className: state.settings.classNames.formAnnouncement, role: 'alert' }));
 
 
-    const extractConsent = () => Object.keys(groups).reduce((acc, key) => {
-        const value = groups[key].reduce(groupValueReducer, '');
-        if (value) acc[key] = parseInt(value, 10);
-        return acc;
-    }, {});
+    const extractConsentObjects = () => {
+        const consentObject = Object.keys(groups).reduce((acc, key) => {
+            const value = groups[key].reduce(groupValueReducer, '');
+            if (value) acc[key] = parseInt(value, 10);
+            return acc;
+        }, {});
+
+        const analyticsObject = Object.entries(consentObject).reduce((acc, [key, value]) => {
+            acc['stormcb_'+key] = value;
+            return acc;
+        }, {'event': `stormcb_save`});
+
+        return {
+            consentObject: consentObject,
+            analyticsObject: analyticsObject
+        }
+    }
 
     const enableButton = e => {
-        if (Object.keys(extractConsent()).length !== Object.keys(groups).length) return;
+        if (Object.keys(extractConsentObjects().consentObject).length !== Object.keys(groups).length) return;
         button.removeAttribute('disabled');
         form.removeEventListener('change', enableButton);
     };
@@ -145,14 +179,19 @@ export const initForm = (Store, track = true) => () => {
     
     form.addEventListener('submit', event => {
         event.preventDefault();
+        const {consentObject, analyticsObject} = extractConsentObjects();
         Store.update(
             updateConsent,
-            extractConsent(),
+            consentObject,
             [
                 deleteCookies,
                 writeCookie,
                 apply(Store),
                 removeBanner(Store),
+                () => {
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push(analyticsObject);
+                },
                 broadcast(EVENTS.CONSENT, Store),
                 renderMessage(button),
                 renderAnnouncement(formAnnouncement),
