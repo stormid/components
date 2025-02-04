@@ -1,6 +1,0 @@
-.DS_Store
-*.log
-__tests__
-example
-coverage
-jest.config.js

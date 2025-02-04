@@ -29,7 +29,8 @@ export const initUI = Store => () => {
  */
 export const toggle = Store => () => {
     Store.dispatch({
-        isOpen: !Store.getState().isOpen },
+        isOpen: !Store.getState().isOpen
+    },
     [toggleAttributes, manageFocus(Store), closeProxy(Store), broadcast(Store)]
     );
 };

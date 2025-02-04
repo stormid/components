@@ -1,39 +1,19 @@
 {
-  "name": "components",
-  "private": false,
-  "scripts": {
-    "gh-pages": "node tools/gh-pages/render",
-    "test": "lerna run test --stream",
-    "lint": "eslint packages -c .eslintrc --ext js",
-    "prepublish": "npm run gh-pages -s"
-  },
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
-    "@babel/core": "^7.7.4",
-    "@babel/node": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
-    "@stormid/eslint-config": "^1.0.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^10.0.3",
-    "babel-jest": "^27.4.6",
-    "babel-loader": "^8.0.6",
-    "clean-webpack-plugin": "^1.0.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-babel": "^5.3.0",
-    "eslint-plugin-jest": "^23.1.1",
-    "fs-extra": "^7.0.1",
-    "html-webpack-plugin": "^3.2.0",
-    "isomorphic-fetch": "^2.2.1",
-    "jest": "^27.4.7",
-    "jest-environment-jsdom": "^27.4.6",
-    "lerna": "^3.22.1",
-    "markdown-it": "^8.4.2",
-    "microbundle": "^0.12.0",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.9.0",
-    "xhr-mock": "^2.5.1"
-  },
-  "dependencies": {
-    "markdown-it-anchor": "^5.2.5"
+    "@babel/core": "^7.26.7",
+    "@babel/preset-env": "^7.26.7",
+    "@stormid/eslint-config": "^1.2.0",
+    "babel-loader": "^9.2.1",
+    "html-webpack-plugin": "^5.6.3",
+    "lerna": "^8.1.9",
+    "microbundle": "^0.15.1",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.0"
   }
 }

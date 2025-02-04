@@ -1,15 +1,4 @@
 {
-  "packages": [
-    "packages/*"
-  ],
-  "command": {
-    "publish": {
-      "ignoreChanges": ["*.md"],
-      "message": "Publish"
-    },
-    "version": {
-      "allowBranch": "master"
-    }
-  },
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "version": "independent"
 }

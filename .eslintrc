@@ -1,4 +1,0 @@
-{
-  "extends": "@stormid/eslint-config",
-  "ignorePatterns": ["node_modules/", "**/dist/"]
-}
