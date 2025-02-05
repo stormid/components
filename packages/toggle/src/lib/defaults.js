@@ -2,7 +2,7 @@
 /*
  * Default settings used by a Toggle instance if not otherwise overwritten with config
  *
- * @property delay, Number, duration in milliseconds of toggle off process persistng animation state ('is--animating' on a global toggle) to support more granular off animations  
+ * @property delay, Number, duration in milliseconds of toggle off process persisting animation state ('is--animating' on a global toggle) to support more granular off animations  
  * @property startOpen, Boolean, toggle should start in an open state
  * @property local, Boolean, toggle is localised in the DOM (claasName changes are made to the parentNode, not the documentElement)
  * @property prehook, Function, called before each toggle event begins

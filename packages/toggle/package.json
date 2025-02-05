@@ -23,8 +23,8 @@
     "scripts": {
         "build": "microbundle --name Toggle",
         "test": "jest --coverage",
-        "dev": "webpack-dev-server --config sandbox/webpack.config.js --hot",
-        "prepublish": "npm run -s build"
+        "dev": "webpack-dev-server --config examples/webpack.config.js",
+        "prepublish": "npm run build"
     },
     "gitHead": "9042db4005411c4360ba3e8188e03333c10098f2"
 }
