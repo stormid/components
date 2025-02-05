@@ -240,17 +240,27 @@ const [ instance ] = tabs(elements);
     focusOnLoad: true //a boolean to set whether the page should focus on the first tab after loading
 }
 </code></pre>
-<h2 id="api">API</h2>
-<p>tabs() returns an array of instances. Each instance exposes the interface</p>
-<pre><code>{
-    getState, a Function that returns the current state Object
-}
+<h2 id="setting-the-active-tab">Setting the active tab</h2>
+<pre><code>On page load the active tab will be set by (in order of precedence):
+1. The page hash.  If the page hash in the address bar matches the ID of a panel, it will be activated on page load
+2. The data-active-index attribute.  If the tabs node found to have a &lt;pre&gt;data-active-index&lt;/pre&gt; attribute, that tab will be activated on page load.  This is a zero-based index.   
+3. The tab specified by the activeIndex in the settings. This is a zero-based index.
+4. The first tab in the set.
+
+## API
+
+tabs() returns an array of instances. Each instance exposes the interface
 </code></pre>
-<h2 id="tests">Tests</h2>
-<pre><code>npm t
+<p>{
+getState, a Function that returns the current state Object
+}</p>
+<pre><code>
+## Tests
 </code></pre>
-<h2 id="license">License</h2>
-<p>MIT</p>
+<p>npm t</p>
+<pre><code>
+## License
+MIT</code></pre>
 
         <main>
     </body>
