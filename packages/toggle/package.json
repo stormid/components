@@ -24,7 +24,7 @@
   "scripts": {
     "build": "microbundle --name Toggle",
     "test": "jest --coverage",
-    "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
+    "dev": "webpack-dev-server --config example/webpack.config.js",
     "prod": "webpack --config example/webpack.config.js --mode production",
     "prepublish": "npm run -s build"
   },

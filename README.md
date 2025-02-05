@@ -31,10 +31,10 @@ Package tasks
 
 | Task                                | Command                                       |
 | ----------------------------------- | --------------------------------------------- |
-| Run the example app                 | lerna run --scope PACKAGE_NAME dev --stream   |
-| Output the example app in prod mode | lerna run --scope PACKAGE_NAME prod --stream  |
-| Run tests                           | lerna run --scope PACKAGE_NAME test --stream  |
-| Build the package for distribution  | lerna run --scope PACKAGE_NAME build --stream |
+| Run the example app                 | lerna run dev --scope=PACKAGE_NAME  |
+| Output the example app in prod mode | lerna run prod --scope PACKAGE_NAME  |
+| Run tests                           | lerna run test --scope PACKAGE_NAME  |
+| Build the package for distribution  | lerna run build --scope PACKAGE_NAME |
 
 Monorepo tasks
 
