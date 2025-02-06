@@ -23,7 +23,8 @@ For example, to map the ad_storage, ad_user_data, and ad_personalisation to an '
 euConsentTypes: {
     ad_storage: 'test',
     ad_user_data: 'test',
-    ad_personalization: 'test'
+    ad_personalization: 'test',
+    analytics_storage: 'test'
 }
 ```
 

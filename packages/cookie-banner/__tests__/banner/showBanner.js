@@ -35,7 +35,6 @@ const init = () => {
     });
 };
 
-
 describe(`Cookie banner > showBanner > show banner`, () => {
     beforeAll(init);
 
