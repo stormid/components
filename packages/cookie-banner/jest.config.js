@@ -6,7 +6,6 @@ module.exports = {
     transform: {
         '^.+\\.js$': '../../tools/jest/babel-jest-wrapper.js'
     },
-    setupFiles: ['./jest.setup.js'],
     displayName: pack.name,
     name: pack.name,
     testEnvironment: 'jsdom'
