@@ -2,7 +2,6 @@ import { cookiesEnabled, extractFromCookie, noop, renderIframe, gtmSnippet, setG
 import { showBanner, initBanner, initForm, initBannerListeners, keyListener } from './ui';
 import { necessary, apply } from './consent';
 import { createStore } from './store';
-import { initialState } from './reducers';
 
 export default settings => {
     /* istanbul ignore next */
@@ -15,7 +14,6 @@ export default settings => {
     const [ hasCookie, consent ] = extractFromCookie(settings);
     
     Store.update(
-        initialState,
         {
             settings,
             bannerOpen: false,

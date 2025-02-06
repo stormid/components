@@ -116,7 +116,7 @@ const cookieBanner = banner({
     savedMessage: 'Your settings have been saved.', //displayed after consent form update,
     trapTab: false, //trap the user's keyboard tab within the banner when open
     bannerTemplate(model){
-        return `<section role="dialog" aria-live="polite" aria-label="Your privacy" class="${model.classNames.banner}">
+        return `<div role="region" aria-live="polite" aria-label="Your privacy" class="${model.classNames.banner}">
             <div class="privacy-content">
                 <div class="wrap">
                     <!--googleoff: all-->
@@ -128,7 +128,7 @@ const cookieBanner = banner({
                     <!--googleon: all-->
                 </div>
             </div>
-        </section>`;
+        </div>`;
     },
     messageTemplate(model){
         return `<div class="${model.settings.classNames.formMessage}" aria-role="alert">${model.settings.savedMessage}</div>`

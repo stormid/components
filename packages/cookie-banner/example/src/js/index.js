@@ -36,7 +36,7 @@ const config = {
     ],
     types: {
         performance: {
-            suggested: 1,
+            // suggested: 1,
             title: 'Performance preferences',
             description: 'Performance cookies are used to measure the performance of our website and make improvements. Your personal data is not identified.',
             labels: {
@@ -59,7 +59,7 @@ const config = {
             ]
         },
         ads: {
-            title: 'Set your personalised ads preferences',
+            title: 'Personalised ads preferences',
             description: 'We work with advertising partners to show you ads for our products and services across the web.  You can choose whether we collect and share that data with our partners below. ',
             labels: {
                 yes: 'Our partners might serve you ads knowing you have visited our website',
@@ -80,7 +80,7 @@ const config = {
         }
     },
     bannerTemplate(model){
-        return `<section role="dialog" aria-live="polite" aria-label="Cookies" class="${model.classNames.banner}">
+        return `<section role="region" aria-live="polite" aria-label="Cookies" class="${model.classNames.banner}">
             <div class="privacy-content">
                 <div class="wrap">
                     <div class="col xs-12 privacy-banner__inner">
@@ -107,7 +107,7 @@ const config = {
     },
     formTemplate(model){
         return `<form id="preferences-form" class="row ${model.settings.classNames.form}" novalidate>
-                ${Object.keys(model.settings.types).map(type => `<div class="privacy-banner__col col"><fieldset class="${model.settings.classNames.fieldset}">
+                ${Object.keys(model.settings.types).map(type => `<div class="privacy-banner__row"><fieldset class="${model.settings.classNames.fieldset}">
                 <legend class="${model.settings.classNames.legend}">
                     <span class="${model.settings.classNames.title}">${model.settings.types[type].title}</span>
                     <span class="${model.settings.classNames.description}">${model.settings.types[type].description}</span>
@@ -141,9 +141,8 @@ const config = {
                     </div>
                 </div>
             </fieldset></div>`).join('')}
-            <div class="privacy-banner__set col">
+            <div class="privacy-banner__row">
                 <button class="${model.settings.classNames.submitBtn}"${Object.keys(model.consent).length !== Object.keys(model.settings.types).length ? ` disabled` : ''}>Save my choices</button>
-                <div class="privacy-banner__set-accept">Or <button type="button" class="privacy-banner__btn-text ${model.settings.classNames.acceptBtn}">Accept and close</button></div>
             </div>
         </form>`;
     }
@@ -157,6 +156,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const banner = cookieBanner(config);
 
     [].slice.call(document.querySelectorAll('.js-preferences-update')).forEach(btn => btn.addEventListener('click', e => {
+        if (banner.getState().bannerOpen) return;
         banner.showBanner();
         bannerToggle.startToggle();
     }));

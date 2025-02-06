@@ -135,7 +135,7 @@ describe(`Cookie banner > Utils > broadcast`, () => {
             bannerOpen: true,
             settings: defaults
         };
-        Store.update(_ => _, state);
+        Store.update(state);
         const listener = jest.fn();
         document.addEventListener(EVENTS.OPEN, listener);
         document.addEventListener(EVENTS.OPEN, e => {

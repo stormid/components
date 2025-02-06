@@ -8,11 +8,16 @@ export const initBanner = Store => () => {
     if (state.bannerOpen || (state.settings.hideBannerOnFormPage && document.querySelector(`.${state.settings.classNames.formContainer}`))) return;
     document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
     
-    Store.update(updateBanner, document.querySelector(`.${state.settings.classNames.banner}`));
-    Store.update(updateBannerOpen, true, [ broadcast(EVENTS.SHOW, Store) ]);
+    Store.update(
+        updateBanner(state, {
+            banner: document.querySelector(`.${state.settings.classNames.banner}`),
+            bannerOpen: true
+        }),
+        [ broadcast(EVENTS.SHOW, Store) ]
+    );
 
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({'event': 'stormcb_display'});
+    window.dataLayer.push({ event: 'stormcb_display' });
 };
 
 export const showBanner = Store => cb => {
@@ -40,12 +45,12 @@ export const initBannerListeners = Store => () => {
         const analyticsObject = Object.entries(consentObject).reduce((acc, [key, value]) => {
             acc['stormcb_'+key] = value;
             return acc;
-        }, {'event': `stormcb_${event}_all`});
+        }, { event: `stormcb_${event}_all` });
         return {
-            consentObject: consentObject,
-            analyticsObject: analyticsObject
-        }
-    }
+            consentObject,
+            analyticsObject
+        };
+    };
 
     const acceptBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
     const rejectBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.rejectBtn)));
@@ -54,10 +59,10 @@ export const initBannerListeners = Store => () => {
 
     acceptBtns.forEach(acceptBtn => {
         acceptBtn.addEventListener('click', e => {
-            const {consentObject, analyticsObject} = composeConsentObjects('accept', 1);
+            const { consentObject, analyticsObject } = composeConsentObjects('accept', 1);
+            const state = Store.getState();
             Store.update(
-                updateConsent,
-                consentObject,
+                updateConsent(state, consentObject),
                 [
                     writeCookie,
                     apply(Store),
@@ -76,10 +81,10 @@ export const initBannerListeners = Store => () => {
 
     rejectBtns.forEach(rejectBtn => {
         rejectBtn.addEventListener('click', e => {
-            const {consentObject, analyticsObject} = composeConsentObjects('reject', 0);
+            const { consentObject, analyticsObject } = composeConsentObjects('reject', 0);
+            const state = Store.getState();
             Store.update(
-                updateConsent,
-                consentObject,
+                updateConsent(state, consentObject),
                 [
                     writeCookie,
                     removeBanner(Store),
@@ -119,7 +124,7 @@ const removeBanner = Store => () => {
     const banner = state.banner;
     if (banner && banner.parentNode) {
         banner.parentNode.removeChild(banner);
-        Store.update(updateBannerOpen, false, [ broadcast(EVENTS.HIDE, Store) ]);
+        Store.update(updateBannerOpen(state, false), [ broadcast(EVENTS.HIDE, Store) ]);
     }
     if (state.settings.trapTab) document.removeEventListener('keydown', state.keyListener);
 };
@@ -179,10 +184,10 @@ export const initForm = (Store, track = true) => () => {
     
     form.addEventListener('submit', event => {
         event.preventDefault();
-        const {consentObject, analyticsObject} = extractConsentObjects();
+        const { consentObject, analyticsObject } = extractConsentObjects();
+        const state = Store.getState();
         Store.update(
-            updateConsent,
-            consentObject,
+            updateConsent(state, consentObject),
             [
                 deleteCookies,
                 writeCookie,

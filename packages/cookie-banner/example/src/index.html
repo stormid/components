@@ -23,25 +23,54 @@
         }
         h1 {
             font: 1.25rem/1.2 sans-serif;
-            margin-bottom:1.5rem;
+            margin-top: 1.5rem;
         }
         h2 {
             font: 1.1rem/1.2 sans-serif;
-            margin-bottom:12px;
+            margin-top:12px;
             padding-top:12px;
         }
         h3 {
             font: 1rem/1.2 sans-serif;
-            margin-bottom:12px;
+            margin-top:12px;
             padding-top:12px;
         }
         p {
-            margin-bottom:1.5rem;
+            margin-top:1.5rem;
         }
-        header {
-            width:100%;
-            padding:20px;
-            margin-bottom:40px;
+        fieldset {
+            padding: 0;
+            margin: 0;
+            bordeR: 0 none;
+        }
+        legend {
+            display: block;
+        }
+        .container {
+            margin: 24px auto 48px;
+            width: calc(100% - 48px);
+        }
+        .embed iframe,
+        .embed__placeholder {
+            width: 600px;
+            aspect-ratio: 16 / 9;
+        }
+        .embed__placeholder {
+            background-color: hsl(0, 0%, 90%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+        .privacy-banner__btn-text,
+        .embed__placeholder-btn,
+        .privacy-banner__link {
+            background-color: transparent;
+            color: blue;
+            text-decoration: underline;
+            font-size: 1rem;
+            padding: 0;
         }
         .privacy-banner__title {
             font-size:1.2rem;
@@ -54,21 +83,49 @@
             right:0;
             padding:24px 25px;
             /* border-top:1px solid #191919; */
-            box-shadow: 0 1px 3px 1px rgba(60,64,67,.2), 0 2px 8px 4px rgba(60,64,67,.1)
+            z-index: 1000;
+            box-shadow: 0 1px 3px 1px rgba(60,64,67,.2), 0 2px 8px 4px rgba(60,64,67,.1);
+            background-color: #fff;
         }
         .privacy-banner__list {
             list-style: none;
             margin-bottom: 24px;
         }
+        button,
         .privacy-banner__btn {
             background-color:#191919;
             padding:8px 16px;
             color: #fff;
             border:0 none;
             cursor: pointer;
+            display: inline-block;
+        }
+        button + button {
+            margin-left: 12px;
         }
         .privacy-banner__btn:hover {
             background-color: blue
+        }
+        .privacy-banner__set-accept {
+            display: inline-block;
+        }
+        .privacy-banner__actions {
+            padding-top: 24px;
+        }
+        .privacy-banner__row {
+            margin-top: 24px;
+        }
+        .privacy-banner__form-title {
+            font-size: 1.2rem;
+        }
+        .privacy-banner__form-description {
+            display: block;
+            padding-top: 12px;
+        }
+        .privacy-banner__label-description {
+            display: block;
+            padding-left: 18px;
+            font-size: .85rem;
         }
         .privacy-banner__form-announcement {
             position: absolute;
@@ -94,19 +151,19 @@
     </style>
   </head>
   <body>
-        <div class="embed"><div class="embed__placeholder" data-iframe-src="https://www.youtube.com/embed/qpLKTUQev30" data-iframe-title="test video"><p>Update your cookie preferences to view this content.</p><button type="button" class="embed__placeholder-btn js-preferences-update">Update preferences</button></div></div>
-      <button class="js-preferences-update">Open banner</button>
         <div class="container">
-            <div class="privacy-banner__update"></div>
-            <div class="">
-                <h1>Cookies</h1>
-                <p>Cookies are a common feature used on almost all websites. A cookie is a small text file that is downloaded onto a device to allow a website to recognise it and to store some information about your preferences.</p>
-                <p>We use cookies for different reasons, including for managing your shopping cart, measuring your visits on our sites, recognising and remembering your preferences and showing you personalised ads. Learn more about cookies and how we use them.</p>
-                <div class="privacy-banner__form-container"></div>
-                <div class="privacy-banner__form-announcement" style="position: absolute;width:1px;height:1px;opacity:0;" role="alert"></div>
-
-
+            <div class="embed">
+                <div class="embed__placeholder" data-iframe-src="https://www.youtube.com/embed/qpLKTUQev30" data-iframe-title="test video">
+                    <p>Update your cookie preferences to view this content.</p>
+                    <button type="button" class="embed__placeholder-btn js-preferences-update">Update preferences</button>
+                </div>
             </div>
+            <div class="privacy-banner__update"></div>
+            <h1>Cookies</h1>
+            <p>Cookies are a common feature used on almost all websites. A cookie is a small text file that is downloaded onto a device to allow a website to recognise it and to store some information about your preferences.</p>
+            <p>We use cookies for different reasons, including for managing your shopping cart, measuring your visits on our sites, recognising and remembering your preferences and showing you personalised ads. Learn more about cookies and how we use them.</p>
+            <div class="privacy-banner__form-container "></div>
+            <div class="privacy-banner__form-announcement" style="position: absolute;width:1px;height:1px;opacity:0;" role="alert"></div>
         </div>
   </body>
 </html>
