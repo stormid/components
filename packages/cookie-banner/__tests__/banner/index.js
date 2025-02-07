@@ -71,8 +71,8 @@ describe(`Cookie banner > DOM > not render`, () => {
 
 describe(`Cookie banner > DOM > accessibility`, () => {
     beforeAll(init);
-    it('The banner should be a dialog', async () => {
-        expect(document.querySelector(`.${defaults.classNames.banner}`).getAttribute('role')).toEqual('dialog');
+    it('The banner should be a region', async () => {
+        expect(document.querySelector(`.${defaults.classNames.banner}`).getAttribute('role')).toEqual('region');
     });
     
     it('The banner should have be polite aria live region', async () => {

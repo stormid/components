@@ -10,13 +10,16 @@ export const applyEffects = state => {
     });
 };
 
-export const apply = Store => state => {
+export const apply = store => state => {
     applyEffects(state);
-    Store.update(
+    store.update(
         updateExecuted(
             state,
             Object.keys(state.settings.types).reduce((acc, type) => {
-                acc[type] = Object.assign({}, state.settings.types[type], { executed: state.settings.types[type].executed || (state.consent[type] && Boolean(state.consent[type])) });
+                acc[type] = {
+                    ...state.settings.types[type],
+                    executed: state.settings.types[type].executed || (state.consent[type] && Boolean(state.consent[type]))
+                };
                 return acc;
             }, {})
         )

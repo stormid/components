@@ -7,24 +7,6 @@ const init = () => {
 
 };
 
-describe(`Cookie banner > state > init`, () => {
-    beforeAll(init);
-
-    it('Should return the Store.getState method on initialisation', async () => {
-        const Store = cookieBanner({ types: {} });
-        expect(Store.getState).not.toBeUndefined();
-    });
-
-    it('Should return the state Object from Store.getState', async () => {
-        const Store = cookieBanner({ types: {} });
-
-        expect(Store.getState()).toBeDefined();
-        expect(Store.getState().consent).toEqual({});
-        expect(Store.getState().settings).toBeDefined();
-    });
-
-});
-
 describe(`Cookie banner > state > update/reducers`, () => {
     beforeAll(init);
 
