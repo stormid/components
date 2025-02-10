@@ -107,11 +107,11 @@ export const removeSubdomain = s => {
 
 export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(','))).filter(el => el.offsetWidth > 0 || el.offsetHeight > 0);
 
-export const broadcast = (type, Store) => () => {
+export const broadcast = (type, store) => () => {
     const event = new CustomEvent(type, {
         bubbles: true,
         detail: {
-            getState: Store.getState
+            getState: store.getState
         }
     });
     window.document.dispatchEvent(event);
