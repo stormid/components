@@ -11,7 +11,7 @@ describe(`Modal > Utils > broadcast`, () => {
         const state = {
             settings: defaults
         };
-        store.update(state, []);
+        store.update(state);
         const listener = jest.fn();
         document.addEventListener(EVENTS.OPEN, listener);
         document.addEventListener(EVENTS.OPEN, e => {
