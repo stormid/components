@@ -4,29 +4,19 @@ GDPR compliant cookie banner and consent form.
 
 Renders a cookie banner and a consent form based on configuration settings, and conditionally invokes cookie-reliant functionality based on user consent.
 
+A WCAG and GDPR compliant example is available for reference at https://storm-ui-patterns.netlify.app/patterns/cookie-banner/.
+
 ---
 
 ## Usage
-Cookie consent is based on categorising cookies and the functions that initialise them, describing them in a configuration object passed into the module at initialisition.
+Cookie consent management works by categorising cookies and the functions that initialise them, describing them in a configuration object passed into the module at initialisition.
 
-The cookie banner renders itself if no consent preferences are recorded in the browser.
+The cookie banner renders itself if no consent preferences are recorded in the browser, or if recorded consent categories do not match.
 
-The consent form renders into a DOMElement with a particular className configurable options (classNames.formContainer).
 
-A page containing a cookie consent form should include a visually hidden live region (role=alert) with a particular className (classNames.formAnnouncement), default: 'privacy-banner__form-announcement'.
 
-Optionally the banner also supports basic Google EU consent mode [https://developers.google.com/tag-platform/security/guides/consent?consentmode=basic], and can push user consent preferences to the dataLayer for Google libraries to use. All that is necessary to suport Google consent mode is to map Google consent categories to the cookie categories in the configuration.
 
-For example, to map the ad_storage, ad_user_data, and ad_personalisation to an 'ads' consent category defined in the banner config, add a `euConsentTypes` object to the configuration like this:
 
-```
-euConsentTypes: {
-    ad_storage: 'test',
-    ad_user_data: 'test',
-    ad_personalization: 'test',
-    analytics_storage: 'test'
-}
-```
 
 
 Install the package
@@ -34,14 +24,26 @@ Install the package
 npm i -S @stormid/cookie-banner
 ```
 
-Create a container element for the consent form.
+Create a container element for the consent form. The consent form renders into a DOMElement with a className set in options (default: classNames.formContainer).
 ```
 <div class="privacy-banner__form-container"></div>
 ```
 
-Create a visually hidden live region for the screen reader announcement.
+A page containing a cookie consent form should include a visually hidden live region (role=alert) with a className set in options (classNames.formAnnouncement), default: 'privacy-banner__form-announcement'.
 ```
 <div class="visually-hidden privacy-banner__form-announcement" role="alert"></div>
+```
+
+Optionally the banner also supports Google EU consent mode v2 https://developers.google.com/tag-platform/security/guides/consent, and can push user consent preferences to the dataLayer for Google libraries to use. All that is necessary to support Google consent mode is to map Google consent categories to the cookie categories in the configuration.
+
+For example, to map the ad_storage, ad_user_data, and ad_personalisation to an 'ads' consent category defined in the banner config, add a `euConsentTypes` object to the configuration like this:
+```
+euConsentTypes: {
+    ad_storage: 'test',
+    ad_user_data: 'test',
+    ad_personalization: 'test',
+    analytics_storage: 'test'
+}
 ```
 
 Initialise the module (example configuration shown below)
@@ -85,6 +87,7 @@ const cookieBanner = banner({
 ```
 
 ## Options
+Full options that can be passed during initialisation:
 ```
 {
     name: '.CookiePreferences', //name of the cookie set to record user consent
