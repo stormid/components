@@ -11,6 +11,12 @@ export const getSelection = selector => {
     return [];
 };
 
+/*
+ * Dispatch a custom event to the document
+ *
+ * @param type, String, name of the event
+ * @param store, Object, store of the current instance state
+ */
 export const broadcast = (type, store) => () => {
     const event = new CustomEvent(type, {
         bubbles: true,

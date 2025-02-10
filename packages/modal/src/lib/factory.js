@@ -8,13 +8,6 @@ import {
     lifecycle
 } from './dom';
 
-
-/* 
- * @param settings, Object, merged defaults + options passed in as instantiation config to module default
- * @param node, HTMLElement, DOM node to be toggled
- *
- * @returns Object, Modal API
- */
 export default ({ node, settings }) => {
     const store = createStore();
     
