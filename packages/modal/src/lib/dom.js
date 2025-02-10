@@ -1,4 +1,5 @@
-import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS } from './constants';
+import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, EVENTS } from './constants';
+import { broadcast } from './utils';
 
 /*
  * Returns an HTMLElement child of the supplied node with a role of dialog
@@ -41,14 +42,17 @@ export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(
  *
  * @param event, Event
  */
-export const keyListener = Store => event => {
-    if (Store.getState().isOpen && event.keyCode === 27) {
+export const keyListener = store => event => {
+    const state = store.getState();
+    const { isOpen } = state;
+    if (isOpen && event.keyCode === 27) {
         event.preventDefault();
-        Store.dispatch({
-            isOpen: !Store.getState().isOpen
-        }, [ change(Store) ]);
+        store.update({
+            ...store.getState(),
+            isOpen: !isOpen
+        }, [ change(store) ]);
     }
-    if (Store.getState().isOpen && event.keyCode === 9) trapTab(Store.getState())(event);
+    if (isOpen && event.keyCode === 9) trapTab(state)(event);
 };
 
 /* 
@@ -84,8 +88,8 @@ const toggle = state => {
 /* 
  * @param Store, Object, model or store of the current instance
  */
-const open = Store => () => {
-    const state = Store.getState();
+const open = store => () => {
+    const state = store.getState();
     if (state.dialog.hasAttribute('aria-hidden')) state.dialog.removeAttribute('aria-hidden'); // past implementations encouraged having aria-hidden on dialog when closed
     const ref = document.body.firstElementChild || null;
     if (ref !== state.node) document.body.insertBefore(state.node, ref);
@@ -94,16 +98,18 @@ const open = Store => () => {
     const focusFn = () => state.focusableChildren.length > 0 && state.focusableChildren[0].focus();
     if (state.settings.delay) window.setTimeout(focusFn, state.settings.delay);
     else focusFn();
+    broadcast(EVENTS.OPEN, store)();
 };
 
 /* 
  * @param Store, Object, model or store of the current instance
  */
-const close = Store => () => {
-    const state = Store.getState();
+const close = store => () => {
+    const state = store.getState();
     document.removeEventListener('keydown', state.keyListener);
     toggle(state);
     state.lastFocused.focus();
+    broadcast(EVENTS.CLOSE, store)();
 };
 
 
@@ -114,9 +120,9 @@ const close = Store => () => {
  * @returns Function
  *
  */
-export const change = Store => state => {
-    if (state.isOpen) open(Store)();
-    else close(Store)(state);
+export const change = store => state => {
+    if (state.isOpen) open(store)();
+    else close(store)(state);
     typeof state.settings.callback === 'function' &&  state.settings.callback.call(state);
 };
 
@@ -125,7 +131,7 @@ export const change = Store => state => {
  *
  * @param Store, Object, model or state of the current instance
  */
-export const initUI = Store => ({ node, dialog, toggles }) => {
+export const initUI = store => ({ node, dialog, toggles }) => {
     if (!dialog || !toggles) return;
     node.setAttribute('hidden', 'hidden');
     if (
@@ -137,12 +143,13 @@ export const initUI = Store => ({ node, dialog, toggles }) => {
     toggles.forEach(tgl => {
         tgl.addEventListener('click', e => {
             e.preventDefault();
-            lifecycle(Store);
+            lifecycle(store);
         });
     });
 };
 
-export const lifecycle = Store => Store.dispatch({
-    isOpen: !Store.getState().isOpen,
-    lastFocused: Store.getState().isOpen ? Store.getState().lastFocused : document.activeElement
-}, [ change(Store) ]);
+export const lifecycle = store => store.update({
+    ...store.getState(),
+    isOpen: !store.getState().isOpen,
+    lastFocused: store.getState().isOpen ? store.getState().lastFocused : document.activeElement
+}, [ change(store) ]);

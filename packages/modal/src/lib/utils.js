@@ -10,3 +10,13 @@ export const getSelection = selector => {
     if (selector instanceof HTMLElement) return [selector];
     return [];
 };
+
+export const broadcast = (type, store) => () => {
+    const event = new CustomEvent(type, {
+        bubbles: true,
+        detail: {
+            getState: store.getState
+        }
+    });
+    window.document.dispatchEvent(event);
+};
