@@ -8,7 +8,8 @@ describe(`Modal Gallery > DOM > initUI`, () => {
     it('should add create the modal UI, update the state with references to the rendered dom elements, and toggle the UI state', () => {
         document.body.innerHTML = ``;
         const Store = createStore();
-        Store.dispatch({
+        Store.update({
+            ...Store.getState(),
             isOpen: true,
             current: 0,
             settings: defaults,
@@ -33,7 +34,8 @@ describe(`Modal Gallery > DOM > next`, () => {
     it('should navigate to the next item', () => {
         document.body.innerHTML = ``;
         const Store = createStore();
-        Store.dispatch({
+        Store.update({
+            ...Store.getState(),
             isOpen: true,
             current: 0,
             settings: defaults,
@@ -58,7 +60,8 @@ describe(`Modal Gallery > DOM > next`, () => {
     it('should navigate to the first item if on the last', () => {
         document.body.innerHTML = ``;
         const Store = createStore();
-        Store.dispatch({
+        Store.update({
+            ...Store.getState(),
             isOpen: true,
             current: 2,
             settings: defaults,
@@ -87,7 +90,8 @@ describe(`Modal Gallery > DOM > previous`, () => {
     it('should navigate to the next item', () => {
         document.body.innerHTML = ``;
         const Store = createStore();
-        Store.dispatch({
+        Store.update({
+            ...Store.getState(),
             isOpen: true,
             current: 1,
             settings: defaults,
@@ -112,7 +116,8 @@ describe(`Modal Gallery > DOM > previous`, () => {
     it('should navigate to the last item if on the first', () => {
         document.body.innerHTML = ``;
         const Store = createStore();
-        Store.dispatch({
+        Store.update({
+            ...Store.getState(),
             isOpen: true,
             current: 0,
             settings: defaults,
@@ -141,7 +146,8 @@ describe(`Modal Gallery > DOM > close`, () => {
     it('should close the modal and update the state', () => {
         document.body.innerHTML = ``;
         const Store = createStore();
-        Store.dispatch({
+        Store.update({
+            ...Store.getState(),
             isOpen: true,
             current: 1,
             settings: defaults,
