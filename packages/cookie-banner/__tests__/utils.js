@@ -147,12 +147,12 @@ describe(`Cookie banner > Utils > broadcast`, () => {
         };
         Store.update(state);
         const listener = jest.fn();
-        document.addEventListener(EVENTS.OPEN, listener);
-        document.addEventListener(EVENTS.OPEN, e => {
+        document.addEventListener(EVENTS.SHOW, listener);
+        document.addEventListener(EVENTS.SHOW, e => {
             expect(e.detail).toEqual({ getState: Store.getState });
         });
 
-        broadcast(EVENTS.OPEN, Store)(state);
+        broadcast(EVENTS.SHOW, Store)(state);
         expect(listener).toHaveBeenCalled();
     });
 
