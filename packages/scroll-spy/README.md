@@ -1,6 +1,6 @@
 # Scroll Spy
 
-Use the IntersectionObserver API to check when a section of the document is in view and update an associated DOM node.
+Use the IntersectionObserver API to check when a section of the document is in view and add a className to an associated DOM node.
 
 Useful for scroll position-related navigation state management.
 
@@ -9,7 +9,7 @@ Useful for scroll position-related navigation state management.
 ## Example usage
 ```
 <header>
-    <nav aria-label="mMain navigation">
+    <nav aria-label="Document sections">
         <a class="js-scroll-spy" href="#section1">Section 1</a>
         <a class="js-scroll-spy" href="#section2">Section 2</a>
         <a class="js-scroll-spy" href="#section3">Section 3</a>
@@ -64,7 +64,7 @@ const instance = scrollSpy(elements);
 ## Options
 ```
 {
-	root: null, //element that is used as the viewport for checking visiblity of the target
+	root: null, //element that is used as the viewport for checking visiblity of the target, defaults to document viewport if null
 	rootMargin: '0px 0px 0px 0px', //margin around the root, px or percentage values
 	threshold: 0, //Either a single number or an array of numbers which indicate at what percentage of the target's visibility the observer's callback should be executed
     activeClassName: 'is--active', //className added when in view
@@ -88,7 +88,7 @@ npm t
 ```
 
 ## Browser support
-Depends on Object.assign and the [IntersectionObserver API](https://caniuse.com/#feat=intersectionobserver), IE11 will require polyfills.
+Depends on [IntersectionObserver API](https://caniuse.com/#feat=intersectionobserver).
 
 ## License
 MIT

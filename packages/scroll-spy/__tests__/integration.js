@@ -9,35 +9,35 @@ describe('Scroll spy > factory > callback', () => {
             settings: defaults,
             active: []
         };
-        const dispatchMock = jest.fn();
+        const updateMock = jest.fn();
         const storeMock = {
             getState() { return state; },
-            dispatch: dispatchMock
+            update: updateMock
         };
         const spy = { node: {}, target: {} };
         const entries = [{ isIntersecting: false }];
         const observer = { disconnect: () => {} };
         callback(storeMock, spy)(entries, observer);
-        expect(dispatchMock).not.toBeCalled();
+        expect(updateMock).not.toBeCalled();
         expect(storeMock.getState()).toEqual(state);
     });
 
-    it('should dispatch new state to the store', () => {
+    it('should update new state to the store', () => {
         const spy = { node: 'node-1', target: 'target-1' };
         const spy2 = { node: 'node-2', target: 'target-2' };
-        const dispatchMock = jest.fn();
+        const updateMock = jest.fn();
         const storeMock = {
             getState() { return this.state; },
             state: {
                 settings: defaults,
                 active: [spy]
             },
-            dispatch: dispatchMock
+            update: updateMock
         };
         const entries = [{ isIntersecting: true }];
         const observer = { disconnect: () => {} };
         callback(storeMock, spy2)(entries, observer);
-        expect(dispatchMock).toBeCalled();
+        expect(updateMock).toBeCalled();
     });
 
     it('should add a spy to the active array', () => {
@@ -45,7 +45,7 @@ describe('Scroll spy > factory > callback', () => {
         const node = document.querySelector('.node');
         const spy = { node, target: 'target-1' };
         const Store = createStore();
-        Store.dispatch({ spies: [spy], settings: defaults, active: [] });
+        Store.update({ spies: [spy], settings: defaults, active: [] });
         const entries = [{ isIntersecting: true }];
         const observer = { disconnect: () => {} };
         callback(Store, spy)(entries, observer);
@@ -60,7 +60,7 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.dispatch({ spies: [spy], settings: defaults, active: [spy] });
+        Store.update({ spies: [spy], settings: defaults, active: [spy] });
         const entries = [{ isIntersecting: true }];
         const observer = { disconnect: () => {} };
         callback(Store, spy2)(entries, observer);
@@ -76,7 +76,7 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.dispatch({ spies: [spy], settings: Object.assign({}, defaults, { single: false }), active: [spy] });
+        Store.update({ spies: [spy], settings: Object.assign({}, defaults, { single: false }), active: [spy] });
         const entries = [{ isIntersecting: true }];
         const observer = { disconnect: () => {} };
         callback(Store, spy2)(entries, observer);
@@ -90,7 +90,7 @@ describe('Scroll spy > factory > callback', () => {
         const node = document.querySelector('.node');
         const spy = { node, target: 'target-1' };
         const Store = createStore();
-        Store.dispatch({ spies: [spy], settings: defaults, active: [spy] });
+        Store.update({ spies: [spy], settings: defaults, active: [spy] });
         const entries = [{ isIntersecting: false }];
         const observer = { disconnect: () => {} };
         callback(Store, spy)(entries, observer);
@@ -105,7 +105,7 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.dispatch({ spies: [spy, spy2], settings: defaults, active: [spy, spy2] });
+        Store.update({ spies: [spy, spy2], settings: defaults, active: [spy, spy2] });
         const entries = [{ isIntersecting: false }];
         const observer = { disconnect: () => {} };
         callback(Store, spy2)(entries, observer);
@@ -121,7 +121,7 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.dispatch({ spies: [spy, spy2], settings: Object.assign({}, defaults, { single: false }), defaults, active: [spy, spy2] });
+        Store.update({ spies: [spy, spy2], settings: Object.assign({}, defaults, { single: false }), defaults, active: [spy, spy2] });
         const entries = [{ isIntersecting: false }];
         const observer = { disconnect: () => {} };
         callback(Store, spy2)(entries, observer);
