@@ -17,10 +17,10 @@ From HTML
 ```
 <ul>
     <li>
-        <a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 1" data-description="Description 1" data-srcset="//placehold.it/800x800 800w, //placehold.it/500x500 320w">Image one</a>
+        <a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">Image one</a>
     </li>
     <li>
-        <a class="js-modal-gallery" href="//placehold.it/300x800" data-title="Image 2" data-description="Description 2" data-srcset="//placehold.it/500x800 800w, //placehold.it/300x500 320w">Image two</a
+        <a class="js-modal-gallery" href="https://placehold.co/300x800" data-title="Image 2" data-description="Description 2" data-srcset="https://placehold.co/500x800 800w, https://placehold.co/300x500 320w">Image two</a
     ></li>
 </ul>
 ```
@@ -115,14 +115,14 @@ import modalGallery from '@stormid/modal-gallery';
 
 const [ gallery ] = modalGallery([
     {
-        src: '//placehold.it/500x500',
-        srcset:'//placehold.it/800x800 800w, //placehold.it/500x500 320w',
+        src: 'https://placehold.co/500x500',
+        srcset:'https://placehold.co/800x800 800w, https://placehold.co/500x500 320w',
         title: 'Image 1',
         description: 'Description 1'
     },
     {
-        src: '//placehold.it/300x800',
-        srcset:'//placehold.it/500x800 800w, //placehold.it/300x500 320w',
+        src: 'https://placehold.co/300x800',
+        srcset:'https://placehold.co/500x800 800w, https://placehold.co/300x500 320w',
         title: 'Image 2',
         description: 'Description 2'
     }
@@ -140,13 +140,20 @@ document.querySelector('.js-modal-gallery__trigger').addEventListener('click', (
     preload: false, //preload all images
     totals: true,   //show totals
     scrollable: false, //modal is scrollable
-    single: false, //single image or gallery
+    single: false, //images should display in separate modals rather than grouped into a navigable gallery
+    templates: { // see src/lib/defaults/templates.js
+        overlay,
+        overlayInner,
+        buttons,
+        item,
+        details
+    }
 }
 ```
 
 ## API
 
-modalGallery() returns an array of instances. Each instance exposes the interface
+Initialisation returns an array of instances. Each instance exposes the interface
 ```
 {
     getState, a Function that returns the current state Object
