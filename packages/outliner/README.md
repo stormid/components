@@ -1,6 +1,6 @@
 # Outliner
 
-Adds a classNamw to the documentElement to be used to hide CSS outline on mouse interactions, show on keyboard interactions. Until [:focus-visible](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible) has broader browser support.
+Adds a className to the documentElement to be used to hide CSS outline on mouse interactions, show on keyboard interactions. To be used to compliment [:focus-visible](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible).
 
 ---
 
@@ -17,9 +17,11 @@ import '@stormid/outliner';
 
 ```
 
-Add CSS
+Example CSS
 ```
-.no-outline * {
+.no-outline *,
+.no-outline *:before,
+.no-outline *:after {
     outline: 0 none !important;
     box-shadow: none !important;
 }
