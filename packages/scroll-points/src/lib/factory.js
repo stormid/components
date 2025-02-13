@@ -3,7 +3,7 @@ export const callback = ({ settings, node }) => (entries, observer) => {
         node.classList.add(settings.className);
         if (settings.callback && typeof settings.callback === 'function') settings.callback.call({ settings, node });
         if (settings.unload) observer.disconnect(node);
-    }
+    } else if (settings.replay) node.classList.remove(settings.className);
 };
 
 export default ({ settings, node }) => {
