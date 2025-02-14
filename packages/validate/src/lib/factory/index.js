@@ -1,5 +1,6 @@
 import { createStore } from '../store';
 import { ACTIONS } from '../constants';
+import reducers from '../reducers';
 import { getInitialState } from '../validator';
 import { validate }  from './validate';
 import { clearErrors, addAXAttributes }  from '../dom';
@@ -16,17 +17,17 @@ import { addGroup, validateGroup, removeGroup } from './group';
  * *
  */
 export default (form, settings) => {
-    const Store = createStore();
-    Store.dispatch(ACTIONS.SET_INITIAL_STATE, getInitialState(form, settings), [ addAXAttributes ]);
-    form.addEventListener('submit', validate(Store));
-    form.addEventListener('reset', () => Store.dispatch(ACTIONS.CLEAR_ERRORS, {}, [ clearErrors ]));
+    const store = createStore();
+    store.update(reducers[ACTIONS.SET_INITIAL_STATE](getInitialState(form, settings)), [ addAXAttributes ]);
+    form.addEventListener('submit', validate(store));
+    form.addEventListener('reset', () => store.update(reducers[ACTIONS.CLEAR_ERRORS](store.getState()), [ clearErrors ]));
 
     return {
-        getState: Store.getState,
-        validate: validate(Store),
-        addMethod: addMethod(Store),
-        addGroup: addGroup(Store),
-        validateGroup: validateGroup(Store),
-        removeGroup: removeGroup(Store)
+        getState: store.getState,
+        validate: validate(store),
+        addMethod: addMethod(store),
+        addGroup: addGroup(store),
+        validateGroup: validateGroup(store),
+        removeGroup: removeGroup(store)
     };
 };

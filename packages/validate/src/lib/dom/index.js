@@ -136,7 +136,7 @@ export const renderError = groupName => state => {
 
     //shouldn't be updating state here...
     //to do: refactor to update state as a side effect afterwards?
-    //would need to pass Store instead of state
+    //would need to pass store instead of state
     if (state.groups[groupName].serverErrorNode) {
         state.errors[groupName] = createErrorTextNode(state.groups[groupName], msg);
     } else {

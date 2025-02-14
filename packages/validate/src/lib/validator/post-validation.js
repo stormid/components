@@ -5,8 +5,8 @@ import {
 }  from '../dom';
 import { PREHOOK_DELAY } from '../constants';
 
-export const postValidation = (event, resolve, Store) => {
-    const { settings, form } = Store.getState();
+export const postValidation = (event, resolve, store) => {
+    const { settings, form } = store.getState();
     let buttonValueNode = false;
     let cachedAction = false;
     const submit = () => {
