@@ -14,7 +14,7 @@ describe(`Toggle > broadcast`, () => {
             isOpen: true,
             settings: defaults
         };
-        Store.dispatch(openState);
+        Store.update(openState);
         const listener = jest.fn();
         const delegatedlistener = jest.fn();
         node.addEventListener(EVENTS.OPEN, listener);

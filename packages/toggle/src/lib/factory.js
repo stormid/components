@@ -19,11 +19,11 @@ import {
  * @returns Object, Toggle API
  */
 export default ({ node, settings }) => {
-    const Store = createStore();
+    const store = createStore();
     //resolve state from DOM
     const { classTarget, statusClass, shouldStartOpen } = getStateFromDOM(node, settings);
-    //set initial state of Store
-    Store.dispatch({
+    //set initial state of store
+    store.update({
         node,
         settings,
         toggles: findToggles(node),
@@ -33,18 +33,18 @@ export default ({ node, settings }) => {
         animatingClass: settings.local ? `animating--${node.getAttribute('id')}` : 'is--animating',
         focusableChildren: getFocusableChildren(node),
         lastFocused: false,
-        keyListener: keyListener(Store),
-        focusInListener: focusInListener(Store),
-        clickListener: clickListener(Store)
-    }, [ initUI(Store), () => {
-	    shouldStartOpen && startToggleLifecycle(Store)();
+        keyListener: keyListener(store),
+        focusInListener: focusInListener(store),
+        clickListener: clickListener(store)
+    }, [ initUI(store), () => {
+	    shouldStartOpen && startToggleLifecycle(store)();
     }]);
 
 
     return {
         node,
-        startToggle: startToggleLifecycle(Store),
-        toggle: toggle(Store),
-        getState: Store.getState
+        startToggle: startToggleLifecycle(store),
+        toggle: toggle(store),
+        getState: store.getState
     };
 };

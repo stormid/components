@@ -1,13 +1,15 @@
 import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, EVENTS } from './constants';
 
 /*
- * Sets aria attributes and adds eventListener on each toggle button
+ * Partially applied function
+ * Sets aria attributes and adds eventListener to each toggle button
  * 
- * @param Store, Object, model or state of the current instance
+ * @param store, Object, model or state of the current instance
+ * @returns Function
  */
-export const initUI = Store => () => {
-    const { toggles, node, settings } = Store.getState();
-    if(settings.useHidden) node.hidden = true;
+export const initUI = store => () => {
+    const { toggles, node, settings } = store.getState();
+    if (settings.useHidden) node.hidden = true;
     toggles.forEach(toggle => {
         const id = node.getAttribute('id');
         if (toggle.tagName !== 'BUTTON') toggle.setAttribute('role', 'button');
@@ -17,36 +19,40 @@ export const initUI = Store => () => {
 
         toggle.addEventListener('click', e => {
             e.preventDefault();
-            startToggleLifecycle(Store)();
+            startToggleLifecycle(store)();
         });
     });
 };
 
 /*
- * Dispatches a toggle action to the Store
+ * Partially applied function
+ * Dispatches a toggle action to the store
  * 
- * @param Store, Object, model or state of the current instance
+ * @param store, Object, model or state of the current instance
+ * @returns Function
  */
-export const toggle = Store => () => {
-    Store.dispatch({
-        isOpen: !Store.getState().isOpen },
-    [toggleAttributes, manageFocus(Store), closeProxy(Store), broadcast(Store)]
+export const toggle = store => () => {
+    store.update({
+        ...store.getState(),
+        isOpen: !store.getState().isOpen
+    },
+    [ toggleAttributes, manageFocus(store), closeProxy(store), broadcast(store) ]
     );
 };
 
 /*
  * Partially applied function that returns a function that begins the toggle lifecycle (prehook > toggle > callback)
  * 
- * @param Store, Object, model or state of the current instance
+ * @param store, Object, model or state of the current instance
  * @returns Function
  */
-export const startToggleLifecycle = Store => () => {
-    const { node, toggles, settings, isOpen, classTarget, animatingClass } = Store.getState();
+export const startToggleLifecycle = store => () => {
+    const { node, toggles, settings, isOpen, classTarget, animatingClass } = store.getState();
     (settings.prehook && typeof settings.prehook === 'function') && settings.prehook({ node, toggles, isOpen });
     classTarget.classList.add(animatingClass);
     const fn = () => {
-        toggle(Store)();
-        (!!settings.callback && typeof settings.callback === 'function') && settings.callback({ node, toggles, isOpen: Store.getState().isOpen });
+        toggle(store)();
+        (!!settings.callback && typeof settings.callback === 'function') && settings.callback({ node, toggles, isOpen: store.getState().isOpen });
     };
     if (isOpen && +settings.delay > 0) window.setTimeout(fn, +settings.delay);
     else fn();
@@ -61,7 +67,7 @@ export const startToggleLifecycle = Store => () => {
 export const findToggles = node => {
 
     const toggleSelector = node.getAttribute('data-toggle');
-    const composeSelector = classSelector => { return ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(", "); }
+    const composeSelector = classSelector => ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(', ');
 
     const toggles = node.getAttribute('data-toggle') && [].slice.call(document.querySelectorAll(composeSelector(toggleSelector)));
 
@@ -86,26 +92,26 @@ export const toggleAttributes = ({ toggles, isOpen, node, classTarget, animating
     toggles.forEach(toggle => toggle.setAttribute('aria-expanded', isOpen));
     classTarget.classList.remove(animatingClass);
     classTarget.classList[isOpen ? 'add' : 'remove'](statusClass);
-    if(settings.useHidden) node.hidden = !isOpen;
+    if (settings.useHidden) node.hidden = !isOpen;
 };
 
 /*
  * Partially applied function that returns a handler function for keydown events when toggle is open
  * Only added as an eventListener when trapTab option is set
  * 
- * @param Store, Object, model or store of the current instance
+ * @param store, Object, model or store of the current instance
  * @returns Function, keyboard event handler
  * 
  * @param Event, document keydown event dispatched from document
  */
-export const keyListener = Store => e => {
+export const keyListener = store => e => {
     switch (e.keyCode){
     case 27:
         e.preventDefault();
-        startToggleLifecycle(Store);
+        startToggleLifecycle(store);
         break;
     case 9:
-        trapTab(Store, e);
+        trapTab(store, e);
         break;
     }
 };
@@ -115,11 +121,11 @@ export const keyListener = Store => e => {
  * If shift is held focus set on the last focusable element
  * If last element, focus is set on the first element
  * 
- * @param Store, Object, model or store of the current instance
+ * @param store, Object, model or store of the current instance
  * @param e, Event, document keydown event passed down from keyListener
  */
-const trapTab = (Store, e) => {
-    const focusableChildren = Store.getState().focusableChildren;
+const trapTab = (store, e) => {
+    const focusableChildren = store.getState().focusableChildren;
     const focusedIndex = focusableChildren.indexOf(document.activeElement);
     if (e.shiftKey && focusedIndex === 0) {
         e.preventDefault();
@@ -136,49 +142,49 @@ const trapTab = (Store, e) => {
  * @param toggles, Array of toggle HTMLElements 
  * @returns Boolean, true if event was dispatched from a toggle button
  * 
- */ 
+ */
 const targetIsToggle = (toggles, target) => toggles.reduce((acc, toggle) => {
     if (toggle === target|| toggle.contains(target)) acc = true;
     return acc;
-}, false)
+}, false);
 
 /*
- * Partially applied factory function that returns handlers for focusin and click events
- * Returned function is added as an eventListener when closeOnBlur options are true
+ * Partially applied factory function that returns handlers for focusin events
+ * Returned function is added as an eventListener when closeOnBlur option is true
  * 
- * @param Store, Object, model or store of the current instance
+ * @param store, Object, model or store of the current instance
  * @returns Function, event handler
  * 
  * @param Event, event dispatched from document
  */
-export const focusInListener = Store => e => {
-    const state = Store.getState();
-    if (!state.node.contains(e.target) && !targetIsToggle(state.toggles, e.target)) toggle(Store)();
+export const focusInListener = store => e => {
+    const state = store.getState();
+    if (!state.node.contains(e.target) && !targetIsToggle(state.toggles, e.target)) toggle(store)();
 };
 
 /*
  * Partially applied factory function that returns handlers for focusin and click events
  * Returned function is added as an eventListener when closeOnClick options are true
  * 
- * @param Store, Object, model or store of the current instance
+ * @param store, Object, model or store of the current instance
  * @returns Function, event handler
  * 
  * @param Event, event dispatched from document
  */
-export const clickListener = Store => e => {
-    const { node, toggles } = Store.getState();
+export const clickListener = store => e => {
+    const { node, toggles } = store.getState();
     if (node.contains(e.target) || targetIsToggle(toggles, e.target)) return;
-    toggle(Store)();
+    toggle(store)();
 };
 
 /*
  * Partially applied function that returns a function that adds and removes the document proxyListeners
  * Only added as an eventListener when closeOnBlur and/or closeOnClick options are true
  * 
- * @param Store, Object, model or state of the current instance
+ * @param store, Object, model or state of the current instance
  */
-export const closeProxy = Store => () => {
-    const { settings, isOpen, focusInListener, clickListener } = Store.getState();
+export const closeProxy = store => () => {
+    const { settings, isOpen, focusInListener, clickListener } = store.getState();
     if (settings.closeOnBlur) document[`${isOpen ? 'add' : 'remove'}EventListener`]('focusin', focusInListener);
     if (settings.closeOnClick) document[`${isOpen ? 'add' : 'remove'}EventListener`]('click', clickListener);
 };
@@ -187,13 +193,13 @@ export const closeProxy = Store => () => {
 /*
  * Partially applied function that returns a function that sets up and pulls down focus event handlers based on toggle status and focus management options 
  * 
- * @param Store, Object, model or state of the current instance
+ * @param store, Object, model or state of the current instance
  */
-export const manageFocus = Store => () => {
-    const { isOpen, focusableChildren, settings, lastFocused, keyListener } = Store.getState();
+export const manageFocus = store => () => {
+    const { isOpen, focusableChildren, settings, lastFocused, keyListener } = store.getState();
     if ((!settings.focus && !settings.trapTab) || focusableChildren.length === 0) return;
     if (isOpen){
-        Store.dispatch({ lastFocused: document.activeElement });
+        store.update({ ...store.getState(), lastFocused: document.activeElement });
         const focusFn = () => focusableChildren[0].focus();
         if (settings.delay) window.setTimeout(focusFn, settings.delay);
         else focusFn();
@@ -204,7 +210,7 @@ export const manageFocus = Store => () => {
         document.removeEventListener('keydown', keyListener);
         const reFocusFn = () => {
             lastFocused && lastFocused.focus();
-            Store.dispatch({ lastFocused: false });
+            store.update({ ...store.getState(), lastFocused: false });
         };
         if (settings.delay) window.setTimeout(reFocusFn, settings.delay);
         else reFocusFn();
@@ -221,11 +227,11 @@ export const getStateFromDOM = (node, settings) => {
     };
 };
 
-export const broadcast = Store => state => {
+export const broadcast = store => state => {
     const event = new CustomEvent(EVENTS[state.isOpen ? 'OPEN' : 'CLOSE'], {
         bubbles: true,
         detail: {
-            getState: Store.getState
+            getState: store.getState
         }
     });
     state.node.dispatchEvent(event);
