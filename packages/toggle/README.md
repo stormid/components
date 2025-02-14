@@ -79,6 +79,7 @@ Example MVP CSS
     trapTab: false, //trap tab in the target element
     closeOnBlur: false, //close the target node on losing focus from the target node and any of the toggles
     closeOnClick: false, //close the target element when a non-child element is clicked
+    useHidden: false //add and remove hidden attribute to toggle target
 }
 ```
 e.g.
