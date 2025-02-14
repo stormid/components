@@ -8,9 +8,11 @@ export const getActiveIndexByHash = panels => {
     }, undefined);
 };
 
-export const getActiveIndexOnLoad = (panels, node) => {
-     return (location.hash) ? getActiveIndexByHash(panels) : (node.getAttribute("data-active-index")) ? parseInt(node.getAttribute("data-active-index")) : undefined;
-};
+export const getActiveIndexOnLoad = (panels, node) => (location.hash)
+    ? getActiveIndexByHash(panels)
+    : (node.getAttribute('data-active-index'))
+        ? parseInt(node.getAttribute('data-active-index'), 10)
+        : undefined;
 
 /*
  * Converts a passed selector which can be of varying types into an array of DOM Objects

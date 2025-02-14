@@ -2,9 +2,9 @@ import tabs from '../src';
 
 let TabSet;
 
-const init = (mode) => {
+const init = mode => {
 
-    const activation = (mode) ? mode : "auto";
+    const activation = (mode) ? mode : 'auto';
     // Set up our document body
     document.body.innerHTML = `<div role="tablist">
         <nav class="tabs__nav">
@@ -43,13 +43,13 @@ const init = (mode) => {
         </section>
     </div>`;
 
-    TabSet = tabs('[role=tablist]', {activation: activation});
+    TabSet = tabs('[role=tablist]', { activation });
 };
 
 describe(`Tabs > Initialisation`, () => {
     
-    beforeAll(() => {init()});
-    console.log(TabSet)
+    beforeAll(() => {init();});
+    console.log(TabSet);
 
     it('should return array of length 2', async () => {
         expect(TabSet.length).toEqual(2);
@@ -86,11 +86,10 @@ describe(`Tabs > Initialisation no panel markup`, () => {
     });
 });
 
-
     
 describe(`Tabs > Accessibility > ARIA`, () => {
 
-    beforeAll(() => {init()});
+    beforeAll(() => {init();});
 
     it('should add correct attributes to tabs', async () => {
         expect(TabSet[0].getState().tabs[1].getAttribute('role')).toEqual('tab');
@@ -109,7 +108,7 @@ describe(`Tabs > Accessibility > ARIA`, () => {
 
 describe(`Tabs > Accessibility > keyboard events auto `, () => {
 
-    beforeAll(() => {init()});
+    beforeAll(() => {init();});
 
     it('should add keyboard event listener for the left and right keys to each tab', () => {
         const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
@@ -125,7 +124,7 @@ describe(`Tabs > Accessibility > keyboard events auto `, () => {
 
 describe(`Tabs > Accessibility > keyboard events manual `, () => {
 
-    beforeAll(() => {init("manual")});
+    beforeAll(() => {init('manual');});
 
     it('should add keyboard event listener for the left and right keys to each tab', () => {
         const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
@@ -134,14 +133,14 @@ describe(`Tabs > Accessibility > keyboard events manual `, () => {
         //should not change the active tab (just move focus)
         expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('false');
         expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
-        expect(TabSet[0].getState().tabs[1].classList.contains('is--active'));
+        expect(TabSet[0].getState().tabs[0].classList.contains('is--active')).toBeTruthy();
     });
     
 });
 
 describe(`Tabs > Accessibility > keyboard events both `, () => {
 
-    beforeAll(() => {init()});
+    beforeAll(() => {init();});
     
     it('should add keyboard event listener for the space key to each tab', () => {
         const space = new window.KeyboardEvent('keydown', { keyCode: 32, bubbles: true });
@@ -172,7 +171,7 @@ describe(`Tabs > Accessibility > keyboard events both `, () => {
 });
 
 describe(`Tabs > mouse events`, () => {
-    beforeAll(() => {init()});
+    beforeAll(() => {init();});
 
     it('should click event listener for each tab', () => {
         const click = new MouseEvent('click', { bubbles: true, cancelable: true });
