@@ -14,36 +14,19 @@ Cookie consent management works by categorising cookies and the functions that i
 The cookie banner renders itself if no consent preferences are recorded in the browser, or if recorded consent categories do not match.
 
 
-
-
-
-
-
 Install the package
 ```
 npm i -S @stormid/cookie-banner
 ```
 
-Create a container element for the consent form. The consent form renders into a DOMElement with a className set in options (default: classNames.formContainer).
+Create a container element for the consent form. The consent form renders into a DOMElement with a className matching the classNames.formContainer option.
 ```
 <div class="privacy-banner__form-container"></div>
 ```
 
-A page containing a cookie consent form should include a visually hidden live region (role=alert) with a className set in options (classNames.formAnnouncement), default: 'privacy-banner__form-announcement'.
+A page containing a cookie consent form should also include a visually hidden live region (role=alert) with a className matching the classNames.formAnnouncement option.
 ```
 <div class="visually-hidden privacy-banner__form-announcement" role="alert"></div>
-```
-
-Optionally the banner also supports Google EU consent mode v2 https://developers.google.com/tag-platform/security/guides/consent, and can push user consent preferences to the dataLayer for Google libraries to use. All that is necessary to support Google consent mode is to map Google consent categories to the cookie categories in the configuration.
-
-For example, to map the ad_storage, ad_user_data, and ad_personalisation to an 'ads' consent category defined in the banner config, add a `euConsentTypes` object to the configuration like this:
-```
-euConsentTypes: {
-    ad_storage: 'test',
-    ad_user_data: 'test',
-    ad_personalization: 'test',
-    analytics_storage: 'test'
-}
 ```
 
 Initialise the module (example configuration shown below)
@@ -53,7 +36,6 @@ import banner from '@stormid/cookie-banner';
 const cookieBanner = banner({
     types: {
         'performance': {
-            suggested: true, //set as pre-checked on consent form as a suggested response
             title: 'Performance preferences',
             description: 'Performance cookies are used to measure the performance of our website and make improvements. Your personal data is not identified.',
             labels: {
@@ -84,6 +66,19 @@ const cookieBanner = banner({
         }
     }
 });
+```
+
+## Google EU consent mode
+Optionally the banner also supports Google EU consent mode v2 https://developers.google.com/tag-platform/security/guides/consent, and can push user consent preferences to the dataLayer for Google libraries to use. All that is necessary to support Google consent mode is to map Google consent categories to the cookie categories in the configuration.
+
+For example, to map the ad_storage, ad_user_data, and ad_personalisation to an 'ads' consent category defined in the banner config, add a `euConsentTypes` object to the configuration like this:
+```
+euConsentTypes: {
+    ad_storage: 'Marketing',
+    ad_user_data: 'Marketing',
+    ad_personalization: 'Marketing',
+    analytics_storage: 'Performance'
+}
 ```
 
 ## Options
@@ -179,7 +174,7 @@ Full options that can be passed during initialisation:
 ```
 
 ## Utility functions
-There are two utility functions provided by the library designed to be invoked following user consent.
+There are two utility functions provided by the library that can be invoked following user consent.
 
 ### Render iframe
 `state.utils.renderIframe`
