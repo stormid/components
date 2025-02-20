@@ -89,6 +89,22 @@ modal() returns an array of instances. Each instance exposes the interface
 }
 ```
 
+## Events
+There are two custom events that an instance of the cookie banner dispatches:
+- `modal.open` when the modal is opened
+- `modal.close` when it is closed
+
+The events are dispatched on the document. A reference to the getState function of the instance is contained in the custom event detail.
+
+```
+const [instance] = modal('.js-modal', options);
+
+document.addEventListener('modal.open', e => {
+    const state = e.detail.getState();
+    // do something with state if we want to
+});
+
+
 ## Tests
 ```
 npm t
