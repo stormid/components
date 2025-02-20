@@ -59,7 +59,7 @@ const [ instance ] = modal(elements);
 ```
 
 CSS
-The className 'is--modal' added to the document.body when the modal is open. This can be used to prevent the body from scrolling
+The className 'is--modal' added to the document.body when the modal is open. This can be used to prevent the body from scrolling and to use CSS to modify other parts of the document.
 
 ```
 .is--modal {
