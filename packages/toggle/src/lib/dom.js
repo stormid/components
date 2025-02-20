@@ -86,7 +86,7 @@ export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(
 /*
  * Change toggle button attributes and node target classNames
  * 
- * @param props, Object, composed of properties of current state required to accessibly change node toggles attributes
+ * @param props, Object, composed of properties of current state required to accessibly change button and toggle attributes
  */
 export const toggleAttributes = ({ toggles, isOpen, node, classTarget, animatingClass, statusClass, settings }) => {
     toggles.forEach(toggle => toggle.setAttribute('aria-expanded', isOpen));
@@ -97,7 +97,6 @@ export const toggleAttributes = ({ toggles, isOpen, node, classTarget, animating
 
 /*
  * Partially applied function that returns a handler function for keydown events when toggle is open
- * Only added as an eventListener when trapTab option is set
  * 
  * @param store, Object, model or store of the current instance
  * @returns Function, keyboard event handler
@@ -140,6 +139,8 @@ const trapTab = (store, e) => {
  * Checks if the event was dispatched from a toggle button
  *
  * @param toggles, Array of toggle HTMLElements 
+ * @param target, event target
+ * 
  * @returns Boolean, true if event was dispatched from a toggle button
  * 
  */

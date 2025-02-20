@@ -13,7 +13,7 @@ import {
 
 
 /* 
- * @param settings, Object, merged defaults + options passed in as instantiation config to module default
+ * @param settings, Object, merged defaults + options
  * @param node, HTMLElement, DOM node to be toggled
  *
  * @returns Object, Toggle API

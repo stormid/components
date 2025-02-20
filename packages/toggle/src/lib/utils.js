@@ -1,7 +1,7 @@
 /*
- * Converts a passed selector which can be of varying types into an array of DOM Objects
+ * Converts a selector of varying types into an array of DOM Objects
  *
- * @param selector, Can be a string, Array of DOM nodes, a NodeList or a single DOM element.
+ * @param selector, string, Array of DOM nodes, a NodeList or a single DOM element.
  */
 export const getSelection = selector => {
     if (typeof selector === 'string') return [].slice.call(document.querySelectorAll(selector));
