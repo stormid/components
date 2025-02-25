@@ -7,6 +7,10 @@ import { initialState } from './reducers';
 export default settings => {
     /* istanbul ignore next */
     if (!cookiesEnabled()) return;
+    if(!settings.bannerTemplate || !settings.formTemplate) {
+        console.warn('Missing required cookie banner and/or preferences form markup. Cookie banner not initialised.');
+        return;
+    }
     const Store = createStore();
     
     //extractFromCookie adds a try/catch guard for cookie reading and JSON.parse in case of cookie name collisions caused by versioning
