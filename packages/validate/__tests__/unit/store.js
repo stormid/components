@@ -7,7 +7,7 @@ beforeAll(() => {
 });
 //createStore
 describe('Validate > Unit > Store > createStore', () => {
-    it('should create a store object with dispatch and get functions', async () => {
+    it('should create a store object with update and get functions', async () => {
         expect.assertions(5);
         expect(Store).not.toBeUndefined();
         expect(Store.update).not.toBeUndefined();
