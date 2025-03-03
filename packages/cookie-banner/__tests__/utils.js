@@ -100,10 +100,20 @@ describe('Cookie > Utils > extractFromCookie > malformed JSON cookie', () => {
     
 });
 
+describe('Cookie > Utils > extractFromCookie > category mismatch', () => {
+    it('should return default hasCookie and content properties if categroies do not match', () => {
+        document.cookie = `${defaults.name}=${btoa(JSON.stringify({ consent: { performance: 1, thirdParty: 0 } }))}`;
+        const [hasCookie, consent ] = extractFromCookie({ ...defaults, types: { performance: {}, thirdParty: {}, ads: {} } });
+        
+        expect(hasCookie).toEqual(false);
+        expect(consent).toEqual({ });
+    });
+});
+
 describe('Cookie > Utils > extractFromCookie > well-formed JSON cookie', () => {
     it('should return hasCookie and content properties from well-formed JSON cookie', () => {
         document.cookie = `${defaults.name}=${btoa(JSON.stringify({ consent: { performance: 1, thirdParty: 0 } }))}`;
-        const [hasCookie, consent ] = extractFromCookie(defaults);
+        const [hasCookie, consent ] = extractFromCookie({ ...defaults, types: { performance: {}, thirdParty: {} } });
         
         expect(hasCookie).toEqual(true);
         expect(consent).toEqual({ performance: 1, thirdParty: 0 });
@@ -135,14 +145,14 @@ describe(`Cookie banner > Utils > broadcast`, () => {
             bannerOpen: true,
             settings: defaults
         };
-        Store.update(_ => _, state);
+        Store.update(state);
         const listener = jest.fn();
-        document.addEventListener(EVENTS.OPEN, listener);
-        document.addEventListener(EVENTS.OPEN, e => {
+        document.addEventListener(EVENTS.SHOW, listener);
+        document.addEventListener(EVENTS.SHOW, e => {
             expect(e.detail).toEqual({ getState: Store.getState });
         });
 
-        broadcast(EVENTS.OPEN, Store)(state);
+        broadcast(EVENTS.SHOW, Store)(state);
         expect(listener).toHaveBeenCalled();
     });
 

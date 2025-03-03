@@ -33,9 +33,9 @@ export const readCookie = settings => {
     return false;
 };
 
-const updateCookie = state => model => document.cookie = [
-    `${model.name}=${model.value};`,
-    `expires=${model.expiry};`,
+const updateCookie = (state, cookie) => document.cookie = [
+    `${cookie.name}=${cookie.value};`,
+    `expires=${cookie.expiry};`,
     `path=${state.settings.path};`,
     state.settings.domain ? `domain=${state.settings.domain};` : '',
     state.settings.samesite ? `SameSite=${state.settings.samesite};` : '',
@@ -50,32 +50,29 @@ export const deleteCookies = state => {
             value: part.split('=')[1],
             expiry: 'Thu, 01 Jan 1970 00:00:01 GMT'
         }))
-        .map(updateCookie(state));
+        .map(cookie => updateCookie(state, cookie));
 };
 
-//@return array [hasCookie<Boolean>, consent<{}>]
 export const extractFromCookie = settings => {
     try {
         const cookie = readCookie(settings);
         if (!cookie) return [false, {}];
         const { consent } = JSON.parse(cookie);
         const hasCookie = consent !== undefined;
+        if (!categoriesMatch(Object.keys(consent), Object.keys(settings.types))) return [false, {}];
         return [hasCookie, consent || {}];
     } catch (e){
         return [false, {}];
     }
 };
 
-export const composeTypes = opts => (acc, curr) => {
-    if (acc[curr]) {
-        acc[curr] = Object.assign({}, acc[curr], {
-            fns: acc[curr].fns.concat(opts.types[curr].fns),
-        });
-    }  else acc[curr] = opts.types[curr];
-    return acc;
+const categoriesMatch = (found, categories) => {
+    if (found.length !== categories.length) return false;
+    for (const category of categories) {
+        if (found.indexOf(category) === -1) return false;
+    }
+    return true;
 };
-
-export const noop = () => {};
 
 export const isCheckable = field => (/radio|checkbox/i).test(field.type);
 
@@ -110,11 +107,11 @@ export const removeSubdomain = s => {
 
 export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(','))).filter(el => el.offsetWidth > 0 || el.offsetHeight > 0);
 
-export const broadcast = (type, Store) => () => {
+export const broadcast = (type, store) => () => {
     const event = new CustomEvent(type, {
         bubbles: true,
         detail: {
-            getState: Store.getState
+            getState: store.getState
         }
     });
     window.document.dispatchEvent(event);
@@ -157,8 +154,8 @@ function gtag() {
     window.dataLayer.push(arguments);
 }
 
-export const setGoogleConsent = (Store, pushType = 'update') => () => {
-    const { settings, consent } = Store.getState();
+export const setGoogleConsent = (store, pushType = 'update') => () => {
+    const { settings, consent } = store.getState();
     const { euConsentTypes } = settings;
     if (!euConsentTypes) return;
     

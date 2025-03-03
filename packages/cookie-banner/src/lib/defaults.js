@@ -33,7 +33,7 @@ export default {
     trapTab: false,
     savedMessage: 'Your settings have been saved.',
     bannerTemplate(model){
-        return `<section role="dialog" aria-live="polite" aria-label="Your privacy" class="${model.classNames.banner}">
+        return `<div role="region" aria-live="polite" aria-label="Your privacy" class="${model.classNames.banner}">
             <div class="privacy-content">
                 <div class="wrap">
                     <!--googleoff: all-->
@@ -46,7 +46,7 @@ export default {
                     <!--googleon: all-->
                 </div>
             </div>
-        </section>`;
+        </div>`;
     },
     messageTemplate(model){
         return `<div class="${model.settings.classNames.formMessage}" aria-hidden="true">${model.settings.savedMessage}</div>`;
