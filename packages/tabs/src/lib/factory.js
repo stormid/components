@@ -9,13 +9,13 @@ import { getActiveIndexOnLoad } from './utils';
  * @returns Object, Toggle API
  */
 export default ({ node, settings }) => {
-    const Store = createStore();
+    const store = createStore();
     const { tabs, panels } = findTabsAndPanels(node, settings);
    
-    if(!tabs.length || !panels.length || panels.includes(undefined)) return false;
+    if (!tabs.length || !panels.length || panels.includes(undefined)) return false;
 
     const activeIndex = getActiveIndexOnLoad(panels, node);
-    Store.dispatch({
+    store.update({
         settings,
         node,
         activeIndex: activeIndex !== undefined  ? +activeIndex : +settings.activeIndex,
@@ -23,9 +23,9 @@ export default ({ node, settings }) => {
         tabs,
         panels,
         loaded: false
-    }, [ initUI(Store), open(Store) ]);
+    }, [ initUI(store), open(store) ]);
 
     return {
-        getState: Store.getState
+        getState: store.getState
     };
 };

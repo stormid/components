@@ -1,10 +1,6 @@
 import { KEYCODES, MODES } from './constants';
 
 /*
- * DOM side effects and mutations
- */
-
-/*
  * Returns an Object composed of two Array of HTMLElements - tabs and panels
  * 
  * @param node, HTMLElement, tab container
@@ -20,9 +16,9 @@ export const findTabsAndPanels = (node, settings) => {
 /*
  * Sets aria attributes and adds eventListener on each tab
  * 
- * @param Store, Object, model or state of the current instance
+ * @param store, Object, model or state of the current instance
  */
-export const initUI = Store => ({ tabs, panels }) => {
+export const initUI = store => ({ tabs, panels }) => {
     tabs[0].parentNode.setAttribute('role', 'tablist');
     tabs.forEach((tab, i) => {
         tab.setAttribute('role', 'tab');
@@ -32,7 +28,7 @@ export const initUI = Store => ({ tabs, panels }) => {
         panels[i].setAttribute('role', 'tabpanel');
         panels[i].setAttribute('hidden', 'hidden');
         panels[i].setAttribute('tabindex', '-1');
-        initListeners(tab, i, Store);
+        initListeners(tab, i, store);
         if (!panels[i].firstElementChild || panels[i].firstElementChild.hasAttribute('tabindex')) return;
         panels[i].firstElementChild.setAttribute('tabindex', '-1');
     });
@@ -42,31 +38,33 @@ const getPreviousTabIndex = ({ activeTabIndex, tabs }) => activeTabIndex === 0 ?
 
 const getNextTabIndex = ({ activeTabIndex, tabs }) => activeTabIndex === tabs.length - 1 ? 0 : activeTabIndex + 1;
 
-const initListeners = (tab, nextIndex, Store) => {
-    const isManualActivation = Store.getState().settings.activation === MODES.MANUAL;
-    const onDirectionChangeFunction = (isManualActivation) ? () => focusTab(Store) : changePanel;
+const initListeners = (tab, nextIndex, store) => {
+    const isManualActivation = store.getState().settings.activation === MODES.MANUAL;
+    const onDirectionChangeFunction = (isManualActivation) ? () => focusTab(store) : changePanel;
 
     tab.addEventListener('keydown', e => {
-        const previousIndex = Store.getState().activeIndex;
+        const previousIndex = store.getState().activeIndex;
         switch (e.keyCode) {
         case KEYCODES.LEFT:
-            Store.dispatch({
-                activeTabIndex: getPreviousTabIndex(Store.getState()),
-                activeIndex: (isManualActivation) ? Store.getState().activeIndex : getPreviousTabIndex(Store.getState())
-            }, [() => onDirectionChangeFunction(Store, previousIndex)]);
+            store.update({
+                ...store.getState(),
+                activeTabIndex: getPreviousTabIndex(store.getState()),
+                activeIndex: (isManualActivation) ? store.getState().activeIndex : getPreviousTabIndex(store.getState())
+            }, [() => onDirectionChangeFunction(store, previousIndex)]);
             break;
         case KEYCODES.RIGHT:
-            Store.dispatch({
-                activeTabIndex: getNextTabIndex(Store.getState()) ,
-                activeIndex: (isManualActivation) ? Store.getState().activeIndex : getNextTabIndex(Store.getState())
-            }, [() => onDirectionChangeFunction(Store, previousIndex)]);
+            store.update({
+                ...store.getState(),
+                activeTabIndex: getNextTabIndex(store.getState()) ,
+                activeIndex: (isManualActivation) ? store.getState().activeIndex : getNextTabIndex(store.getState())
+            }, [() => onDirectionChangeFunction(store, previousIndex)]);
             break;
         case KEYCODES.ENTER:
-            (previousIndex !== nextIndex) && Store.dispatch({ activeIndex: nextIndex, activeTabIndex: nextIndex }, [() => changePanel(Store, previousIndex)]);
+            (previousIndex !== nextIndex) && store.update({ ...store.getState(), activeIndex: nextIndex, activeTabIndex: nextIndex }, [() => changePanel(store, previousIndex)]);
             break;
         case KEYCODES.SPACE:
             e.preventDefault();
-            (previousIndex !== nextIndex) && Store.dispatch({ activeIndex: nextIndex, activeTabIndex: nextIndex }, [() => changePanel(Store, previousIndex)]);
+            (previousIndex !== nextIndex) && store.update({ ...store.getState(), activeIndex: nextIndex, activeTabIndex: nextIndex }, [() => changePanel(store, previousIndex)]);
             break;
         default:
             break;
@@ -75,19 +73,20 @@ const initListeners = (tab, nextIndex, Store) => {
     
     tab.addEventListener('click', e => {
         e.preventDefault();
-        const previousActiveIndex = Store.getState().activeTabIndex;
-        Store.getState().activeIndex !== nextIndex && Store.dispatch({
+        const previousActiveIndex = store.getState().activeTabIndex;
+        store.getState().activeIndex !== nextIndex && store.update({
+            ...store.getState(),
             activeIndex: nextIndex,
             activeTabIndex: nextIndex
-        }, [() => changePanel(Store, previousActiveIndex)]);
+        }, [() => changePanel(store, previousActiveIndex)]);
     }, false);
 };
 
-const changePanel = (Store, previousActiveIndex) => {
-    const { activeIndex, settings, tabs } = Store.getState();
-    close(Store.getState(), previousActiveIndex);
-    open(Store)(Store.getState());
-    focusTab(Store);
+const changePanel = (store, previousActiveIndex) => {
+    const { activeIndex, settings, tabs } = store.getState();
+    close(store.getState(), previousActiveIndex);
+    open(store)(store.getState());
+    focusTab(store);
     if (settings.updateURL && window.history) {
         window.history.replaceState({ URL: tabs[activeIndex].getAttribute('href') }, '', tabs[activeIndex].getAttribute('href'));
     }
@@ -107,21 +106,21 @@ const activateTab = ({ settings, tabs, activeTabIndex }) => {
     tabs[activeTabIndex].setAttribute('tabindex', 0);
 };
 
-const focusTab = Store => {
-    const { tabs, activeTabIndex } = Store.getState();
+const focusTab = store => {
+    const { tabs, activeTabIndex } = store.getState();
     window.setTimeout(() => { tabs[activeTabIndex].focus(); }, 0);
 };
 
-export const open = Store => () => {
-    const { settings, tabs, panels, activeIndex, activeTabIndex, loaded } = Store.getState();
+export const open = store => () => {
+    const { settings, tabs, panels, activeIndex, activeTabIndex, loaded } = store.getState();
     activateTab({ settings, tabs, activeTabIndex });
-    if (settings.focusOnLoad && !loaded) focusTab(Store);
+    if (settings.focusOnLoad && !loaded) focusTab(store);
     tabs[activeTabIndex].setAttribute('aria-selected', true);
     panels[activeIndex].classList.add(settings.activeClass);
     panels[activeIndex].removeAttribute('hidden');
     panels[activeIndex].setAttribute('tabindex', 0);
 
-    Store.dispatch({ loaded: true }, []);
+    store.update({ ...store.getState(), loaded: true }, []);
 };
 
 

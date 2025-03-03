@@ -9,11 +9,8 @@ import { getSelection } from './lib/utils';
  * @params options, Object, to be merged with defaults to become the settings propery of each returned object
  */
 export default (selector, options) => {
-    //Array.from isnt polyfilled
-    //https://github.com/babel/babel/issues/5682
     let nodes = getSelection(selector);
 
-    //no DOM nodes found, return with warning
     if (nodes.length === 0) return console.warn(`Tabs not initialised, no elements found for selector '${selector}'`);
    
     //return array of Objects, one for each DOM node found
@@ -24,10 +21,6 @@ export default (selector, options) => {
             settings: { ...defaults, ...node.dataset, ...options },
             node
         });
-        if(instance) {
-            return Object.create(instance);
-        } else {
-            console.warn("Tabset not initialised, required markup not found");
-        }
-    }).filter((instance) => typeof instance !== "undefined");
+        return instance ? Object.create(instance) : void console.warn('Tab not initialised, required markup not found');
+    }).filter(instance => typeof instance !== 'undefined');
 };
