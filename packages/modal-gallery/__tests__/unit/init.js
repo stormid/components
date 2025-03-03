@@ -4,10 +4,10 @@ import { getSelection} from '../../src/lib/init'
 describe(`Modal Gallery > Initialisation > gallery`, () => {
 
     it('should return an Object when passed a DOM selector matching links', async () => {
-		 document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http:https://placehold.co/800x800 800w, http:https://placehold.co/500x500 320w" data-sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px">
+		 document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w" data-sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px">
 			<img src="https://placehold.co/200x200" alt="">
 		</a>
-		<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 2" data-description="Description 2" data-srcset="http:https://placehold.co/800x800 800w, http:https://placehold.co/500x500 320w" data-sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px">
+		<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 2" data-description="Description 2" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w" data-sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px">
 			<img src="https://placehold.co/200x200" alt="">
 		</a>`;
         const gallery = modalGallery('.js-modal-gallery');
@@ -46,10 +46,10 @@ describe(`Modal Gallery > Initialisation > gallery`, () => {
 describe(`Modal Gallery > Initisation > single`, () => {
 
     it('should return an array of Objects when passed a DOM selector matching links when initialising as single images', async () => {
-		 document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http:https://placehold.co/800x800 800w, http:https://placehold.co/500x500 320w">
+		 document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">
 			<img src="https://placehold.co/200x200" alt="">
 		</a>
-		<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 2" data-description="Description 2" data-srcset="http:https://placehold.co/800x800 800w, http:https://placehold.co/500x500 320w">
+		<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 2" data-description="Description 2" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">
 			<img src="https://placehold.co/200x200" alt="">
 		</a>`;
         const gallery = modalGallery('.js-modal-gallery', { single: true });
@@ -79,10 +79,10 @@ describe(`Modal Gallery > Initisation > single`, () => {
 describe(`Modal Gallery > Initialisation > gallery from code`, () => {
 
     it('should return an Object when passed a DOM selector matching links', async () => {
-		 document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http:https://placehold.co/800x800 800w, http:https://placehold.co/500x500 320w">
+		 document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">
 			<img src="https://placehold.co/200x200" alt="">
 		</a>
-		<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 2" data-description="Description 2" data-srcset="http:https://placehold.co/800x800 800w, http:https://placehold.co/500x500 320w">
+		<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 2" data-description="Description 2" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">
 			<img src="https://placehold.co/200x200" alt="">
 		</a>`;
         const els = Array.from(document.querySelectorAll('.js-modal-gallery'));
@@ -108,7 +108,7 @@ describe(`Modal Gallery > Initialisation > gallery from code`, () => {
 describe('Modal gallery > Initialisation > Get Selection', () => {
 
     const setupDOM = () => {
-        document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http:https://placehold.co/800x800 800w, http:https://placehold.co/500x500 320w">
+        document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">
             <img src="https://placehold.co/200x200" alt="">
         </a>`;
     }

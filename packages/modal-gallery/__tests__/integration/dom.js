@@ -177,17 +177,17 @@ describe(`Modal Gallery > DOM > close`, () => {
 describe(`Modal Gallery > accessibility > buttons`, () => {
 
     it('should navigate to the previous item on previous button press', () => {
-        document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http:https://placehold.co/800x800 800w, http:https://placehold.co/500x500 320w">
+        document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">
             <img src="https://placehold.co/200x200" alt="">
         </a>
         <ul hidden>
             <li class="gallery__item">
-                <a class="js-modal-gallery" href="https://placehold.co/300x500" data-title="Image 2" data-description="Description 2" data-srcset="http:https://placehold.co/500x800 800w, http:https://placehold.co/300x500 320w">
+                <a class="js-modal-gallery" href="https://placehold.co/300x500" data-title="Image 2" data-description="Description 2" data-srcset="https://placehold.co/500x800 800w, https://placehold.co/300x500 320w">
                     <img src="https://placehold.co/200x200" alt="">
                 </a>
             </li>
             <li class="gallery__item">
-                <a class="js-modal-gallery" href="https://placehold.co/300x300" data-title="Image 3" data-description="Description 3" data-srcset="http:https://placehold.co/500x500 800w, http:https://placehold.co/300x300 320w">
+                <a class="js-modal-gallery" href="https://placehold.co/300x300" data-title="Image 3" data-description="Description 3" data-srcset="https://placehold.co/500x500 800w, https://placehold.co/300x300 320w">
                     <img src="https://placehold.co/200x200" alt="">
                 </a>
             </li>
@@ -203,17 +203,17 @@ describe(`Modal Gallery > accessibility > buttons`, () => {
 
 
     it('should navigate to the next item on next button press', () => {
-        document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http:https://placehold.co/800x800 800w, http:https://placehold.co/500x500 320w">
+        document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">
             <img src="https://placehold.co/200x200" alt="">
         </a>
         <ul hidden>
             <li class="gallery__item">
-                <a class="js-modal-gallery" href="https://placehold.co/300x500" data-title="Image 2" data-description="Description 2" data-srcset="http:https://placehold.co/500x800 800w, http:https://placehold.co/300x500 320w">
+                <a class="js-modal-gallery" href="https://placehold.co/300x500" data-title="Image 2" data-description="Description 2" data-srcset="https://placehold.co/500x800 800w, https://placehold.co/300x500 320w">
                     <img src="https://placehold.co/200x200" alt="">
                 </a>
             </li>
             <li class="gallery__item">
-                <a class="js-modal-gallery" href="https://placehold.co/300x300" data-title="Image 3" data-description="Description 3" data-srcset="http:https://placehold.co/500x500 800w, http:https://placehold.co/300x300 320w">
+                <a class="js-modal-gallery" href="https://placehold.co/300x300" data-title="Image 3" data-description="Description 3" data-srcset="https://placehold.co/500x500 800w, https://placehold.co/300x300 320w">
                     <img src="https://placehold.co/200x200" alt="">
                 </a>
             </li>
