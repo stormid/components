@@ -18,7 +18,7 @@ npm i -S @stormid/toggle
 Useful for document-level state changes that affect the whole page, such as an off-canvas menu.
 
 1. Set up the DOM elements
-The element you want to toggle state, and related button(s) that will trigger state change. The `data-toggle` attribute of the target element nav in the below example) is used as a selector to find buttons that trigger state change. The target element should have a unique id.
+The element you want to toggle state, and related button(s) that will trigger state change. The `data-toggle` attribute of the target element (nav in the example below) is used as a selector to find buttons that trigger state change. The target element should have a unique id.
 
 Simplified example:
 ```
@@ -26,8 +26,8 @@ Simplified example:
 <nav id="primary-navigation" aria-label="Main navigation" class="js-toggle" data-toggle="js-toggle-btn">...</nav>
 ```
 
-2. Set up CSS
-Toggle changes DOM attributes and CSS classNames but all visible changes to the UI are left ot the developer to implement in CSS.
+1. Set up CSS
+Toggle changes DOM attributes and CSS classNames but all visible changes to the UI are left to the developer to implement in CSS.
 
 For a full document Toggle a className is added to the document element (html) based on the target id - "on--" plus the target id.
 
