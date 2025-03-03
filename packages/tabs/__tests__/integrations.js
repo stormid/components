@@ -49,7 +49,6 @@ const init = mode => {
 describe(`Tabs > Initialisation`, () => {
     
     beforeAll(() => {init();});
-    console.log(TabSet);
 
     it('should return array of length 2', async () => {
         expect(TabSet.length).toEqual(2);
