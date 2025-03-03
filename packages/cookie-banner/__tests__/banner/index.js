@@ -75,7 +75,7 @@ describe(`Cookie banner > DOM > accessibility`, () => {
         expect(document.querySelector(`.${defaults.classNames.banner}`).getAttribute('role')).toEqual('region');
     });
     
-    it('The banner should have be polite aria live region', async () => {
+    it('The banner should be a polite aria live region', async () => {
         expect(document.querySelector(`.${defaults.classNames.banner}`).getAttribute('aria-live')).toEqual('polite');
     });
     

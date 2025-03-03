@@ -80,7 +80,7 @@ const config = {
         }
     },
     bannerTemplate(model){
-        return `<section role="region" aria-live="polite" aria-label="Cookies" class="${model.classNames.banner}">
+        return `<div role="region" aria-live="polite" aria-label="Cookies" class="${model.classNames.banner}">
             <div class="privacy-content">
                 <div class="wrap">
                     <div class="col xs-12 privacy-banner__inner">
@@ -103,7 +103,7 @@ const config = {
                     </div>
                 </div>
             </div>
-        </section>`;
+        </div>`;
     },
     formTemplate(model){
         return `<form id="preferences-form" class="row ${model.settings.classNames.form}" novalidate>
