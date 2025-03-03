@@ -1,5 +1,6 @@
 import textarea from '../src';
 import { getSelection } from '../src/lib/utils';
+window.scrollTo = function() {}; //not implemented in JSDOM
 
 global.MutationObserver = class {
     // constructor(callback) {}

@@ -5,9 +5,9 @@ const isHidden = el => el.offsetParent === null;
 
 const update = ({ target }) => {
     const scrollCache = window.scrollY;
-	target.style.height = 'auto';
-	target.style.height = `${target.scrollHeight}px`;
-	window.scrollTo(0, scrollCache);
+    target.style.height = 'auto';
+    target.style.height = `${target.scrollHeight}px`;
+    window.scrollTo(0, scrollCache);
 };
 const initObserver = el => {
     const observer = new MutationObserver(mutationsList => {

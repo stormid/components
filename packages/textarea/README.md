@@ -51,10 +51,10 @@ const [ instance ] = textarea(elements);
 
 ## API
 
-textarea() returns an array of instances. Each instance exposes the interface
+Initialisation returns an array of instances. Each instance exposes the interface
 ```
 {
-    node, DOMElement, the text area
+    node, DOMElement, the textarea
     resize, Function to trigger resize
 }
 ```
