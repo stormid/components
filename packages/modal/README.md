@@ -68,7 +68,7 @@ The className 'is--modal' added to the document.body when the modal is open. Thi
 ```
 
 ## Options
-Options can be set during initialising in an Object passed as the second argument to the modal function, e.g. `modal('.js-modal', { startOpen: true })`, or as data-attributes on the modal element (the element passed to the initiaisation function), e.g. `data-start-open="true"`
+Options can be set during initialising in an Object passed as the second argument to the modal function, e.g. `modal('.js-modal', { startOpen: true })`, or as data-attributes on the modal element (the element passed to the initialisation function), e.g. `data-start-open="true"`
 ```
 {
     onClassName: 'is--active', //className added to node when modal is open

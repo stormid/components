@@ -121,7 +121,7 @@ export const change = store => state => {
 
 /*
  * Partially applied function that returns a function
- * Sets aria attributes and adds eventListener on each nodal toggle
+ * Sets aria attributes and adds eventListener on each modal toggle
  *
  * @param store, Object, store of the current instance state
  * @returns Function
