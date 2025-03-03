@@ -8,12 +8,13 @@ describe(`Modal Gallery > DOM > initUI`, () => {
     it('should add create the modal UI, update the state with references to the rendered dom elements, and toggle the UI state', () => {
         document.body.innerHTML = ``;
         const Store = createStore();
-        Store.dispatch({
+        Store.update({
+            ...Store.getState(),
             isOpen: true,
             current: 0,
             settings: defaults,
             imageCache: [],
-            items: [{  src: 'https://placehold.it/500x500' }],
+            items: [{  src: 'https:https://placehold.co/500x500' }],
             keyListener: jest.fn()
         });
         initUI(Store)(Store.getState());
@@ -33,15 +34,16 @@ describe(`Modal Gallery > DOM > next`, () => {
     it('should navigate to the next item', () => {
         document.body.innerHTML = ``;
         const Store = createStore();
-        Store.dispatch({
+        Store.update({
+            ...Store.getState(),
             isOpen: true,
             current: 0,
             settings: defaults,
             imageCache: [],
             items: [
-                { src: 'https://placehold.it/500x500' },
-                { src: 'https://placehold.it/500x500' },
-                { src: 'https://placehold.it/500x500' }
+                { src: 'https:https://placehold.co/500x500' },
+                { src: 'https:https://placehold.co/500x500' },
+                { src: 'https:https://placehold.co/500x500' }
             ],
             keyListener: jest.fn()
         });
@@ -58,15 +60,16 @@ describe(`Modal Gallery > DOM > next`, () => {
     it('should navigate to the first item if on the last', () => {
         document.body.innerHTML = ``;
         const Store = createStore();
-        Store.dispatch({
+        Store.update({
+            ...Store.getState(),
             isOpen: true,
             current: 2,
             settings: defaults,
             imageCache: [],
             items: [
-                { src: 'https://placehold.it/500x500' },
-                { src: 'https://placehold.it/500x500' },
-                { src: 'https://placehold.it/500x500' }
+                { src: 'https:https://placehold.co/500x500' },
+                { src: 'https:https://placehold.co/500x500' },
+                { src: 'https:https://placehold.co/500x500' }
             ],
             keyListener: jest.fn()
         });
@@ -87,15 +90,16 @@ describe(`Modal Gallery > DOM > previous`, () => {
     it('should navigate to the next item', () => {
         document.body.innerHTML = ``;
         const Store = createStore();
-        Store.dispatch({
+        Store.update({
+            ...Store.getState(),
             isOpen: true,
             current: 1,
             settings: defaults,
             imageCache: [],
             items: [
-                { src: 'https://placehold.it/500x500' },
-                { src: 'https://placehold.it/500x500' },
-                { src: 'https://placehold.it/500x500' }
+                { src: 'https:https://placehold.co/500x500' },
+                { src: 'https:https://placehold.co/500x500' },
+                { src: 'https:https://placehold.co/500x500' }
             ],
             keyListener: jest.fn()
         });
@@ -112,15 +116,16 @@ describe(`Modal Gallery > DOM > previous`, () => {
     it('should navigate to the last item if on the first', () => {
         document.body.innerHTML = ``;
         const Store = createStore();
-        Store.dispatch({
+        Store.update({
+            ...Store.getState(),
             isOpen: true,
             current: 0,
             settings: defaults,
             imageCache: [],
             items: [
-                { src: 'https://placehold.it/500x500' },
-                { src: 'https://placehold.it/500x500' },
-                { src: 'https://placehold.it/500x500' }
+                { src: 'https:https://placehold.co/500x500' },
+                { src: 'https:https://placehold.co/500x500' },
+                { src: 'https:https://placehold.co/500x500' }
             ],
             keyListener: jest.fn()
         });
@@ -141,15 +146,16 @@ describe(`Modal Gallery > DOM > close`, () => {
     it('should close the modal and update the state', () => {
         document.body.innerHTML = ``;
         const Store = createStore();
-        Store.dispatch({
+        Store.update({
+            ...Store.getState(),
             isOpen: true,
             current: 1,
             settings: defaults,
             imageCache: [],
             items: [
-                { src: 'https://placehold.it/500x500' },
-                { src: 'https://placehold.it/500x500' },
-                { src: 'https://placehold.it/500x500' }
+                { src: 'https:https://placehold.co/500x500' },
+                { src: 'https:https://placehold.co/500x500' },
+                { src: 'https:https://placehold.co/500x500' }
             ],
             keyListener: jest.fn()
         });
@@ -171,18 +177,18 @@ describe(`Modal Gallery > DOM > close`, () => {
 describe(`Modal Gallery > accessibility > buttons`, () => {
 
     it('should navigate to the previous item on previous button press', () => {
-        document.body.innerHTML = `<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w">
-            <img src="//placehold.it/200x200" alt="">
+        document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">
+            <img src="https://placehold.co/200x200" alt="">
         </a>
         <ul hidden>
             <li class="gallery__item">
-                <a class="js-modal-gallery" href="//placehold.it/300x500" data-title="Image 2" data-description="Description 2" data-srcset="http://placehold.it/500x800 800w, http://placehold.it/300x500 320w">
-                    <img src="//placehold.it/200x200" alt="">
+                <a class="js-modal-gallery" href="https://placehold.co/300x500" data-title="Image 2" data-description="Description 2" data-srcset="https://placehold.co/500x800 800w, https://placehold.co/300x500 320w">
+                    <img src="https://placehold.co/200x200" alt="">
                 </a>
             </li>
             <li class="gallery__item">
-                <a class="js-modal-gallery" href="//placehold.it/300x300" data-title="Image 3" data-description="Description 3" data-srcset="http://placehold.it/500x500 800w, http://placehold.it/300x300 320w">
-                    <img src="//placehold.it/200x200" alt="">
+                <a class="js-modal-gallery" href="https://placehold.co/300x300" data-title="Image 3" data-description="Description 3" data-srcset="https://placehold.co/500x500 800w, https://placehold.co/300x300 320w">
+                    <img src="https://placehold.co/200x200" alt="">
                 </a>
             </li>
         </ul>`;
@@ -197,18 +203,18 @@ describe(`Modal Gallery > accessibility > buttons`, () => {
 
 
     it('should navigate to the next item on next button press', () => {
-        document.body.innerHTML = `<a class="js-modal-gallery" href="//placehold.it/500x500" data-title="Image 1" data-description="Description 1" data-srcset="http://placehold.it/800x800 800w, http://placehold.it/500x500 320w">
-            <img src="//placehold.it/200x200" alt="">
+        document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">
+            <img src="https://placehold.co/200x200" alt="">
         </a>
         <ul hidden>
             <li class="gallery__item">
-                <a class="js-modal-gallery" href="//placehold.it/300x500" data-title="Image 2" data-description="Description 2" data-srcset="http://placehold.it/500x800 800w, http://placehold.it/300x500 320w">
-                    <img src="//placehold.it/200x200" alt="">
+                <a class="js-modal-gallery" href="https://placehold.co/300x500" data-title="Image 2" data-description="Description 2" data-srcset="https://placehold.co/500x800 800w, https://placehold.co/300x500 320w">
+                    <img src="https://placehold.co/200x200" alt="">
                 </a>
             </li>
             <li class="gallery__item">
-                <a class="js-modal-gallery" href="//placehold.it/300x300" data-title="Image 3" data-description="Description 3" data-srcset="http://placehold.it/500x500 800w, http://placehold.it/300x300 320w">
-                    <img src="//placehold.it/200x200" alt="">
+                <a class="js-modal-gallery" href="https://placehold.co/300x300" data-title="Image 3" data-description="Description 3" data-srcset="https://placehold.co/500x500 800w, https://placehold.co/300x300 320w">
+                    <img src="https://placehold.co/200x200" alt="">
                 </a>
             </li>
         </ul>`;

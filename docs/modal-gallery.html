@@ -205,10 +205,10 @@
 <p>From HTML</p>
 <pre><code>&lt;ul&gt;
     &lt;li&gt;
-        &lt;a class=&quot;js-modal-gallery&quot; href=&quot;//placehold.it/500x500&quot; data-title=&quot;Image 1&quot; data-description=&quot;Description 1&quot; data-srcset=&quot;//placehold.it/800x800 800w, //placehold.it/500x500 320w&quot;&gt;Image one&lt;/a&gt;
+        &lt;a class=&quot;js-modal-gallery&quot; href=&quot;https://placehold.co/500x500&quot; data-title=&quot;Image 1&quot; data-description=&quot;Description 1&quot; data-srcset=&quot;https://placehold.co/800x800 800w, https://placehold.co/500x500 320w&quot;&gt;Image one&lt;/a&gt;
     &lt;/li&gt;
     &lt;li&gt;
-        &lt;a class=&quot;js-modal-gallery&quot; href=&quot;//placehold.it/300x800&quot; data-title=&quot;Image 2&quot; data-description=&quot;Description 2&quot; data-srcset=&quot;//placehold.it/500x800 800w, //placehold.it/300x500 320w&quot;&gt;Image two&lt;/a
+        &lt;a class=&quot;js-modal-gallery&quot; href=&quot;https://placehold.co/300x800&quot; data-title=&quot;Image 2&quot; data-description=&quot;Description 2&quot; data-srcset=&quot;https://placehold.co/500x800 800w, https://placehold.co/300x500 320w&quot;&gt;Image two&lt;/a
     &gt;&lt;/li&gt;
 &lt;/ul&gt;
 </code></pre>
@@ -296,14 +296,14 @@ const [ gallery ] = modalGallery('.js-modal-gallery');
 
 const [ gallery ] = modalGallery([
     {
-        src: '//placehold.it/500x500',
-        srcset:'//placehold.it/800x800 800w, //placehold.it/500x500 320w',
+        src: 'https://placehold.co/500x500',
+        srcset:'https://placehold.co/800x800 800w, https://placehold.co/500x500 320w',
         title: 'Image 1',
         description: 'Description 1'
     },
     {
-        src: '//placehold.it/300x800',
-        srcset:'//placehold.it/500x800 800w, //placehold.it/300x500 320w',
+        src: 'https://placehold.co/300x800',
+        srcset:'https://placehold.co/500x800 800w, https://placehold.co/300x500 320w',
         title: 'Image 2',
         description: 'Description 2'
     }
