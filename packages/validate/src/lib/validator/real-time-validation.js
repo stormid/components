@@ -1,4 +1,5 @@
 import { ACTIONS } from '../constants';
+import reducers from '../reducers';
 import {
     getGroupValidityState,
     resolveRealTimeValidationEvent,
@@ -20,34 +21,34 @@ import {
  * dispatched to the store to update state and render the error
  * 
  */
-export const initRealTimeValidation = Store => {
+export const initRealTimeValidation = store => {
     const handler = groupName => () => {
-        const { groups, errors } = Store.getState();
+        const { groups, errors } = store.getState();
         
         if (!groups[groupName].valid && errors[groupName]) {
-            Store.dispatch(ACTIONS.CLEAR_ERROR, groupName, [ clearError(groupName) ]);
+            store.update(reducers[ACTIONS.CLEAR_ERROR](store.getState(), groupName), [ clearError(groupName) ]);
         }
         getGroupValidityState(groups[groupName])
             .then(res => {
                 if (!res.reduce(reduceGroupValidityState, true)) {
-                    Store.dispatch(
-                        ACTIONS.VALIDATION_ERROR,
-                        {
-                            group: groupName,
-                            errorMessages: res.reduce(reduceErrorMessages(groupName, Store.getState()), [])
-                        },
+                    store.update(
+                        reducers[ACTIONS.VALIDATION_ERROR](store.getState(),
+                            {
+                                group: groupName,
+                                errorMessages: res.reduce(reduceErrorMessages(groupName, store.getState()), [])
+                            }),
                         [ renderError(groupName) ]
                     );
                 }
             });
     };
 
-    Object.keys(Store.getState().groups).forEach(groupName => {
+    Object.keys(store.getState().groups).forEach(groupName => {
 
-        const { groups } = Store.getState();
-        const groupUpdate = {...groups};
+        const { groups } = store.getState();
+        const groupUpdate = { ...groups };
         
-        if(!groupUpdate[groupName].hasEvent) {
+        if (!groupUpdate[groupName].hasEvent) {
             groupUpdate[groupName].fields.forEach(input => {
                 input.addEventListener(resolveRealTimeValidationEvent(input), handler(groupName));
             });
@@ -66,8 +67,8 @@ export const initRealTimeValidation = Store => {
             groupUpdate[groupName].hasEvent = true;
         }
       
-        Store.dispatch(ACTIONS.START_REALTIME, {
+        store.update(reducers[ACTIONS.START_REALTIME](store.getState(), {
             groups: groupUpdate
-        });
+        }));
     });
 };

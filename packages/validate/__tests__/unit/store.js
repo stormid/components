@@ -1,16 +1,17 @@
 import { createStore } from '../../src/lib/store';
 import { ACTIONS } from '../../src/lib/constants';
+import reducers from '../../src/lib/reducers';
 let Store;
 beforeAll(() => {
     Store = createStore();
 });
 //createStore
 describe('Validate > Unit > Store > createStore', () => {
-    it('should create a store object with dispatch and get functions', async () => {
+    it('should create a store object with update and get functions', async () => {
         expect.assertions(5);
         expect(Store).not.toBeUndefined();
-        expect(Store.dispatch).not.toBeUndefined();
-        expect(typeof Store.dispatch === 'function').toEqual(true);
+        expect(Store.update).not.toBeUndefined();
+        expect(typeof Store.update === 'function').toEqual(true);
         expect(Store.getState).not.toBeUndefined();
         expect(typeof Store.getState === 'function').toEqual(true);
     });
@@ -24,14 +25,14 @@ describe('Validate > Unit > Store > getState', () => {
     });
 });
 
-//dispatch
-describe('Validate > Unit > Store > dispatch', () => {
+//update
+describe('Validate > Unit > Store > update', () => {
     it('should update state using reducers and nextState payload', async () => {
         expect.assertions(1);
         const nextState = {
             newProp: true
         };
-        Store.dispatch(ACTIONS.SET_INITIAL_STATE, nextState);
+        Store.update(reducers[ACTIONS.SET_INITIAL_STATE](Store.getState(), nextState));
         expect(Store.getState()).toEqual(nextState);
     });
 
@@ -42,7 +43,7 @@ describe('Validate > Unit > Store > dispatch', () => {
         const sideEffect = () => {
             flag = true;
         };
-        Store.dispatch(ACTIONS.SET_INITIAL_STATE, nextState, [sideEffect]);
+        Store.update(reducers[ACTIONS.SET_INITIAL_STATE](Store.getState(), nextState), [sideEffect]);
         expect(flag).toEqual(true);
     });
 
@@ -54,7 +55,7 @@ describe('Validate > Unit > Store > dispatch', () => {
         const sideEffect = () => {
             flag = true;
         };
-        Store.dispatch(ACTIONS.SET_INITIAL_STATE, false, [sideEffect]);
+        Store.update(reducers[ACTIONS.SET_INITIAL_STATE](Store.getState(), false), [sideEffect]);
         expect(flag).toEqual(true);
         expect(Store.getState()).toEqual(priorState);
     });
