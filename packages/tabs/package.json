@@ -1,6 +1,6 @@
 {
   "name": "@stormid/tabs",
-  "version": "1.0.0-alpha.15",
+  "version": "1.0.0",
   "description": "Accessible tabbed panelled content areas",
   "author": "stormid",
   "license": "MIT",
