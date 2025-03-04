@@ -25,7 +25,7 @@
     "dev": "webpack-dev-server --config example/webpack.config.js",
     "prod": "webpack --config example/webpack.config.js --mode production",
     "prepublish": "npm run -s build",
-    "test": "jest --coverage"
+    "test": "jest --coverage && npx playwright test"
   },
   "gitHead": "9042db4005411c4360ba3e8188e03333c10098f2"
 }
