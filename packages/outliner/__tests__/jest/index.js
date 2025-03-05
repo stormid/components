@@ -1,4 +1,4 @@
-import '../src';
+import '../../src';
 
 describe('Outliner', () => {
     const mousedown = new Event('mousedown', { bubbles: false, cancelable: false });
