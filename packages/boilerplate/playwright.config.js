@@ -1,5 +1,6 @@
+const { defineConfig } = require('@playwright/test');
 const base = require('../../tools/playwright/config.base.js');
 
-module.exports = {
+module.exports = defineConfig({
     ...base
-}
+})

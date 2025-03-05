@@ -1,13 +1,13 @@
-const { defineConfig, devices } = require('@playwright/test');
+const { devices } = require('@playwright/test');
 
-module.exports = defineConfig({
+module.exports = {
   testDir: './__tests__/playwright',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'line',
-  timeout: 120_000,
+  timeout: 60_000,
   expect: {
     timeout: 10_000,
   },
@@ -47,10 +47,10 @@ module.exports = defineConfig({
     },
   ],
   webServer: {
-    command: 'webpack-dev-server --config example/webpack.config.js --hot --no-open',
+    command: 'webpack-dev-server --config example/playwright.webpack.config.js --hot --no-open',
     url: 'http://127.0.0.1:8081',
     reuseExistingServer: !process.env.CI,
   },
-});
+};
 
 
