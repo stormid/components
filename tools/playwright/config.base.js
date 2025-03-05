@@ -47,7 +47,7 @@ module.exports = {
     },
   ],
   webServer: {
-    command: 'webpack-dev-server --config example/playwright.webpack.config.js --hot --no-open',
+    command: 'webpack-dev-server --config tools/playwright.webpack.config.js --hot --no-open',
     url: 'http://127.0.0.1:8081',
     reuseExistingServer: !process.env.CI,
   },

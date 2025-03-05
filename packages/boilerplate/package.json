@@ -22,8 +22,8 @@
   ],
   "scripts": {
     "build": "microbundle --name boilerplate",
-    "dev": "webpack-dev-server --config example/webpack.config.js",
-    "prod": "webpack --config example/webpack.config.js --mode production",
+    "dev": "webpack-dev-server --config tools/webpack.config.js",
+    "prod": "webpack --config tools/webpack.config.js --mode production",
     "prepublish": "npm run -s build",
     "test": "jest --coverage & npx playwright test"
   },
