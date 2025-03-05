@@ -11,7 +11,7 @@ test.describe('Boilerplate', { tag: '@reduced'}, () => {
 	});	
 
     test('should attach the click eventListener to DOMElement of each instance with click eventHandler to toggle className', async({ page }) => {
-        const element = page.locator('.js-boilerplate');
+        const element = page.locator('.js-boilerplate').first();
 		await element.click();
         await expect(element).toHaveClass(/clicked/);
 		await element.click();

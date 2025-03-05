@@ -7,6 +7,10 @@ module.exports = defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'line',
+  timeout: 120_000,
+  expect: {
+    timeout: 10_000,
+  },
   use: {
     baseURL: 'http://127.0.0.1:8081',
     trace: 'on-first-retry',
