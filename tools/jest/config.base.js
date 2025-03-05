@@ -1,9 +1,9 @@
 module.exports = {
-    moduleFileExtensions: [ "js" ],
+    moduleFileExtensions: [ 'js' ],
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1'
       },
     collectCoverage: false,
     verbose: true,
-    testPathIgnorePatterns: []
+    testPathIgnorePatterns: ['\\.spec\\.js$']
 };
