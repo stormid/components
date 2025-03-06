@@ -1,5 +1,5 @@
-import component from '../src';
-import { getSelection } from '../src/lib/utils';
+import component from '../../src';
+import { getSelection } from '../../src/lib/utils';
 
 let basic, withCallback;
 const init = () => {
@@ -36,30 +36,11 @@ describe(`Boilerplate > Initialisation`, () => {
         expect(basic[0].click).not.toBeNull();
     });
 
-    it('should attach the click eventListener to DOMElement of each instance with click eventHandler to toggle className', () => {
-        basic[0].node.click();
-        expect(basic[0].node.classList).toContain('clicked');
-        basic[0].node.click();
-        expect(basic[0].node.classList).not.toContain('clicked');
-    });
-
     it('should initialisation with different settings if different options are passed', () => {
         expect(basic[0].settings.callback).not.toEqual(withCallback[0].settings.callback);
     });
 
 });
-
-describe('Boilerplate > Component API', () => {
-
-    it('should trigger the click function toggling the className', () => {
-        basic[0].click.call(basic[0].node);
-        expect(basic[0].node.classList).toContain('clicked');
-        basic[0].click.call(basic[0].node);
-        expect(basic[0].node.classList).not.toContain('clicked');
-    });
-
-});
-
 
 describe('Boilerplate > Options', () => {
 

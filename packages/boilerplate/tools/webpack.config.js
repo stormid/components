@@ -8,7 +8,7 @@ module.exports = {
     entry: './example/src/js/index.js',
     output: {
         filename: 'app.js',
-        path: path.resolve(__dirname, './build')
+        path: path.resolve(__dirname, '../build')
     },
     mode: 'development',
     devtool: 'source-map',
@@ -17,7 +17,7 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new CleanWebpackPlugin(['./build']),
+        new CleanWebpackPlugin(['../build']),
         new HtmlWebpackPlugin({
             title: pkg.name,
             template: './example/src/index.html',
