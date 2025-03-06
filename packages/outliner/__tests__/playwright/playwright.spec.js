@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
 	await page.goto('/');
 });
 
-test.describe('Outliner', { tag: '@reduced'}, () => {
+test.describe('Outliner', { tag: '@all'}, () => {
 	
     test('should attach a mousedown eventListener that adds a className to the documentElement', async ({ page }) => {
         await page.mouse.click(0, 0);
@@ -13,7 +13,7 @@ test.describe('Outliner', { tag: '@reduced'}, () => {
     });
 
 	test('Example links should have no visible outline when clicked', async ({ page }) => {
-        const linktest = page.locator('a').first();
+        const linktest = page.locator('button').first();
 		await linktest.click();
 		await expect(linktest).toHaveCSS('outline-style', 'none');
     });
@@ -24,7 +24,7 @@ test.describe('Outliner', { tag: '@reduced'}, () => {
     });
 
 	test('Example links should have visible outline when tabbed to', async ({ page }) => {
-        const linktest = page.locator('a').first();
+        const linktest = page.locator('button').first();
 		await page.keyboard.press('Tab');
 		await expect(linktest).toHaveCSS('outline-style', 'solid');
     });

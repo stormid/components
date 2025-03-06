@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
 	await page.goto('/');
 });
 
-test.describe('Boilerplate', { tag: '@reduced'}, () => {
+test.describe('Boilerplate', { tag: '@all'}, () => {
 	test("DOM elements should exist", async ({ page }) => {
         await expect(page.locator(".js-boilerplate")).toHaveCount(2);  
 	});	
