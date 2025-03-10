@@ -18,16 +18,24 @@ test.describe('Outliner', { tag: '@all'}, () => {
 		await expect(linktest).toHaveCSS('outline-style', 'none');
     });
 
-    test('should attach a keydown eventListener that removes the className', async ({page}) => {
-        await page.keyboard.press('Tab');
+    test('should attach a keydown eventListener that removes the className', async ({ page }, testInfo) => {
+		const tabKey = testInfo.project.use.defaultBrowserType === 'webkit'
+				? "Alt+Tab"
+				: "Tab";
+		
+		await page.keyboard.press(tabKey);
 		expect(await page.evaluate(() => document.documentElement.classList.contains('no-outline'))).toEqual(false);
-    });
+	});
 
-	test('Example links should have visible outline when tabbed to', async ({ page }) => {
-        const linktest = page.locator('button').first();
-		await page.keyboard.press('Tab');
+	test('Example should have visible outline when tabbed to', async ({ page }, testInfo) => {
+		const linktest = page.locator('button').first();
+		const tabKey = testInfo.project.use.defaultBrowserType === 'webkit'
+				? "Alt+Tab"
+				: "Tab";
+		
+		await page.keyboard.press(tabKey);
 		await expect(linktest).toHaveCSS('outline-style', 'solid');
-    });
+	});
 });
 
 test.describe('Outliner > Axe', { tag: '@reduced'}, () => {
