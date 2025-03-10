@@ -22,32 +22,10 @@
 			max-width: 960px;
 			padding: 0 24px;
 		}
-		hr {
-			height: 1px;
-			width: 100%;
-			display: block;
-			background: #ddd;
-			margin: 24px 0;
-			border: 0 none;
-		}
-		nav {
-            padding:30px 0;
+        button {
+            padding: 10px 5px;
         }
-        nav a {
-            display: inline-block;
-            text-align: center;
-            padding: 5px 20px;
-            margin: 0 15px;
-            color: blue;
-        }
-        nav a:first-child {
-            margin-left: 0;
-            padding-left: 0;
-        }
-        nav a:hover {
-            color: black;
-        }
-        nav a:focus {
+        button:focus {
             outline: 3px solid blue;
         }
         .no-outline * {
@@ -58,12 +36,7 @@
 <body>
     <main class="container">
         <h1>Outliner example</h1>
-        <nav>
-            <a href="#">Link one</a>
-            <a href="#">Link two</a>
-            <a href="#">Link three</a>
-            <a href="#">Link four</a>
-        </nav>
+        <button type="button">Example</button>
     </main>
 	
 </body>
