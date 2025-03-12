@@ -13,8 +13,13 @@ test.beforeEach(async ({ page }, testInfo) => {
 	await page.keyboard.press('Enter');
 });
 
+test.describe('Scroll spy > functionality', { tag: '@all'}, () => {
+	
 
-test.describe('Skip > Axe', { tag: '@reduced'}, () => {
+
+});
+
+test.describe('Scroll spy > Axe', { tag: '@reduced'}, () => {
 	test('Should not have any automatically detectable accessibility issues', async ({ page }) => {	
 		const accessibilityScanResults = await new AxeBuilder({ page }).analyze(); 
 		expect(accessibilityScanResults.violations).toEqual([]);
