@@ -8,7 +8,6 @@ export const findSpies = nodes => nodes.map(node => {
 
 export const setActive = spy => state => {
     const { settings } = state;
-    console.log(spy);
     if (spy !== undefined) spy.node.classList.add(settings.activeClassName);
 };
 
