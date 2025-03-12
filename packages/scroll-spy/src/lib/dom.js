@@ -1,14 +1,10 @@
 export const findSpies = nodes => nodes.map(node => {
     if (!node.hash || !document.querySelector(node.hash)) return void console.warn('Node is missing a href hash or the hash target id does not exist');
     
-    const newSpy =  {
+    return  {
         node,
         target: document.querySelector(node.hash),
     };
-
-    console.log(newSpy);
-
-    return newSpy;
 });
 
 export const setActive = spy => state => {
