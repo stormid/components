@@ -33,7 +33,7 @@ const init = () => {
             </section>
             <section id="section4" style="height:500px">
                 Section 4
-            </section>`;
+            </section></div>`;
 
     basic = scrollSpy('.js-scroll-spy');
     withCallback = scrollSpy('.js-scroll-spy-two', {
