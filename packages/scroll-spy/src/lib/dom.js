@@ -13,12 +13,12 @@ export const findSpies = nodes => nodes.map(node => {
 
 export const setActive = spy => state => {
     const { settings } = state;
-    spy.node.classList.add(settings.activeClassName);
+    if (spy !== undefined) spy.node.classList.add(settings.activeClassName);
 };
 
 export const unsetActive = spy => state => {
     const { settings } = state;
-    spy.node.classList.remove(settings.activeClassName);
+    if (spy !== undefined) spy.node.classList.remove(settings.activeClassName);
 };
 
 export const unsetAllActive = state => {
