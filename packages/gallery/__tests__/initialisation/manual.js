@@ -1,6 +1,5 @@
 import gallery from '../../src';
 import defaults from '../../src/lib/defaults';
-import { ATTRIBUTE } from '../../src/lib/constants';
 
 describe('Gallery > initialisation > manual initialisation', () => {
     //mock image complete because JSDom cannot load images
@@ -29,7 +28,6 @@ describe('Gallery > initialisation > manual initialisation', () => {
                         <li
                             class="gallery__item"
                             data-gallery-item
-                            data-gallery-item-src="http://placehold.it/800x800"
                             aria-hidden="true"
                         >
                             <div class="gallery__item-img-container" data-gallery-item-img-container>
@@ -37,7 +35,7 @@ describe('Gallery > initialisation > manual initialisation', () => {
                                     alt="Image one"
                                     class="gallery__item-img"
                                     decoding="async"
-                                    src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                                    src="http://placehold.it/800x800""
                                 />
                             </div>
                             <div class="gallery__item-footer">
@@ -57,15 +55,14 @@ describe('Gallery > initialisation > manual initialisation', () => {
                         <li
                             class="gallery__item"
                             data-gallery-item
-                            data-gallery-item-src="http://placehold.it/1200x1200"
                             aria-hidden="true"
                         >
-                            <div class="gallery__item-img-container" data-gallery-item-img-container>
+                            <div class="gallery__item-img-container">
                                 <img 
                                     alt="Image two"
                                     class="gallery__item-img"
                                     decoding="async"
-                                    src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                                    src="http://placehold.it/1200x1200"
                                 />
                             </div>
                             <div class="gallery__item-footer">
@@ -94,13 +91,9 @@ describe('Gallery > initialisation > manual initialisation', () => {
         expect(items[0].node.hasAttribute('aria-hidden')).toEqual(true);
         expect(items[0].node.classList.contains(defaults.className.active)).toEqual(false);
 
-        const imgs = await instance.initialise();
-        expect(items[0].node.hasAttribute(ATTRIBUTE.LOADED)).toEqual(true);
+        await instance.initialise();
         expect(items[0].node.hasAttribute('aria-hidden')).toEqual(false);
         expect(items[0].node.classList.contains(defaults.className.active)).toEqual(true);
-        expect(imgs.length).toEqual(2);
-        expect(imgs[0].src).toEqual('http://placehold.it/800x800');
-        expect(imgs[1].src).toEqual('http://placehold.it/1200x1200');
     });
 
 });

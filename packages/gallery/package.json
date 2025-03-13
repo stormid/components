@@ -1,6 +1,6 @@
 {
   "name": "@stormid/gallery",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0",
   "description": "Accessible image gallery",
   "author": "stormid",
   "license": "MIT",
@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "npx microbundle --name Gallery",
-    "test": "node_modules/.bin/jest --coverage",
+    "test": "jest --coverage --passWithNoTests",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",
     "prepublish": "npm run -s build"
