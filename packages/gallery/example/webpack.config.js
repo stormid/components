@@ -10,6 +10,11 @@ module.exports = {
         filename: 'app.js',
         path: path.resolve(__dirname, './build')
     },
+    mode: 'development',
+    devtool: 'source-map',
+    devServer: {
+        port: 8081
+    },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new CleanWebpackPlugin(['./build']),
