@@ -1,4 +1,4 @@
-import gallery from '../src';
+import gallery from '../../src';
 
 let instance;
 
@@ -105,14 +105,20 @@ beforeAll(() => {
                     </button>
                 </div>
             </section>`;
+    [ instance ] = gallery('.js-gallery', { updateURL: true });
 });
 
-describe('Gallery > from URL', () => {
+describe('Gallery > updateURL', () => {
 
-    it('Should set the initial activeIndex from the URL', () => {
-        window.location.href = `#'gallery-1-3`;
-        [ instance ] = gallery('.js-gallery');
-        expect(instance.getState().activeIndex).toBe(2);
+    it('Should update the URL when navigating the gallery', () => {
+        instance.goTo(2);
+        // const expected = 'http://localhost:8080/gallery/1';
+        // const url = new URL(window.location.href);
+        // url.hash = '#1';
+        // window.history.pushState({}, '', url.href);
+        expect(window.location.hash).toBe('#gallery-1-3');
+        instance.getState().dom.next.click();
+        expect(window.location.hash).toBe('#gallery-1-1');
     });
 
 });

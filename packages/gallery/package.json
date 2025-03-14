@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "npx microbundle --name Gallery",
-    "test": "jest --coverage --passWithNoTests",
+    "test": "jest --coverage & npx playwright test",
     "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
     "prod": "webpack --config example/webpack.config.js --mode production",
     "prepublish": "npm run -s build"

@@ -1,4 +1,4 @@
-import { sanitise, getIndexFromURL } from '../src/lib/utils';
+import { sanitise, getIndexFromURL, getSelection } from '../../src/lib/utils';
 
 describe('Gallery > Utils > sanitize', () => {
 
@@ -20,9 +20,6 @@ describe('Gallery > Utils > sanitize', () => {
 
 });
 
-//composeItems
-
-//composeDOM
 describe('Gallery > getIndexFromURL', () => {
     //return fallback if url.split throws
     it('Should return fallback if url.split throws', () => {
@@ -61,5 +58,43 @@ describe('Gallery > getIndexFromURL', () => {
         expect(result).toEqual([0, true]);
     });
 
+
+});
+
+
+describe('Gallery > Utils > Get Selection', () => {
+
+    const setupDOM = () => {
+        document.body.innerHTML = `<div class="js-gallery test"></div>`;
+    };
+
+    beforeAll(setupDOM);
+
+    it('should return an array when passed a DOM element', async () => {
+        const node = document.querySelector('.js-gallery');
+        const els = getSelection(node);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a NodeList element', async () => {
+        const node = document.querySelectorAll('.js-gallery');
+        const els = getSelection(node);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed an array of DOM elements', async () => {
+        const node = document.querySelector('.js-gallery');
+        const els = getSelection([node]);
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
+
+    it('should return an array when passed a string', async () => {
+        const els = getSelection('.js-gallery');
+        expect(els instanceof Array).toBe(true);
+        expect(els.length).toEqual(1);
+    });
 
 });

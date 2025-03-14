@@ -3,15 +3,12 @@ import { ATTRIBUTE, EVENTS } from './constants';
 
 
 /*
- * Returns a Promise wrapping the loading image Promises using Promise.all
- *
- * @param i, Number, index of item
+ * @param store, Object, store instance
  */
 export const init = store => () => {
     const state = store.getState();
     const { settings, items, dom, activeIndex } = state;
 
-    //initialise buttons
     if (!dom.liveRegion) console.warn(`A live region announcing current and total items is recommended for screen readers.`);
     else writeLiveRegion(state);
     if (dom.fullscreen) {
@@ -29,7 +26,6 @@ export const init = store => () => {
         }));
     }
     
-    //set initial DOM state
     items.forEach((item, i) => {
         if (!item.node.hasAttribute('tabindex')) item.node.setAttribute('tabindex', 0);
         if (i === activeIndex) {
