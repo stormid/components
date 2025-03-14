@@ -1,18 +1,20 @@
-import gallery from '../src';
+import gallery from '../../src';
 
 let instance;
 
 beforeAll(() => {
-    document.body.innerHTML = `<section class="gallery js-gallery" id="gallery">
+    document.body.innerHTML = `<button data-gallery-navigate="1">1</button>
+    <button data-gallery-navigate="2">2</button>
+    <section class="gallery js-gallery" id="gallery">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
-                    <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 3</div>
+                    <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>
                     <button class="gallery__fullscreen" aria-label="Full screen" data-gallery-fullscreen>
                         <svg class="gallery__fullscreen-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
                     </button>
                 </div>
                 <div class="gallery__main">
-                    <button class="gallery__previous" aria-label="Previous image" disabled data-gallery-previous>
+                    <button class="gallery__previous" aria-label="Previous image" data-gallery-previous>
                         <svg class="gallery__previous-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><rect fill="none" height="24" width="24"/><g><polygon points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"/></g></svg>
                     </button>
                     <ul class="gallery__list">
@@ -105,20 +107,41 @@ beforeAll(() => {
                     </button>
                 </div>
             </section>`;
-    [ instance ] = gallery('.js-gallery', { updateURL: true });
+    [ instance ] = gallery('.js-gallery');
 });
 
-describe('Gallery > updateURL', () => {
+//Don't need to test keyboard interactions separately (the test won't work by dispatching an event anyway)
+//https://www.w3.org/TR/WCAG20-TECHS/SCR35.html
+//The onclick event is mapped to the default action of a link or button.
+//The default action occurs when the user clicks the element with a mouse, but it also occurs when the user focuses the element and hits enter or space, and when the element is triggered via the accessibility API.
+describe('Gallery > click interactions', () => {
 
-    it('Should update the URL when navigating the gallery', () => {
-        instance.goTo(2);
-        // const expected = 'http://localhost:8080/gallery/1';
-        // const url = new URL(window.location.href);
-        // url.hash = '#1';
-        // window.history.pushState({}, '', url.href);
-        expect(window.location.hash).toBe('#gallery-1-3');
+    it('should navigate to the next item via the next button', () => {
+        expect(instance.getState().activeIndex).toEqual(0);
         instance.getState().dom.next.click();
-        expect(window.location.hash).toBe('#gallery-1-1');
+        expect(instance.getState().activeIndex).toEqual(1);
+        instance.getState().dom.next.click();
+        expect(instance.getState().activeIndex).toEqual(2);
+        instance.getState().dom.next.click();
+        expect(instance.getState().activeIndex).toEqual(0);
+    });
+
+    it('should navigate to the previous item via the previous button', () => {
+        expect(instance.getState().activeIndex).toEqual(0);
+        instance.getState().dom.previous.click();
+        expect(instance.getState().activeIndex).toEqual(2);
+        instance.getState().dom.previous.click();
+        expect(instance.getState().activeIndex).toEqual(1);
+        instance.getState().dom.previous.click();
+        expect(instance.getState().activeIndex).toEqual(0);
+    });
+
+    it('should navigate to a specific item via a navigation button', () => {
+        expect(instance.getState().activeIndex).toEqual(0);
+        document.querySelector('[data-gallery-navigate="1"]').click();
+        expect(instance.getState().activeIndex).toEqual(1);
+        document.querySelector('[data-gallery-navigate="2"]').click();
+        expect(instance.getState().activeIndex).toEqual(2);
     });
 
 });

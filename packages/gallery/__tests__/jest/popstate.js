@@ -1,4 +1,4 @@
-import gallery from '../src';
+import gallery from '../../src';
 
 let instance;
 
