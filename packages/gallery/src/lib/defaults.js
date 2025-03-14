@@ -2,8 +2,6 @@
 
 export default {
     name: false, //for setting the URL, if not set (false) it will get it from the id the container node, or just 'gallery'
-    preload: false,
-    totals: true,
     startIndex: 0,
     selector: {
         item: '[data-gallery-item]',
