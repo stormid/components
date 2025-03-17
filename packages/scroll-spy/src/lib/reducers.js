@@ -1,6 +1,11 @@
 export const addActive = (state, spy) => {
     if (state.active.includes(spy)) return state;
-    return { ...state, active: [ ...state.active, spy ]  };
+
+    const newActiveSpies = [ ...state.active, spy ].sort((a, b) => {
+        return a.target.offsetTop - b.target.offsetTop;
+    });
+
+    return { ...state, active: newActiveSpies  };
 };
 
 export const removeActive = (state, spy) => {
@@ -9,18 +14,5 @@ export const removeActive = (state, spy) => {
 };
 
 export const setDirection = (state, direction) => {
-    const { active } = state;
-
-    console.log("before sort");
-    console.table(active)
-
-    if(active.length > 1) active.sort((a, b) => {
-        console.log
-        if (direction === 'down') return a.target.offsetTop - b.target.offsetTop;
-        return b.target.offsetTop - a.target.offsetTop;
-    });
-    console.log("after sort");
-    console.table(active)
-
-    return { ...state, active: active };
+    return { ...state, scrollDirectionY: direction };
 };

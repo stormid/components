@@ -3,23 +3,18 @@ import { findSpies, setActive } from './dom';
 import { setDirection, addActive, removeActive } from './reducers';
 
 export const callback = (store, spy) => (entry) => {
-
     store.update(setDirection(store.getState(), entry.scrollDirectionY), [() => {
         (entry.isIntersecting) ? store.update(addActive(store.getState(), spy), [ setActive() ]) :  store.update(removeActive(store.getState(), spy), [ setActive() ]);
     }]);
 };
 
-
-function createIntersectionObserver(callback, opts) {
+export const createIntersectionObserver = (callback, opts) => {
     var previousY = new Map();
-  
     var observer = new IntersectionObserver(function(entries, observer){
         entries.forEach(function (entry) {
             var currY = entry.boundingClientRect.y;
             var prevY = previousY.get(entry.target);
-
             entry.scrollDirectionY = (currY > prevY) ? 'up' : 'down';
-
             callback(entry);
             previousY.set(entry.target, currY);
         });
@@ -28,10 +23,8 @@ function createIntersectionObserver(callback, opts) {
     return observer;
 }
 
-
-const initObservers = store => state => {
+export const initObservers = store => state => {
     const { settings, spies } = store.getState();
-
     spies.map(spy => {
         if (spy === undefined) return;
         const observer = createIntersectionObserver(callback(store, spy), {
