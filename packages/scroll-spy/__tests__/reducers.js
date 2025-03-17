@@ -1,4 +1,4 @@
-import { addActive, removeActive } from '../src/lib/reducers';
+import { addActive, removeActive, setDirection } from '../src/lib/reducers';
 
 describe(`Scroll spy > reducers > addActive`, () => {
 
@@ -47,4 +47,16 @@ describe(`Scroll spy > reducers > removeActive`, () => {
         expect(removeActive(state, newSpy)).toEqual(state);
     });
 
+});
+
+describe(`Scroll spy > reducers > setDirection`, () => {
+
+    it('should update the scroll direction', () => {
+        const state = {
+            scrollDirectionY: 'down',
+        };
+        expect(setDirection(state, 'up')).toEqual({
+            scrollDirectionY: 'up',
+        });
+    });
 });
