@@ -9,5 +9,18 @@ export const removeActive = (state, spy) => {
 };
 
 export const setDirection = (state, direction) => {
-    return { ...state, scrollDirectionY: direction };
+    const { active } = state;
+
+    console.log("before sort");
+    console.table(active)
+
+    if(active.length > 1) active.sort((a, b) => {
+        console.log
+        if (direction === 'down') return a.target.offsetTop - b.target.offsetTop;
+        return b.target.offsetTop - a.target.offsetTop;
+    });
+    console.log("after sort");
+    console.table(active)
+
+    return { ...state, active: active };
 };
