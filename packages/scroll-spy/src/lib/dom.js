@@ -4,12 +4,12 @@ export const findSpies = nodes => nodes.map(node => {
     return {
         node,
         target: document.querySelector(node.hash),
-        // parent: node.parentNode.tagName.toLowerCase() === 'li' ? node.parentNode : null,
     };
 });
 
 export const setActive = spy => state => {
-    const { settings } = state;
+    const { settings, scrollDirectionY } = state;
+    console.log(scrollDirectionY);
     if (spy !== undefined) spy.node.classList.add(settings.activeClassName);
 };
 
