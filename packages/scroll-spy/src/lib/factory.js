@@ -1,6 +1,6 @@
 import { createStore } from './store';
 import { findSpies, setActive } from './dom';
-import { setDirection, addActive, removeActive } from './reducers';
+import { setDirection, addActive, removeActive, setScrolled } from './reducers';
 
 export const callback = (store, spy) => (entry) => {
     store.update(setDirection(store.getState(), entry.scrollDirectionY), [() => {
@@ -34,11 +34,16 @@ export const initObservers = store => state => {
         });
         observer.observe(spy.target);
     });
+
+    window.onscroll = () => {
+        store.update(setScrolled(store.getState(), true), []);
+    }
+
 };
 
 export default ({ settings, nodes }) => {
     const store = createStore();
-    store.update({ spies: findSpies(nodes), settings, active: [], scrollDirectionY: 'down'}, [ initObservers(store) ]);
+    store.update({ spies: findSpies(nodes), settings, active: [], hasScrolled: false, scrollDirectionY: 'down'}, [ initObservers(store) ]);
 	
     return {
         getState: store.getState

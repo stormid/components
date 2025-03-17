@@ -16,3 +16,7 @@ export const removeActive = (state, spy) => {
 export const setDirection = (state, direction) => {
     return { ...state, scrollDirectionY: direction };
 };
+
+export const setScrolled = (state, scrolled) => {
+    return { ...state, hasScrolled: scrolled };
+};

@@ -8,11 +8,16 @@ export const findSpies = nodes => nodes.map(node => {
 });
 
 export const setActive = () => state => {
-    const { settings, spies, active, scrollDirectionY } = state;
+    const { settings, spies, active, scrollDirectionY, hasScrolled } = state;
 
     spies.map(spy => {
         if (spy !== undefined) spy.node.classList.remove(settings.activeClassName);
     });
+
+    if (!hasScrolled) {
+        active[0].node.classList.add(settings.activeClassName);
+        return;
+    }
 
     active.forEach((spy, index) => {
         if (settings.single && scrollDirectionY === 'down' && index !== active.length - 1) return;
