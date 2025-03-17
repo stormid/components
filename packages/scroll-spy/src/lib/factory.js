@@ -38,7 +38,6 @@ export const initObservers = store => state => {
     window.onscroll = () => {
         store.update(setScrolled(store.getState(), true), []);
     }
-
 };
 
 export default ({ settings, nodes }) => {

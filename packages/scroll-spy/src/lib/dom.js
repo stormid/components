@@ -14,8 +14,8 @@ export const setActive = () => state => {
         if (spy !== undefined) spy.node.classList.remove(settings.activeClassName);
     });
 
-    if (!hasScrolled) {
-        active[0].node.classList.add(settings.activeClassName);
+    if (!hasScrolled && active.length) {
+        if (active[0].node) active[0].node.classList.add(settings.activeClassName);
         return;
     }
 
