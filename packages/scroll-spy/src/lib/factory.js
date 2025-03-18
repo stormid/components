@@ -29,7 +29,7 @@ export const initObservers = store => state => {
 
 export default ({ settings, nodes }) => {
     const store = createStore();
-    store.update({ spies: findSpies(nodes), settings, active: [], hasScrolled: false}, [ initObservers(store) ]);
+    store.update({ spies: findSpies(nodes), settings, active: [], hasScrolledToBottom: false}, [ initObservers(store) ]);
 	
     return {
         getState: store.getState

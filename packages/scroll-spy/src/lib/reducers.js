@@ -14,5 +14,5 @@ export const removeActive = (state, spy) => {
 };
 
 export const setScrolled = (state, scrolled) => {
-    return { ...state, hasScrolled: scrolled };
+    return { ...state, hasScrolledToBottom: scrolled };
 };

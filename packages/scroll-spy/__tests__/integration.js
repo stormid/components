@@ -13,7 +13,7 @@ describe('Scroll spy > factory > callback', () => {
             state: {
                 settings: defaults,
                 active: [spy],
-                hasScrolled: false
+                hasScrolledToBottom: false
             },
             update: updateMock
         };
@@ -27,7 +27,7 @@ describe('Scroll spy > factory > callback', () => {
         const node = document.querySelector('.node');
         const spy = { node, target: 'target-1' };
         const Store = createStore();
-        Store.update({ spies: [spy], settings: defaults, active: [], hasScrolled: false });
+        Store.update({ spies: [spy], settings: defaults, active: [], hasScrolledToBottom: false });
         const entries = [{ isIntersecting: true }];
         intersectionCallback(Store, spy)(entries);
         expect(Store.getState().active).toEqual([spy]);
@@ -41,7 +41,7 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.update({ spies: [spy], settings: defaults, active: [spy], hasScrolled: false });
+        Store.update({ spies: [spy], settings: defaults, active: [spy], hasScrolledToBottom: false });
         const entries = [{ isIntersecting: true }];
         intersectionCallback(Store, spy2)(entries);
         expect(Store.getState().active).toEqual([spy, spy2]);
@@ -69,7 +69,7 @@ describe('Scroll spy > factory > callback', () => {
         const node = document.querySelector('.node');
         const spy = { node, target: 'target-1' };
         const Store = createStore();
-        Store.update({ spies: [spy], settings: defaults, active: [spy], hasScrolled: false });
+        Store.update({ spies: [spy], settings: defaults, active: [spy], hasScrolledToBottom: false });
         const entries = [{ isIntersecting: false }];
         intersectionCallback(Store, spy)(entries);
         expect(Store.getState().active).toEqual([]);
@@ -83,7 +83,7 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.update({ spies: [spy, spy2], settings: defaults, active: [spy], hasScrolled: false });
+        Store.update({ spies: [spy, spy2], settings: defaults, active: [spy], hasScrolledToBottom: false });
         const entries = [{ isIntersecting: true }];
         intersectionCallback(Store, spy2)(entries);
         expect(Store.getState().active).toEqual([spy, spy2]);
@@ -98,7 +98,7 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.update({ spies: [spy, spy2], settings: defaults, active: [spy], hasScrolled: true });
+        Store.update({ spies: [spy, spy2], settings: defaults, active: [spy], hasScrolledToBottom: true });
         const entries = [{ isIntersecting: true }];
         intersectionCallback(Store, spy2)(entries);
         expect(Store.getState().active).toEqual([spy, spy2]);
@@ -113,7 +113,7 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.update({ spies: [spy, spy2], settings: Object.assign({}, defaults, { single: false }), defaults, active: [spy, spy2], hasScrolled: false });
+        Store.update({ spies: [spy, spy2], settings: Object.assign({}, defaults, { single: false }), defaults, active: [spy, spy2], hasScrolledToBottom: false });
         const entries = [{ isIntersecting: false}];
         intersectionCallback(Store, spy2)(entries);
         expect(Store.getState().active).toEqual([spy]);
