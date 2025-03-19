@@ -26,7 +26,16 @@ export const initObservers = store => state => {
         observer.observe(spy.target);
     });
 
-    window.onscroll = scrollCallback(store);
+    let throttleTick = false;
+    window.addEventListener('scroll', () => {
+        if (!throttleTick) {
+            window.requestAnimationFrame(() => {
+                scrollCallback(store)();
+                throttleTick = false;
+            });
+            throttleTick = true;
+        }
+    });
 };
 
 export default ({ settings, nodes }) => {
