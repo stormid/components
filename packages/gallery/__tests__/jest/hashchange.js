@@ -108,24 +108,24 @@ beforeEach(() => {
     [ instance ] = gallery('.js-gallery', { updateURL: true });
 });
 
-describe('Gallery > popstate', () => {
+describe('Gallery > hashchange', () => {
 
 
-    it('Should not update the gallery on popstate if a new hash does not match the addressing spec', () => {
+    it('Should not update the gallery on hashchange if a new hash does not match the addressing spec', () => {
         expect(instance.getState().activeIndex).toBe(0);
-        window.dispatchEvent(new PopStateEvent('popstate', { state: { URL: '#test' } }));
+        window.dispatchEvent(new HashChangeEvent('hashchange', { newURL: '#test' }));
         expect(instance.getState().activeIndex).toBe(0);
     });
 
-    it('Should not update the gallery on popstate if the event has no state', () => {
+    it('Should not update the gallery on hashchange if the event has no state', () => {
         expect(instance.getState().activeIndex).toBe(0);
-        window.dispatchEvent(new PopStateEvent('popstate'));
+        window.dispatchEvent(new HashChangeEvent('hashchange'));
         expect(instance.getState().activeIndex).toBe(0);
     });
 
-    it('Should update the gallery on popstate if a new hash matches the addressing spec', () => {
+    it('Should update the gallery on hashchange if a new hash matches the addressing spec', () => {
         expect(instance.getState().activeIndex).toBe(0);
-        window.dispatchEvent(new PopStateEvent('popstate', { state: { URL: '#gallery-1-2' } }));
+        window.dispatchEvent(new HashChangeEvent('hashchange', { newURL: '#gallery-1-2' }));
         expect(instance.getState().activeIndex).toBe(1);
     });
 

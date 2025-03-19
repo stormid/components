@@ -1,13 +1,9 @@
 import { sanitise } from './utils';
-import { ATTRIBUTE, EVENTS } from './constants';
+import { ATTRIBUTE, EVENTS, KEYCODES } from './constants';
 
-
-/*
- * @param store, Object, store instance
- */
 export const init = store => () => {
     const state = store.getState();
-    const { settings, items, dom, activeIndex } = state;
+    const { settings, items, dom, activeIndex, node } = state;
 
     if (!dom.liveRegion) console.warn(`A live region announcing current and total items is recommended for screen readers.`);
     else writeLiveRegion(state);
@@ -27,15 +23,27 @@ export const init = store => () => {
     }
     
     items.forEach((item, i) => {
-        if (!item.node.hasAttribute('tabindex')) item.node.setAttribute('tabindex', 0);
+        if (!item.hasAttribute('tabindex')) item.setAttribute('tabindex', 0);
         if (i === activeIndex) {
-            if (!item.node.classList.contains(settings.className.active)) item.node.classList.add(settings.className.active);
-            if (item.node.hasAttribute('aria-hidden')) item.node.removeAttribute('aria-hidden');
+            if (!item.classList.contains(settings.className.active)) item.classList.add(settings.className.active);
+            if (item.hasAttribute('aria-hidden')) item.removeAttribute('aria-hidden');
         } else {
-            if (item.node.classList.contains(settings.className.active)) item.node.classList.remove(settings.className.active);
-            if (!item.node.hasAttribute('aria-hidden')) item.node.setAttribute('aria-hidden', 'true');
+            if (item.classList.contains(settings.className.active)) item.classList.remove(settings.className.active);
+            if (!item.hasAttribute('aria-hidden')) item.setAttribute('aria-hidden', 'true');
         }
     });
+
+    node.addEventListener('keydown', e => {
+        switch (e.keyCode) {
+        case KEYCODES.LEFT:
+            previous(store);
+            break;
+        case KEYCODES.RIGHT:
+            next(store);
+            break;
+        }
+    });
+
     broadcast(store, EVENTS.INITIALISED)(state);
 };
 
@@ -48,8 +56,8 @@ export const toggleFullScreen = store => {
     } else if (document.exitFullscreen) document.exitFullscreen();
 };
 
-export const change = (store, next) => {
-    const { activeIndex, items, settings, name } = store.getState();
+export const change = (store, next, options = { fromListener: false }) => {
+    const { activeIndex, items, settings } = store.getState();
 
     // Ensure any YouTube videos are stopped
     // let targetOrigin = 'https://www.youtube.com';
@@ -64,16 +72,19 @@ export const change = (store, next) => {
     //then run all side effects to change the DOM/show and hide items, manage focus, and load updated previous/next
     store.update({ ...store.getState(), activeIndex: next }, [
         () => {
-            items[activeIndex].node.classList.remove('is--active');
-            items[activeIndex].node.setAttribute('aria-hidden', 'true');
-            items[next].node.classList.add('is--active');
-            items[next].node.removeAttribute('aria-hidden');
+            items[activeIndex].classList.remove('is--active');
+            items[activeIndex].setAttribute('aria-hidden', 'true');
+            items[next].classList.add('is--active');
+            items[next].removeAttribute('aria-hidden');
         },
-        () => items[next].node.focus(),
+        () => items[next].focus(),
         writeLiveRegion,
         () => {
-            const num = next + 1;
-            settings.updateURL && window.history.replaceState({ URL: `#${name}-${num}` }, '', `#${name}-${num}`);
+            const id = items[next].getAttribute('id');
+
+            //TODO
+            //don't pushState if this was fired from a hashchange event
+            settings.updateURL && !options.fromListener && window.history.pushState({ URL: `#${id}` }, '', `#${id}`);
         },
         broadcast(store, EVENTS.CHANGE)
     ]);

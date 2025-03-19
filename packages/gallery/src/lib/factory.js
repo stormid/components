@@ -1,6 +1,6 @@
 import { createStore } from './store';
 import { init, toggleFullScreen, goTo } from './dom';
-import { composeItems, composeDOM, getIndexFromURL, popstateHandler } from './utils';
+import { composeDOM, getIndexFromURL, hashchangeHandler } from './utils';
 
 /* 
  * @param node, HTMLElement, DOM node containing the gallery
@@ -14,18 +14,22 @@ export default (node, settings, index) => {
     const items = [].slice.call(node.querySelectorAll(settings.selector.item));
     if (items.length === 0) return console.warn('Gallery cannot be initialised, no items found'), null;
 
-    const name = `${settings.name || node.getAttribute('id') || 'gallery'}-${index + 1}`;
-
+    //ensure each gallery item has an id
+    //need to do this before setting initial state as it's required for the initial activeIndex
+    //TODO
+    // - add a check for duplicate ids across whole document if multiple galleries initialised separately
+    items.forEach((item, idx) => {
+        if (!item.hasAttribute('id')) item.setAttribute('id', `gallery-${index + 1}-${idx + 1}`);
+    });
     store.update({
         node,
-        name,
         settings,
-        items: composeItems(items, settings),
+        items,
         dom: composeDOM(node, settings),
-        activeIndex: getIndexFromURL(name, items, location.hash, settings.startIndex)
+        activeIndex: getIndexFromURL(items, location.hash, settings.startIndex)
     }, [
         () => !settings.manualInitialisation && init(store)(),
-        () => window.addEventListener('popstate', popstateHandler(store))
+        () => window.addEventListener('hashchange', hashchangeHandler(store))
     ]);
 
     return {

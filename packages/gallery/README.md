@@ -133,7 +133,6 @@ const [instance] = gallery('js-gallery);
 
 ```
 {
-    name: false, //for use when updating the page URL, if not set (false) it will get it from the id the container node, or just 'gallery'
     startIndex: 0,
     selector: { //selectors for the gallery elements
         item: '[data-gallery-item]',

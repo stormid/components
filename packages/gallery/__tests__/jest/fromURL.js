@@ -110,7 +110,7 @@ beforeAll(() => {
 describe('Gallery > from URL', () => {
 
     it('Should set the initial activeIndex from the URL', () => {
-        window.location.href = `#'gallery-1-3`;
+        window.location.href = `#gallery-1-3`;
         [ instance ] = gallery('.js-gallery');
         expect(instance.getState().activeIndex).toBe(2);
     });

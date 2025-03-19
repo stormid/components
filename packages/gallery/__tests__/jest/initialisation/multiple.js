@@ -163,7 +163,7 @@ describe('Gallery > initialisation > multiple', () => {
         expect(instances[1].getState().activeIndex).toEqual(0);
     });
 
-    it('Should initialise separate instances with differnt settings', () => {
+    it('Should initialise separate instances with different settings', () => {
         document.body.innerHTML = `<section class="gallery js-gallery__1" id="gallery-1">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">
@@ -180,7 +180,7 @@ describe('Gallery > initialisation > multiple', () => {
                         <li
                             class="gallery__item is--active"
                             data-gallery-item
-                            data-gallery-item-loaded
+                            id="test-1"
                         >
                             <div class="gallery__item-img-container" data-gallery-item-img-container>
                                 <img 
@@ -207,7 +207,7 @@ describe('Gallery > initialisation > multiple', () => {
                         <li
                             class="gallery__item"
                             data-gallery-item
-                            data-gallery-item-src="http://placehold.it/1200x1200"
+                            id="test-2"
                             aria-hidden="true"
                         >
                             <div class="gallery__item-img-container" data-gallery-item-img-container>
@@ -254,7 +254,7 @@ describe('Gallery > initialisation > multiple', () => {
                         <li
                             class="gallery__item is--active"
                             data-gallery-item
-                            data-gallery-item-loaded
+                            id="another-test-1"
                         >
                             <div class="gallery__item-img-container" data-gallery-item-img-container>
                                 <img 
@@ -281,7 +281,7 @@ describe('Gallery > initialisation > multiple', () => {
                         <li
                             class="gallery__item"
                             data-gallery-item
-                            data-gallery-item-src="http://placehold.it/1200x1200"
+                            id="another-test-2"
                             aria-hidden="true"
                         >
                             <div class="gallery__item-img-container" data-gallery-item-img-container>
