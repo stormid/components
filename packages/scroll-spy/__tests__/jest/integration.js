@@ -1,6 +1,6 @@
-import { intersectionCallback } from '../src/lib/factory';
-import defaults from '../src/lib/defaults';
-import { createStore } from '../src/lib/store';
+import { intersectionCallback } from '../../src/lib/factory';
+import defaults from '../../src/lib/defaults';
+import { createStore } from '../../src/lib/store';
 
 describe('Scroll spy > factory > callback', () => {
 
