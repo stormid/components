@@ -1,9 +1,11 @@
+import sampleTemplates from '../../example/src/js/sample-templates';
 import cookieBanner from '../../src';
 import defaults from '../../src/lib/defaults';
 
 describe(`Cookie banner > DOM > form > not render`, () => {
     document.body.innerHTML = `<div></div>`;
     cookieBanner({
+        ...sampleTemplates,
         types: {
             test: {
                 title: 'Test title',

@@ -1,4 +1,5 @@
 import cookieBanner from '../src';
+import sampleTemplates from '../example/src/js/sample-templates';
 import { updateConsent, updateExecuted } from '../src/lib/reducers';
 
 const init = () => {
@@ -24,7 +25,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 ]
             }
         };
-        const Store = cookieBanner({ types });
+        const Store = cookieBanner({ ...sampleTemplates, types });
 
         expect(Store.getState().settings.types).toEqual(types);
     });

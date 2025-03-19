@@ -1,4 +1,5 @@
 import cookieBanner from '../../src';
+import sampleTemplates from '../../example/src/js/sample-templates';
 import defaults from '../../src/lib/defaults';
 let instance;
 
@@ -6,6 +7,7 @@ const init = () => {
     // Set up our document body
     document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
     instance = cookieBanner({
+        ...sampleTemplates,
         secure: false,
         hideBannerOnFormPage: false,
         types: {

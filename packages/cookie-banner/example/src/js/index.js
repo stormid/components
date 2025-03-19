@@ -1,5 +1,6 @@
 import cookieBanner from '../../../src/index';
 import toggle from '../../../../toggle/src/index';
+import SampleTemplates from './sample-templates';
 
 const writeCookie = state => {
     document.cookie = [
@@ -12,7 +13,7 @@ const writeCookie = state => {
     ].join('');
 };
     
-const config = {
+const config = {...SampleTemplates, 
     name: '.Components.Dev.Consent',
     secure: false,
     euConsentTypes: {
@@ -78,73 +79,6 @@ const config = {
                 }
             ]
         }
-    },
-    bannerTemplate(model){
-        return `<div role="region" aria-live="polite" aria-label="Cookies" class="${model.classNames.banner}">
-            <div class="privacy-content">
-                <div class="wrap">
-                    <div class="col xs-12 privacy-banner__inner">
-                        <!--googleoff: all-->
-                        <div class="privacy-banner__content">
-                            <div class="privacy-banner__title">Cookies</div>
-                            <p class="privacy-banner__summary">This web service uses cookies to ensure it functions correctly, and to help gather analytics data which is used to help us improve the service.</p>
-                            <p class="privacy-banner__summary">Find out more from our <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="/privacy">privacy policy</a> and <a class="privacy-banner__link" rel="noopener noreferrer nofollow" href="${model.policyURL}">cookie policy</a>.</p>
-                        </div>
-                        <div class="privacy-banner__actions">
-                            <button type="button" class="privacy-banner__btn ${model.classNames.acceptBtn}">Accept all</button>
-                            <button type="button" class="privacy-banner__btn ${model.classNames.rejectBtn}">Reject all</button>
-                            <button type="button" class="privacy-banner__link js-toggle__preferences ${model.classNames.optionsBtn}">Your options</button>
-                        </div>
-                        <div id="preferences" class="privacy-banner__panel js-toggle-banner" data-toggle="js-toggle__preferences">
-                            <p><button type="button" class="privacy-banner__btn-text ${model.classNames.acceptBtn}">Accept and close </button> or edit your choices below and click 'Save my choices'.</p>
-                            <div class="privacy-banner__form-container"></div>
-                        </div>
-                        <!--googleon: all-->
-                    </div>
-                </div>
-            </div>
-        </div>`;
-    },
-    formTemplate(model){
-        return `<form id="preferences-form" class="row ${model.settings.classNames.form}" novalidate>
-                ${Object.keys(model.settings.types).map(type => `<div class="privacy-banner__row"><fieldset class="${model.settings.classNames.fieldset}">
-                <legend class="${model.settings.classNames.legend}">
-                    <span class="${model.settings.classNames.title}">${model.settings.types[type].title}</span>
-                    <span class="${model.settings.classNames.description}">${model.settings.types[type].description}</span>
-                </legend>
-                <div class="privacy-banner__row">
-                    <div class="relative">
-                        <label class="privacy-banner__label">
-                            <input
-                                class="${model.settings.classNames.field}"
-                                type="radio"
-                                name="privacy-${type.split(' ')[0].replace(' ', '-')}"
-                                value="1"
-                                ${model.consent[type] === 1 ? ` checked` : ''}>
-                            <span class="privacy-banner__label-text">Ok</span>
-                            <span class="privacy-banner__label-description">${model.settings.types[type].labels.yes}</span>
-                        </label>    
-                    </div>
-                </div>
-                <div class="privacy-banner__row">
-                    <div class="relative">
-                        <label class="privacy-banner__label">
-                            <input
-                                class="${model.settings.classNames.field}"
-                                type="radio"
-                                name="privacy-${type.split(' ')[0].replace(' ', '-')}"
-                                value="0"
-                                ${model.consent[type] === 0 ? ` checked` : ''}>
-                            <span class="privacy-banner__label-text">No</span>
-                            <span class="privacy-banner__label-description">${model.settings.types[type].labels.no}</span>
-                        </label>
-                    </div>
-                </div>
-            </fieldset></div>`).join('')}
-            <div class="privacy-banner__row">
-                <button class="${model.settings.classNames.submitBtn}"${Object.keys(model.consent).length !== Object.keys(model.settings.types).length ? ` disabled` : ''}>Save my choices</button>
-            </div>
-        </form>`;
     }
 };
 

@@ -1,3 +1,4 @@
+import sampleTemplates from '../../example/src/js/sample-templates';
 import cookieBanner from '../../src';
 import defaults from '../../src/lib/defaults';
 
@@ -6,6 +7,7 @@ describe(`Cookie banner > DOM > form > render by api`, () => {
     it('Should render the form via the API', async () => {
         document.body.innerHTML = `<main></main>`;
         const instance = cookieBanner({
+            ...sampleTemplates,
             secure: false,
             hideBannerOnFormPage: false,
             types: {
