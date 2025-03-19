@@ -2,8 +2,6 @@ import { change } from './dom';
 
 export const sanitise = item => item.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-export const composeItems = (nodes, settings) => nodes.map(node => ({ node }));
-
 export const composeDOM = (node, settings) => ({
     liveRegion: node.querySelector(settings.selector.liveRegion),
     fullscreen: node.querySelector(settings.selector.fullscreen),
@@ -12,23 +10,21 @@ export const composeDOM = (node, settings) => ({
     triggers: [].slice.call(document.querySelectorAll(settings.selector.navigate))
 });
 
-export const getIndexFromURL = (name, items, url, fallback = 0) => {
+export const getIndexFromURL = (items, url, fallback = false) => {
     const hash = url.split(`#`)[1] || '';
-    if (hash.indexOf(`${name}-`) === -1) return fallback;
-    const num = Number(hash.split(`${name}-`)[1]);
-    if (isNaN(num)) return console.warn('Gallery hash not valid'), fallback;
-    const index = num - 1;
-    if (index < 0 || index > (items.length - 1)) return console.warn('Gallery index out of bounds'), fallback;
-    return index;
+    if (hash === '') return fallback;
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].id === hash) return i;
+    }
+    return fallback;
 };
 
-export const popstateHandler = store => e => {
-    if (!e.state) return;
-    const url = e.state.URL;
-    const { name, items } = store.getState();
-    const index = getIndexFromURL(name, items, url);
+export const hashchangeHandler = store => e => {
+    const url = e.newURL;
+    const { items } = store.getState();
+    const index = getIndexFromURL(items, url);
     if (index === false) return;
-    change(store, index);
+    change(store, index, { fromListener: true });
 };
 
 export const getSelection = selector => {

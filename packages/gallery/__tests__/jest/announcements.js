@@ -198,7 +198,7 @@ describe('Gallery > announcements', () => {
     });
 
     it('Should render a custom announcement based on settings', () => {
-
+        document.location.hash = ''; //reset hash
         document.body.innerHTML = `<section class="gallery js-gallery" id="gallery-2">
                 <h2 class="visually-hidden">Gallery</h2>
                 <div class="gallery__header">

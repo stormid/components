@@ -21,41 +21,33 @@ describe('Gallery > Utils > sanitize', () => {
 });
 
 describe('Gallery > getIndexFromURL', () => {
-    //return fallback if url.split throws
-    it('Should return fallback if url.split throws', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-        const result = getIndexFromURL('test-name', [], '#');
-        expect(result).toEqual(0);
-        warn.mockRestore();
-    });
-    
-    it('Should return fallback if hash does not contain gallery name', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-        const result = getIndexFromURL('test-name', [], '#potato');
-        expect(result).toEqual(0);
-        warn.mockRestore();
-    });
-    
-    it('Should return fallback and console warn if hash does not contain a number', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-        const result = getIndexFromURL('test-name', [], '#test-name-potato');
-        expect(result).toEqual(0);
-        expect(warn).toHaveBeenCalledWith('Gallery hash not valid');
-        warn.mockRestore();
-    });
 
-    it('Should return fallback and console warn if index is out of bounds', () => {
+    it('Should return fallback if no hash', () => {
         const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-        const result = getIndexFromURL('test-name', [{}, {}], '#test-name-4');
-        expect(result).toEqual(0);
-        expect(warn).toHaveBeenCalledWith('Gallery index out of bounds');
+        const result = getIndexFromURL([], '');
+        expect(result).toEqual(false);
+        warn.mockRestore();
+    });
+    
+    it('Should return fallback if hash does not contain gallery item id', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const result = getIndexFromURL([], '#potato');
+        expect(result).toEqual(false);
         warn.mockRestore();
     });
 
     it('Should return index if one is found', () => {
-        const result = getIndexFromURL('test-name', [{}, {}], '#test-name-1');
-        //index is one less than the number in the hash
-        expect(result).toEqual(0);
+        const result = getIndexFromURL([
+            { id: 'gallery-1-1' },
+            { id: 'gallery-1-2' }], '#gallery-1-2');
+
+        expect(result).toEqual(1);
+    });
+
+    it('Should return fallback passed as argument if no item matching hash', () => {
+        const result = getIndexFromURL([], '#gallery-1-2', 'fallback');
+
+        expect(result).toEqual('fallback');
     });
 
 

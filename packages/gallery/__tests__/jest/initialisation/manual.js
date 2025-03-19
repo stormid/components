@@ -88,12 +88,12 @@ describe('Gallery > initialisation > manual initialisation', () => {
         const [ instance ] = gallery('.js-gallery', { manualInitialisation: true });
         expect(instance.getState).toBeDefined();
         const { items } = instance.getState();
-        expect(items[0].node.hasAttribute('aria-hidden')).toEqual(true);
-        expect(items[0].node.classList.contains(defaults.className.active)).toEqual(false);
+        expect(items[0].hasAttribute('aria-hidden')).toEqual(true);
+        expect(items[0].classList.contains(defaults.className.active)).toEqual(false);
 
         await instance.initialise();
-        expect(items[0].node.hasAttribute('aria-hidden')).toEqual(false);
-        expect(items[0].node.classList.contains(defaults.className.active)).toEqual(true);
+        expect(items[0].hasAttribute('aria-hidden')).toEqual(false);
+        expect(items[0].classList.contains(defaults.className.active)).toEqual(true);
     });
 
 });
