@@ -36,7 +36,7 @@ export const init = store => () => {
             if (!item.node.hasAttribute('aria-hidden')) item.node.setAttribute('aria-hidden', 'true');
         }
     });
-    
+    broadcast(store, EVENTS.INITIALISED)(state);
 };
 
 const writeLiveRegion = ({ activeIndex, items, settings, dom }) => dom.liveRegion.innerHTML = sanitise(settings.announcement(activeIndex + 1, items.length));
@@ -101,5 +101,4 @@ export const next = store => {
 
 export const goTo = store => i => {
     change(store, i);
-    broadcast(store, EVENTS.TRIGGERED);
 };
