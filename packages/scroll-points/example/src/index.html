@@ -39,6 +39,12 @@
             transition: all 60ms ease-in;
             will-change:transform;
         }
+        .example-mock-content {
+            height: 500px;
+            margin-top: 1000px;
+            margin-bottom: 400px;
+            position: relative;
+        }
         .scroll-point {
             position: absolute;
             left:50%;
@@ -59,7 +65,7 @@
     <main class="container">
         <h1>Scroll points example</h1>
         <hr />
-        <div style="height:500px;margin-top:1000px;margin-bottom:400px;position:relative;">
+        <div class="example-mock-content">
             <div class="js-scroll-point scroll-point"></div>
         </div>
     </main>
