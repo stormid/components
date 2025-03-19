@@ -6,7 +6,7 @@ describe('Gallery > initialisation', () => {
         document.body.innerHTML = ``;
         console.warn = jest.fn();
         gallery('.js-gallery');
-        expect(console.warn).toHaveBeenCalledWith('Gallery cannot be initialised, no galleries found');
+        expect(console.warn).toHaveBeenCalledWith("Gallery not initialised, no elements found for selector '.js-gallery'");
     });
 
     it('Should console.warn if no items are found', () => {

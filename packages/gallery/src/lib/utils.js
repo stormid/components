@@ -12,21 +12,21 @@ export const composeDOM = (node, settings) => ({
     triggers: [].slice.call(document.querySelectorAll(settings.selector.navigate))
 });
 
-export const getIndexFromURL = (name, items, url, fallback = false) => {
+export const getIndexFromURL = (name, items, url, fallback = 0) => {
     const hash = url.split(`#`)[1] || '';
-    if (hash.indexOf(`${name}-`) === -1) return [ fallback ];
+    if (hash.indexOf(`${name}-`) === -1) return fallback;
     const num = Number(hash.split(`${name}-`)[1]);
-    if (isNaN(num)) return console.warn('Gallery hash not valid'), [ fallback ];
+    if (isNaN(num)) return console.warn('Gallery hash not valid'), fallback;
     const index = num - 1;
-    if (index < 0 || index > (items.length - 1)) return console.warn('Gallery index out of bounds'), [ fallback ];
-    return [ index, true ];
+    if (index < 0 || index > (items.length - 1)) return console.warn('Gallery index out of bounds'), fallback;
+    return index;
 };
 
 export const popstateHandler = store => e => {
     if (!e.state) return;
     const url = e.state.URL;
     const { name, items } = store.getState();
-    const [ index ] = getIndexFromURL(name, items, url);
+    const index = getIndexFromURL(name, items, url);
     if (index === false) return;
     change(store, index);
 };

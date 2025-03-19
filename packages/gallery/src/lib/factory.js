@@ -1,6 +1,5 @@
 import { createStore } from './store';
-import { EVENTS } from './constants';
-import { init, toggleFullScreen, goTo, broadcast } from './dom';
+import { init, toggleFullScreen, goTo } from './dom';
 import { composeItems, composeDOM, getIndexFromURL, popstateHandler } from './utils';
 
 /* 
@@ -16,7 +15,6 @@ export default (node, settings, index) => {
     if (items.length === 0) return console.warn('Gallery cannot be initialised, no items found'), null;
 
     const name = `${settings.name || node.getAttribute('id') || 'gallery'}-${index + 1}`;
-    const [ startIndex, setfromURL = false ] = getIndexFromURL(name, items, location.hash, settings.startIndex);
 
     store.update({
         node,
@@ -24,11 +22,10 @@ export default (node, settings, index) => {
         settings,
         items: composeItems(items, settings),
         dom: composeDOM(node, settings),
-        activeIndex: startIndex
+        activeIndex: getIndexFromURL(name, items, location.hash, settings.startIndex)
     }, [
         () => !settings.manualInitialisation && init(store)(),
-        () => window.addEventListener('popstate', popstateHandler(store)),
-        () => setfromURL && broadcast(store, EVENTS.TRIGGERED)(store.getState())
+        () => window.addEventListener('popstate', popstateHandler(store))
     ]);
 
     return {

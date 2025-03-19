@@ -3,6 +3,6 @@ export const ATTRIBUTE = {
 };
 
 export const EVENTS = {
-    CHANGE: 'gallery.change',
-    TRIGGERED: 'gallery.triggered'
+    INITIALISED: 'gallery.initialised',
+    CHANGE: 'gallery.change'
 };

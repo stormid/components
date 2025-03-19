@@ -25,21 +25,21 @@ describe('Gallery > getIndexFromURL', () => {
     it('Should return fallback if url.split throws', () => {
         const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
         const result = getIndexFromURL('test-name', [], '#');
-        expect(result).toEqual([false]);
+        expect(result).toEqual(0);
         warn.mockRestore();
     });
     
     it('Should return fallback if hash does not contain gallery name', () => {
         const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
         const result = getIndexFromURL('test-name', [], '#potato');
-        expect(result).toEqual([false]);
+        expect(result).toEqual(0);
         warn.mockRestore();
     });
     
     it('Should return fallback and console warn if hash does not contain a number', () => {
         const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
         const result = getIndexFromURL('test-name', [], '#test-name-potato');
-        expect(result).toEqual([false]);
+        expect(result).toEqual(0);
         expect(warn).toHaveBeenCalledWith('Gallery hash not valid');
         warn.mockRestore();
     });
@@ -47,7 +47,7 @@ describe('Gallery > getIndexFromURL', () => {
     it('Should return fallback and console warn if index is out of bounds', () => {
         const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
         const result = getIndexFromURL('test-name', [{}, {}], '#test-name-4');
-        expect(result).toEqual([false]);
+        expect(result).toEqual(0);
         expect(warn).toHaveBeenCalledWith('Gallery index out of bounds');
         warn.mockRestore();
     });
@@ -55,7 +55,7 @@ describe('Gallery > getIndexFromURL', () => {
     it('Should return index if one is found', () => {
         const result = getIndexFromURL('test-name', [{}, {}], '#test-name-1');
         //index is one less than the number in the hash
-        expect(result).toEqual([0, true]);
+        expect(result).toEqual(0);
     });
 
 
