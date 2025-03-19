@@ -1,6 +1,7 @@
 <!doctype html>
-<html>
+<html lang="en">
 	<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Storm ID</title>
     <style>
         * {
@@ -14,14 +15,20 @@
             height:100%;
         }
 		hr {
-			height: 1px;
+			height: 2px;
 			width: 100%;
 			display: block;
-			background: #ddd;
+			background: #999;
 			margin: 0 auto;
 			border: 0 none;
 			position: fixed;
 			top: 50%;
+            left: 0;
+		}
+        .container {
+			margin: 24px auto;
+			max-width: 960px;
+			padding: 0 24px;
 		}
 		.scroll-point {
             position:relative;
@@ -49,9 +56,12 @@
     </style>
 </head>
 <body>
-	<hr />
-	<div style="height:500px;margin-top:1000px;margin-bottom:400px;position:relative;">
-		<div class="js-scroll-point scroll-point"></div>
-	</div>
+    <main class="container">
+        <h1>Scroll points example</h1>
+        <hr />
+        <div style="height:500px;margin-top:1000px;margin-bottom:400px;position:relative;">
+            <div class="js-scroll-point scroll-point"></div>
+        </div>
+    </main>
 </body>
 </html>
