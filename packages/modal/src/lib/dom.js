@@ -1,63 +1,60 @@
-import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS } from './constants';
+import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, EVENTS } from './constants';
+import { broadcast } from './utils';
 
 /*
- * Returns an HTMLElement child of the supplied node with a role of dialog
- *
- * @param node, HTMLElement, tab container
- * @param settings, Object, settings of the 
- * @return HTMLElement
+ * @param node, HTMLElement 
+ * @return child HTMLElement with dialog/alertdialog role
  */
 export const findDialog = node => (node.querySelector('[role=dialog]') || node.querySelector('[role=alertdialog]')) || console.warn(`No dialog or alertdialog found in modal node`);
 
 /*
- * Returns an Array of HTMLElements selected based on data-toggle attribute of a given node
- *
- * @param node, HTMLElement, node to be toggled
- * @return Array of HTMLElements
+ * @param node, HTMLElement, modal node
+ * @param settings, Object, instance configuration
+ * @return Array of HTMLElements that open/close the modal node
  */
 export const findToggles = (node, settings) => {
-
     const toggleSelector = node.getAttribute(settings.toggleSelectorAttribute);
     const composeSelector = classSelector => ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(', ');
 
     const toggles = toggleSelector && [].slice.call(document.querySelectorAll(composeSelector(toggleSelector)));
-    if (!toggles) console.warn(`Modal cannot be initialised, no modal toggle elements found. Does the modal have a ${settings.toggleSelectorAttribute} attribute that identifies toggle buttons or anchors?`);
+    if (!toggles) return void console.warn(`Modal cannot be initialised, no modal toggle elements found. Does the modal have a ${settings.toggleSelectorAttribute} attribute that identifies toggle buttons or links?`);
     return toggles;
 };
 
 /* 
-  * Returns an Array of HTMLElements selected from parentNode based on whitelist FOCUSABLE_ELEMENTS constant
-  *
-  * @param node, HTMLElement, node to be toggled
-  * @return Array of HTMLElements
+  * @param node, HTMLElement
+  * @return Array of focusable child HTMLElements
  */
 export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
 
 /* 
- * Partially applied function that returns a function
+ * Partially applied function that returns function
  *
- * @param Store, Object, model or store of the current instance
+ * @param store, Object, store of the current instance state
  * @returns Function, handler for keyDown
  *
  * @param event, Event
  */
-export const keyListener = Store => event => {
-    if (Store.getState().isOpen && event.keyCode === 27) {
+export const keyListener = store => event => {
+    const state = store.getState();
+    const { isOpen } = state;
+    if (isOpen && event.keyCode === 27) {
         event.preventDefault();
-        Store.dispatch({
-            isOpen: !Store.getState().isOpen
-        }, [ change(Store) ]);
+        store.update({
+            ...store.getState(),
+            isOpen: !isOpen
+        }, [ change(store) ]);
     }
-    if (Store.getState().isOpen && event.keyCode === 9) trapTab(Store.getState())(event);
+    if (isOpen && event.keyCode === 9) trapTab(state)(event);
 };
 
 /* 
  * Partially applied function that returns a function
  *
- * @param Store, Object, model or store of the current instance
- * @returns Function:
+ * @param state, Object, current instance state
+ * @returns Function
  *
- * @param state, Object, the current state or model of the instance
+ * @param event, Event
  */
 const trapTab = state => event => {
     const focusedIndex = state.focusableChildren.indexOf(document.activeElement);
@@ -71,7 +68,7 @@ const trapTab = state => event => {
 };
 
 /* 
- * @param state, Object, the current state or model of the instance
+ * @param state, Object, the current instance state
  */
 const toggle = state => {
     state.node[state.isOpen ? 'removeAttribute' : 'setAttribute']('hidden', 'hidden');
@@ -82,10 +79,10 @@ const toggle = state => {
 };
 
 /* 
- * @param Store, Object, model or store of the current instance
+ * @param store, Object, store of the current instance state
  */
-const open = Store => () => {
-    const state = Store.getState();
+const open = store => () => {
+    const state = store.getState();
     if (state.dialog.hasAttribute('aria-hidden')) state.dialog.removeAttribute('aria-hidden'); // past implementations encouraged having aria-hidden on dialog when closed
     const ref = document.body.firstElementChild || null;
     if (ref !== state.node) document.body.insertBefore(state.node, ref);
@@ -94,38 +91,47 @@ const open = Store => () => {
     const focusFn = () => state.focusableChildren.length > 0 && state.focusableChildren[0].focus();
     if (state.settings.delay) window.setTimeout(focusFn, state.settings.delay);
     else focusFn();
+    broadcast(EVENTS.OPEN, store)();
 };
 
 /* 
- * @param Store, Object, model or store of the current instance
+ * @param store, Object, store of the current instance state
  */
-const close = Store => () => {
-    const state = Store.getState();
+const close = store => () => {
+    const state = store.getState();
     document.removeEventListener('keydown', state.keyListener);
     toggle(state);
     state.lastFocused.focus();
+    broadcast(EVENTS.CLOSE, store)();
 };
 
 
 /* 
  * Partially applied function that returns a function
  *
- * @param Store, Object, model or store of the current instance
+ * @param store, Object, store of the current instance state
  * @returns Function
  *
  */
-export const change = Store => state => {
-    if (state.isOpen) open(Store)();
-    else close(Store)(state);
+export const change = store => state => {
+    if (state.isOpen) open(store)();
+    else close(store)(state);
     typeof state.settings.callback === 'function' &&  state.settings.callback.call(state);
 };
 
 /*
- * Sets aria attributes and adds eventListener on each tab
+ * Partially applied function that returns a function
+ * Sets aria attributes and adds eventListener on each modal toggle
  *
- * @param Store, Object, model or state of the current instance
+ * @param store, Object, store of the current instance state
+ * @returns Function
+ * 
+ * @param node, HTMLElement, modal node
+ * @param dialog, HTMLElement, dialog/alertdialog node
+ * @param toggles, Array of HTMLElements, trigger elements
+ * 
  */
-export const initUI = Store => ({ node, dialog, toggles }) => {
+export const initUI = store => ({ node, dialog, toggles }) => {
     if (!dialog || !toggles) return;
     node.setAttribute('hidden', 'hidden');
     if (
@@ -137,12 +143,16 @@ export const initUI = Store => ({ node, dialog, toggles }) => {
     toggles.forEach(tgl => {
         tgl.addEventListener('click', e => {
             e.preventDefault();
-            lifecycle(Store);
+            lifecycle(store);
         });
     });
 };
 
-export const lifecycle = Store => Store.dispatch({
-    isOpen: !Store.getState().isOpen,
-    lastFocused: Store.getState().isOpen ? Store.getState().lastFocused : document.activeElement
-}, [ change(Store) ]);
+/*
+ * @param store, Object, store of the current instance state
+*/
+export const lifecycle = store => store.update({
+    ...store.getState(),
+    isOpen: !store.getState().isOpen,
+    lastFocused: store.getState().isOpen ? store.getState().lastFocused : document.activeElement
+}, [ change(store) ]);

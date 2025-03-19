@@ -1,6 +1,6 @@
 {
   "name": "@stormid/skip",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0",
   "description": "Fragment identifier links focus on their target node",
   "author": "stormid",
   "license": "MIT",
@@ -11,7 +11,7 @@
   "private": false,
   "main": "dist/index.js",
   "source": "src/index.js",
-  "module": "dist/index.modern.mjs",
+  "module": "dist/index.modern.js",
   "unpkg": "dist/index.umd.js",
   "browser": "dist/index.umd.js",
   "keywords": [
@@ -21,9 +21,9 @@
   ],
   "scripts": {
     "build": "microbundle --name Skip",
-    "test": "jest --coverage",
-    "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
-    "prod": "webpack --config example/webpack.config.js --mode production",
+    "test": "jest --coverage --passWithNoTests & npx playwright test",
+    "dev": "webpack-dev-server --config tools/webpack.config.js",
+    "prod": "webpack --config tools/webpack.config.js --mode production",
     "prepublish": "npm run -s build"
   },
   "gitHead": "9042db4005411c4360ba3e8188e03333c10098f2"

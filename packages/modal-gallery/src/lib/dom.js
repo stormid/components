@@ -1,27 +1,28 @@
 import { KEY_CODES, ACCEPTED_TRIGGERS } from './constants';
 import { getFocusableChildren } from './utils';
 
-export const initTriggers = Store => state => {
+export const initTriggers = store => state => {
     const { items, settings } = state;
     
     items.map((item, i) => {
         if (!item.trigger) return;
         item.trigger.addEventListener('click', e => {
             e.preventDefault();
-            open(Store)(i);
+            open(store)(i);
         });
     });
-    if (settings.preload) items.map(loadImage(Store));
+    if (settings.preload) items.map(loadImage(store));
 };
 
-const loadImage = Store => (item, i) => {
+const loadImage = store => (item, i) => {
     try {
         const img = new Image();
         const loaded = () => {
-            const { imageCache } = Store.getState();
+            const state = store.getState();
+            const { imageCache } = state;
             imageCache[i] = img;
-            Store.dispatch({ imageCache });
-            writeImage(Store.getState(), i);
+            store.update({ ...state, imageCache });
+            writeImage(state, i);
         };
         img.onload = loaded;
         img.src = item.src;
@@ -31,8 +32,8 @@ const loadImage = Store => (item, i) => {
     }
 };
 
-const loadImages = Store => i => {
-    const { imageCache, items, dom } = Store.getState();
+const loadImages = store => i => {
+    const { imageCache, items, dom } = store.getState();
     const indexes = [i];
 
     if (items.length > 1) indexes.push(i === 0 ? items.length - 1 : i - 1);
@@ -40,38 +41,41 @@ const loadImages = Store => i => {
     indexes.forEach(idx => {
         if (imageCache[idx] === undefined) {
             dom.items[idx].classList.add('loading');
-            loadImage(Store)(items[idx], idx);
+            loadImage(store)(items[idx], idx);
         }
     });
 
 };
 
-export const initUI = Store => state => {
-    const { settings, items, keyListener } = Store.getState();
+export const initUI = store => state => {
+    const { settings, items, keyListener } = store.getState();
     const container = document.body.appendChild(settings.templates.overlay());
     const buttons = items.length > 1 ? settings.templates.buttons() : '';
     container.insertAdjacentHTML('beforeend', settings.templates.overlayInner(buttons, items.map(settings.templates.details).map(settings.templates.item(items)).join('')));
     const domItems = [].slice.call(container.querySelectorAll('.js-modal-gallery__item'));
     const domTotals = container.querySelector('.js-gallery-totals');
-    Store.dispatch({ dom: {
-        overlay: container,
-        items: domItems,
-        totals: domTotals,
-        focusableChildren: getFocusableChildren(container),
-        lastFocused: document.activeElement
-    } }, [
-        load(Store),
-        initUIButtons(Store),
+    store.update({
+        ...store.getState(),
+        dom: {
+            overlay: container,
+            items: domItems,
+            totals: domTotals,
+            focusableChildren: getFocusableChildren(container),
+            lastFocused: document.activeElement
+        }
+    }, [
+        load(store),
+        initUIButtons(store),
         () => document.addEventListener('keydown', keyListener),
-        toggle(Store),
+        toggle(store),
         writeTotals
     ]);
 };
 
-const load = Store => state => {
-    const { imageCache, items, current } = Store.getState();
+const load = store => state => {
+    const { imageCache, items, current } = store.getState();
     if (Object.keys(imageCache).length === items.length) imageCache.map((img, i) => { writeImage(state, i); });
-    else loadImages(Store)(current);
+    else loadImages(store)(current);
 };
 
 const writeImage = (state, i) => {
@@ -88,58 +92,58 @@ const writeImage = (state, i) => {
     dom.items[i].classList.remove('loading');
 };
 
-const initUIButtons = Store => state => {
-    const { dom } = Store.getState();
+const initUIButtons = store => state => {
+    const { dom } = store.getState();
 
-    const composeSelector = classSelector => { return ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(", "); }
+    const composeSelector = classSelector => ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(', ');
 
-    const closeBtn = dom.overlay.querySelector(composeSelector("js-modal-gallery__close"));
-    if(closeBtn) {
+    const closeBtn = dom.overlay.querySelector(composeSelector('js-modal-gallery__close'));
+    if (closeBtn) {
         closeBtn.addEventListener('click', e => {
-            close(Store);
+            close(store);
         });
     } else {
-        console.warn('No close buttons or links found.')
+        console.warn('No close buttons or links found.');
     }
 
-    const previousBtn = dom.overlay.querySelector(composeSelector("js-modal-gallery__previous"));
-    const nextBtn = dom.overlay.querySelector(composeSelector("js-modal-gallery__next"));
+    const previousBtn = dom.overlay.querySelector(composeSelector('js-modal-gallery__previous'));
+    const nextBtn = dom.overlay.querySelector(composeSelector('js-modal-gallery__next'));
     if (!previousBtn && !nextBtn) {
-        console.warn('No next or previous buttons or links found.')
+        console.warn('No next or previous buttons or links found.');
         return;
     }
 
     previousBtn && previousBtn.addEventListener('click', e => {
-        previous(Store);
+        previous(store);
     });
     nextBtn && nextBtn.addEventListener('click', e => {
-        next(Store);
+        next(store);
     });
 };
 
-export const keyListener = Store => e => {
-    const { isOpen } = Store.getState();
+export const keyListener = store => e => {
+    const { isOpen } = store.getState();
     if (!isOpen) return;
     switch (e.keyCode) {
-        case KEY_CODES.ESC:
-            close(Store);
-            break;
-        case KEY_CODES.TAB:
-            trapTab(Store, e);
-            break;
-        case KEY_CODES.LEFT:
-            previous(Store);
-            break;
-        case KEY_CODES.RIGHT:
-            next(Store);
-            break;
-        default:
-            break;
+    case KEY_CODES.ESC:
+        close(store);
+        break;
+    case KEY_CODES.TAB:
+        trapTab(store, e);
+        break;
+    case KEY_CODES.LEFT:
+        previous(store);
+        break;
+    case KEY_CODES.RIGHT:
+        next(store);
+        break;
+    default:
+        break;
     }
 };
 
-const trapTab = (Store, e) => {
-    const { dom } = Store.getState();
+const trapTab = (store, e) => {
+    const { dom } = store.getState();
     const focusedIndex = dom.focusableChildren.indexOf(document.activeElement);
     if (e.shiftKey && focusedIndex === 0) {
         /* istanbul ignore next */
@@ -153,8 +157,8 @@ const trapTab = (Store, e) => {
     }
 };
 
-const toggle = Store => state => {
-    const { dom, current, isOpen, settings } = Store.getState();
+const toggle = store => state => {
+    const { dom, current, isOpen, settings } = store.getState();
     dom.overlay.classList.toggle('is--active');
     dom.overlay.setAttribute('aria-hidden', !isOpen);
     dom.overlay.setAttribute('tabindex', isOpen ? '0' : '-1');
@@ -185,42 +189,56 @@ const toggleFullScreen = ({ isOpen, dom }) => {
     }
 };
 
-export const previous = Store => {
-    const { current, dom } = Store.getState();
+export const previous = store => {
+    const { current, dom } = store.getState();
     const next = current === 0 ? dom.items.length - 1 : current - 1;
-    Store.dispatch({ current: next }, [
+    store.update({
+        ...store.getState(),
+        current: next
+    }, [
         () => dom.items[current].classList.remove('is--active'),
         () => dom.items[next].classList.add('is--active'),
-        load(Store),
+        load(store),
         writeTotals
     ]);
 };
 
-export const next = Store => {
-    const { current, dom } = Store.getState();
+export const next = store => {
+    const { current, dom } = store.getState();
     const next = current === dom.items.length - 1 ? 0 : current + 1;
-    Store.dispatch({ current: next }, [
+    store.update({
+        ...store.getState(),
+        current: next
+    }, [
         () => dom.items[current].classList.remove('is--active'),
         () => dom.items[next].classList.add('is--active'),
-        load(Store),
+        load(store),
         writeTotals
     ]);
 };
 
-export const close = Store => {
-    const { keyListener, lastFocused, dom } = Store.getState();
-    Store.dispatch({ current: null, isOpen: false }, [
+export const close = store => {
+    const { keyListener, lastFocused, dom } = store.getState();
+    store.update({
+        ...store.getState(),
+        current: null,
+        isOpen: false
+    }, [
         () => document.removeEventListener('keydown', keyListener),
         () => { if (lastFocused) lastFocused.focus(); },
         // () => dom.items[current].classList.remove('is--active'),
-        // toggle(Store),
+        // toggle(store),
         () => dom.overlay.parentNode.removeChild(dom.overlay)
     ]);
 };
 
-export const open = Store => (i = 0) => {
-    Store.dispatch(
-        { current: i, isOpen: true },
-        [ initUI(Store) ]
+export const open = store => (i = 0) => {
+    store.update(
+        {
+            ...store.getState(),
+            current: i,
+            isOpen: true
+        },
+        [ initUI(store) ]
     );
 };

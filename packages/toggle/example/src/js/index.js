@@ -5,13 +5,6 @@ window.addEventListener('DOMContentLoaded', () => {
         focus: false,
         closeOnClick: true,
         closeOnBlur: true,
-        useHidden:true
+        useHidden: true
     });
-    // window.__t2__ = toggle('.js-toggle__local', {
-    //     closeOnBlur: true
-    // });
-
-    // document.addEventListener('Toggle.Open', e => {
-    //     console.log(e.detail.getState());
-    // });
 });

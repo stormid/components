@@ -37,7 +37,7 @@ const config = {...SampleTemplates,
     ],
     types: {
         performance: {
-            suggested: 1,
+            // suggested: 1,
             title: 'Performance preferences',
             description: 'Performance cookies are used to measure the performance of our website and make improvements. Your personal data is not identified.',
             labels: {
@@ -60,7 +60,7 @@ const config = {...SampleTemplates,
             ]
         },
         ads: {
-            title: 'Set your personalised ads preferences',
+            title: 'Personalised ads preferences',
             description: 'We work with advertising partners to show you ads for our products and services across the web.  You can choose whether we collect and share that data with our partners below. ',
             labels: {
                 yes: 'Our partners might serve you ads knowing you have visited our website',
@@ -90,6 +90,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const banner = cookieBanner(config);
 
     [].slice.call(document.querySelectorAll('.js-preferences-update')).forEach(btn => btn.addEventListener('click', e => {
+        if (banner.getState().bannerOpen) return;
         banner.showBanner();
         bannerToggle.startToggle();
     }));

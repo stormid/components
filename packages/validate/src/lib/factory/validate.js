@@ -1,4 +1,5 @@
 import { ACTIONS } from '../constants';
+import reducers from '../reducers';
 import {
     getValidityState,
     reduceGroupValidityState,
@@ -18,33 +19,32 @@ import {
  * can be used as a form submit eventListener or via the API
  * 
  * Submits the form if called as a submit eventListener and is valid
- * Dispatches error state to Store if errors
+ * Dispatches error state to store if errors
  * 
  * @param form [DOM node]
  * 
  * @returns [Promise] Resolves with boolean validityState of the form
  * 
  */
-export const validate = Store => event => {
+export const validate = store => event => {
     event && event.preventDefault();
-    Store.dispatch(ACTIONS.CLEAR_ERRORS, null, [clearErrors]);
+    store.update(reducers[ACTIONS.CLEAR_ERRORS](store.getState()), [clearErrors]);
 
     return new Promise(resolve => {
-        const state = Store.getState();
+        const state = store.getState();
         const { groups, realTimeValidation } = state;
         getValidityState(groups)
             .then(validityState => {
-                if (isFormValid(validityState)) return postValidation(event, resolve, Store);
+                if (isFormValid(validityState)) return postValidation(event, resolve, store);
 
-                if (realTimeValidation === false) initRealTimeValidation(Store);
+                if (realTimeValidation === false) initRealTimeValidation(store);
 
-                Store.dispatch(
-                    ACTIONS.VALIDATION_ERRORS,
-                    Object.keys(groups)
+                store.update(
+                    reducers[ACTIONS.VALIDATION_ERRORS](store.getState(), Object.keys(groups)
                         .reduce((acc, group, i) => (acc[group] = {
                             valid: validityState[i].reduce(reduceGroupValidityState, true),
                             errorMessages: validityState[i].reduce(reduceErrorMessages(group, state), [])
-                        }, acc), {}),
+                        }, acc), {})),
                     [renderErrors, focusFirstInvalidField]
                 );
 

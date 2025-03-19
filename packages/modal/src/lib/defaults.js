@@ -5,6 +5,7 @@
  * @property onClassName, String, 
  * @property toggleSelectorAttribute, String
  * @property callback, Function
+ * @property startOpen, Boolean
  * @property delay, Number
  */
 export default {

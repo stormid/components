@@ -1,5 +1,5 @@
 export const findSpies = nodes => nodes.map(node => {
-    if (!node.hash || !document.querySelector(node.hash)) return void console.warn('Node is missing a href hash  or the hash target id does not exist');
+    if (!node.hash || !document.querySelector(node.hash)) return void console.warn('Node is missing a href hash or the hash target id does not exist');
     
     return {
         node,
@@ -10,17 +10,19 @@ export const findSpies = nodes => nodes.map(node => {
 
 export const setActive = spy => state => {
     const { settings } = state;
-    spy.node.classList.add(settings.activeClassName);
+    if (spy !== undefined) spy.node.classList.add(settings.activeClassName);
 };
 
 export const unsetActive = spy => state => {
     const { settings } = state;
-    spy.node.classList.remove(settings.activeClassName);
+    if (spy !== undefined) spy.node.classList.remove(settings.activeClassName);
 };
 
 export const unsetAllActive = state => {
     const { settings, spies } = state;
-    spies.map(spy => spy.node.classList.remove(settings.activeClassName));
+    spies.map(spy => {
+        if (spy !== undefined) spy.node.classList.remove(settings.activeClassName)
+    });
 };
 
 export const findActive = state => {

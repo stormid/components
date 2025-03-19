@@ -1,7 +1,7 @@
 
 # Scroll points
 
-Trigger className changes and callbacks based on element intersecting the viewport using IntersectionObservers. 
+Trigger className changes and callbacks based on scroll using IntersectionObservers. 
 
 ---
 
@@ -47,12 +47,13 @@ const [ instance ] = scrollPoints(elements);
 ## Options
 ```
 {
-	root: null, //element that is used as the viewport for checking visiblity of the target
+	root: null, //element that is used as the viewport for checking visiblity of the target, defaults to viewport if null
 	rootMargin: '0px 0px 0px 0px', //margin around the root, px or percentage values
 	threshold: 0, //Either a single number or an array of numbers which indicate at what percentage of the target's visibility the observer's callback should be executed
-	callback: false, //function executed when scrolled into view
-	className: 'is--scrolled-in', //className added when scrolled into view
-	unload: true //only callback once
+	callback: false, //function executed when target is intersecting
+	className: 'is--scrolled-in', //className added when target is intersecting
+	unload: true //unload intersection observer after target has intersected once
+	replay: false //remove className when target is not intersecting
 };
 ```
 
@@ -62,7 +63,7 @@ npm t
 ```
 
 ## Browser support
-Depends on Object.assign and the [IntersectionObserver API](https://caniuse.com/#feat=intersectionobserver), IE11 will require polyfills.
+Depends on [IntersectionObserver API](https://caniuse.com/#feat=intersectionobserver).
 
 ## License
 MIT

@@ -3,31 +3,53 @@ import { ACCEPTED_TRIGGERS, EVENTS } from './constants';
 import { apply } from './consent';
 import { updateConsent, updateBannerOpen, updateBanner } from './reducers';
 
-export const initBanner = Store => () => {
-    const state = Store.getState();
+export const initBanner = store => () => {
+    const state = store.getState();
     if (state.bannerOpen || (state.settings.hideBannerOnFormPage && document.querySelector(`.${state.settings.classNames.formContainer}`))) return;
     document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
     
-    Store.update(updateBanner, document.querySelector(`.${state.settings.classNames.banner}`));
-    Store.update(updateBannerOpen, true, [ broadcast(EVENTS.SHOW, Store) ]);
+    store.update(
+        updateBanner(state, {
+            banner: document.querySelector(`.${state.settings.classNames.banner}`),
+            bannerOpen: true
+        }),
+        [ broadcast(EVENTS.SHOW, store) ]
+    );
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'stormcb_display' });
 };
 
-export const showBanner = Store => cb => {
-    initBanner(Store)();
-    const { bannerOpen } = Store.getState();
-    if (!bannerOpen) return;
-    initForm(Store)();
+export const showBanner = store => callback => {
+    initBanner(store)();
+    if (!store.getState().bannerOpen) return;
+    initForm(store)();
     const focusableChildren = getFocusableChildren(document.body.firstElementChild);
     if (focusableChildren.length > 0) focusableChildren[0].focus();
-    if (cb && cb.call) cb(Store.getState());
+    if (callback && callback.call) callback(store.getState());
 };
 
-export const initBannerListeners = Store => () => {
-    const state = Store.getState();
+export const initBannerListeners = store => () => {
+    const state = store.getState();
     const banner = state.banner;
     if (!banner) return;
 
     const composeSelector = classSelector => ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(', ');
+
+    const composeConsentObjects = (event, consentVal) => {
+        const consentObject = Object.keys(state.settings.types).reduce((acc, type) => {
+            acc[type] = consentVal;
+            return acc;
+        },{});
+        const analyticsObject = Object.entries(consentObject).reduce((acc, [key, value]) => {
+            acc['stormcb_'+key] = value;
+            return acc;
+        }, { event: `stormcb_${event}_all` });
+        return {
+            consentObject,
+            analyticsObject
+        };
+    };
 
     const acceptBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
     const rejectBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.rejectBtn)));
@@ -36,19 +58,22 @@ export const initBannerListeners = Store => () => {
 
     acceptBtns.forEach(acceptBtn => {
         acceptBtn.addEventListener('click', e => {
-            Store.update(
-                updateConsent,
-                Object.keys(state.settings.types).reduce((acc, type) => {
-                    acc[type] = 1;
-                    return acc;
-                }, {}),
+            const { consentObject, analyticsObject } = composeConsentObjects('accept', 1);
+            const state = store.getState();
+            store.update(
+                updateConsent(state, consentObject),
                 [
+                    deleteCookies,
                     writeCookie,
-                    apply(Store),
-                    removeBanner(Store),
-                    initForm(Store, false),
-                    broadcast(EVENTS.CONSENT, Store),
-                    setGoogleConsent(Store),
+                    apply(store),
+                    removeBanner(store),
+                    initForm(store),
+                    () => {
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push(analyticsObject);
+                    },
+                    broadcast(EVENTS.CONSENT, store),
+                    setGoogleConsent(store),
                 ]
             );
         });
@@ -56,24 +81,25 @@ export const initBannerListeners = Store => () => {
 
     rejectBtns.forEach(rejectBtn => {
         rejectBtn.addEventListener('click', e => {
-            Store.update(
-                updateConsent,
-                Object.keys(state.settings.types).reduce((acc, type) => {
-                    acc[type] = 0;
-                    return acc;
-                }, {}),
+            const { consentObject, analyticsObject } = composeConsentObjects('reject', 0);
+            const state = store.getState();
+            store.update(
+                updateConsent(state, consentObject),
                 [
                     writeCookie,
-                    removeBanner(Store),
-                    initForm(Store, false),
-                    broadcast(EVENTS.CONSENT, Store),
-                    setGoogleConsent(Store),
+                    removeBanner(store),
+                    initForm(store),
+                    () => {
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push(analyticsObject);
+                    },
+                    broadcast(EVENTS.CONSENT, store),
+                    setGoogleConsent(store),
                 ]
             );
         });
     });
 };
-
 
 const trapTab = state => event => {
     const focusableChildren = getFocusableChildren(state.banner);
@@ -88,16 +114,16 @@ const trapTab = state => event => {
     }
 };
 
-export const keyListener = Store => event => {
-    if (Store.getState().banner && event.keyCode === 9) trapTab(Store.getState())(event);
+export const keyListener = store => event => {
+    if (store.getState().banner && event.keyCode === 9) trapTab(store.getState())(event);
 };
 
-const removeBanner = Store => () => {
-    const state = Store.getState();
+const removeBanner = store => () => {
+    const state = store.getState();
     const banner = state.banner;
     if (banner && banner.parentNode) {
         banner.parentNode.removeChild(banner);
-        Store.update(updateBannerOpen, false, [ broadcast(EVENTS.HIDE, Store) ]);
+        store.update(updateBannerOpen(state, false), [ broadcast(EVENTS.HIDE, store) ]);
     }
     if (state.settings.trapTab) document.removeEventListener('keydown', state.keyListener);
 };
@@ -111,8 +137,8 @@ const suggestedConsent = state => Object.keys(state.consent).length > 0
         }, {})
     });
 
-export const initForm = (Store, track = true) => () => {
-    const state = Store.getState();
+export const initForm = store => () => {
+    const state = store.getState();
     const formContainer = document.querySelector(`.${state.settings.classNames.formContainer}`);
     if (!formContainer) return;
 
@@ -130,14 +156,26 @@ export const initForm = (Store, track = true) => () => {
                             || document.body.appendChild(Object.assign(document.createElement('div'), { className: state.settings.classNames.formAnnouncement, role: 'alert' }));
 
 
-    const extractConsent = () => Object.keys(groups).reduce((acc, key) => {
-        const value = groups[key].reduce(groupValueReducer, '');
-        if (value) acc[key] = parseInt(value, 10);
-        return acc;
-    }, {});
+    const extractConsentObjects = () => {
+        const consentObject = Object.keys(groups).reduce((acc, key) => {
+            const value = groups[key].reduce(groupValueReducer, '');
+            if (value) acc[key] = parseInt(value, 10);
+            return acc;
+        }, {});
+
+        const analyticsObject = Object.entries(consentObject).reduce((acc, [key, value]) => {
+            acc['stormcb_'+key] = value;
+            return acc;
+        }, { event: `stormcb_save` });
+
+        return {
+            consentObject,
+            analyticsObject
+        };
+    };
 
     const enableButton = e => {
-        if (Object.keys(extractConsent()).length !== Object.keys(groups).length) return;
+        if (Object.keys(extractConsentObjects().consentObject).length !== Object.keys(groups).length) return;
         button.removeAttribute('disabled');
         form.removeEventListener('change', enableButton);
     };
@@ -145,18 +183,23 @@ export const initForm = (Store, track = true) => () => {
     
     form.addEventListener('submit', event => {
         event.preventDefault();
-        Store.update(
-            updateConsent,
-            extractConsent(),
+        const { consentObject, analyticsObject } = extractConsentObjects();
+        const state = store.getState();
+        store.update(
+            updateConsent(state, consentObject),
             [
                 deleteCookies,
                 writeCookie,
-                apply(Store),
-                removeBanner(Store),
-                broadcast(EVENTS.CONSENT, Store),
+                apply(store),
+                removeBanner(store),
+                () => {
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push(analyticsObject);
+                },
+                broadcast(EVENTS.CONSENT, store),
                 renderMessage(button),
                 renderAnnouncement(formAnnouncement),
-                setGoogleConsent(Store),
+                setGoogleConsent(store),
             ]
         );
     });

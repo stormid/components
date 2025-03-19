@@ -8,39 +8,32 @@ import {
     lifecycle
 } from './dom';
 
-
-/* 
- * @param settings, Object, merged defaults + options passed in as instantiation config to module default
- * @param node, HTMLElement, DOM node to be toggled
- *
- * @returns Object, Modal API
- */
 export default ({ node, settings }) => {
-    const Store = createStore();
+    const store = createStore();
     
-    Store.dispatch({
+    store.update({
         settings,
         node,
         dialog: findDialog(node),
         toggles: findToggles(node, settings),
         focusableChildren: getFocusableChildren(node),
-        keyListener: keyListener(Store),
+        keyListener: keyListener(store),
         lastFocused: false,
         isOpen: false
     }, [
-        initUI(Store),
-        () => settings.startOpen && lifecycle(Store)
+        initUI(store),
+        () => settings.startOpen && lifecycle(store)
     ]);
 
     return {
-        getState: Store.getState,
+        getState: store.getState,
         open() {
-            if (Store.getState().isOpen) return;
-            lifecycle(Store);
+            if (store.getState().isOpen) return;
+            lifecycle(store);
         },
         close() {
-            if (!Store.getState().isOpen) return;
-            lifecycle(Store);
+            if (!store.getState().isOpen) return;
+            lifecycle(store);
         }
     };
 };

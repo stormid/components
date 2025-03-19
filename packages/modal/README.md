@@ -1,6 +1,8 @@
 # Modal
 
-Accessible modal dialog
+Accessible modal dialog.
+
+Example implementations of specific types of modal are available for reference at https://storm-ui-patterns.netlify.app/.
 
 ---
 
@@ -57,7 +59,7 @@ const [ instance ] = modal(elements);
 ```
 
 CSS
-The className 'is--modal' added to the document.body when the modal is open. This can be used to prevent the body from scrolling
+The className 'is--modal' added to the document.body when the modal is open. This can be used to prevent the body from scrolling and to use CSS to modify other parts of the document.
 
 ```
 .is--modal {
@@ -66,7 +68,7 @@ The className 'is--modal' added to the document.body when the modal is open. Thi
 ```
 
 ## Options
-Options can be set during initialising in an Object passed as the second argument to the modal function, e.g. `modal('.js-modal', { startOpen: true })`, or as data-attributes on the modal element (the element passed to the modal function), e.g. `data-start-open="true"`
+Options can be set during initialising in an Object passed as the second argument to the modal function, e.g. `modal('.js-modal', { startOpen: true })`, or as data-attributes on the modal element (the element passed to the initialisation function), e.g. `data-start-open="true"`
 ```
 {
     onClassName: 'is--active', //className added to node when modal is open
@@ -86,6 +88,22 @@ modal() returns an array of instances. Each instance exposes the interface
     close a Function that closes the modal
 }
 ```
+
+## Events
+There are two custom events that an instance of the cookie banner dispatches:
+- `modal.open` when the modal is opened
+- `modal.close` when it is closed
+
+The events are dispatched on the document. A reference to the getState function of the instance is contained in the custom event detail.
+
+```
+const [instance] = modal('.js-modal', options);
+
+document.addEventListener('modal.open', e => {
+    const state = e.detail.getState();
+    // do something with state if we want to
+});
+
 
 ## Tests
 ```

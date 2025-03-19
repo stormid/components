@@ -49,5 +49,17 @@ describe('Scroll points > unit > callback', () => {
         expect(mockDisconnect).toBeCalledWith(node);
     });
 
+    it('should remove className if entries[0] is not intersecting and replay and unload options set to allow replaying', () => {
+        document.body.innerHTML = '<div class="test"></div>';
+        const node = document.querySelector('.test');
+        const settings = { ...defaults, replay: true, unload: false };
+        const observer = { disconnect: () => {} };
+        callback({ settings, node })([{ isIntersecting: true }], observer);
+        expect(node.classList.contains(defaults.className)).toEqual(true);
+        
+        callback({ settings, node })([{ isIntersecting: false }], observer);
+        expect(node.classList.contains(defaults.className)).toEqual(false);
+    });
+
 
 });

@@ -1,6 +1,6 @@
 {
   "name": "@stormid/boilerplate",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "Boilerplate for developing UI components",
   "author": "stormid",
   "license": "MIT",
@@ -11,7 +11,7 @@
   "private": false,
   "main": "dist/index.js",
   "source": "src/index.js",
-  "module": "dist/index.modern.mjs",
+  "module": "dist/index.modern.js",
   "unpkg": "dist/index.umd.js",
   "browser": "dist/index.umd.js",
   "keywords": [
@@ -22,10 +22,10 @@
   ],
   "scripts": {
     "build": "microbundle --name boilerplate",
-    "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
-    "prod": "webpack --config example/webpack.config.js --mode production",
+    "dev": "webpack-dev-server --config tools/webpack.config.js",
+    "prod": "webpack --config tools/webpack.config.js --mode production",
     "prepublish": "npm run -s build",
-    "test": "jest --coverage"
+    "test": "jest --coverage & npx playwright test"
   },
   "gitHead": "9042db4005411c4360ba3e8188e03333c10098f2"
 }

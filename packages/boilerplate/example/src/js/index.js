@@ -1,4 +1,4 @@
-import boilerplate from '../../../dist';
+import boilerplate from '../../../src';
     
 window.addEventListener('DOMContentLoaded', () => {
     boilerplate('.js-boilerplate');
