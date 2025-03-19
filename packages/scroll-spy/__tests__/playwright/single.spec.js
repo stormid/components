@@ -33,6 +33,12 @@ test.describe('Scroll spy > functionality', { tag: '@all'}, () => {
 		expect(await matchingLinks.count()).toBe(1);
 	});
 
+	test('Clicking the spy link should activate it', async ({ page }) => {	
+		const matchingLink = page.locator('nav a[href="#section5"]');
+		await matchingLink.click();
+		await expect(matchingLink).toHaveClass(/is--active/);
+	});
+
 	test('Activate the last link when the page is at the bottom, even if not intersecting top of window', async ({ page }) => {	
 		const matchingLink = page.locator('nav a[href="#section3"]');		
 		await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight));
