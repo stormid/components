@@ -1,6 +1,6 @@
 export default {
     bannerTemplate(model){
-        return `<<section role="dialog" aria-live="polite" aria-label="Your privacy" class="${model.classNames.banner}">
+        return `<section role="region" aria-live="polite" aria-label="Your privacy" class="${model.classNames.banner}">
             <div class="privacy-content">
                 <div class="wrap">
                     <!--googleoff: all-->
