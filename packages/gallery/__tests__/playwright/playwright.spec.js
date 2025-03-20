@@ -6,9 +6,7 @@ test.beforeEach(async ({ page }) => {
     await page.goto('/');
 });
 
-//TO DO
-// add left/right keyboard navigation tests
-test.describe('Gallery > Keyboard Navigation', { tag: '@reduced' }, () => {
+test.describe('Gallery > Keyboard Navigation', { tag: '@all' }, () => {
     test('Should navigate to the next item when the right arrow key is pressed', async ({ page }) => {
         const items = await page.locator('[data-gallery-item]').all();
         await items[0].focus();
