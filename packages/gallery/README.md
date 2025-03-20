@@ -10,12 +10,16 @@ Create the gallery in HTML.
 
 There must be an live region with a `data-gallery-live-region` attribute (an element with `aria-live="polite" aria-atomic="true"` for example) for the accessible announcenments.
 
-Each of the gallery items should have a `data-gallery-item` attribute. For navigation, `data-gallery-previous` and `data-gallery-next` attributes on buttons.
+Each of the gallery items should have a `data-gallery-item` attribute and an id, which is used to update the document URL and makes slides addressable - you can link to a specific gallery slide using a URL hash matching a slide id. If ids are not added they are programmatically generated.
+
+For navigation, `data-gallery-previous` and `data-gallery-next` attributes on buttons identify them as navigation triggers.
 
 Optionally, a button with `data-gallery-fullscreen` attribute if supporting fullscreen functionality.
 
+Optionally, any buttons with a `data-gallery-navigate` attribute will navigate the gallery to a specific slide, e.g. `data-gallery-navigate="2"`.
+
 ```
-<div class="gallery js-gallery" id="gallery">
+<div role="region" class="gallery js-gallery" id="gallery">
     <div class="gallery__header">
         <div class="gallery__total" aria-live="polite" aria-atomic="true" data-gallery-live-region>1 of 5</div>
         <button class="gallery__fullscreen" aria-label="Full screen" data-gallery-fullscreen>
@@ -29,7 +33,7 @@ Optionally, a button with `data-gallery-fullscreen` attribute if supporting full
     </div>
     <div class="gallery__main">
         <ul class="gallery__list">
-            <li class="gallery__item" data-gallery-item>
+            <li class="gallery__item" data-gallery-item id="gallery-1">
                 <div class="gallery__item-img-container">
                     <picture>
                         <source srcset="https://placehold.co/1600x1000.jpg" media="(min-width:1000px)">
@@ -48,7 +52,7 @@ Optionally, a button with `data-gallery-fullscreen` attribute if supporting full
                     </div>
                 </div>
             </li>
-            <li class="gallery__item" data-gallery-item>
+            <li class="gallery__item" data-gallery-item id="gallery-2">
                 <div class="gallery__item-img-container">
                     <picture>
                         <source srcset="https://placehold.co/1600x1400.jpg" media="(min-width:1100px)">
@@ -67,7 +71,7 @@ Optionally, a button with `data-gallery-fullscreen` attribute if supporting full
                     </div>
                 </div>
             </li>
-            <li class="gallery__item" data-gallery-item>
+            <li class="gallery__item" data-gallery-item id="gallery-3">
                 <div class="gallery__item-img-container">
                     <picture>
                         <source srcset="https://placehold.co/1630x1500.jpg" media="(min-width:1300px)">
@@ -86,7 +90,7 @@ Optionally, a button with `data-gallery-fullscreen` attribute if supporting full
                     </div>
                 </div>
             </li>
-            <li class="gallery__item" data-gallery-item>
+            <li class="gallery__item" data-gallery-item id="gallery-4">
                 <div class="gallery__item-img-container">
                     <picture>
                         <source srcset="https://placehold.co/1640x2400.jpg" media="(min-width:1400px)">
