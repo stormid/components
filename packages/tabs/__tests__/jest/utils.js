@@ -1,4 +1,4 @@
-import { getActiveIndexByHash, getActiveIndexOnLoad } from '../../../src/lib/utils';
+import { getActiveIndexByHash, getActiveIndexOnLoad } from '../../src/lib/utils';
 
 const init = () => {
     document.body.innerHTML = `<div role="tablist" data-active-index="1">

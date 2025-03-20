@@ -1,5 +1,5 @@
-import tabs from '../../../src';
-import { getSelection } from '../../../src/lib/utils';
+import tabs from '../../src';
+import { getSelection } from '../../src/lib/utils';
 
 let TabSet;
 
@@ -183,6 +183,25 @@ describe(`Tabs > init`, () => {
 
 
 });
+
+describe(`Tabs > Initialisation no panel markup`, () => {
+    
+    beforeAll(() => {
+        document.body.innerHTML = `
+            <div role="tablist">
+                <nav class="tabs__nav">
+                    <a id="tab-4" class="tabs__nav-link js-tabs__link" href="#panel-4" role="tab">Tab 4</a>
+                </nav>
+            </div>`;
+
+        TabSet = tabs('[role=tablist]');
+    });
+
+    it('should return array of length 0', async () => {
+        expect(TabSet.length).toEqual(0);
+    });
+});
+
 
 describe('Tabs > Initialisation > Get Selection', () => {
 
