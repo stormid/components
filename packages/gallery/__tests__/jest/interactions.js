@@ -110,10 +110,6 @@ beforeAll(() => {
     [ instance ] = gallery('.js-gallery');
 });
 
-//Don't need to test keyboard interactions separately (the test won't work by dispatching an event anyway)
-//https://www.w3.org/TR/WCAG20-TECHS/SCR35.html
-//The onclick event is mapped to the default action of a link or button.
-//The default action occurs when the user clicks the element with a mouse, but it also occurs when the user focuses the element and hits enter or space, and when the element is triggered via the accessibility API.
 describe('Gallery > click interactions', () => {
 
     it('should navigate to the next item via the next button', () => {
