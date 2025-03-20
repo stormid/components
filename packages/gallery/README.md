@@ -158,16 +158,17 @@ const [instance] = gallery('js-gallery);
 gallery() returns an array of instances. Each instance exposes the interface
 ```
 {
-    getState //
-    initialise //
-    goTo //
-    toggleFullScreen //
+    getState // return the current state Object
+    initialise // to manually initialise if manualInitialisation setting is true
+    goTo // navigate to a slide index (zero indexed)
+    toggleFullScreen // set teh gallery to full screen
 }
 ```
 
 ## Events
-There are X custom events that an instance of the gallery dispatches:
-- `gallery.XXX` when xxxxx
+There are 2 events that an instance of the gallery dispatches:
+- `gallery.initialised` when it's initialised
+- `gallery.change` when navigating to a different slide
 
 
 ## Tests

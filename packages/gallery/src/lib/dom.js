@@ -81,9 +81,6 @@ export const change = (store, next, options = { fromListener: false }) => {
         writeLiveRegion,
         () => {
             const id = items[next].getAttribute('id');
-
-            //TODO
-            //don't pushState if this was fired from a hashchange event
             settings.updateURL && !options.fromListener && window.history.pushState({ URL: `#${id}` }, '', `#${id}`);
         },
         broadcast(store, EVENTS.CHANGE)
