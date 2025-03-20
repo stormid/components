@@ -1,4 +1,4 @@
-import tabs from '../src';
+import tabs from '../../src';
 
 let TabSet;
 

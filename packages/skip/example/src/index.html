@@ -1,26 +1,32 @@
 <!doctype html>
 <html lang="en">
-	<head>
-    <title>StormID</title>
-    <style>
-        * {
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family: sans-serif;
-        }
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>StormID</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: sans-serif;
+		}
+
 		body {
-        	font:100%/1.4 "AvenirNextLTW01-Regular", Helvetica, "Lucida Grande", sans-serif;
+			font: 100%/1.4 "AvenirNextLTW01-Regular", Helvetica, "Lucida Grande", sans-serif;
 		}
-        html,
-        body {
-            height:100%;
-        }
+
+		html,
+		body {
+			height: 100%;
+		}
+
 		.container {
-			margin:24px auto;
+			margin: 24px auto;
 			max-width: 960px;
-			padding:0 24px;
+			padding: 0 24px;
 		}
+
 		hr {
 			height: 1px;
 			width: 100%;
@@ -29,6 +35,7 @@
 			margin: 24px 0;
 			border: 0 none;
 		}
+
 		.skip__container {
 			position: absolute;
 			top: 0;
@@ -36,35 +43,40 @@
 			width: 100%;
 			pointer-events: none;
 		}
+
 		.skip__btn {
 			position: relative;
 			left: -999em;
-			height:1px;
+			height: 1px;
 		}
+
 		.skip__btn:focus {
-			pointer-events:all;
+			pointer-events: all;
 			position: fixed;
-			height:auto;
-			margin:0 auto;
+			height: auto;
+			margin: 0 auto;
 			display: block;
-			background-color:red;
-			color:#fff;
-			padding:0 12px;
-			left:50%;
+			background-color: red;
+			color: #fff;
+			padding: 0 12px;
+			left: 50%;
 			transform: translateX(-50%);
-			top:0;
+			top: 0;
 			z-index: 1002;
 			text-align: center;
 		}
+
 		#content {
-			width:100%;
-			height:50vh;
+			width: 100%;
+			height: 50vh;
 		}
+
 		#content:focus {
 			outline: 1px solid red;
 		}
-    </style>
+	</style>
 </head>
+
 <body>
 	<section class="skip__container" aria-labelledby="skip-link">
 		<a id="skip-link" class="skip__btn" tabindex="0" href="#content">Skip to main content</a>
@@ -74,5 +86,5 @@
 		<button id="test-2">Test button</button>
 	</main>
 </body>
-</html>
 
+</html>
