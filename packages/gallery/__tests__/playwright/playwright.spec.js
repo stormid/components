@@ -28,6 +28,16 @@ test.describe('Gallery > Keyboard Navigation', { tag: '@all' }, () => {
     });
 });
 
+test.describe('Gallery > Full screen mode support', { tag: '@all' }, () => {
+    test('Should remove the fullscreen button if not supported', async ({ page }) => {
+        const supportsFullscreen = await page.evaluate(() => document.fullscreenEnabled || document.webkitFullscreenEnabled);
+        if (!supportsFullscreen) {
+            await expect(page.locator('[data-gallery-fullscreen]')).not.toBeVisible();
+        } else {
+            await expect(page.locator('[data-gallery-fullscreen]')).toBeVisible();
+        }
+    });
+});
 
 test.describe('Gallery > Axe', { tag: '@reduced' }, () => {
     test('Should not have any automatically detectable accessibility issues', async ({ page }) => {
