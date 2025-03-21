@@ -8,11 +8,13 @@ export const init = store => () => {
     if (!dom.liveRegion) console.warn(`A live region announcing current and total items is recommended for screen readers.`);
     else writeLiveRegion(state);
     if (dom.fullscreen) {
-        dom.fullscreen.addEventListener('click', toggleFullScreen.bind(null, store));
-        document.addEventListener('fullscreenchange', e => {
-            if (document.fullscreenElement) document.documentElement.classList.add(settings.className.fullscreen);
-            else document.documentElement.classList.remove(settings.className.fullscreen);
-        });
+        if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
+            dom.fullscreen.addEventListener('click', toggleFullScreen.bind(null, store));
+            document.addEventListener('fullscreenchange', e => {
+                if (document.fullscreenElement) document.documentElement.classList.add(settings.className.fullscreen);
+                else document.documentElement.classList.remove(settings.className.fullscreen);
+            });
+        } else dom.fullscreen.parentNode.removeChild(dom.fullscreen);
     }
     if (dom.previous) dom.previous.addEventListener('click', previous.bind(null, store));
     if (dom.next) dom.next.addEventListener('click', next.bind(null, store));
@@ -52,8 +54,14 @@ const writeLiveRegion = ({ activeIndex, items, settings, dom }) => dom.liveRegio
 export const toggleFullScreen = store => {
     const { node } = store.getState();
     if (!document.fullscreenElement) {
-        if (node.requestFullscreen) node.requestFullscreen();
-    } else if (document.exitFullscreen) document.exitFullscreen();
+        if (node.requestFullscreen) {
+            node.requestFullscreen && node.requestFullscreen();
+            node.webkitRequestFullscreen && node.webkitRequestFullscreen();
+        }
+    } else if (document.exitFullscreen) {
+        node.requestFullscreen && node.exitFullscreen();
+        node.webkitExitFullscreen && node.webkitExitFullscreen();
+    }
 };
 
 export const change = (store, next, options = { fromListener: false }) => {
