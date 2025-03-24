@@ -64,12 +64,16 @@ test.describe('Toggle > Functionality', { tag: '@all'}, () => {
 		await expect(toggleWrapper).toHaveClass(/is--active/);
 	});
 
-	test('Hidden attribute should only be added if settings specify', async ({ page }) => {	
+	test('Hidden attribute should only be used if settings specify', async ({ page }) => {	
 		const toggleBlockGlobal = page.locator('.js-toggle-menu');
 		const toggleBlockLocal = page.locator('#child1');
+		const toggleButton = page.locator('.js-toggle__btn').first();
 
 		await expect(toggleBlockGlobal).toHaveAttribute('hidden');
 		await expect(toggleBlockLocal).not.toHaveAttribute('hidden');
+
+		await toggleButton.click();
+		await expect(toggleBlockGlobal).not.toHaveAttribute('hidden');
 	});
 
 	test('Should start open if a class is used on parent', async ({ page }) => {	
@@ -111,6 +115,16 @@ test.describe('Toggle > Keyboard', { tag: '@all'}, () => {
 		await expect(HTMLNode).not.toHaveClass(/on--nav/);
 	});
 
+	test('Keyboard focus should move within the panel if the settings specify', async ({ page }) => {	
+		const toggleBlock = page.locator('.js-toggle-trap');
+
+		await page.keyboard.press(tabKey);
+		await page.keyboard.press(tabKey);
+		await page.keyboard.press('Enter');
+		await expect(toggleBlock).toBeVisible();
+		await expect(page.locator(':focus')).toHaveClass(/eg__nav-item/);
+	});
+
 	test('Should trap the tab key within the toggle panel if the settings specify', async ({ page }) => {	
 		const toggleBlock = page.locator('.js-toggle-trap');
 		const HTMLNode = page.locator('html');
@@ -138,38 +152,21 @@ test.describe('Toggle > Keyboard', { tag: '@all'}, () => {
 });
 
 test.describe('Toggle > Aria', { tag: '@all'}, () => {
-	// it('should add aria attributes to toggle buttons', async () => {
-    //     expect(Toggles[0].getState().toggles[0].getAttribute('aria-controls')).toEqual(Toggles[0].node.getAttribute('id'));
-    //     expect(Toggles[0].getState().toggles[0].getAttribute('aria-expanded')).toEqual('false');
-    // });
 
-    // it('should initially add a hidden attribute on the node', async () => {
-    //     expect(Toggles[0].getState().node.hidden).toBeTruthy();
-    // });
-
-    // it('should focus on the first focusable child node fo the target when toggled open', () => {
-    //     Toggles[0].getState().toggles[0].click();
-    //     Toggles[0].getState().toggles[0].click();
-    //     expect(document.activeElement.getAttribute('id')).toEqual('focusable-1-1');
-    // });
-
-    // it('should change the hidden attribute on the node when clicked', async () => {
-    //     Toggles[0].getState().toggles[0].click();
-    //     expect(Toggles[0].getState().node.hidden).toBeFalsy();
-    // });
-
+	test('Should add aria attributes on all toggle buttons', async ({ page }) => {
+		const buttons = await page.locator('.btn, .menu-button').all();
+		for(const button of buttons) {
+			await expect(button).toHaveAttribute('aria-controls');
+			await expect(button).toHaveAttribute('aria-expanded');
+		}
+	});
 	
-		// it('should change attributes of all toggle buttons when an instance changes state', async () => {
-		// 	const togglesExpanded = toggles => toggles.reduce((acc, curr) => {
-		// 		if (curr.getAttribute('aria-expanded') === 'false') acc = false;
-		// 		return acc;
-		// 	}, true);
-	
-		// 	Toggles[0].toggle();
-		// 	expect(togglesExpanded(Toggles[0].getState().toggles)).toEqual(true);
-		// 	Toggles[0].toggle();
-		// 	expect(togglesExpanded(Toggles[0].getState().toggles)).toEqual(false);
-		// });
+	test('Should update aria expanded when toggle is used', async ({ page }) => {
+		const toggleButton = page.locator('.js-toggle__btn-local');
+		await expect(toggleButton).toHaveAttribute('aria-expanded', 'false');
+		await toggleButton.click();
+		await expect(toggleButton).toHaveAttribute('aria-expanded', 'true');
+	});
 	
 });
 
