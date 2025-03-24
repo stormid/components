@@ -41,6 +41,20 @@ test.describe('Tabs > Functionality', { tag: '@all'}, () => {
 		await expect(thirdTab).toHaveClass(/is--active/);
 	});
 
+	test('should make the appropriate tabpanel visible when using the activeIndex', async ({ page }) => {
+		await page.goto('/focus.html');
+		const thirdPanel = page.locator('#panel-6');
+		await expect(thirdPanel).toBeVisible();
+		const thirdTab = page.locator('#tab-6');
+		await expect(thirdTab).toHaveClass(/is--active/);
+	});
+
+	test('should autofocus on the active tab if the autofocus setting is used', async ({ page }) => {
+		await page.goto('/focus.html');
+		const focussed = page.locator(':focus');
+		await expect(focussed).toHaveAttribute('id', 'tab-1');
+	});
+
 });
 
 test.describe('Tabs > Accessibility > ARIA', { tag: '@all'}, () => {
@@ -94,73 +108,100 @@ test.describe('Tabs > Accessibility > ARIA', { tag: '@all'}, () => {
 	});
 });
 
-test.describe('Tabs > Accessibility > Keyboard', { tag: '@all'}, () => {
+test.describe('Tabs > Manual activation > Keyboard', { tag: '@all'}, () => {
 	
-	// describe(`Tabs > Accessibility > keyboard events auto `, () => {
-	
-	// 	beforeAll(() => {init();});
-	
-	// 	it('should add keyboard event listener for the left and right keys to each tab', () => {
-	// 		const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
-	// 		const left = new window.KeyboardEvent('keydown', { keyCode: 37, bubbles: true });
-	
-	// 		TabSet[0].getState().tabs[0].dispatchEvent(right);
-	// 		expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('true');
-	// 		TabSet[0].getState().tabs[1].dispatchEvent(left);
-	// 		expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
-	// 	});
-		
-	// });
-	
-	// describe(`Tabs > Accessibility > keyboard events manual `, () => {
-	
-	// 	beforeAll(() => {init('manual');});
-	
-	// 	it('should add keyboard event listener for the left and right keys to each tab', () => {
-	// 		const right = new window.KeyboardEvent('keydown', { keyCode: 39, bubbles: true });
-	
-	// 		TabSet[0].getState().tabs[0].dispatchEvent(right);
-	// 		//should not change the active tab (just move focus)
-	// 		expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('false');
-	// 		expect(TabSet[0].getState().tabs[0].getAttribute('aria-selected')).toEqual('true');
-	// 		expect(TabSet[0].getState().tabs[0].classList.contains('is--active')).toBeTruthy();
-	// 	});
-		
-	// });
-	
-	// describe(`Tabs > Accessibility > keyboard events both `, () => {
-	
-	// 	beforeAll(() => {init();});
-		
-	// 	it('should add keyboard event listener for the space key to each tab', () => {
-	// 		const space = new window.KeyboardEvent('keydown', { keyCode: 32, bubbles: true });
-	
-	// 		TabSet[0].getState().tabs[1].dispatchEvent(space);
-	// 		expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('true');
-			
-	// 	});
-	
-	// 	it('should add keyboard event listener for the enter key to each tab', () => {
-	// 		const enter = new window.KeyboardEvent('keydown', { keyCode: 13, bubbles: true });
-	
-	// 		TabSet[0].getState().tabs[2].dispatchEvent(enter);
-	// 		expect(TabSet[0].getState().tabs[2].getAttribute('aria-selected')).toEqual('true');
-			
-	// 	});
-	
-	// 	it('should ignore other keyboard events, tab should follow tab order of the page', () => {
-	// 		const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true });
-	// 		const space = new window.KeyboardEvent('keydown', { keyCode: 32, bubbles: true });
-	
-	// 		TabSet[0].getState().tabs[1].dispatchEvent(space);
-	// 		TabSet[0].getState().tabs[1].dispatchEvent(tab);
-	// 		expect(TabSet[0].getState().tabs[1].getAttribute('aria-selected')).toEqual('true');
-			
-	// 	});
-	
-	// });
-	
+	test('should use the arrow keys to navigate between tabs for selection without activating', async ({ page }) => {
+		await page.keyboard.press(tabKey);
+		let focussed = page.locator(':focus');
+
+		await expect(focussed).toHaveAttribute('id', 'tab-1');
+		await expect(focussed).toHaveClass(/is--active/);
+
+		await page.keyboard.press('ArrowRight');
+		focussed = page.locator(':focus');
+
+		await expect(focussed).toHaveAttribute('id', 'tab-2');
+		await expect(focussed).not.toHaveClass(/is--active/);
+
+		await page.keyboard.press('ArrowLeft');
+		focussed = page.locator(':focus');
+
+		await expect(page.locator(':focus')).toHaveAttribute('id', 'tab-1');
+		await expect(focussed).toHaveClass(/is--active/);
+	});
+
+	test('should activate the tab on pressing the enter key', async ({ page }) => {
+		await page.keyboard.press(tabKey);
+		let focussed = page.locator(':focus');
+
+		await expect(focussed).toHaveAttribute('id', 'tab-1');
+		await expect(focussed).toHaveClass(/is--active/);
+
+		await page.keyboard.press('ArrowRight');
+		focussed = page.locator(':focus');
+
+		await expect(focussed).toHaveAttribute('id', 'tab-2');
+		await expect(focussed).not.toHaveClass(/is--active/);
+
+		await page.keyboard.press('Enter');
+		focussed = page.locator(':focus');
+
+		await expect(page.locator(':focus')).toHaveAttribute('id', 'tab-2');
+		await expect(focussed).toHaveClass(/is--active/);
+		await expect(page.locator('#panel-2')).toBeVisible();
+	});
+
+	test('should activate the tab on pressing the space bar', async ({ page }) => {
+		await page.keyboard.press(tabKey);
+		let focussed = page.locator(':focus');
+
+		await expect(focussed).toHaveAttribute('id', 'tab-1');
+		await expect(focussed).toHaveClass(/is--active/);
+
+		await page.keyboard.press('ArrowRight');
+		focussed = page.locator(':focus');
+
+		await expect(focussed).toHaveAttribute('id', 'tab-2');
+		await expect(focussed).not.toHaveClass(/is--active/);
+
+		await page.keyboard.press(' ');
+		focussed = page.locator(':focus');
+
+		await expect(page.locator(':focus')).toHaveAttribute('id', 'tab-2');
+		await expect(focussed).toHaveClass(/is--active/);
+		await expect(page.locator('#panel-2')).toBeVisible();
+	});
+
 });
+
+test.describe('Tabs > Auto activation > Keyboard', { tag: '@all'}, () => {
+	
+	test('should use the arrow keys to navigate between tabs and activate', async ({ page }) => {
+		await page.keyboard.press(tabKey);
+		await page.keyboard.press(tabKey);
+		await page.keyboard.press(tabKey);
+		let focussed = page.locator(':focus');
+
+		await expect(focussed).toHaveAttribute('id', 'tab-6');
+		await expect(focussed).toHaveClass(/is--active/);
+
+		await page.keyboard.press('ArrowRight');
+		focussed = page.locator(':focus');
+
+		await expect(focussed).toHaveAttribute('id', 'tab-4');
+		await expect(focussed).toHaveClass(/is--active/);
+		await expect(page.locator('#panel-4')).toBeVisible();
+
+		await page.keyboard.press('ArrowLeft');
+		focussed = page.locator(':focus');
+
+		await expect(page.locator(':focus')).toHaveAttribute('id', 'tab-6');
+		await expect(focussed).toHaveClass(/is--active/);
+		await expect(page.locator('#panel-6')).toBeVisible();
+	});
+
+});
+
 
 test.describe('Tabs > Axe', { tag: '@reduced'}, () => {
 	test('Should not have any automatically detectable accessibility issues', async ({ page }) => {	
