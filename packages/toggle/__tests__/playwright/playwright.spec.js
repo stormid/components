@@ -115,6 +115,14 @@ test.describe('Toggle > Keyboard', { tag: '@all'}, () => {
 		await expect(HTMLNode).not.toHaveClass(/on--nav/);
 	});
 
+	test('Closed toggles should not be accessible via keyboard', async ({ page }) => {	
+		for(let i = 0; i<=2; i++) {
+            await page.keyboard.press(tabKey);
+        }
+
+		await expect(page.locator(':focus')).toHaveClass(/js-toggle__btn-local/);
+	});
+
 	test('Keyboard focus should move within the panel if the settings specify', async ({ page }) => {	
 		const toggleBlock = page.locator('.js-toggle-trap');
 
