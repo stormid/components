@@ -1,8 +1,13 @@
 const { test, expect } = require('@playwright/test');
 import AxeBuilder from '@axe-core/playwright';
 
-test.beforeEach(async ({ page }) => {
+let tabKey;
+
+test.beforeEach(async ({ page }, testInfo) => {
 	await page.goto('/');
+	tabKey = testInfo.project.use.defaultBrowserType === 'webkit'
+			? "Alt+Tab"
+			: "Tab";
 });
 
 test.describe('Toggle > Functionality', { tag: '@all'}, () => {
@@ -59,6 +64,14 @@ test.describe('Toggle > Functionality', { tag: '@all'}, () => {
 		await expect(toggleWrapper).toHaveClass(/is--active/);
 	});
 
+	test('Hidden attribute should only be added if settings specify', async ({ page }) => {	
+		const toggleBlockGlobal = page.locator('.js-toggle-menu');
+		const toggleBlockLocal = page.locator('#child1');
+
+		await expect(toggleBlockGlobal).toHaveAttribute('hidden');
+		await expect(toggleBlockLocal).not.toHaveAttribute('hidden');
+	});
+
 	test('Should start open if a class is used on parent', async ({ page }) => {	
 		const toggleBlock = page.locator('#child3');
 		const toggleWrapper = page.locator('#parent3');
@@ -75,38 +88,53 @@ test.describe('Toggle > Functionality', { tag: '@all'}, () => {
 });
 
 test.describe('Toggle > Keyboard', { tag: '@all'}, () => {
-	// it('should close an open toggle when the document.activeElement becomes a non-child element', async () => {
-    //     Toggles[0].toggle();
-    //     // TogglesLocal[0].getState().toggles[0].focus();
-    //     const focusin = new CustomEvent('focusin', { bubbles: true, cancelable: false });
-    //     document.dispatchEvent(focusin);
-    //     expect(Toggles[0].getState().isOpen).toEqual(false);
-    // });
 
-	//  it('should tab to the last focusable child with a shift-tab', async () => {
-	// 		const shiftTab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true, shiftKey: true });
-	// 		const focusableChildren = Toggles[0].getState().focusableChildren;
-	// 		Toggles[0].toggle();
-	// 		focusableChildren[0].dispatchEvent(shiftTab);
-	// 		expect(document.activeElement).toEqual(focusableChildren[focusableChildren.length -1]);
-	// 	});
-	
-	// 	it('should trapTab and return to the first focusable child', async () => {
-	// 		const tab = new window.KeyboardEvent('keydown', { keyCode: 9, bubbles: true });
-	// 		const focusableChildren = Toggles[0].getState().focusableChildren;
-	// 		focusableChildren[0].dispatchEvent(tab);
-	// 		expect(document.activeElement).toEqual(focusableChildren[0]);
-	
-	// 		//and close for next test
-	// 		Toggles[0].toggle();
-	// 	});
-	
-    // it('should close open toggles when the escape key is pressed', async () => {
-    //     const escape = new window.KeyboardEvent('keydown', { keyCode: 27, bubbles: true });
-    //     Toggles[0].toggle();
-    //     document.dispatchEvent(escape);
-    //     expect(Toggles[0].getState().isOpen).toEqual(true);
-    // });
+	test('Should close an open toggle that uses closeOnBlur if focus moves away', async ({ page }) => {	
+		const toggleBlock = page.locator('.js-toggle-menu');
+		const HTMLNode = page.locator('html');
+
+		await expect(toggleBlock).not.toBeVisible();
+		await expect(HTMLNode).not.toHaveClass(/on--nav/);
+
+		await page.keyboard.press(tabKey);
+		await page.keyboard.press('Enter');
+		await expect(toggleBlock).toBeVisible();
+		await expect(HTMLNode).toHaveClass(/on--nav/);
+
+		//After a number of tab presses that exceeds the number of
+        //elements in the panel, the panel should close
+        for(let i = 0; i<=4; i++) {
+            await page.keyboard.press(tabKey);
+        }
+
+		await expect(toggleBlock).not.toBeVisible();
+		await expect(HTMLNode).not.toHaveClass(/on--nav/);
+	});
+
+	test('Should trap the tab key within the toggle panel if the settings specify', async ({ page }) => {	
+		const toggleBlock = page.locator('.js-toggle-trap');
+		const HTMLNode = page.locator('html');
+
+		await expect(toggleBlock).not.toBeVisible();
+		await expect(HTMLNode).not.toHaveClass(/on--trap/);
+
+		await page.keyboard.press(tabKey);
+		await page.keyboard.press(tabKey);
+		await page.keyboard.press('Enter');
+		await expect(toggleBlock).toBeVisible();
+		await expect(HTMLNode).toHaveClass(/on--trap/);
+
+		//After a number of tab presses that exceeds the number of
+        //elements in the panel, the panel should remain open with the focus within
+        for(let i = 0; i<=6; i++) {
+            await page.keyboard.press(tabKey);
+        }
+
+		await expect(toggleBlock).toBeVisible();
+		await expect(HTMLNode).toHaveClass(/on--trap/);
+		await expect(page.locator(':focus')).toHaveClass(/js-toggle__btn-trap/);
+	});
+
 });
 
 test.describe('Toggle > Aria', { tag: '@all'}, () => {

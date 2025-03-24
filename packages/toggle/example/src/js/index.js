@@ -8,6 +8,11 @@ window.addEventListener('DOMContentLoaded', () => {
         useHidden: true
     });
 
+    toggle('.js-toggle-trap', {
+        focus: true,
+        trapTab: true
+    });
+
     toggle('.js-toggle-local', {
         local: true
     });
