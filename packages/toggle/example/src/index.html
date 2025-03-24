@@ -17,57 +17,22 @@
             height: 100%;
         }
 
-        hr {
-            height: 1px;
-            width: 100%;
-            display: block;
-            background: #ddd;
-            margin: 24px 0;
-            border: 0 none;
-        }
-
-        h1 {
-            font: 1.25rem/1.2 sans-serif;
-            margin-bottom: 1.5rem;
-        }
-
-        h2 {
-            font: 1.1rem/1.2 sans-serif;
-            margin-bottom: 12px;
-            padding-top: 12px;
-        }
-
-        h3 {
-            font: 1rem/1.2 sans-serif;
-            margin-bottom: 12px;
-            padding-top: 12px;
-        }
-
-        p {
-            margin-bottom: 1.5rem;
-        }
-
         header {
             width: 100%;
             padding: 20px;
             margin-bottom: 40px;
+            background: #ddd;
         }
 
         .container {
-            clear: both;
-            overflow: hidden;
             margin: 0 auto;
             width: 80%;
             max-width: 1200px;
         }
 
-        .row {
-            margin-left: -30px;
-            overflow: hidden
-        }
-
-        section {
-            margin-bottom: 30px;
+        header .container {
+            display: flex;
+            justify-content: flex-end;
         }
 
         button {
@@ -79,48 +44,41 @@
         }
 
         button svg {
-            fill: blue;
-            position: relative;
-            top: .4rem;
+            margin-right: 10px;
         }
 
-        .eg__local a {
-            margin-bottom: 1rem;
-            color: blue;
+        .menu-button {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
-        .eg__local-target {
-            max-height: 0;
-            overflow: hidden;
-            transition: maxHeight 100ms ease;
-        }
-
-        .eg__local.is--active .eg__local-target {
-            max-height: 1000px;
+        .menu-button:focus {
+            outline: 4px solid blue;
         }
 
         .eg__nav {
+            display: none;
             position: fixed;
             top: 0;
             right: 0;
             bottom: 0;
-            transform: translateX(100%);
             transition: transform 120ms;
             background: #191919;
             width: 50%;
             padding: 50px 5%;
-            visibility: hidden;
         }
 
         .eg__nav-item {
             display: block;
             color: #fff;
-            ;
+            font-size: 24px;
+            margin-bottom: 10px
         }
 
         .on--nav .eg__nav {
-            transform: translateX(0);
-            visibility: visible;
+            display: block;
         }
 
         .eg__nav-close {
@@ -132,30 +90,113 @@
         .eg__nav-close svg {
             fill: #fff;
         }
+
+        h1 {
+            margin-bottom: 48px;
+        }
+
+        .child {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .parent {
+            margin-bottom: 48px;
+        }
+
+        .parent.is--active .child {
+            display: block;
+        }
+
+        .btn {
+            font-size: 20px;
+            font-weight: bold;
+            padding-right: 24px;
+            position: relative;
+        }
+
+        .btn:after {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid black;
+            border-bottom: 2px solid black;
+            transform: rotate(-45deg);
+            position: absolute;
+            right: 0;
+            top: calc(50% - 5px);
+        }
+
+        .btn[aria-expanded="true"]:after {
+            transform: rotate(45deg);
+            top: calc(50% - 10px);
+        }
     </style>
 </head>
 
 <body>
+    <header class="header">
+        <div class="container">
+            <button class="menu-button js-toggle__btn" aria-label="Toggle off-canvas navigation">
+                <svg fill="#191919" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg> Global toggle
+            </button>
+            <nav id="nav" class="eg__nav js-toggle-menu" data-toggle="js-toggle__btn">
+                <a class="eg__nav-item" href="#">Home</a>
+                <a class="eg__nav-item" href="#">About</a>
+                <a class="eg__nav-item" href="#">Contact</a>
+                <button class="js-toggle__btn eg__nav-close" aria-label="Toggle off-canvas navigation">
+                    <svg fill="#191919" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                        <path d="M0 0h24v24H0z" fill="none" />
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
     <main class="container">
         <h1>Toggle example</h1>
-        <button class="js-toggle__btn" aria-label="Toggle off-canvas navigation">
-            <svg fill="#191919" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 0h24v24H0z" fill="none" />
-                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
-            </svg> Menu
-        </button>
-        <nav id="nav" class="eg__nav js-toggle" data-toggle="js-toggle__btn">
-            <a class="eg__nav-item" href="#">Home</a>
-            <a class="eg__nav-item" href="#">About</a>
-            <a class="eg__nav-item" href="#">Contact</a>
-            <button class="js-toggle__btn eg__nav-close" aria-label="Toggle off-canvas navigation">
-                <svg fill="#191919" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-                    <path d="M0 0h24v24H0z" fill="none" />
-                </svg>
-            </button>
-        </nav>
+        <div id="parent1" class="parent">
+            <button type="button" class="btn js-toggle__btn-local">Test button - basic local</button>
+            <div id="child1" class="js-toggle-local child" data-toggle="js-toggle__btn-local">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lorem purus, sollicitudin faucibus
+                    finibus sed, molestie ac lectus. Morbi sit amet bibendum odio, at laoreet augue. Nunc eget elit
+                    rutrum purus lacinia blandit. Duis accumsan mi ut ligula pharetra tempus. Nulla convallis id lectus
+                    in volutpat. Maecenas sit amet rhoncus mi. Fusce magna diam, finibus sit amet fermentum lacinia,
+                    elementum at turpis. Ut hendrerit et est elementum finibus. Nulla aliquet consectetur dapibus. Fusce
+                    nunc purus, finibus in purus eget, congue aliquet purus. Aenean vestibulum in dui et venenatis.
+                </p>
+            </div>
+        </div>
+        <div id="parent2" class="parent">
+            <button type="button" class="btn js-toggle__btn-data">Test button - toggle has data attribute</button>
+            <div id="child2" class="js-toggle-local child" data-toggle="js-toggle__btn-data" data-start-open="true">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lorem purus, sollicitudin faucibus
+                    finibus sed, molestie ac lectus. Morbi sit amet bibendum odio, at laoreet augue. Nunc eget elit
+                    rutrum purus lacinia blandit. Duis accumsan mi ut ligula pharetra tempus. Nulla convallis id lectus
+                    in volutpat. Maecenas sit amet rhoncus mi. Fusce magna diam, finibus sit amet fermentum lacinia,
+                    elementum at turpis. Ut hendrerit et est elementum finibus. Nulla aliquet consectetur dapibus. Fusce
+                    nunc purus, finibus in purus eget, congue aliquet purus. Aenean vestibulum in dui et venenatis.
+                </p>
+            </div>
+        </div>
+
+        <div id="parent3" class="parent is--active">
+            <button type="button" class="btn js-toggle__btn-class">Test button - toggle has active class</button>
+            <div id="child3" class="js-toggle-local child" data-toggle="js-toggle__btn-class" data-start-open="true">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lorem purus, sollicitudin faucibus
+                    finibus sed, molestie ac lectus. Morbi sit amet bibendum odio, at laoreet augue. Nunc eget elit
+                    rutrum purus lacinia blandit. Duis accumsan mi ut ligula pharetra tempus. Nulla convallis id lectus
+                    in volutpat. Maecenas sit amet rhoncus mi. Fusce magna diam, finibus sit amet fermentum lacinia,
+                    elementum at turpis. Ut hendrerit et est elementum finibus. Nulla aliquet consectetur dapibus. Fusce
+                    nunc purus, finibus in purus eget, congue aliquet purus. Aenean vestibulum in dui et venenatis.
+                </p>
+            </div>
+        </div>
     </main>
 </body>
 

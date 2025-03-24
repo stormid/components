@@ -1,4 +1,4 @@
-import { getStateFromDOM } from '../../../src/lib/dom';
+import { getStateFromDOM } from '../../src/lib/dom';
 
 describe(`Toggle > getStateFromDOM`, () => {
 

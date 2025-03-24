@@ -1,10 +1,20 @@
 import toggle from '../../../src';
     
 window.addEventListener('DOMContentLoaded', () => {
-    window.__t1__ = toggle('.js-toggle', {
+    toggle('.js-toggle-menu', {
         focus: false,
         closeOnClick: true,
         closeOnBlur: true,
         useHidden: true
     });
+
+    toggle('.js-toggle-local', {
+        local: true
+    });
+
+    toggle('.js-toggle-data', {
+        local: true
+    });
 });
+    
+    

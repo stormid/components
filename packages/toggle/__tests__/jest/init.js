@@ -1,5 +1,5 @@
-import toggle from '../../../src';
-import { getSelection } from '../../../src/lib/utils';
+import toggle from '../../src';
+import { getSelection } from '../../src/lib/utils';
 
 let Toggles, ToggleLocals;
 
@@ -48,6 +48,13 @@ describe(`Toggle > Init`, () => {
     it('should use data attributes as settings, overriding options', () => {
         expect(ToggleLocals[0].getState().settings.startOpen).toEqual('true');
         expect(ToggleLocals[0].getState().isOpen).toEqual(true);
+    });
+
+    it('should expose a toggle function that toggles the state of the instance', async () => {
+        expect(Toggles[0].getState().isOpen).toEqual(false);
+        Toggles[0].toggle();
+        expect(Toggles[0].getState().isOpen).toEqual(true);
+        Toggles[0].toggle();
     });
 
 });

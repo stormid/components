@@ -1,7 +1,7 @@
-import { broadcast } from '../../../src/lib/dom';
-import { createStore } from '../../../src/lib/store';
-import defaults from '../../../src/lib/defaults';
-import { EVENTS } from '../../../src/lib/constants';
+import { broadcast } from '../../src/lib/dom';
+import { createStore } from '../../src/lib/store';
+import defaults from '../../src/lib/defaults';
+import { EVENTS } from '../../src/lib/constants';
 
 describe(`Toggle > broadcast`, () => {
 
