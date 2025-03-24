@@ -1,5 +1,5 @@
-import toggle from '../src';
-import { EVENTS } from '../src/lib/constants';
+import toggle from '../../src';
+import { EVENTS } from '../../src/lib/constants';
 
 let Toggles, TogglesLocal;
 
