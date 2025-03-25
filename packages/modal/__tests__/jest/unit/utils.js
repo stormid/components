@@ -1,7 +1,7 @@
-import { createStore } from '../../src/lib/store';
-import { broadcast } from '../../src/lib/utils';
-import { EVENTS } from '../../src/lib/constants';
-import defaults from '../../src/lib/defaults';
+import { createStore } from '../../../src/lib/store';
+import { broadcast } from '../../../src/lib/utils';
+import { EVENTS } from '../../../src/lib/constants';
+import defaults from '../../../src/lib/defaults';
 
 
 describe(`Modal > Utils > broadcast`, () => {

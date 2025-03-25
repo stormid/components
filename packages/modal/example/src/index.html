@@ -1,106 +1,125 @@
 <!doctype html>
-<html>
-  <head>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StormID</title>
     <style>
         * {
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: sans-serif;
         }
+
         html,
         body {
-            height:100%;
+            height: 100%;
         }
+
         .container {
-            clear:both;
-            overflow:hidden;
-            margin:0 auto;
-            width:80%;
-            max-width:1200px;
+            clear: both;
+            overflow: hidden;
+            margin: 0 auto;
+            width: 80%;
+            max-width: 1200px;
         }
+
         .modal {
-			position: absolute;
-			overflow: hidden;
-			width:	0;
-			height:0;
-            background-color: rgba(0,0,0,.9);
-			top:0;
-			left:0;
-			opacity:0;
-			visibility:hidden;
-		}
-		.modal__inner {
-			background:#fff;
-			margin:30vh auto;
-			position: relative;
-			z-index:3;
+            position: absolute;
+            overflow: hidden;
+            width: 0;
+            height: 0;
+            background-color: rgba(0, 0, 0, .9);
+            top: 0;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .modal__inner {
+            background: #fff;
+            margin: 30vh auto;
+            position: relative;
+            z-index: 3;
             max-width: 600px;
             padding: 24px;
-		}
-		.modal__close {
-			position:fixed;
-			z-index:3;
-			top:0;
-			bottom:0;
-			left:0;
-			right:0;
-		}
-		.modal__close-btn {
-			position: fixed;
-			top:0px;
-			right:-30px;
-			cursor:pointer;
-		}
-        .modal.is--active {
-			opacity:1;
-			visibility: visible;
-			overflow: auto;
-			position: fixed;
-			width: auto;
-			height: auto;
-			top: 0;
-			left: 0;
-			bottom: 0;
-			right: 0;
-			z-index: 9;
         }
-		*:focus {
-			outline: 3px solid red;
-		}
+
+        .modal__close {
+            position: fixed;
+            z-index: 3;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .modal__close-btn {
+            position: fixed;
+            top: 0px;
+            right: -30px;
+            cursor: pointer;
+        }
+
+        .modal.is--active {
+            opacity: 1;
+            visibility: visible;
+            overflow: auto;
+            position: fixed;
+            width: auto;
+            height: auto;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            z-index: 9;
+        }
+
+        *:focus {
+            outline: 3px solid red;
+        }
+
         button {
-            background-color:#191919;
-            padding:8px 16px;
+            background-color: #191919;
+            padding: 8px 16px;
             color: #fff;
-            border:0 none;
+            border: 0 none;
             cursor: pointer;
             display: inline-block;
-                &:hover {
-                    background-color: blue
-                }
+
+            &:hover {
+                background-color: blue
+            }
         }
-        button + button {
+
+        button+button {
             margin-left: 12px;
         }
+
         .modal-confirmation__form {
             margin-top: 24px;
         }
+
         .modal-confirmation__row {
             margin-top: 32px;
         }
+
         .modal-confirmation__title {
             font-size: 1.2rem;
             font-weight: 500;
         }
+
         .modal-confirmation__cancel {
             background-color: transparent;
             color: #191919;
-                &:hover {
-                    background-color: transparent;
-                    color: blue;
-                }
+
+            &:hover {
+                background-color: transparent;
+                color: blue;
+            }
         }
+
         .visually-hidden {
             clip: rect(0 0 0 0);
             clip-path: inset(100%);
@@ -110,24 +129,31 @@
             white-space: nowrap;
             width: 1px;
         }
+
         .is--modal {
             overflow: hidden;
         }
     </style>
-  </head>
-  <body>
-    <button class="js-modal__btn" aria-haspopup="dialog">Open modal</button>
-    <div id="modal-confirmation" aria-labelledby="modal-label" role="region" class="js-modal modal-confirmation modal" data-modal-toggle="js-modal__btn" hidden="hidden">
-        <div class="modal__inner" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-description">
-            <h1 class="modal-confirmation__title" id="modal-label">Are you sure?</h1>
-            <form class="modal__form modal-confirmation__form" action="#" novalidate="novalidate">
-                <p id="modal-description">This will permanently remove this item</p>
-                <div class="modal-confirmation__row">
-                    <button type="button" class="modal-confirmation__confirm">Delete</button>
-                    <button type="button" class="modal-confirmation__cancel js-modal__btn">Cancel</button>
-                </div>
-            </form>
+</head>
+
+<body>
+    <main class="container">
+        <h1>Modal example</h1>
+        <button class="js-modal__btn" aria-haspopup="dialog">Open modal</button>
+        <div id="modal-confirmation" aria-labelledby="modal-label" role="region" class="js-modal modal-confirmation modal"
+            data-modal-toggle="js-modal__btn" hidden="hidden">
+            <div class="modal__inner" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-description">
+                <h1 class="modal-confirmation__title" id="modal-label">Are you sure?</h1>
+                <form class="modal__form modal-confirmation__form" action="#" novalidate="novalidate">
+                    <p id="modal-description">This will permanently remove this item</p>
+                    <div class="modal-confirmation__row">
+                        <button type="button" class="modal-confirmation__confirm">Delete</button>
+                        <button type="button" class="modal-confirmation__cancel js-modal__btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-  </body>
+    </main>
+</body>
+
 </html>
