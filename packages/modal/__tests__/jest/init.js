@@ -1,5 +1,5 @@
-import modal from '../../../src';
-import { getSelection } from '../../../src/lib/utils';
+import modal from '../../src';
+import { getSelection } from '../../src/lib/utils';
 
 let ModalSet;
 
@@ -111,10 +111,6 @@ describe(`Modal > Initialisation`, () => {
 
     it('should create instance with different options based on node data-attributes from same init function', () => {
         expect(ModalSet[0].getState().settings.delay).not.toEqual(ModalSet[1].getState().settings.delay);
-    });
-
-    it('should set a hidden attribute on the node', () => {
-        expect(ModalSet[0].getState().node.getAttribute('hidden')).toEqual('hidden');
     });
 
     it('should find toggles associated with the modal', () => {

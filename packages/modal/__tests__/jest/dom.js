@@ -1,4 +1,4 @@
-import * as DOM from '../../../src/lib/dom';
+import * as DOM from '../../src/lib/dom';
 
 describe(`Modal > DOM > findDialog`, () => {
 	

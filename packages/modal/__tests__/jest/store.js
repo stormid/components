@@ -1,4 +1,4 @@
-import { createStore } from '../../../src/lib/store';
+import { createStore } from '../../src/lib/store';
 
 describe(`Modal > Store`, () => {
 
