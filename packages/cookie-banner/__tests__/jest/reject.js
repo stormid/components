@@ -1,11 +1,10 @@
 import cookieBanner from '../../src';
 import defaults from '../../src/lib/defaults';
-let instance;
 
 const init = () => {
     // Set up our document body
     document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
-    instance = cookieBanner({
+    window.__cb__ = cookieBanner({
         secure: false,
         hideBannerOnFormPage: false,
         types: {
@@ -35,25 +34,14 @@ const init = () => {
     });
 };
 
-describe(`Cookie banner > Analytics > Data layer additions`, () => {
+
+describe(`Cookie banner > reject`, () => {
     beforeAll(init);
 
-    it('It should add to the dataLayer when the banner is shown', async () => {
-        expect(dataLayer.find(e => e.event === "stormcb_display")).toBeDefined();
-    });
-
-    it('It should add to the datalayer when accept all is clicked', async () => {
-        document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-        expect(dataLayer.find(e => e.event === "stormcb_accept_all")).toBeDefined();
-        expect(dataLayer.find(e => e.stormcb_performance === 1)).toBeDefined();
-        expect(dataLayer.find(e => e.stormcb_test === 1)).toBeDefined();
-    });
-
-    it('It should add to the datalayer when reject all is clicked', async () => {
-        instance.showBanner();
+    it('Should reject all cookies whe the reject button is clicked', async () => {
         document.querySelector(`.${defaults.classNames.rejectBtn}`).click();
-        expect(dataLayer.find(e => e.event === "stormcb_reject_all")).toBeDefined();
-        expect(dataLayer.find(e => e.stormcb_performance === 0)).toBeDefined();
-        expect(dataLayer.find(e => e.stormcb_test === 0)).toBeDefined();
+        expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":0,"performance":0}}`)}`);
     });
+
 });
+
