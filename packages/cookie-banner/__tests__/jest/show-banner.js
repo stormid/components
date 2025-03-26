@@ -1,5 +1,5 @@
-import cookieBanner from '../../../src';
-import defaults from '../../../src/lib/defaults';
+import cookieBanner from '../../src';
+import defaults from '../../src/lib/defaults';
 
 let instance;
 
