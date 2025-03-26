@@ -7,10 +7,10 @@ module.exports = defineConfig({
     ...baseConfig,
     use: {
         ...baseConfig.use,
-        baseURL: `http://127.0.0.1:${server.devServer.port}/`,
+        baseURL: `http://localhost:${server.devServer.port}/`,
     },
     webServer: {
         ...baseConfig.webServer,
-        url: `http://127.0.0.1:${server.devServer.port}/`,
+        url: `http://localhost:${server.devServer.port}/`,
     },
 });
