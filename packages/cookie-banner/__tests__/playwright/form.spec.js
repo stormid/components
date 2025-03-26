@@ -4,7 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 let tabKey;
 
 test.beforeEach(async ({ page }, testInfo) => {
-	await page.goto('/');
+	await page.goto('/form.html');
 	tabKey = testInfo.project.use.defaultBrowserType === 'webkit'
 			? "Alt+Tab"
 			: "Tab";
@@ -16,6 +16,32 @@ test.describe('Cookie banner > Axe', { tag: '@reduced'}, () => {
 		expect(accessibilityScanResults.violations).toEqual([]);
 	});
 });
+
+// describe(`Cookie banner > DOM > not render`, () => {
+
+//     it('It should not render the banner if hideBannerOnFormPage setting is true and on consent form page', async () => {
+//         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
+//         cookieBanner({
+//             secure: false,
+//             hideBannerOnFormPage: true,
+//             types: {
+//                 test: {
+//                     title: 'Test title',
+//                     description: 'Test description',
+//                     labels: {
+//                         yes: 'Pages you visit and actions you take will be measured and used to improve the service',
+//                         no: 'Pages you visit and actions you take will not be measured and used to improve the service'
+//                     },
+//                     fns: [
+//                         () => { }
+//                     ]
+//                 }
+//             }
+//         });
+//         expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull();
+//     });
+// });
+
 
 //  it('Submit button should be disabled', async () => {
 // 		expect(document.querySelector(`.${defaults.classNames.submitBtn}`).getAttribute('disabled')).not.toBeNull();

@@ -3,11 +3,59 @@ import AxeBuilder from '@axe-core/playwright';
 
 let tabKey;
 
-test.beforeEach(async ({ page }, testInfo) => {
+test.beforeEach(async ({ page, context }, testInfo) => {
 	await page.goto('/');
 	tabKey = testInfo.project.use.defaultBrowserType === 'webkit'
 			? "Alt+Tab"
 			: "Tab";
+});
+
+test.describe('Cookie banner > Banner > functionality', { tag: '@all'}, () => {
+	test('Should render the banner', async ({ page }) => {	
+		const banner = page.locator('.privacy-banner');
+		await expect(banner).toHaveCount(1);
+		await expect(banner).toBeVisible();
+	});
+
+	test('Should hide the banner and update preferences when cookies are accepted', async ({ page, context }) => {	
+		const banner = page.locator('.privacy-banner');
+		const acceptAll = page.locator('.privacy-banner__accept').first();
+
+		await expect(banner).toBeVisible();
+		
+		await acceptAll.click();
+		const cookies = await context.cookies();
+		const preferences = cookies.find((c) => c.name === '.Components.Dev.Consent');
+
+		await expect(banner).not.toBeVisible();
+		expect(preferences.value).toEqual(btoa(`{"consent":{"performance":1,"ads":1}}`));
+	});
+
+	test('Should hide the banner and update preferences when cookies are rejected', async ({ page, context }) => {	
+		const banner = page.locator('.privacy-banner');
+		const rejectAll = page.locator('.privacy-banner__reject').first();
+		
+		await rejectAll.click();
+		const cookies = await context.cookies();
+		const preferences = cookies.find((c) => c.name === '.Components.Dev.Consent');
+
+		await expect(banner).not.toBeVisible();
+		expect(preferences.value).toEqual(btoa(`{"consent":{"performance":0,"ads":0}}`));
+	});
+	
+});
+
+test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
+
+});
+
+test.describe('Cookie banner > Banner > Aria', { tag: '@all'}, () => {
+	test('Banner should have the appropriate aria attributes', async ({ page }) => {	
+		const banner = page.locator('.privacy-banner');
+		await expect(banner).toHaveAttribute('role', 'region');
+		await expect(banner).toHaveAttribute('aria-live', 'polite');
+		await expect(banner).toHaveAttribute('aria-label');
+	});
 });
 
 test.describe('Cookie banner > Axe', { tag: '@reduced'}, () => {
@@ -17,63 +65,11 @@ test.describe('Cookie banner > Axe', { tag: '@reduced'}, () => {
 	});
 });
 
-// describe(`Cookie banner > DOM > render`, () => {
-//     beforeAll(init);
-
-//     it('It should render the banner', async () => {
-//         expect(document.querySelector(`.${defaults.classNames.banner}`)).not.toBeNull();
-//     });
-// });
-
-// describe(`Cookie banner > DOM > not render`, () => {
-
-//     it('It should not render the banner if hideBannerOnFormPage setting is true and on consent form page', async () => {
-//         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
-//         cookieBanner({
-//             secure: false,
-//             hideBannerOnFormPage: true,
-//             types: {
-//                 test: {
-//                     title: 'Test title',
-//                     description: 'Test description',
-//                     labels: {
-//                         yes: 'Pages you visit and actions you take will be measured and used to improve the service',
-//                         no: 'Pages you visit and actions you take will not be measured and used to improve the service'
-//                     },
-//                     fns: [
-//                         () => { }
-//                     ]
-//                 }
-//             }
-//         });
-//         expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull();
-//     });
-// });
-
-
-// describe(`Cookie banner > DOM > accessibility`, () => {
-//     beforeAll(init);
-//     it('The banner should be a region', async () => {
-//         expect(document.querySelector(`.${defaults.classNames.banner}`).getAttribute('role')).toEqual('region');
-//     });
-    
-//     it('The banner should be a polite aria live region', async () => {
-//         expect(document.querySelector(`.${defaults.classNames.banner}`).getAttribute('aria-live')).toEqual('polite');
-//     });
-    
-//     it('The banner should have an aria label', async () => {
-//         expect(document.querySelector(`.${defaults.classNames.banner}`).getAttribute('aria-label')).toBeDefined();
-//     });
-    
-// });
 
 // describe(`Cookie banner > DOM > interactions`, () => {
 //     beforeAll(init);
     
-//     it('Hides the banner', async () => {
-//         document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-//         expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull();
-//     });
+//     
 
 // });
 
