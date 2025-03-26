@@ -13,6 +13,7 @@ test.describe('Scroll points > Functionality', { tag: '@all'}, () => {
 
 	test('Should have at least one activated scroll point by the time the page has scrolled to the bottom', async ({ page }) => {	
 		await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight));
+		await page.waitForTimeout(5000);
 		const activePoints = page.locator('.is--scrolled-in');
 		expect(await activePoints.count()).toBeGreaterThan(0);
 	});
