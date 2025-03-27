@@ -1,5 +1,6 @@
 import cookieBanner from '../../src';
 import defaults from '../../src/lib/defaults';
+import sampleTemplates from '../../example/src/js/sample-templates';
 
 let instance;
 
@@ -7,6 +8,7 @@ const init = () => {
     // Set up our document body
     document.body.innerHTML = `<main></main>`;
     instance = cookieBanner({
+        ...sampleTemplates,
         secure: false,
         types: {
             test: {
