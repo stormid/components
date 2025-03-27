@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 let tabKey;
 
-test.beforeEach(async ({ page, context }, testInfo) => {
+test.beforeEach(async ({ page }, testInfo) => {
 	await page.goto('/');
 	tabKey = testInfo.project.use.defaultBrowserType === 'webkit'
 			? "Alt+Tab"
@@ -45,8 +45,77 @@ test.describe('Cookie banner > Banner > functionality', { tag: '@all'}, () => {
 	
 });
 
-test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
+test.describe('Cookie banner > Banner > Analytics', { tag: '@all'}, () => {
 
+	test('Should add to the dataLayer when the banner is shown', async ({ page }) => {	
+		expect(await page.evaluate(() => window.dataLayer.find(e => e.event === "stormcb_display"))).toBeDefined();
+	});
+
+	test('Should add to the datalayer when accept all is clicked', async ({ page }) => {	
+		await page.locator('.privacy-banner__accept').first().click();
+		const dataLayer = await page.evaluate(() => window.dataLayer);
+ 		expect(dataLayer.find(e => e.event === "stormcb_accept_all")).toBeDefined();
+ 		expect(dataLayer.find(e => e.stormcb_performance === 1)).toBeDefined();
+ 		expect(dataLayer.find(e => e.stormcb_ads === 1)).toBeDefined();
+	});
+
+	test('Should add to the datalayer when reject all is clicked', async ({ page }) => {	
+		await page.locator('.privacy-banner__reject').first().click();
+		const dataLayer = await page.evaluate(() => window.dataLayer);
+ 		expect(dataLayer.find(e => e.event === "stormcb_reject_all")).toBeDefined();
+ 		expect(dataLayer.find(e => e.stormcb_performance === 0)).toBeDefined();
+ 		expect(dataLayer.find(e => e.stormcb_ads === 0)).toBeDefined();
+	});
+	
+});
+
+test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
+	test('If the banner is open, focus should move there first', async ({ page }, testInfo) => {
+		await page.keyboard.press(tabKey);
+		const expectedClass = (testInfo.project.use.defaultBrowserType === 'webkit') ? /privacy-banner__accept/ : /privacy-banner__link/;
+		await expect(page.locator(':focus')).toHaveClass(expectedClass);
+	});
+
+	test('If the banner is open and trapTab is set, focus should not leave the banner', async ({ page }, testInfo) => {
+		for(let i = 0; i<=5; i++) {
+			await page.keyboard.press(tabKey);
+		}
+		const expectedClass = (testInfo.project.use.defaultBrowserType === 'webkit') ? /privacy-banner__reject/ : /privacy-banner__link/;
+		await expect(page.locator(':focus')).toHaveClass(expectedClass);
+	});
+
+	test('Cookies can be accepted via keyboard', async ({ page, context }, testInfo) => {
+		const keyPresses = (testInfo.project.use.defaultBrowserType === 'webkit') ? 0 : 2;
+		const banner = page.locator('.privacy-banner');
+
+		for(let i = 0; i<=keyPresses; i++) {
+			await page.keyboard.press(tabKey);
+		}
+
+		await page.keyboard.press('Enter');
+		const cookies = await context.cookies();
+		const preferences = cookies.find((c) => c.name === '.Components.Dev.Consent');
+
+		await expect(banner).not.toBeVisible();
+		expect(preferences.value).toEqual(btoa(`{"consent":{"performance":1,"ads":1}}`));
+	});
+
+	test('Cookies can be rejected via keyboard', async ({ page, context }, testInfo) => {
+		const keyPresses = (testInfo.project.use.defaultBrowserType === 'webkit') ? 1 : 3;
+		const banner = page.locator('.privacy-banner');
+
+		for(let i = 0; i<=keyPresses; i++) {
+			await page.keyboard.press(tabKey);
+		}
+		
+		await page.keyboard.press('Enter');
+		const cookies = await context.cookies();
+		const preferences = cookies.find((c) => c.name === '.Components.Dev.Consent');
+
+		await expect(banner).not.toBeVisible();
+		expect(preferences.value).toEqual(btoa(`{"consent":{"performance":0,"ads":0}}`));
+	});
+	
 });
 
 test.describe('Cookie banner > Banner > Aria', { tag: '@all'}, () => {
@@ -64,51 +133,3 @@ test.describe('Cookie banner > Axe', { tag: '@reduced'}, () => {
 		expect(accessibilityScanResults.violations).toEqual([]);
 	});
 });
-
-
-// describe(`Cookie banner > DOM > interactions`, () => {
-//     beforeAll(init);
-    
-//     
-
-// });
-
-//  it('Sets a cookie based on preferences form', async () => {
-// 		document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-// 		expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":1,"performance":1}}`)}`);
-
-// 		const fields = Array.from(document.querySelectorAll(`.${defaults.classNames.field}`));
-// 		fields[1].checked = true;
-// 		fields[3].checked = true;
-// 		document.querySelector(`.${defaults.classNames.submitBtn}`).click();
-// 		expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":0,"performance":0}}`)}`);
-// 	});
-
-//  it('Should reject all cookies whe the reject button is clicked', async () => {
-// 		document.querySelector(`.${defaults.classNames.rejectBtn}`).click();
-// 		expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":0,"performance":0}}`)}`);
-// 	});
-
-// describe(`Cookie banner > Analytics > Data layer additions`, () => {
-// 	beforeAll(init);
-
-// 	it('It should add to the dataLayer when the banner is shown', async () => {
-// 		expect(dataLayer.find(e => e.event === "stormcb_display")).toBeDefined();
-// 	});
-
-// 	it('It should add to the datalayer when accept all is clicked', async () => {
-// 		document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-// 		expect(dataLayer.find(e => e.event === "stormcb_accept_all")).toBeDefined();
-// 		expect(dataLayer.find(e => e.stormcb_performance === 1)).toBeDefined();
-// 		expect(dataLayer.find(e => e.stormcb_test === 1)).toBeDefined();
-// 	});
-
-// 	it('It should add to the datalayer when reject all is clicked', async () => {
-// 		instance.showBanner();
-// 		document.querySelector(`.${defaults.classNames.rejectBtn}`).click();
-// 		expect(dataLayer.find(e => e.event === "stormcb_reject_all")).toBeDefined();
-// 		expect(dataLayer.find(e => e.stormcb_performance === 0)).toBeDefined();
-// 		expect(dataLayer.find(e => e.stormcb_test === 0)).toBeDefined();
-// 	});
-// });
-

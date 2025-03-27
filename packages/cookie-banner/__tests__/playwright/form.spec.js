@@ -42,6 +42,17 @@ test.describe('Cookie banner > Axe', { tag: '@reduced'}, () => {
 //     });
 // });
 
+//  it('Sets a cookie based on preferences form', async () => {
+// 		document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
+// 		expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":1,"performance":1}}`)}`);
+
+// 		const fields = Array.from(document.querySelectorAll(`.${defaults.classNames.field}`));
+// 		fields[1].checked = true;
+// 		fields[3].checked = true;
+// 		document.querySelector(`.${defaults.classNames.submitBtn}`).click();
+// 		expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":0,"performance":0}}`)}`);
+// 	});
+
 
 //  it('Submit button should be disabled', async () => {
 // 		expect(document.querySelector(`.${defaults.classNames.submitBtn}`).getAttribute('disabled')).not.toBeNull();
