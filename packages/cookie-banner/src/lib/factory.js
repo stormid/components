@@ -6,6 +6,10 @@ import { createStore } from './store';
 export default settings => {
     /* istanbul ignore next */
     if (!cookiesEnabled()) return;
+    if(!settings.bannerTemplate || !settings.formTemplate) {
+        console.warn('Missing required cookie banner and/or preferences form markup. Cookie banner not initialised.');
+        return;
+    }
     const store = createStore();
     
     const [ hasCookie, consent ] = extractFromCookie(settings);
