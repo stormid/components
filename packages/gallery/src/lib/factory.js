@@ -1,6 +1,6 @@
 import { createStore } from './store';
 import { init, toggleFullScreen, goTo } from './dom';
-import { composeDOM, getIndexFromURL, hashchangeHandler } from './utils';
+import { composeDOM, getIndexFromURL, hashchangeHandler, scrollHandler, throttle } from './utils';
 
 /* 
  * @param node, HTMLElement, DOM node containing the gallery
@@ -25,11 +25,13 @@ export default (node, settings, index) => {
         node,
         settings,
         items,
+        list: node.querySelector(settings.selector.list),
         dom: composeDOM(node, settings),
         activeIndex: getIndexFromURL(items, location.hash, settings.startIndex)
     }, [
         () => !settings.manualInitialisation && init(store)(),
-        () => window.addEventListener('hashchange', hashchangeHandler(store))
+        () => window.addEventListener('hashchange', hashchangeHandler(store)),
+        ({ list }) => list.addEventListener('scroll', throttle(scrollHandler(store), 150))
     ]);
 
     return {
