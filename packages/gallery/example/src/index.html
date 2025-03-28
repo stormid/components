@@ -29,9 +29,6 @@
             overflow: hidden;
             clip: rect(0 0 0 0);
         }
-        .gallery__item:not(.is--active) {
-            display: none;
-        }
         button {
             background:#191919;
             color:#fff;
@@ -96,9 +93,15 @@
             height: 32px;
         }
         .gallery__item {
-            display: none;
+            width: 100%;
+            /* display: none; */
+            flex-shrink: 0;
+            scroll-snap-align: start;
         }
-        .gallery__item.is--active {
+        /* .gallery__item:not(.is--active) {
+            display: none;
+        } */
+        /* .gallery__item.is--active {
             display: flex;
             flex-direction: column;
             width: 100%;
@@ -106,7 +109,7 @@
         .gallery__item.is--active:focus {
             outline: 0 none !important;
             box-shadow: none !important;
-        }
+        } */
         .gallery__previous,
         .gallery__next {
             position: absolute;
@@ -146,8 +149,17 @@
             }
         }
         .gallery__list {
-            display: flex;
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: 100%;
+            height: 100%;
             width: 100%;
+            scroll-snap-type: x mandatory;
+            overflow: scroll hidden;
+            scroll-behavior: auto;
+            overscroll-behavior: contain;
+            scrollbar-width: none;
+            list-style: none;
         }
         .gallery__item-img-container {
             flex-grow: 1;
@@ -233,7 +245,7 @@
                 </button>
             </div>
             <div class="gallery__main">
-                <ul class="gallery__list">
+                <ul class="gallery__list" data-gallery-list>
 
                     <!-- <li
                         class="gallery__item"

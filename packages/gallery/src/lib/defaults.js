@@ -3,6 +3,7 @@
 export default {
     startIndex: 0,
     selector: {
+        list: '[data-gallery-list]',
         item: '[data-gallery-item]',
         fullscreen: '[data-gallery-fullscreen]',
         liveRegion: '[data-gallery-live-region]',

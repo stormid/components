@@ -24,16 +24,16 @@ export const init = store => () => {
         }));
     }
     
-    items.forEach((item, i) => {
-        if (!item.hasAttribute('tabindex')) item.setAttribute('tabindex', 0);
-        if (i === activeIndex) {
-            if (!item.classList.contains(settings.className.active)) item.classList.add(settings.className.active);
-            if (item.hasAttribute('aria-hidden')) item.removeAttribute('aria-hidden');
-        } else {
-            if (item.classList.contains(settings.className.active)) item.classList.remove(settings.className.active);
-            if (!item.hasAttribute('aria-hidden')) item.setAttribute('aria-hidden', 'true');
-        }
-    });
+    // items.forEach((item, i) => {
+    //     if (!item.hasAttribute('tabindex')) item.setAttribute('tabindex', 0);
+    //     if (i === activeIndex) {
+    //         if (!item.classList.contains(settings.className.active)) item.classList.add(settings.className.active);
+    //         if (item.hasAttribute('aria-hidden')) item.removeAttribute('aria-hidden');
+    //     } else {
+    //         if (item.classList.contains(settings.className.active)) item.classList.remove(settings.className.active);
+    //         if (!item.hasAttribute('aria-hidden')) item.setAttribute('aria-hidden', 'true');
+    //     }
+    // });
 
     node.addEventListener('keydown', e => {
         switch (e.keyCode) {
@@ -64,28 +64,15 @@ export const toggleFullScreen = store => {
     }
 };
 
-export const change = (store, next, options = { fromListener: false }) => {
-    const { activeIndex, items, settings } = store.getState();
-
-    // Ensure any YouTube videos are stopped
-    // let targetOrigin = 'https://www.youtube.com';
-    // let youtube_iframes = [...document.querySelectorAll('.data-yt-iframe')];
-    // if(youtube_iframes.length){
-    //     youtube_iframes.forEach(youtube_iframe => {
-    //         youtube_iframe.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', targetOrigin);
-    //     })
-    // }
+export const change = (store, next, options = { fromListener: false, fromScroll: false }) => {
+    const { list, items, settings } = store.getState();
 
     //set activeIndex in state,
     //then run all side effects to change the DOM/show and hide items, manage focus, and load updated previous/next
     store.update({ ...store.getState(), activeIndex: next }, [
         () => {
-            items[activeIndex].classList.remove('is--active');
-            items[activeIndex].setAttribute('aria-hidden', 'true');
-            items[next].classList.add('is--active');
-            items[next].removeAttribute('aria-hidden');
+            if (!options.fromScroll) list.scrollLeft = (next * items[next].clientWidth);
         },
-        () => items[next].focus(),
         writeLiveRegion,
         () => {
             const id = items[next].getAttribute('id');
