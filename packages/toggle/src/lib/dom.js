@@ -104,15 +104,7 @@ export const toggleAttributes = ({ toggles, isOpen, node, classTarget, animating
  * @param Event, document keydown event dispatched from document
  */
 export const keyListener = store => e => {
-    switch (e.keyCode){
-    case 27:
-        e.preventDefault();
-        startToggleLifecycle(store);
-        break;
-    case 9:
-        trapTab(store, e);
-        break;
-    }
+    if (e.keyCode === 9) trapTab(store, e);
 };
 
 /*
