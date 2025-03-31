@@ -1,8 +1,9 @@
 import cookieBanner from '../../../src/index';
 import toggle from '../../../../toggle/src/index';
-import sampleTemplates from '../../example/src/js/sample-templates';
+import sampleTemplates from './sample-templates';
     
-const config = {...sampleTemplates, 
+const config = {
+    ...sampleTemplates, 
     name: '.Components.Dev.Consent',
     secure: true,
     euConsentTypes: {

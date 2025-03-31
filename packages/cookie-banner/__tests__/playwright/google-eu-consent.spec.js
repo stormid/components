@@ -1,12 +1,36 @@
 const { test, expect } = require('@playwright/test');
 
-
-test.beforeEach(async ({ page }, testInfo) => {
+test.beforeEach(async ({ page }) => {
 	await page.goto('/');
 });
 
 test.describe('Cookie banner > Google EU Consent', { tag: '@all'}, () => {
+	test.only('Should set a default consent event with all categories denied', async ({ page }) => {	
+		const dataLayer = await page.evaluate(() => window.dataLayer);
+		const acceptAll = page.locator('.privacy-banner__accept').first();
+		
+		const expectedConsent = {
+			'0': 'consent',
+			'1': 'default',
+			'2': {
+			  ad_storage: 'denied',
+			  ad_user_data: 'denied',
+			  ad_personalization: 'denied',
+			  analytics_storage: 'denied',
+			  wait_for_update: 500
+			}
+		}
 
+		dataLayer.find(e => {console.log(e, "item being compared"); return e === expectedConsent;})
+
+		//expect(dataLayer[0]).toEqual(expectedConsent);
+		//expect(dataLayer.find(e => e === expectedConsent)).toBeDefined();
+
+		// await acceptAll.click();
+		// const newDataLayer = await page.evaluate(() => window.dataLayer);
+		// console.log(newDataLayer);
+
+	});
 });
 
 
