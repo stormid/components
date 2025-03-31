@@ -1,7 +1,6 @@
-import modal from '../src';
-import defaults from '../src/lib/defaults';
+import modal from '../../src';
 
-let ModalSet;
+let instance;
 
 const init = () => {
     // Set up our document body
@@ -39,47 +38,23 @@ const init = () => {
             </div>
         </div>`;
 
-    ModalSet = modal('.js-modal');
+    [ instance ] = modal('.js-modal');
 };
 
-describe(`Modal > Initialisation`, () => {
+describe(`Modal > API > open ? close`, () => {
     
     beforeAll(init);
 
-    it('should return array of length 2', () => {
-        expect(ModalSet.length).toEqual(2);
+    it('should allow instance to be opened via API', () => {
+        expect(instance.getState().isOpen).toEqual(false);
+        instance.open();
+        expect(instance.getState().isOpen).toEqual(true);
     });
 
-    it('should return the expected API', () => {
-        expect(ModalSet[0]).not.toBeNull();
-        expect(ModalSet[0].getState).not.toBeNull();
-    });
-
-    it('should create instance with different options based on node data-attributes from same init function', () => {
-        expect(ModalSet[0].getState().settings.delay).not.toEqual(ModalSet[1].getState().settings.delay);
-    });
-
-});
-
-
-describe(`Modal > Mouse events`, () => {
-
-    beforeAll(init);
-
-    it('should attach the handleClick eventListener to DOMElement click event to toggle modal state', () => {
-        ModalSet[0].getState().toggles[0].click();
-        expect(Array.from(ModalSet[0].getState().node.classList)).toContain(defaults.onClassName);
-        expect(ModalSet[0].getState().node.hasAttribute('hidden')).toEqual(false);
-        expect(document.body.firstElementChild).toEqual(ModalSet[0].getState().node);
-        Array.from(document.querySelectorAll('.container')).forEach(container => expect(container.getAttribute('aria-hidden')).toEqual('true'));
-        expect(document.documentElement.classList.contains('is--modal')).toEqual(true);
-        
-        ModalSet[0].getState().toggles[0].click();
-        expect(Array.from(ModalSet[0].getState().node.classList)).not.toContain(defaults.onClassName);
-        expect(ModalSet[0].getState().node.hasAttribute('hidden')).toEqual(true);
-        Array.from(document.querySelectorAll('.container')).forEach(container => expect(container.hasAttribute('aria-hidden')).toEqual(false));
-        expect(document.documentElement.classList.contains('is--modal')).toEqual(false);
-        
+    it('should allow instance to be closed via API', () => {
+        expect(instance.getState().isOpen).toEqual(true);
+        instance.close();
+        expect(instance.getState().isOpen).toEqual(false);
     });
 
 });
