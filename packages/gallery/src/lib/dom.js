@@ -3,7 +3,7 @@ import { ATTRIBUTE, EVENTS, KEYCODES } from './constants';
 
 export const init = store => () => {
     const state = store.getState();
-    const { settings, items, dom, activeIndex, node } = state;
+    const { settings, dom, list } = state;
 
     if (!dom.liveRegion) console.warn(`A live region announcing current and total items is recommended for screen readers.`);
     else writeLiveRegion(state);
@@ -23,19 +23,9 @@ export const init = store => () => {
             goTo(store)(+trigger.getAttribute(ATTRIBUTE.NAVIGATE));
         }));
     }
-    
-    // items.forEach((item, i) => {
-    //     if (!item.hasAttribute('tabindex')) item.setAttribute('tabindex', 0);
-    //     if (i === activeIndex) {
-    //         if (!item.classList.contains(settings.className.active)) item.classList.add(settings.className.active);
-    //         if (item.hasAttribute('aria-hidden')) item.removeAttribute('aria-hidden');
-    //     } else {
-    //         if (item.classList.contains(settings.className.active)) item.classList.remove(settings.className.active);
-    //         if (!item.hasAttribute('aria-hidden')) item.setAttribute('aria-hidden', 'true');
-    //     }
-    // });
 
-    node.addEventListener('keydown', e => {
+    list.addEventListener('keydown', e => {
+        e.preventDefault();
         switch (e.keyCode) {
         case KEYCODES.LEFT:
             previous(store);
@@ -54,13 +44,11 @@ const writeLiveRegion = ({ activeIndex, items, settings, dom }) => dom.liveRegio
 export const toggleFullScreen = store => {
     const { node } = store.getState();
     if (!document.fullscreenElement) {
-        if (node.requestFullscreen) {
-            node.requestFullscreen && node.requestFullscreen();
-            node.webkitRequestFullscreen && node.webkitRequestFullscreen();
-        }
-    } else if (document.exitFullscreen) {
-        node.requestFullscreen && node.exitFullscreen();
-        node.webkitExitFullscreen && node.webkitExitFullscreen();
+        if (node.requestFullscreen) node.requestFullscreen();
+        else if (node.webkitRequestFullscreen) node.webkitRequestFullscreen();
+    } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
     }
 };
 

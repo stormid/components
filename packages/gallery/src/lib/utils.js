@@ -1,4 +1,4 @@
-import { change, writeLiveRegion } from './dom';
+import { change } from './dom';
 
 export const sanitise = item => item.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -37,10 +37,33 @@ export const hashchangeHandler = store => e => {
 };
 
 export const scrollHandler = store => e => {
-    const index = getPosition(store.getState());
+    const { list, items, activeIndex } = store.getState();
+    const index = getPosition({ list, items } );
     if (index === undefined) return;
+    if (index === activeIndex) return;
     change(store, index, { fromScroll: true });
 };
+
+//ensure each gallery item has a unique id
+//used for updating the URL and for accessibility
+export const patchAccessibility = (items, index) => items.map((item, idx) => {
+    // if the item has an id, but it is a duplicate, warn the user
+    if (item.hasAttribute('id')) {
+        if (Array.from(document.querySelectorAll(`#${item.id}`)).length > 1) {
+            console.warn(`Gallery item id "${item.id}" is not unique, please ensure each gallery item has a unique id`);
+        }
+    } else {
+        let id = `gallery-${index + 1}-${idx + 1}`;
+        // check for duplicate ids across whole document in case multiple galleries have been initialised separately, add 100 to index
+        while (document.getElementById(id)) {
+            id = `gallery-${(index + 100) + 1}-${idx + 1}`;
+        }
+        item.setAttribute('id', id);
+    }
+    //ensure the item is focusable
+    // if (!item.hasAttribute('tabindex')) item.setAttribute('tabindex', 0);
+    return item;
+});
 
 export const getSelection = selector => {
     if (typeof selector === 'string') return [].slice.call(document.querySelectorAll(selector));

@@ -1,5 +1,5 @@
 import gallery from '../../../src';
-import defaults from '../../../src/lib/defaults';
+import { EVENTS } from '../../../src/lib/constants';
 
 describe('Gallery > initialisation > manual initialisation', () => {
     //mock image complete because JSDom cannot load images
@@ -24,7 +24,7 @@ describe('Gallery > initialisation > manual initialisation', () => {
                     <button class="gallery__previous" aria-label="Previous image" data-gallery-previous>
                         <svg class="gallery__previous-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><rect fill="none" height="24" width="24"/><g><polygon points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"/></g></svg>
                     </button>
-                    <ul class="gallery__list">
+                    <ul class="gallery__list" data-gallery-list>
                         <li
                             class="gallery__item"
                             data-gallery-item
@@ -85,15 +85,17 @@ describe('Gallery > initialisation > manual initialisation', () => {
                     </button>
                 </div>
             </section>`;
+
+        const node = document.querySelector('.js-gallery');
+        const initialisationHandler = jest.fn();
+        node.addEventListener(EVENTS.INITIALISED, initialisationHandler);
         const [ instance ] = gallery('.js-gallery', { manualInitialisation: true });
         expect(instance.getState).toBeDefined();
-        const { items } = instance.getState();
-        expect(items[0].hasAttribute('aria-hidden')).toEqual(true);
-        expect(items[0].classList.contains(defaults.className.active)).toEqual(false);
+        expect(instance.getState().items).toBeDefined();
+        expect(initialisationHandler).not.toHaveBeenCalled();
 
         await instance.initialise();
-        expect(items[0].hasAttribute('aria-hidden')).toEqual(false);
-        expect(items[0].classList.contains(defaults.className.active)).toEqual(true);
+        expect(initialisationHandler).toHaveBeenCalled();
     });
 
 });
