@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
 	await page.goto('/');
 });
 
-test.describe.serial('Scroll points > Functionality', { tag: '@all'}, () => {
+test.describe('Scroll points > Functionality', { tag: '@all'}, () => {
 	test('Should not have any activated scroll points on page load', async ({ page }) => {	
 		const activePoints = page.locator('.is--scrolled-in');
 		expect(await activePoints.count()).toBe(0);
