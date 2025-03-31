@@ -5,15 +5,14 @@ test.beforeEach(async ({ page }) => {
 	await page.goto('/');
 });
 
-test.describe('Scroll points > Functionality', { tag: '@all'}, () => {
+test.describe.serial('Scroll points > Functionality', { tag: '@all'}, () => {
 	test('Should not have any activated scroll points on page load', async ({ page }) => {	
 		const activePoints = page.locator('.is--scrolled-in');
 		expect(await activePoints.count()).toBe(0);
 	});
 
 	test('Should have at least one activated scroll point by the time the page has scrolled to the bottom', async ({ page }) => {	
-		// await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight));
-		await page.evaluate(() => window.scrollBy(0, 1200));
+		await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight));
 		const activePoints = page.locator('.is--scrolled-in');
 		expect(await activePoints.count()).toBeGreaterThan(0);
 	});
