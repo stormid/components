@@ -36,8 +36,6 @@
             background:#999;
             width:100%;
             display:block;
-            transition: all 60ms ease-in;
-            will-change:transform;
         }
         .example-mock-content {
             height: 500px;
@@ -47,16 +45,15 @@
         }
         .scroll-point {
             position: absolute;
-            left:50%;
-            transform: translateX(-50%);
+            left: calc(50% - 75px);
             width: 150px;
             height:150px;
             border-radius: 75px;
             background-color:#efefef;
-            transform-origin: center;
+            
         }
         .scroll-point.is--scrolled-in {
-            transition: background-color 120ms ease;
+            
             background-color:blue;
         }
     </style>
