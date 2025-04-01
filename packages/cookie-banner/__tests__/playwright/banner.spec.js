@@ -42,6 +42,19 @@ test.describe('Cookie banner > Banner > functionality', { tag: '@all'}, () => {
 		await expect(banner).not.toBeVisible();
 		expect(preferences.value).toEqual(btoa(`{"consent":{"performance":0,"ads":0}}`));
 	});
+
+	
+	test('Should re-open the banner if Update preferences links are used', async ({ page }) => {
+		const banner = page.locator('.privacy-banner');
+		const updateLink = page.locator('.js-preferences-update').first();
+		const rejectAll = page.locator('.privacy-banner__reject').first();
+		
+		await rejectAll.click();
+		await expect(banner).not.toBeVisible();
+		await updateLink.click();
+		await expect(banner).toBeVisible();
+	});
+
 	
 });
 
