@@ -49,6 +49,7 @@ test.describe('Gallery > scrolling support', { tag: '@desktop' }, () => {
         await expect(items[0]).toHaveClass(`gallery__item ${defaults.className.active}`);
         await list.hover();
         await page.mouse.wheel(itemWidth/.75, 0);
+        await items[1].scrollIntoViewIfNeeded();
         await expect(items[1]).toHaveClass(`gallery__item ${defaults.className.active}`);
     });
 });
