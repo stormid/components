@@ -128,8 +128,7 @@ Initialise the gallery
 ```
 import gallery from '@stormid/gallery';
 
-const [instance] = gallery('js-gallery);
-
+const [instance] = gallery('.js-gallery');
 ## Options
 
 ```
