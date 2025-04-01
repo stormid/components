@@ -162,7 +162,7 @@ gallery() returns an array of instances. Each instance exposes the interface
     getState // return the current state Object
     initialise // to manually initialise if manualInitialisation setting is true
     goTo // navigate to a slide index (zero indexed)
-    toggleFullScreen // set teh gallery to full screen
+    toggleFullScreen // set the gallery to full screen
 }
 ```
 
