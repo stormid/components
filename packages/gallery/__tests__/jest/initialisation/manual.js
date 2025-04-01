@@ -35,7 +35,7 @@ describe('Gallery > initialisation > manual initialisation', () => {
                                     alt="Image one"
                                     class="gallery__item-img"
                                     decoding="async"
-                                    src="http://placehold.it/800x800""
+                                    src="http://placehold.it/800x800"
                                 />
                             </div>
                             <div class="gallery__item-footer">
