@@ -8,8 +8,7 @@ Accessible media gallery that can be used inline or in a modal.
 
 Create the gallery in HTML.
 
-There must be an live region with a `data-gallery-live-region` attribute (an element with `aria-live="polite" aria-atomic="true"` for example) for the accessible announcenments.
-
+There must be an live region with a `data-gallery-live-region` attribute (an element with `aria-live="polite" aria-atomic="true"` for example) for the accessible announcements.
 Each of the gallery items should have a `data-gallery-item` attribute and an id, which is used to update the document URL and makes slides addressable - you can link to a specific gallery slide using a URL hash matching a slide id. If ids are not added they are programmatically generated.
 
 For navigation, `data-gallery-previous` and `data-gallery-next` attributes on buttons identify them as navigation triggers.
