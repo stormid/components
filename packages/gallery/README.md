@@ -31,7 +31,10 @@ Optionally, any buttons with a `data-gallery-navigate` attribute will navigate t
         </button>
     </div>
     <div class="gallery__main">
-        <ul class="gallery__list">
+        <button class="gallery__previous" aria-label="Previous image" data-gallery-previous>
+            <svg class="gallery__previous-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><rect fill="none" height="24" width="24"/><g><polygon points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"/></g></svg>
+        </button>
+        <ul class="gallery__list" tabindex="0">
             <li class="gallery__item" data-gallery-item id="gallery-1">
                 <div class="gallery__item-img-container">
                     <picture>
@@ -108,12 +111,7 @@ Optionally, any buttons with a `data-gallery-navigate` attribute will navigate t
                     </div>
                 </div>
             </li>
-
-
         </ul>
-        <button class="gallery__previous" aria-label="Previous image" data-gallery-previous>
-            <svg class="gallery__previous-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><rect fill="none" height="24" width="24"/><g><polygon points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"/></g></svg>
-        </button>
         <button class="gallery__next" aria-label="Next image" data-gallery-next>
             <svg class="gallery__next-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12"/></g></svg>
         </button>
@@ -138,6 +136,7 @@ const [instance] = gallery('js-gallery);
 {
     startIndex: 0,
     selector: { //selectors for the gallery elements
+        list: '[data-gallery-list]',
         item: '[data-gallery-item]',
         fullscreen: '[data-gallery-fullscreen]',
         liveRegion: '[data-gallery-live-region]',
