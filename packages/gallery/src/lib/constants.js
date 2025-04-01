@@ -10,5 +10,6 @@ export const EVENTS = {
 
 export const KEYCODES = {
     LEFT: 37,
-    RIGHT: 39
+    RIGHT: 39,
+    // TAB: 9
 };

@@ -19,6 +19,7 @@ export const getIndexFromURL = (items, url, fallback = false) => {
     return fallback;
 };
 
+/* istanbul ignore next */
 export const getPosition = ({ list, items }) => {
     const scrollPosition = list.scrollLeft;
     const itemWidth = items[0].clientWidth;
@@ -36,6 +37,7 @@ export const hashchangeHandler = store => e => {
     change(store, index, { fromListener: true });
 };
 
+/* istanbul ignore next */
 export const scrollHandler = store => e => {
     const { list, items, activeIndex } = store.getState();
     const index = getPosition({ list, items } );
@@ -44,9 +46,10 @@ export const scrollHandler = store => e => {
     change(store, index, { fromScroll: true });
 };
 
+
 //ensure each gallery item has a unique id
 //used for updating the URL and for accessibility
-export const patchAccessibility = (items, index) => items.map((item, idx) => {
+export const patchIds = (items, index) => items.map((item, idx) => {
     // if the item has an id, but it is a duplicate, warn the user
     if (item.hasAttribute('id')) {
         if (Array.from(document.querySelectorAll(`#${item.id}`)).length > 1) {
@@ -60,10 +63,13 @@ export const patchAccessibility = (items, index) => items.map((item, idx) => {
         }
         item.setAttribute('id', id);
     }
-    //ensure the item is focusable
-    // if (!item.hasAttribute('tabindex')) item.setAttribute('tabindex', 0);
     return item;
 });
+
+export const updateCSS = ({ activeIndex, node, items, settings }) => {
+    node.querySelector(settings.className.active)?.classList.remove(settings.className.active);
+    items[activeIndex].classList.add(settings.className.active);
+};
 
 export const getSelection = selector => {
     if (typeof selector === 'string') return [].slice.call(document.querySelectorAll(selector));

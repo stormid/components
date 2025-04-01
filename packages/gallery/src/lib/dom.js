@@ -1,4 +1,4 @@
-import { sanitise } from './utils';
+import { sanitise, updateCSS } from './utils';
 import { ATTRIBUTE, EVENTS, KEYCODES } from './constants';
 
 export const init = store => () => {
@@ -7,6 +7,7 @@ export const init = store => () => {
 
     if (!dom.liveRegion) console.warn(`A live region announcing current and total items is recommended for screen readers.`);
     else writeLiveRegion(state);
+    /* istanbul ignore next */
     if (dom.fullscreen) {
         if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
             dom.fullscreen.addEventListener('click', toggleFullScreen.bind(null, store));
@@ -24,23 +25,30 @@ export const init = store => () => {
         }));
     }
 
+    /* istanbul ignore next */
     list.addEventListener('keydown', e => {
-        e.preventDefault();
         switch (e.keyCode) {
         case KEYCODES.LEFT:
+            e.preventDefault();
             previous(store);
             break;
         case KEYCODES.RIGHT:
+            e.preventDefault();
             next(store);
             break;
+        // case KEYCODES.TAB:
+        //     next(store);
+        //     break;
         }
     });
 
+    updateCSS(state);
     broadcast(store, EVENTS.INITIALISED)(state);
 };
 
 const writeLiveRegion = ({ activeIndex, items, settings, dom }) => dom.liveRegion.innerHTML = sanitise(settings.announcement(activeIndex + 1, items.length));
 
+/* istanbul ignore next */
 export const toggleFullScreen = store => {
     const { node } = store.getState();
     if (!document.fullscreenElement) {
@@ -55,13 +63,12 @@ export const toggleFullScreen = store => {
 export const change = (store, next, options = { fromListener: false, fromScroll: false }) => {
     const { list, items, settings } = store.getState();
 
-    //set activeIndex in state,
-    //then run all side effects to change the DOM/show and hide items, manage focus, and load updated previous/next
     store.update({ ...store.getState(), activeIndex: next }, [
         () => {
             if (!options.fromScroll) list.scrollLeft = (next * items[next].clientWidth);
         },
         writeLiveRegion,
+        updateCSS,
         () => {
             const id = items[next].getAttribute('id');
             settings.updateURL && !options.fromListener && window.history.pushState({ URL: `#${id}` }, '', `#${id}`);

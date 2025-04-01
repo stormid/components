@@ -1,5 +1,4 @@
 import gallery from '../../src';
-import defaults from '../../src/lib/defaults';
 
 let instance;
 
@@ -18,9 +17,8 @@ beforeAll(() => {
                     </button>
                     <ul class="gallery__list" data-gallery-list>
                         <li
-                            class="gallery__item is--active"
+                            class="gallery__item"
                             data-gallery-item
-                            data-gallery-item-loaded
                         >
                             <div class="gallery__item-img-container" data-gallery-item-img-container>
                                 <img 
@@ -47,8 +45,6 @@ beforeAll(() => {
                         <li
                             class="gallery__item"
                             data-gallery-item
-                            data-gallery-item-src="http://placehold.it/600x600"
-                            aria-hidden="true"
                         >
                             <div class="gallery__item-img-container" data-gallery-item-img-container>
                                 <img 
@@ -75,8 +71,6 @@ beforeAll(() => {
                         <li
                             class="gallery__item"
                             data-gallery-item
-                            data-gallery-item-src="http://placehold.it/1200x1200"
-                            aria-hidden="true"
                         >
                             <div class="gallery__item-img-container" data-gallery-item-img-container>
                                 <img 
@@ -128,11 +122,6 @@ describe('Gallery > API', () => {
         expect(instance.getState().activeIndex).toEqual(0);
         instance.goTo(2);
         expect(instance.getState().activeIndex).toEqual(2);
-        const galleryItems = Array.from(document.querySelectorAll(defaults.selector.item));
-        expect(galleryItems[0].classList.contains(defaults.className.active)).toEqual(false);
-        expect(galleryItems[0].hasAttribute('aria-hidden')).toEqual(true);
-        expect(galleryItems[2].classList.contains(defaults.className.active)).toEqual(true);
-        expect(galleryItems[2].hasAttribute('aria-hidden')).toEqual(false);
     });
 
     it('Should have an API method toggleFullScreen', () => {

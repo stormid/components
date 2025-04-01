@@ -22,7 +22,7 @@ describe('Gallery > initialisation', () => {
                     <button class="gallery__previous" aria-label="Previous image" data-gallery-previous>
                         <svg class="gallery__previous-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><rect fill="none" height="24" width="24"/><g><polygon points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"/></g></svg>
                     </button>
-                    <ul class="gallery__list">
+                    <ul class="gallery__list" data-gallery-list>
                         <li
                             class="gallery__item is--active"
                         >
@@ -97,7 +97,7 @@ describe('Gallery > initialisation', () => {
                     <button class="gallery__previous" aria-label="Previous image" data-gallery-previous>
                         <svg class="gallery__previous-icon" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><rect fill="none" height="24" width="24"/><g><polygon points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"/></g></svg>
                     </button>
-                    <ul class="gallery__list">
+                    <ul class="gallery__list" data-gallery-list>
                         <li
                             class="gallery__item is--active"
                             data-gallery-item
