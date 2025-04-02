@@ -20,7 +20,7 @@ test.describe('Cookie banner > Banner > functionality', { tag: '@all'}, () => {
 	test.only('Should hide the banner and update preferences when cookies are accepted', async ({ page, context }) => {	
 		const banner = page.locator('.privacy-banner');
 		const acceptAll = page.locator('.privacy-banner__accept').first();
-		console.log(page.evaluate(() => window.location.hostname));
+		console.log(await page.evaluate(() => window.location.hostname));
 
 		await expect(banner).toBeVisible();
 		
