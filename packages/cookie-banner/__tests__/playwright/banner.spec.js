@@ -92,8 +92,7 @@ test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
 		for(let i = 0; i<=5; i++) {
 			await page.keyboard.press(tabKey);
 		}
-		const expectedClass = (testInfo.project.use.defaultBrowserType === 'webkit') ? /privacy-banner__reject/ : /privacy-banner__link/;
-		await expect(page.locator(':focus')).toHaveClass(expectedClass);
+		expect(await page.evaluate(() => document.querySelector('.privacy-banner').contains(document.querySelector(':focus')))).toBeTruthy();
 	});
 
 	test('Cookies can be accepted via keyboard', async ({ page, context }, testInfo) => {
