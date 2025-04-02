@@ -84,6 +84,8 @@ test.describe('Cookie banner > Banner > Analytics', { tag: '@all'}, () => {
 
 test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
 	test('If the banner is open, focus should move there first', async ({ page }, testInfo) => {
+		//Webkit tests can be slow to load the banner, so we need to wait for it to be visible before pressing tab
+		await page.waitForSelector('.privacy-banner');
 		await page.keyboard.press(tabKey);
 		const expectedClass = (testInfo.project.use.defaultBrowserType === 'webkit') ? /privacy-banner__accept/ : /privacy-banner__link/;
 		await expect(page.locator(':focus')).toHaveClass(expectedClass);
