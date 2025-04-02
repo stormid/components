@@ -1,5 +1,4 @@
 import cookieBanner from "../../../src/index";
-import toggle from "../../../../toggle/src/index";
 import sampleTemplates from "./sample-templates";
 
 const config = {
