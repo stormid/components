@@ -120,10 +120,6 @@
             }
         }
 
-        h1, p, button {
-            margin-bottom: 24px;
-        }
-
         .visually-hidden {
             clip: rect(0 0 0 0);
             clip-path: inset(100%);
@@ -144,7 +140,7 @@
     <main id="main" class="container">
         <h1>Modal example</h1>
         <button class="js-modal__btn" aria-haspopup="dialog">Open modal</button>
-        <div id="modal-confirmation" aria-labelledby="modal-label" role="region" class="js-modal modal-confirmation modal" data-modal-toggle="js-modal__btn" hidden>
+        <div id="modal-confirmation" aria-labelledby="modal-label" role="region" class="js-modal-start-open modal-confirmation modal" data-modal-toggle="js-modal__btn" hidden>
             <div class="modal__inner" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-description">
                 <h1 class="modal-confirmation__title" id="modal-label">Are you sure?</h1>
                 <form class="modal__form modal-confirmation__form" action="#" novalidate="novalidate">
@@ -155,13 +151,6 @@
                     </div>
                 </form>
             </div>
-        </div>
-        <div>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pretium vitae lacus id accumsan. Curabitur scelerisque orci in venenatis molestie. Nulla in urna vulputate tellus interdum blandit. Aliquam iaculis eu odio et porttitor. Maecenas blandit luctus sagittis. Fusce eu risus porttitor, luctus nunc sit amet, laoreet nisi. Maecenas ipsum turpis, vulputate eu faucibus elementum, sollicitudin quis urna. Pellentesque sollicitudin est sit amet ex sollicitudin blandit. Vivamus bibendum pretium hendrerit.</p>
-
-            <p>Aenean sed convallis dolor. Proin lectus elit, commodo vel sodales eget, fringilla at massa. Morbi nec lacinia diam, sed mattis orci. Maecenas faucibus urna id metus placerat vehicula. Praesent quis dapibus diam. Suspendisse fermentum viverra lectus, id molestie sapien congue viverra. Sed a condimentum est, in scelerisque orci. Donec cursus eget est id consectetur.</p>
-
-            <p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam cursus elit a ligula aliquam mattis. Etiam eget velit enim. In sed dolor sit amet risus facilisis tempus ut vitae purus. Phasellus fermentum porttitor lacus, ut lobortis nulla condimentum fringilla. Maecenas pharetra scelerisque arcu, in consectetur felis. Nam eget ex diam. Praesent auctor ac arcu consequat consequat. Morbi cursus posuere porta. Nulla arcu est, rhoncus vitae pulvinar sit amet, scelerisque id mauris. Sed consectetur mauris quis mi congue, sit amet venenatis mi aliquam. <a href="#">Vivamus id turpis finibus</a>, facilisis sem quis, ornare tortor. Maecenas hendrerit porta tellus non rutrum. Donec sagittis volutpat nunc et mollis. Vestibulum ac aliquet sem. Donec lacinia nec ante id egestas.</p>
         </div>
     </main>
 </body>

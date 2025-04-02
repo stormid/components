@@ -12,7 +12,7 @@ module.exports = {
     timeout: 10_000,
   },
   use: {
-    baseURL: 'http://localhost',
+    baseURL: 'http://localhost:8081',
     trace: 'on-first-retry',
   },
   projects: [
@@ -47,7 +47,7 @@ module.exports = {
   ],
   webServer: {
     command: 'webpack-dev-server --config tools/playwright.webpack.config.js --hot --no-open',
-    url: 'http://localhost',
+    url: 'http://localhost:8081',
     reuseExistingServer: !process.env.CI,
   },
 };
