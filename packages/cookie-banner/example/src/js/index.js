@@ -4,7 +4,7 @@ import sampleTemplates from "./sample-templates";
 const config = {
 	...sampleTemplates,
 	name: ".Components.Dev.Consent",
-	secure: true,
+	secure: false,
 	euConsentTypes: {
 		ad_storage: "ads",
 		ad_user_data: "ads",
