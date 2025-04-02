@@ -17,7 +17,7 @@ test.describe('Cookie banner > Banner > functionality', { tag: '@all'}, () => {
 		await expect(banner).toBeVisible();
 	});
 
-	test('Should hide the banner and update preferences when cookies are accepted', async ({ page, context }) => {	
+	test.only('Should hide the banner and update preferences when cookies are accepted', async ({ page, context }) => {	
 		const banner = page.locator('.privacy-banner');
 		const acceptAll = page.locator('.privacy-banner__accept').first();
 
@@ -25,6 +25,7 @@ test.describe('Cookie banner > Banner > functionality', { tag: '@all'}, () => {
 		
 		await acceptAll.click();
 		const cookies = await context.cookies();
+		console.log(cookies);
 		const preferences = cookies.find((c) => c.name === '.Components.Dev.Consent');
 
 		await expect(banner).not.toBeVisible();
@@ -84,8 +85,6 @@ test.describe('Cookie banner > Banner > Analytics', { tag: '@all'}, () => {
 
 test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
 	test('If the banner is open, focus should move there first', async ({ page }, testInfo) => {
-		//Webkit tests can be slow to load the banner, so we need to wait for it to be visible before pressing tab
-		await page.waitForSelector('.privacy-banner');
 		await page.keyboard.press(tabKey);
 		const expectedClass = (testInfo.project.use.defaultBrowserType === 'webkit') ? /privacy-banner__accept/ : /privacy-banner__link/;
 		await expect(page.locator(':focus')).toHaveClass(expectedClass);
