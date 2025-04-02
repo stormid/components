@@ -1,109 +1,115 @@
-const { test, expect } = require('@playwright/test');
-import AxeBuilder from '@axe-core/playwright';
+const { test, expect } = require("@playwright/test");
+import AxeBuilder from "@axe-core/playwright";
 
 let tabKey;
 
 test.beforeEach(async ({ page }, testInfo) => {
-	await page.goto('/form.html');
-	tabKey = testInfo.project.use.defaultBrowserType === 'webkit'
-			? "Alt+Tab"
-			: "Tab";
+	await page.goto("/form.html");
+	tabKey = testInfo.project.use.defaultBrowserType === "webkit" ? "Alt+Tab" : "Tab";
 });
 
-test.describe('Cookie banner > Axe', { tag: '@reduced'}, () => {
-	test('Should not have any automatically detectable accessibility issues', async ({ page }) => {	
-		const accessibilityScanResults = await new AxeBuilder({ page }).analyze(); 
-		expect(accessibilityScanResults.violations).toEqual([]);
+test.describe("Cookie banner > Functionality", { tag: "@all" }, () => {
+	test("Should not render the banner when the hideBannerOnFormPage has been used", async ({ page }) => {
+		const banner = page.locator(".privacy-banner");
+		await expect(banner).toHaveCount(0);
+	});
+
+	test("Should not render the form if there is no form container on the page", async ({ page }) => {
+		await page.goto("/");
+		const form = page.locator(".privacy-banner__form");
+		await expect(form).toHaveCount(0);
+	});
+
+	test("Should render the form if the container is on the page", async ({ page }) => {
+		const form = page.locator(".privacy-banner__form");
+		await expect(form).toHaveCount(1);
+		await expect(form).toBeVisible();
+	});
+
+	test("The submit button should be disabled if no choices are made", async ({ page }) => {
+		const radios = await page.getByRole('radio').all();
+		const submitBtn = page.locator(".privacy-banner__submit");
+		await expect(submitBtn).toHaveRole('button');
+
+		for (const radio of radios) {
+			await expect(radio).not.toBeChecked();
+		}
+
+		await expect(submitBtn).toBeDisabled();
+	});
+
+	test("The submit button should be enabled if choices are made for all consent types", async ({ page }) => {
+		const submitBtn = page.locator(".privacy-banner__submit");
+		await expect(submitBtn).toBeDisabled();
+		await expect(submitBtn).toHaveRole('button');
+
+		await page.getByLabel(/Our partners might serve you ads knowing you have visited our website/).check({force: true});
+		await expect(submitBtn).toBeDisabled();
+
+		await page.getByLabel(/Pages you visit and actions you take will not be measured and used to improve the service/).check({force: true});
+		await expect(submitBtn).toBeEnabled();
+	});
+
+	test("A cookie should be set when the form is submitted and user preferences updated", async ({ page, context }) => {
+		const submitBtn = page.locator(".privacy-banner__submit");
+
+		await page.getByLabel(/Our partners might serve you ads knowing you have visited our website/).check({force: true});
+		await page.getByLabel(/Pages you visit and actions you take will not be measured and used to improve the service/).check({force: true});
+		await submitBtn.click();
+
+		let cookies = await context.cookies();
+		let preferences = cookies.find((c) => c.name === '.Components.Dev.Consent');
+		expect(preferences.value).toEqual(btoa(`{"consent":{"performance":0,"ads":1}}`));
+
+		await page.getByLabel(/Pages you visit and actions you take will be measured and used to improve the service/).check({force: true});
+		await page.getByLabel(/Our partners will still serve you ads, but they will not know you have visited out website/).check({force: true});
+		await submitBtn.click();
+
+		cookies = await context.cookies();
+		preferences = cookies.find((c) => c.name === '.Components.Dev.Consent');
+		expect(preferences.value).toEqual(btoa(`{"consent":{"performance":1,"ads":0}}`));
 	});
 });
 
-// describe(`Cookie banner > DOM > not render`, () => {
+test.describe("Cookie banner > Form >Markup", { tag: "@all" }, () => {
+	test("Should render a fieldset for each cookie type", async ({ page }) => {
+		const fieldsets = page.locator(".privacy-banner__fieldset");
+		await expect(fieldsets).toHaveCount(2);
 
-//     it('It should not render the banner if hideBannerOnFormPage setting is true and on consent form page', async () => {
-//         document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
-//         cookieBanner({
-//             secure: false,
-//             hideBannerOnFormPage: true,
-//             types: {
-//                 test: {
-//                     title: 'Test title',
-//                     description: 'Test description',
-//                     labels: {
-//                         yes: 'Pages you visit and actions you take will be measured and used to improve the service',
-//                         no: 'Pages you visit and actions you take will not be measured and used to improve the service'
-//                     },
-//                     fns: [
-//                         () => { }
-//                     ]
-//                 }
-//             }
-//         });
-//         expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull();
-//     });
-// });
+		for (const fieldset of await fieldsets.all()) {
+			await expect(fieldset.locator('legend')).toHaveCount(1);
+		}
+	});
 
-//  it('Sets a cookie based on preferences form', async () => {
-// 		document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-// 		expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":1,"performance":1}}`)}`);
+	test("Should have a yes/no radio button per cookie type with appropriate labels", async ({ page }) => {
+		const labels = page.locator(".privacy-banner__fieldset label");
 
-// 		const fields = Array.from(document.querySelectorAll(`.${defaults.classNames.field}`));
-// 		fields[1].checked = true;
-// 		fields[3].checked = true;
-// 		document.querySelector(`.${defaults.classNames.submitBtn}`).click();
-// 		expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":0,"performance":0}}`)}`);
-// 	});
+		for (const label of await labels.all()) {
+			await expect(label.locator('input[type=radio]')).toHaveCount(1);
+		}
+	});
+});
 
+test.describe("Cookie banner > Form > Keyboard", { tag: "@all" }, () => {
+	test("Should be able to update cookie preferences via keyboard", async ({ page, context }) => {
+		for(let i = 0; i < 2; i++) {
+			await page.keyboard.press(tabKey);
+		}
+		for(let i = 0; i < 2; i++) {
+			await page.keyboard.press('Space');
+			await page.keyboard.press(tabKey);
+		}
+		await page.keyboard.press('Enter');
 
-//  it('Submit button should be disabled', async () => {
-// 		expect(document.querySelector(`.${defaults.classNames.submitBtn}`).getAttribute('disabled')).not.toBeNull();
-// 	});
+		let cookies = await context.cookies();
+		let preferences = cookies.find((c) => c.name === '.Components.Dev.Consent');
+		expect(preferences.value).toEqual(btoa(`{"consent":{"performance":1,"ads":1}}`));
+	});
+});
 
-// 	it('Submit button should be enabled if both field groups have values', async () => {
-// 		const fields = Array.from(document.querySelectorAll(`.${defaults.classNames.field}`));
-
-// 		fields[0].checked = true;
-// 		dispatchSyntheticEvent(fields[0], 'change');//for JSDOM
-// 		expect(document.querySelector(`.${defaults.classNames.submitBtn}`).getAttribute('disabled')).not.toBeNull();
-
-// 		fields[2].checked = true;
-// 		dispatchSyntheticEvent(fields[2], 'change');//for JSDOM
-// 		expect(document.querySelector(`.${defaults.classNames.submitBtn}`).getAttribute('disabled')).toEqual(null);
-// 	});
-
-// 	it('Submit button should set the cookie and hide the banner', async () => {
-// 		document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-// 		expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":1,"performance":1}}`)}`);
-// 		expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull();
-// 	});
-
-// it('Should return if there is no form container', async () => {
-// 		expect(document.querySelector(`.${defaults.classNames.form}`)).toBeNull();
-// 	});
-
-// it('Should render the form', async () => {
-// 		expect(document.querySelector(`.${defaults.classNames.form}`)).not.toBeNull();
-// 	});
-
-// 	it('Should render a fieldset for each type', async () => {
-// 		const fieldset = Array.from(document.querySelectorAll(`.${defaults.classNames.fieldset}`));
-// 		const fields = Array.from(document.querySelectorAll(`.${defaults.classNames.field}`));
-// 		expect(fieldset.length).toEqual(2);
-// 		expect(fields.length).toEqual(4);
-// 	});
-
-// 	it('Should set the default values if any are set and no there is no user consent preferences', async () => {
-// 		const fields = Array.from(document.querySelectorAll(`.${defaults.classNames.field}`));
-// 		expect(fields[0].checked).toEqual(true);
-// 	});
-
-//  it('Sets a cookie based on preferences form', async () => {
-// 		document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-// 		expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":1,"performance":1}}`)}`);
-
-// 		const fields = Array.from(document.querySelectorAll(`.${defaults.classNames.field}`));
-// 		fields[1].checked = true;
-// 		fields[3].checked = true;
-// 		document.querySelector(`.${defaults.classNames.submitBtn}`).click();
-// 		expect(document.cookie).toEqual(`${defaults.name}=${btoa(`{"consent":{"test":0,"performance":0}}`)}`);
-// 	});
-
+test.describe("Cookie banner > Axe", { tag: "@reduced" }, () => {
+	test("Should not have any automatically detectable accessibility issues", async ({ page }) => {
+		const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+		expect(accessibilityScanResults.violations).toEqual([]);
+	});
+});

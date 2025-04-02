@@ -57,7 +57,7 @@ test.describe('Cookie banner > IFrame ', { tag: '@all'}, () => {
 		let iframes = page.locator('iframe');
 		await expect(iframes).toHaveCount(0);
 
-		await page.getByLabel(/Pages you visit and actions you take will be measured and used to improve the service/).check();
+		await page.getByLabel(/Pages you visit and actions you take will be measured and used to improve the service/).check({force: true});
 		await page.getByLabel(/Our partners will still serve you ads, but they will not know you have visited out website/).check({force: true});
 		await page.locator('.privacy-banner__submit').click();
 
@@ -72,7 +72,7 @@ test.describe('Cookie banner > IFrame ', { tag: '@all'}, () => {
 		await expect(iframes).toHaveCount(0);
 
 		await page.getByLabel(/Pages you visit and actions you take will not be measured and used to improve the service/).check({force: true});
-		await page.getByLabel(/Our partners might serve you ads knowing you have visited our website/).check();
+		await page.getByLabel(/Our partners might serve you ads knowing you have visited our website/).check({force: true});
 		await page.locator('.privacy-banner__submit').click();
 
 		iframes = page.locator('iframe');
@@ -130,7 +130,7 @@ test.describe('Cookie banner > GA', { tag: '@all'}, () => {
 		let GTMscript = page.locator('script[src*="googletagmanager"]');
 		await expect(GTMscript).toHaveCount(0);
 		
-		await page.getByLabel(/Our partners might serve you ads knowing you have visited our website/).check();
+		await page.getByLabel(/Our partners might serve you ads knowing you have visited our website/).check({force: true});
 		await page.getByLabel(/Pages you visit and actions you take will not be measured and used to improve the service/).check({force: true});
 		await page.locator('.privacy-banner__submit').click();
 
@@ -144,7 +144,7 @@ test.describe('Cookie banner > GA', { tag: '@all'}, () => {
 		let GTMscript = page.locator('script[src*="googletagmanager"]');
 		await expect(GTMscript).toHaveCount(0);
 		
-		await page.getByLabel(/Pages you visit and actions you take will be measured and used to improve the service/).check();
+		await page.getByLabel(/Pages you visit and actions you take will be measured and used to improve the service/).check({force: true});
 		await page.getByLabel(/Our partners will still serve you ads, but they will not know you have visited out website/).check({force: true});
 		await page.locator('.privacy-banner__submit').click();
 
