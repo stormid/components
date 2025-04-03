@@ -115,6 +115,7 @@ const trapTab = state => event => {
 };
 
 export const keyListener = store => event => {
+console.log(event.keyCode);
     if (store.getState().banner && event.keyCode === 9) trapTab(store.getState())(event);
 };
 
