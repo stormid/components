@@ -10,10 +10,10 @@ test.beforeEach(async ({ page }, testInfo) => {
 			: "Tab";
 });
 
-const tabLoop = async (page) => {
+const tabLoop = async (page, selector) => {
 	let focussed = page.locator(':focus');
 	
-	if(!await focussed.evaluate((el) => el.classList.contains('privacy-banner__accept'))) {
+	if(!await focussed.evaluate((el) => el.classList.contains(selector))) {
 		let maxTabCount = 10; // Prevent infinite loop in case of failure
 
 		/*Keep tabbing until the accept button is focused*/
@@ -22,7 +22,7 @@ const tabLoop = async (page) => {
 			await page.keyboard.press(tabKey);
 			focussed = page.locator(':focus');
 			maxTabCount--;
-		} while ((await focussed.count() === 0 || await focussed.evaluate((el) => !el.classList.contains('privacy-banner__accept'))) && maxTabCount > 0);
+		} while ((await focussed.count() === 0 || await focussed.evaluate((el) => !el.classList.contains(selector))) && maxTabCount > 0);
 	};
 }
 
@@ -111,7 +111,7 @@ test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
 	test('Cookies can be accepted via keyboard', async ({ page, context }) => {
 		const banner = page.locator('.privacy-banner');
 		await page.keyboard.press(tabKey);
-		await tabLoop(page);
+		await tabLoop(page, 'privacy-banner__accept');
 
 		await page.keyboard.press('Enter');
 		const cookies = await context.cookies();
@@ -124,7 +124,7 @@ test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
 	test('Cookies can be rejected via keyboard', async ({ page, context }) => {
 		const banner = page.locator('.privacy-banner');
 		await page.keyboard.press(tabKey);
-		await tabLoop(page);
+		await tabLoop(page, 'privacy-banner__reject');
 		
 		await page.keyboard.press('Enter');
 		const cookies = await context.cookies();
