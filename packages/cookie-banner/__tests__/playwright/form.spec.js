@@ -8,22 +8,6 @@ test.beforeEach(async ({ page }, testInfo) => {
 	tabKey = testInfo.project.use.defaultBrowserType === "webkit" ? "Alt+Tab" : "Tab";
 });
 
-const tabLoop = async (page) => {
-	let focussed = page.locator(':focus');
-	
-	if(!await focussed.evaluate((el) => el.classList.contains('privacy-banner__accept'))) {
-		let maxTabCount = 10; // Prevent infinite loop in case of failure
-
-		/*Keep tabbing until the accept button is focused*/
-		/* Different browsers and environments require different numbers */
-		do {
-			await page.keyboard.press(tabKey);
-			focussed = page.locator(':focus');
-			maxTabCount--;
-		} while ((await focussed.count() === 0 || await focussed.evaluate((el) => !el.classList.contains('privacy-banner__accept'))) && maxTabCount > 0);
-	};
-}
-
 test.describe("Cookie banner > Functionality", { tag: "@all" }, () => {
 	test("Should not render the banner when the hideBannerOnFormPage has been used", async ({ page }) => {
 		const banner = page.locator(".privacy-banner");
