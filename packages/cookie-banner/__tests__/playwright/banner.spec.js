@@ -108,7 +108,7 @@ test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
 		expect(await page.evaluate(() => document.querySelector('.privacy-banner').contains(document.querySelector(':focus')))).toBeTruthy();
 	});
 
-	test.only('Cookies can be accepted via keyboard', async ({ page, context }) => {
+	test('Cookies can be accepted via keyboard', async ({ page, context }) => {
 		const banner = page.locator('.privacy-banner');
 		await page.keyboard.press(tabKey);
 		await tabLoop(page);
