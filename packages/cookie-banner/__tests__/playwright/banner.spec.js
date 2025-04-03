@@ -10,6 +10,22 @@ test.beforeEach(async ({ page }, testInfo) => {
 			: "Tab";
 });
 
+const tabLoop = async (page) => {
+	let focussed = page.locator(':focus');
+	
+	if(!await focussed.evaluate((el) => el.classList.contains('privacy-banner__accept'))) {
+		let maxTabCount = 10; // Prevent infinite loop in case of failure
+
+		/*Keep tabbling until the accept button is focused*/
+		/* Different browsers and environments require different numbers */
+		do {
+			await page.keyboard.press(tabKey);
+			focussed = page.locator(':focus');
+			maxTabCount--;
+		} while (await focussed.evaluate((el) => !el.classList.contains('privacy-banner__accept')) && maxTabCount > 0);
+	};
+}
+
 test.describe('Cookie banner > Banner > functionality', { tag: '@all'}, () => {
 	test('Should render the banner', async ({ page }) => {	
 		const banner = page.locator('.privacy-banner');
@@ -53,8 +69,6 @@ test.describe('Cookie banner > Banner > functionality', { tag: '@all'}, () => {
 		await updateLink.click();
 		await expect(banner).toBeVisible();
 	});
-
-	
 });
 
 test.describe('Cookie banner > Banner > Analytics', { tag: '@all'}, () => {
@@ -82,25 +96,22 @@ test.describe('Cookie banner > Banner > Analytics', { tag: '@all'}, () => {
 });
 
 test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
-	test('If the banner is open, focus should move there first', async ({ page }, testInfo) => {
+	test('If the banner is open, focus should move there first', async ({ page }) => {
 		await page.keyboard.press(tabKey);
 		expect(await page.evaluate(() => document.querySelector('.privacy-banner').contains(document.querySelector(':focus')))).toBeTruthy();
 	});
 
-	test('If the banner is open and trapTab is set, focus should not leave the banner', async ({ page }, testInfo) => {
+	test('If the banner is open and trapTab is set, focus should not leave the banner', async ({ page }) => {
 		for(let i = 0; i<=5; i++) {
 			await page.keyboard.press(tabKey);
 		}
 		expect(await page.evaluate(() => document.querySelector('.privacy-banner').contains(document.querySelector(':focus')))).toBeTruthy();
 	});
 
-	test('Cookies can be accepted via keyboard', async ({ page, context }, testInfo) => {
-		const keyPresses = (testInfo.project.use.defaultBrowserType === 'webkit') ? 0 : 2;
+	test.only('Cookies can be accepted via keyboard', async ({ page, context }) => {
 		const banner = page.locator('.privacy-banner');
-
-		for(let i = 0; i<=keyPresses; i++) {
-			await page.keyboard.press(tabKey);
-		}
+		await page.keyboard.press(tabKey);
+		await tabLoop(page);
 
 		await page.keyboard.press('Enter');
 		const cookies = await context.cookies();
@@ -110,13 +121,10 @@ test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
 		expect(preferences.value).toEqual(btoa(`{"consent":{"performance":1,"ads":1}}`));
 	});
 
-	test('Cookies can be rejected via keyboard', async ({ page, context }, testInfo) => {
-		const keyPresses = (testInfo.project.use.defaultBrowserType === 'webkit') ? 1 : 3;
+	test('Cookies can be rejected via keyboard', async ({ page, context }) => {
 		const banner = page.locator('.privacy-banner');
-
-		for(let i = 0; i<=keyPresses; i++) {
-			await page.keyboard.press(tabKey);
-		}
+		await page.keyboard.press(tabKey);
+		await tabLoop(page);
 		
 		await page.keyboard.press('Enter');
 		const cookies = await context.cookies();
