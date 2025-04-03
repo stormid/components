@@ -22,7 +22,7 @@ const tabLoop = async (page, selector) => {
 			await page.keyboard.press(tabKey);
 			focussed = page.locator(':focus');
 			maxTabCount--;
-		} while ((await focussed.count() === 0 || await focussed.evaluate((el, selector) => !el.classList.contains(selector))) && maxTabCount > 0);
+		} while ((await focussed.count() === 0 || await focussed.evaluate((el, selector) => !el.classList.contains(selector), selector)) && maxTabCount > 0);
 	};
 }
 
