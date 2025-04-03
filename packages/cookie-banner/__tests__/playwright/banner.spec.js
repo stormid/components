@@ -16,7 +16,7 @@ const tabLoop = async (page) => {
 	if(!await focussed.evaluate((el) => el.classList.contains('privacy-banner__accept'))) {
 		let maxTabCount = 10; // Prevent infinite loop in case of failure
 
-		/*Keep tabbling until the accept button is focused*/
+		/*Keep tabbing until the accept button is focused*/
 		/* Different browsers and environments require different numbers */
 		do {
 			await page.keyboard.press(tabKey);
@@ -108,7 +108,7 @@ test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
 		expect(await page.evaluate(() => document.querySelector('.privacy-banner').contains(document.querySelector(':focus')))).toBeTruthy();
 	});
 
-	test.only('Cookies can be accepted via keyboard', async ({ page, context }) => {
+	test('Cookies can be accepted via keyboard', async ({ page, context }) => {
 		const banner = page.locator('.privacy-banner');
 		await page.keyboard.press(tabKey);
 		await tabLoop(page);
