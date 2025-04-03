@@ -13,7 +13,7 @@ test.beforeEach(async ({ page }, testInfo) => {
 const tabLoop = async (page, selector) => {
 	let focussed = page.locator(':focus');
 	
-	if(!await focussed.evaluate((el) => el.classList.contains(selector))) {
+	if(!await focussed.evaluate((el) => el.classList.contains(selector), selector)) {
 		let maxTabCount = 10; // Prevent infinite loop in case of failure
 
 		/*Keep tabbing until the accept button is focused*/
