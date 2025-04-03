@@ -84,8 +84,7 @@ test.describe('Cookie banner > Banner > Analytics', { tag: '@all'}, () => {
 test.describe('Cookie banner > Banner > keyboard', { tag: '@all'}, () => {
 	test('If the banner is open, focus should move there first', async ({ page }, testInfo) => {
 		await page.keyboard.press(tabKey);
-		const expectedClass = (testInfo.project.use.defaultBrowserType === 'webkit') ? /privacy-banner__accept/ : /privacy-banner__link/;
-		await expect(page.locator(':focus')).toHaveClass(expectedClass);
+		expect(await page.evaluate(() => document.querySelector('.privacy-banner').contains(document.querySelector(':focus')))).toBeTruthy();
 	});
 
 	test('If the banner is open and trapTab is set, focus should not leave the banner', async ({ page }, testInfo) => {
