@@ -1,4 +1,4 @@
-import { applyEffects } from '../src/lib/consent';
+import { applyEffects } from '../../src/lib/consent';
 
 describe(`Cookie banner > consent > callback`, () => {
     document.body.innerHTML = `<main><div class="privacy-banner__form-container"></div><p id="test"><p><p id="test2"></p></main>`;

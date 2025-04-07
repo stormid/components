@@ -27,7 +27,6 @@ module.exports = {
       use: { ...devices['Desktop Firefox'] },
       grep: /@desktop|@all/,
     },
-  
     {
       name: 'webkit',
       userAgent: 'Safari',

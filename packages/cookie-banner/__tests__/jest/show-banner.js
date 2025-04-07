@@ -1,15 +1,15 @@
 import cookieBanner from '../../src';
-import sampleTemplates from '../../example/src/js/sample-templates';
 import defaults from '../../src/lib/defaults';
+import sampleTemplates from '../../example/src/js/sample-templates';
+
 let instance;
 
 const init = () => {
     // Set up our document body
-    document.body.innerHTML = `<div class="privacy-banner__form-container"></div>`;
+    document.body.innerHTML = `<main></main>`;
     instance = cookieBanner({
         ...sampleTemplates,
         secure: false,
-        hideBannerOnFormPage: false,
         types: {
             test: {
                 title: 'Test title',
@@ -37,25 +37,31 @@ const init = () => {
     });
 };
 
-describe(`Cookie banner > Analytics > Data layer additions`, () => {
+describe(`Cookie banner > showBanner > show banner`, () => {
     beforeAll(init);
 
-    it('It should add to the dataLayer when the banner is shown', async () => {
-        expect(dataLayer.find(e => e.event === "stormcb_display")).toBeDefined();
-    });
-
-    it('It should add to the datalayer when accept all is clicked', async () => {
-        document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-        expect(dataLayer.find(e => e.event === "stormcb_accept_all")).toBeDefined();
-        expect(dataLayer.find(e => e.stormcb_performance === 1)).toBeDefined();
-        expect(dataLayer.find(e => e.stormcb_test === 1)).toBeDefined();
-    });
-
-    it('It should add to the datalayer when reject all is clicked', async () => {
+    it('It should not show the banner if is already showing', async () => {
+        expect(document.querySelector(`.${defaults.classNames.banner}`)).not.toBeNull();
+        expect(instance.getState().bannerOpen).toBe(true);
         instance.showBanner();
-        document.querySelector(`.${defaults.classNames.rejectBtn}`).click();
-        expect(dataLayer.find(e => e.event === "stormcb_reject_all")).toBeDefined();
-        expect(dataLayer.find(e => e.stormcb_performance === 0)).toBeDefined();
-        expect(dataLayer.find(e => e.stormcb_test === 0)).toBeDefined();
+        expect(document.querySelectorAll(`.${defaults.classNames.banner}`).length).toBe(1);
     });
+
+    it('It should show the banner and invoke the callback function', async () => {
+        expect(document.querySelector(`.${defaults.classNames.banner}`)).not.toBeNull();
+        expect(instance.getState().bannerOpen).toBe(true);
+        //hide it
+        document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
+        expect(instance.getState().bannerOpen).toBe(false);
+        expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull();
+
+        //show it
+        const cb = jest.fn();
+        instance.showBanner(cb);
+        expect(instance.getState().bannerOpen).toBe(true);
+        expect(document.querySelector(`.${defaults.classNames.banner}`)).not.toBeNull();
+        const nextState = instance.getState();
+        expect(cb).toHaveBeenCalledWith(nextState);
+    });
+
 });
