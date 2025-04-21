@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <title>StormID</title>
     <style>
@@ -145,134 +145,78 @@
     </style>
   </head>
   <body>
-    <!-- <form class="js-validate" action="" autocomplete="off">
-        <input type="hidden" name="hidden-field" value="" required />
-        <div class="form-group">
-            <label for="RequiredString1">Required String</label>
-            <input class="form-control" type="text" id="RequiredString1" name="RequiredString1" value="" required />
-        </div>
-        <input type="submit" name="onward" value="Submit">
-        <input type="submit" name="onward" value="Submit and continue">
-    </form> -->
-    <!-- <button class="js-add">Required last field</button>
-    <form class="js-validate" action="#" autocomplete="off">
-        <input type="hidden" name="hidden-field" value="" required />
-        <div class="form-group">
-            <label for="RequiredString1">Required String</label>
-            <input class="form-control" type="text" id="RequiredString1" name="RequiredString1" value="" required />
-        </div>
-        <div class="form-group">
-            <label for="Password">Required Password</label>
-            <input class="form-control" type="password" id="Password" name="Password" value="" required />
-        </div>
-        <div class="form-group">
-            <label for="Later">Required later</label>
-            <input class="form-control" type="text" id="Later" name="Later" value="" />
-        </div>
-        <input type="submit" formaction="#back" value="Back">
-        <input type="submit" name="onward" value="Submit">
-        <input type="submit" value="Submit">
-    </form> -->
-    <!-- <button class="js-add">Required last field</button>
-    <form class="js-validate" action="#" autocomplete="off">
-        <div class="form-group">
-            <label for="RequiredString1">Required String</label>
-            <input class="form-control" type="text" id="RequiredString1" name="RequiredString1" value="" required />
-        </div>
-        <div class="form-group">
-            <label for="Later">Required later</label>
-            <input class="form-control" type="text" id="Later" name="Later" value="" />
-        </div>
-        <input type="submit" value="Submit">
-    </form> -->
-    <!-- <form class="js-validate" action="#" autocomplete="off">
-        <div class="form-group">
-            <label for="RequiredString1">Required String</label>
-            <input class="form-control" type="text" id="RequiredString1" name="RequiredString1" value="" required />
-        </div>
-        <div class="form-group">
-            <label for="Later">Required later</label>
-            <input class="form-control" type="hidden" id="Later" name="something" value="" />
-        </div>
-        <input type="submit" value="Submit">
-    </form> -->
-    <!-- <form class="js-validate" action="#" autocomplete="off">
-        <div class="form-group">
-            <label for="f1">Field 1</label>
-            <span data-valmsg-for="f1"></span>
-            <input class="form-control" id="f1" name="f1" value="" data-val="true" data-val-required="This field is required" type="email" data-val-email="{{value}} is not a valid email address"/>
-        </div>
-        <div class="form-group">
-            <label for="f2">Field 2</label>
-            <input class="form-control" id="f2" name="f2" value="" data-val="true" data-val-required="This field is required" />
-        </div>
-        <input type="submit" value="Submit">
-    </form> -->
-
-    <form class="js-validate" action="#" autocomplete="off">
-        <fieldset class="form-group">
-            <legend>Radios</legend>
-            <span data-valmsg-for="radio"></span>
-            <div class="boolean-group">
-                <input type="radio" id="radio-1" name="radio" data-val="true" data-val-required="Select an option" />
-                <label for="radio-1">option 1</label>
+    <main>
+        <h1>Validate example</h1>
+        <form class="js-validate" action="#" autocomplete="off">
+            <fieldset class="form-group">
+                <legend>Radios</legend>
+                <span data-valmsg-for="radio"></span>
+                <div class="boolean-group">
+                    <input type="radio" id="radio-1" name="radio" data-val="true" data-val-required="Select an option" />
+                    <label for="radio-1">option 1</label>
+                </div>
+                <div class="boolean-group">
+                    <input type="radio" id="radio-2" name="radio" data-val="true" data-val-required="Select an option" />
+                    <label for="radio-2">option 2</label>
+                </div>
+                <div class="boolean-group">
+                    <input type="radio" id="radio-3" name="radio" data-val="true" data-val-required="Select an option" />
+                    <label for="radio-3">option 3</label>
+                </div>
+                <div class="boolean-group">
+                    <input type="radio" id="radio-4" name="radio" data-val="true" data-val-required="Select an option" />
+                    <label for="radio-4">option 4</label>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <legend>Checkboxes</legend>
+                <span data-valmsg-for="checkbox"></span>
+                <div class="boolean-group">
+                    <input type="checkbox" id="checkbox-1" name="checkbox" data-val="true" data-val-required="Select an option" />
+                    <label for="checkbox-1">option 1</label>
+                </div>
+                <div class="boolean-group">
+                    <input type="checkbox" id="checkbox-2" name="checkbox" data-val="true" data-val-required="Select an option" />
+                    <label for="checkbox-2">option 2</label>
+                </div>
+                <div class="boolean-group">
+                    <input type="checkbox" id="checkbox-3" name="checkbox" data-val="true" data-val-required="Select an option" />
+                    <label for="checkbox-3">option 3</label>
+                </div>
+                <div class="boolean-group">
+                    <input type="checkbox" id="radio-4" name="checkbox" data-val="true" data-val-required="Select an option" />
+                    <label for="checkbox-4">option 4</label>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">          
+                <legend>Checkbox</legend>  
+                <span data-valmsg-for="checkbox-single"></span>
+                <div class="boolean-group">
+                    <input type="checkbox" id="checkbox" name="checkbox-single" data-val="true" data-val-required="Must check this to continue" />
+                    <label for="checkbox">option 1</label>
+                </div>
+            </fieldset>
+            <div class="input input--date">
+                <fieldset class="input__fieldset">
+                    <legend class="input__legend">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit?
+                    </legend>
+                    <div class="input input--date__day">
+                        <label for="dateDay" class="input__label">Day</label>
+                        <input id="dateDay" name="dateDay" type="text" class="input__input" />
+                    </div>
+                    <div class="input input--date__month">
+                        <label for="dateMonth" class="input__label">Month</label>
+                        <input id="dateDay" name="dateDay" type="text" class="input__input" />
+                    </div>
+                    <div class="input input--date__year">
+                        <label for="dateYear" class="input__label">Year</label>
+                        <input id="dateYear" name="dateYear" type="text" class="input__input" />
+                    </div>
+                </fieldset>
             </div>
-            <div class="boolean-group">
-                <input type="radio" id="radio-2" name="radio" data-val="true" data-val-required="Select an option" />
-                <label for="radio-2">option 2</label>
-            </div>
-            <div class="boolean-group">
-                <input type="radio" id="radio-3" name="radio" data-val="true" data-val-required="Select an option" />
-                <label for="radio-3">option 3</label>
-            </div>
-            <div class="boolean-group">
-                <input type="radio" id="radio-4" name="radio" data-val="true" data-val-required="Select an option" />
-                <label for="radio-4">option 4</label>
-            </div>
-        </fieldset>
-        <fieldset class="form-group">
-            <legend>Checkboxes</legend>
-            <span data-valmsg-for="checkbox"></span>
-            <div class="boolean-group">
-                <input type="checkbox" id="checkbox-1" name="checkbox" data-val="true" data-val-required="Select an option" />
-                <label for="checkbox-1">option 1</label>
-            </div>
-            <div class="boolean-group">
-                <input type="checkbox" id="checkbox-2" name="checkbox" data-val="true" data-val-required="Select an option" />
-                <label for="checkbox-2">option 2</label>
-            </div>
-            <div class="boolean-group">
-                <input type="checkbox" id="checkbox-3" name="checkbox" data-val="true" data-val-required="Select an option" />
-                <label for="checkbox-3">option 3</label>
-            </div>
-            <div class="boolean-group">
-                <input type="checkbox" id="radio-4" name="checkbox" data-val="true" data-val-required="Select an option" />
-                <label for="checkbox-4">option 4</label>
-            </div>
-        </fieldset>
-        <fieldset class="form-group">          
-            <legend>Checkbox</legend>  
-            <span data-valmsg-for="checkbox-single"></span>
-            <div class="boolean-group">
-                <input type="checkbox" id="checkbox" name="checkbox-single" data-val="true" data-val-required="Must check this to continue" />
-                <label for="checkbox">option 1</label>
-            </div>
-        </fieldset>
-        <fieldset>
-            <legend>
-                <span>Date</span>
-                <span data-valmsg-for="date" id="date-error-message"></span>
-                <span data-valmsg-for="dateDay" id="date-Day-error-message"></span>
-                <span data-valmsg-for="dateMonth" id="date-Month-error-message"></span>
-                <span data-valmsg-for="dateYear" id="date-Year-error-message"></span>
-            </legend>
-            <div class="flex">
-                <input id="dateDay" name="dateDay" inputmode="numeric" data-val="true" data-val-required="Enter a day" aria-required="true"/>
-                <input id="dateMonth" name="dateMonth" inputmode="numeric" data-val="true" data-val-required="Enter a month" aria-required="true"/>
-                <input id="dateYear" name="dateYear" inputmode="numeric" data-val="true" data-val-required="Enter a year" aria-required="true" />
-            </div>
-        </fieldset>
-        <input type="submit" value="Submit">
-    </form>
+            <input type="submit" value="Submit">
+        </form>
+    </main>
   </body>
 </html>
