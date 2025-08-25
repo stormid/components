@@ -613,7 +613,7 @@
     <main>
         <h1>Validate example</h1>
 
-        <form class="form js-validate" action="#">
+        <form class="form js-validate" method="post" action="/test">
             <p class="push-bottom">All fields are required unless marked as optional.</p>
             <fieldset class="fieldset">
                 <legend class="legend">
@@ -631,109 +631,9 @@
                     <input data-val="true" data-val-required="Last name must not be empty" autocomplete="family-name"
                         class="input" id="lname" name="lname" />
                 </div>
-                <div class="form-row">
-                    <label for="aka" class="label">Also known as <span class="label__hint">Optional</span></label>
-                    <input class="input" id="aka" autocomplete="nickname " name="aka" />
-                </div>
-                <div class="form-row">
-                    <label for="email" class="label">Email</label>
-                    <span class="error-message" data-valmsg-for="email" />
-                    <input data-val="true" data-val-required="Email must not be empty"
-                        data-val-email="Email must be correct format" class="input" type="email" id="email"
-                        autocomplete="email" name="email" />
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="legend">Your preferences</legend>
-                <div class="push-bottom--half">Please tick at least one option below.</div>
-                <span class="error-message push-bottom--half" data-valmsg-for="opts" />
-                <div class="checkbox">
-                    <input class="checkbox__input" id="opt1" name="opts" type="checkbox" data-val="true"
-                        data-val-required="Select at least one option" />
-                    <label class="checkbox__label" for="opt1">Option 1</label>
-                </div>
-                <div class="checkbox">
-                    <input class="checkbox__input" id="opt2" name="opts" type="checkbox" data-val="true"
-                        data-val-required="Select at least one option" />
-                    <label class="checkbox__label" for="opt2">Option 2</label>
-                </div>
-                <div class="checkbox">
-                    <input class="checkbox__input" id="opt3" name="opts" type="checkbox" data-val="true"
-                        data-val-required="Select at least one option" />
-                    <label class="checkbox__label" for="opt3">Option 3</label>
-                </div>
-                <div class="checkbox">
-                    <input class="checkbox__input" id="opt4" name="opts" type="checkbox" data-val="true"
-                        data-val-required="Select at least one option" />
-                    <label class="checkbox__label" for="opt4">Option 4</label>
-                </div>
-                <div class="checkbox">
-                    <input class="checkbox__input" id="opt5" name="opts" type="checkbox" data-val="true"
-                        data-val-required="Select at least one option" />
-                    <label class="checkbox__label" for="opt5">Option 5</label>
-                </div>
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="legend">Radios</legend>
-                <span data-valmsg-for="radio"></span>
-                <div class="radio">
-                    <input class="radio__input" type="radio" id="radio-1" name="radio" data-val="true"
-                        data-val-required="Select an option" />
-                    <label class="radio__label" for="radio-1">Radio option 1</label>
-                </div>
-                <div class="radio">
-                    <input class="radio__input" type="radio" id="radio-2" name="radio" data-val="true"
-                        data-val-required="Select an option" />
-                    <label class="radio__label" for="radio-2">Radio option 2</label>
-                </div>
-                <div class="radio">
-                    <input class="radio__input" type="radio" id="radio-3" name="radio" data-val="true"
-                        data-val-required="Select an option" />
-                    <label class="radio__label" for="radio-3">Radio option 3</label>
-                </div>
-                <div class="radio">
-                    <input class="radio__input" type="radio" id="radio-4" name="radio" data-val="true"
-                        data-val-required="Select an option" />
-                    <label class="radio__label" for="radio-4">Radio option 4</label>
-                </div>
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="legend">
-                    <span>Date</span>
-                    <span data-valmsg-for="date" id="date-error-message"></span>
-                    <span data-valmsg-for="dateDay" id="date-Day-error-message"></span>
-                    <span data-valmsg-for="dateMonth" id="date-Month-error-message"></span>
-                    <span data-valmsg-for="dateYear" id="date-Year-error-message"></span>
-                </legend>
-                <div class="flex">
-                    <div>
-                        <label for="dateDay" class="label">Day</label>
-                        <input id="dateDay" name="dateDay" inputmode="numeric" data-val="true" data-val-required="Enter a day" aria-required="true" class="input"/>
-                    </div>
-                    <div>
-                        <label for="dateMonth" class="label">Month</label>
-                        <input id="dateMonth" name="dateMonth" class="input" inputmode="numeric" data-val="true" data-val-required="Enter a month" aria-required="true"/>
-                    </div>
-                    <div>
-                        <label for="dateYear" class="label">Year</label>
-                        <input id="dateYear" name="dateYear" inputmode="numeric" data-val="true" data-val-required="Enter a year" aria-required="true" class="input"/>
-                    </div>
-                </div>
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="legend">Terms and conditions</legend>
-                <div class="checkbox">
-                    <input data-val="true" data-val-required="You must agree to proceed" class="checkbox__input"
-                        id="tcs" name="tcs" type="checkbox" />
-                    <label class="checkbox__label" for="tcs">
-                        I have read and agree to the <a href="#">terms and conditions</a>
-                    </label>
-                    <span class="field-validation-error" data-valmsg-for="tcs" />
-                </div>
             </fieldset>
             <button type="submit" class="btn" id="submit">Submit</button>
         </form>
-
-
     </main>
 </body>
 
