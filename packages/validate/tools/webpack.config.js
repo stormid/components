@@ -27,6 +27,11 @@ module.exports = {
             title: pkg.name,
             template: './example/src/mini.html',
             filename: 'mini.html'
+        }),
+        new HtmlWebpackPlugin({
+            title: pkg.name,
+            template: './example/src/mini-no-server-errors.html',
+            filename: 'mini-no-server-errors.html'
         })
     ],
     module: {
