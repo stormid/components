@@ -133,7 +133,7 @@ test.describe('Validate > Errors > Clear errors', { tag: '@all'}, () => {
 		await expect(page.locator("#lname-error-message")).toHaveCount(0);
 	});
 
-	test.only('Should remove the aria-describedby attribute relating to the error, but preserve other aria-describedby values', async ({ page }) => {	
+	test('Should remove the aria-describedby attribute relating to the error, but preserve other aria-describedby values', async ({ page }) => {	
 		await page.goto('/mini-no-server-errors.html');
 		await page.evaluate(() => {
 			const fname = document.getElementById('fname');
@@ -157,6 +157,23 @@ test.describe('Validate > Errors > Clear errors', { tag: '@all'}, () => {
 		await expect(page.locator("#fname")).toHaveAttribute("aria-describedby", "form-title");
 		await expect(page.locator("#lname")).toHaveAttribute("aria-describedby", "form-title");
 
+	});
+
+});
+
+test.describe('Validate > Errors > Error message tokens', { tag: '@all'}, () => {
+
+	test('Should return an error message string containing the input value if the {{value}} token is found in the error message', async ({ page }) => {
+		await page.fill("#email", "test");
+		await page.click("#submit");
+		await expect(page.locator("#email-error-message")).toHaveText("test is not a valid email address");
+	});
+
+	test('Should return an error message with a comma delimited string of values if more than one field is in a group', async ({ page }) => {
+		await page.fill("#group1", "test");
+		await page.fill("#group2", "test2");
+		await page.click("#submit");
+		await expect(page.locator("#group1-error-message")).toHaveText("test, test2 are not valid inputs");
 	});
 
 });
