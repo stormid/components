@@ -18,7 +18,7 @@ test.describe('Validate > Errors > Render errors', { tag: '@all'}, () => {
 		await expect(page.locator("#lname-error-message")).toHaveCount(0);
 
 		await page.fill("#fname", "John");
-		await page.click("#submit");
+		await page.click("#submitTest");
 
 		await expect(page.locator("#fname-error-message")).toHaveCount(0);
 		await expect(page.locator("#lname-error-message")).toHaveCount(1);
@@ -40,7 +40,7 @@ test.describe('Validate > Errors > Render errors', { tag: '@all'}, () => {
 		const message1 = await page.evaluate(() => document.querySelector("#fname").getAttribute("data-val-required"));
 		const message2 = await page.evaluate(() => document.querySelector("#lname").getAttribute("data-val-required"));
 
-		await page.click("#submit");
+		await page.click("#submitTest");
 
 		await expect(page.locator("[data-valmsg-for='fname']")).toHaveText(message1);
 		await expect(page.locator("[data-valmsg-for='lname']")).toHaveText(message2);
@@ -52,28 +52,19 @@ test.describe('Validate > Errors > Render errors', { tag: '@all'}, () => {
 		await expect(page.locator("#lname")).toHaveAttribute("aria-invalid", "true");
 		await expect(page.locator("#lname")).toHaveAttribute("aria-describedby", "lname-error-message");
 		await expect(page.locator("//*[@id='lname']//parent::div")).toHaveClass(/is--invalid/);
-
 	});
 
 	test('Should replace text inside an error node completely, if text already exists', async ({ page }) => {	
-
 		await page.goto('/mini.html');
 
-		const fnameErrorNode = page.locator("[data-valmsg-for='fname']");
-		await expect(fnameErrorNode).toHaveCount(1);
+		const lnameErrorNode = page.locator("[data-valmsg-for='lname']");
+		await expect(lnameErrorNode).toHaveCount(1);
+		await expect(lnameErrorNode).toHaveText("Existing server error");
 
-		await fnameErrorNode.evaluate(node => {
-			const errorNode = document.createTextNode('The server dislikes the value of this field');
-			node.appendChild(errorNode);
-		});
-
-		const message1 = await page.evaluate(() => document.querySelector("#fname").getAttribute("data-val-required"));
-		await page.click("#submit");
-
-		await expect(fnameErrorNode).toHaveText(message1);
-
+		const message1 = await page.evaluate(() => document.querySelector("#lname").getAttribute("data-val-required"));
+		await page.click("#submitTest");
+		await expect(lnameErrorNode).toHaveText(message1);
 	});
-	
 });
 
 test.describe('Validate > Errors > Clear errors', { tag: '@all'}, () => {
@@ -81,7 +72,7 @@ test.describe('Validate > Errors > Clear errors', { tag: '@all'}, () => {
 	test('Should empty a server-side rendered errorNode container, remove invalid classNames and aria', async ({ page }) => {	
 
 		await page.goto('/mini.html');
-		await page.click("#submit");
+		await page.click("#submitTest");
 
 		const fnameErrorNode = page.locator("[data-valmsg-for='fname']");
 		const lnameErrorNode = page.locator("[data-valmsg-for='lname']");
@@ -121,7 +112,7 @@ test.describe('Validate > Errors > Clear errors', { tag: '@all'}, () => {
 		await expect(page.locator("#fname-error-message")).toHaveCount(0);
 		await expect(page.locator("#lname-error-message")).toHaveCount(0);
 
-		await page.click("#submit");
+		await page.click("#submitTest");
 
 		await expect(page.locator("#fname-error-message")).toHaveCount(1);
 		await expect(page.locator("#lname-error-message")).toHaveCount(1);
@@ -146,7 +137,7 @@ test.describe('Validate > Errors > Clear errors', { tag: '@all'}, () => {
 			fname.parentNode.insertBefore(title, fname);
 		});
 
-		await page.click("#submit");
+		await page.click("#submitTest");
 
 		await expect(page.locator("#fname")).toHaveAttribute("aria-describedby", "form-title fname-error-message");
 		await expect(page.locator("#lname")).toHaveAttribute("aria-describedby", "form-title lname-error-message");
@@ -165,14 +156,14 @@ test.describe('Validate > Errors > Error message tokens', { tag: '@all'}, () => 
 
 	test('Should return an error message string containing the input value if the {{value}} token is found in the error message', async ({ page }) => {
 		await page.fill("#email", "test");
-		await page.click("#submit");
+		await page.click("#submitTest");
 		await expect(page.locator("#email-error-message")).toHaveText("test is not a valid email address");
 	});
 
 	test('Should return an error message with a comma delimited string of values if more than one field is in a group', async ({ page }) => {
 		await page.fill("#group1", "test");
 		await page.fill("#group2", "test2");
-		await page.click("#submit");
+		await page.click("#submitTest");
 		await expect(page.locator("#group1-error-message")).toHaveText("test, test2 are not valid inputs");
 	});
 

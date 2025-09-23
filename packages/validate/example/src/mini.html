@@ -622,18 +622,18 @@
                 </legend>
                 <div class="form-row">
                     <label for="fname" class="label">First Name</label>
-                    <span class="error-message" data-valmsg-for="fname">Test</span>
+                    <span class="error-message" data-valmsg-for="fname"></span>
                     <input data-val="true" data-val-required="First name must not be empty" autocomplete="given-name"
                         class="input" id="fname" name="fname" />
                 </div>
                 <div class="form-row">
                     <label for="lname" class="label">Last Name</label>
-                    <span class="error-message" data-valmsg-for="lname"></span>
+                    <span class="error-message" data-valmsg-for="lname">Existing server error</span>
                     <input data-val="true" data-val-required="Last name must not be empty" autocomplete="family-name"
                         class="input" id="lname" name="lname" />
                 </div>
             </fieldset>
-            <button type="submit" class="btn" id="submit">Submit</button>
+            <button type="submit" class="btn" name="submitTest" id="submitTest" value="checking">Submit</button>
         </form>
     </main>
 </body>
