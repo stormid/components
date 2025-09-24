@@ -13,7 +13,7 @@ import {
     escapeAttributeValue,
     extractValueFromGroup,
     findErrors
-} from '../../../../src/lib/validator/utils';
+} from '../../src/lib/validator/utils';
 
 describe('Validate > Unit > Utils > isCheckable', () => {
     it('should return true if the field is of type radio', async () => {

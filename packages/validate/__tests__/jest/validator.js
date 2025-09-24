@@ -6,8 +6,8 @@ import {
     extractErrorMessage,
     removeUnvalidatableGroups,
     getInitialState
-} from '../../../../src/lib/validator';
-import defaults from '../../../../src/lib/defaults';
+} from '../../src/lib/validator';
+import defaults from '../../src/lib/defaults';
 
 //resolveParam
 describe('Validate > Unit > Validator > resolveParam', () => {

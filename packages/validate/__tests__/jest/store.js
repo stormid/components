@@ -1,6 +1,6 @@
-import { createStore } from '../../../src/lib/store';
-import { ACTIONS } from '../../../src/lib/constants';
-import reducers from '../../../src/lib/reducers';
+import { createStore } from '../../src/lib/store';
+import { ACTIONS } from '../../src/lib/constants';
+import reducers from '../../src/lib/reducers';
 let Store;
 beforeAll(() => {
     Store = createStore();

@@ -2,8 +2,8 @@ import {
     h,
     clearError,
     clearErrors,
-} from '../../../src/lib/dom';
-import { DOTNET_CLASSNAMES } from '../../../src/lib/constants';
+} from '../../src/lib/dom';
+import { DOTNET_CLASSNAMES } from '../../src/lib/constants';
 
 //clearError
 describe('Validate > Unit > DOM > clearError', () => {

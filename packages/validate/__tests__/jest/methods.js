@@ -1,5 +1,5 @@
 import mock from 'xhr-mock';
-import Methods from '../../../../src/lib/validator/methods';
+import Methods from '../../src/lib/validator/methods';
 
 //required
 describe('Validate > Unit > Validator > methods > required', () => {

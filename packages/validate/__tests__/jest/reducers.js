@@ -1,5 +1,5 @@
-import { ACTIONS, GROUP_ATTRIBUTE } from '../../../src/lib/constants';
-import Reducers from '../../../src/lib/reducers';
+import { ACTIONS, GROUP_ATTRIBUTE } from '../../src/lib/constants';
+import Reducers from '../../src/lib/reducers';
 
 //set initial state
 describe('Validate > Unit > Reducers > Set initial state', () => {
