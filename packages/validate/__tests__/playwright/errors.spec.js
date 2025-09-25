@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test');
+import { DOTNET_CLASSNAMES } from '../../src/lib/constants';
 let tabKey;
 
 test.beforeEach(async ({ page }, testInfo) => {
@@ -11,8 +12,7 @@ test.beforeEach(async ({ page }, testInfo) => {
 
 test.describe('Validate > Errors > Render errors', { tag: '@all'}, () => {
 
-	test('Should add an error message container if there is no serverErrorNode, and attributes to reflect invalidity', async ({ page }) => {	
-
+	test('Should add a client side error message container if no server container exists', async ({ page }) => {
 		await page.goto('/mini-no-server-errors.html');
 		await expect(page.locator("#fname-error-message")).toHaveCount(0);
 		await expect(page.locator("#lname-error-message")).toHaveCount(0);
@@ -29,6 +29,15 @@ test.describe('Validate > Errors > Render errors', { tag: '@all'}, () => {
 		await expect(page.locator("#lname")).toHaveAttribute("aria-describedby", "lname-error-message");
 		await expect(page.locator("//*[@id='lname']//parent::div")).toHaveClass(/is--invalid/);
 
+	});
+
+	test('Should add a client side error message container as the next sibling of the associated label', async ({ page }) => {	
+		await page.goto('/mini-no-server-errors.html');
+		await page.click("#submitTest");
+		const errorContainer = page.locator("[for='fname'] + *");
+		expect(errorContainer).not.toBeNull();
+		await expect(errorContainer).toHaveClass(new RegExp(`^${DOTNET_CLASSNAMES.ERROR}$`));
+		await expect(errorContainer).toHaveAttribute("id", "fname-error-message");
 	});
 
 	test('Should add an error message text node to a serverErrorNode, and attributes to reflect invalidity', async ({ page }) => {	

@@ -3,6 +3,13 @@ import { isValidDate, isFutureDate, isPastDate } from '../../../src/lib/plugins/
 
 {
     const formToValidate = document.querySelector('.js-validate');
+    const resetBtn = document.getElementById('resetBtn');
+
+    if(resetBtn) resetBtn.addEventListener('click', () => {     
+        const event = new Event('reset');
+        formToValidate.dispatchEvent(event);
+    });
+    
     const [ validator ] = validate(formToValidate, {
         preSubmitHook: () => {
             const hiddenCheck = document.createElement('input');
