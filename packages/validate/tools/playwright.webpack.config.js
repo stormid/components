@@ -3,6 +3,6 @@ const baseConfig = require('./webpack.config');
 module.exports = {
     ...baseConfig,
     devServer: {
-        port: 8090
+        port: 8092
     }
 };
