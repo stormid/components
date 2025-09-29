@@ -7,7 +7,19 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Validate > Accessibility > Axe', { tag: '@reduced'}, () => {
 	test('Should not have any automatically detectable accessibility issues', async ({ page }) => {	
-		const accessibilityScanResults = await new AxeBuilder({ page }).analyze(); 
+		let accessibilityScanResults = await new AxeBuilder({ page }).analyze(); 
+		expect(accessibilityScanResults.violations).toEqual([]);
+
+		await page.click('#submitTest');
+		accessibilityScanResults = await new AxeBuilder({ page }).analyze(); 
+		expect(accessibilityScanResults.violations).toEqual([]);
+
+		await page.goto('/mini-no-server-errors.html');
+		accessibilityScanResults = await new AxeBuilder({ page }).analyze(); 
+		expect(accessibilityScanResults.violations).toEqual([]);
+
+		await page.click('#submitTest');
+		accessibilityScanResults = await new AxeBuilder({ page }).analyze(); 
 		expect(accessibilityScanResults.violations).toEqual([]);
 	});
 });
