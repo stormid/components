@@ -642,6 +642,16 @@
                     <input data-val="true" data-val-required="Email must not be empty"
                         data-val-email="{{value}} is not a valid email address" class="input" type="email" id="email"
                         autocomplete="email" name="email" />
+                </div>
+                <div class="form-row">
+                    <label for="selectexample" class="label">Select an option</label>
+                    <span class="error-message" data-valmsg-for="selectexample"></span>
+                    <select data-val="true" data-val-required="You must select an option" class="select input" id="selectexample" name="selectexample">
+                        <option value="">Please select</option>
+                        <option value="option1">Option 1</option>
+                        <option value="option2">Option 2</option>
+                    </select>
+                </div>
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="legend">Your preferences</legend>

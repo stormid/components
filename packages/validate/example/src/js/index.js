@@ -35,4 +35,6 @@ import { isValidDate, isFutureDate, isPastDate } from '../../../src/lib/plugins/
             [ document.getElementById('dateDay'), document.getElementById('dateMonth'), document.getElementById('dateYear') ] 
         );
     }
+
+    window.validator = validator;
 };
