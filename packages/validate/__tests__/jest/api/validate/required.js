@@ -23,16 +23,11 @@ describe('Validate > Integration > api > validate > required', () => {
                 type="text" />
         </form>`;
         const input = document.getElementById('group1-1');
-        const label = document.getElementById('group1-1-label');
         const validator = validate('form')[0];
         const validityState = await validator.validate();
-        // //validityState
         expect(validityState).toEqual(false);
-        // //realtimeValidation start
         expect(validator.getState().realTimeValidation).toEqual(true);
-        // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
-        //render error message
         expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual(defaults.messages.required());
     });
 
@@ -49,7 +44,6 @@ describe('Validate > Integration > api > validate > required', () => {
         </form>`;
         const validator = validate('form')[0];
         const validityState = await validator.validate();
-        // //validityState
         expect(validityState).toEqual(true);
     });
 
@@ -69,13 +63,9 @@ describe('Validate > Integration > api > validate > required', () => {
         const input = document.getElementById('group2');
         const validator = validate('form')[0];
         const validityState = await validator.validate();
-        //validityState
         expect(validityState).toEqual(false);
-        //realtimeValidation start
         expect(validator.getState().realTimeValidation).toEqual(true);
-        //focus on firstinvalid node
         expect(document.activeElement).toEqual(input);
-        //render error message
         expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Required error message');
         
     });
@@ -94,7 +84,6 @@ describe('Validate > Integration > api > validate > required', () => {
         </form>`;
         const validator = validate('form')[0];
         const validityState = await validator.validate();
-        // //validityState
         expect(validityState).toEqual(true);
     });
 });

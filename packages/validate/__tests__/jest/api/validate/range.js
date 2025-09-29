@@ -18,16 +18,11 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 type="text">
         </form>`;
         const input = document.querySelector('#group1');
-        const label = document.getElementById('group1-label');
         const validator = validate('form')[0];
         const validityState = await validator.validate();
-        // //validityState
         expect(validityState).toEqual(false);
-        // //realtimeValidation start
         expect(validator.getState().realTimeValidation).toEqual(true);
-        // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
-        //render error message
         expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Range error message');
     });
 
@@ -63,16 +58,11 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 type="text">
         </form>`;
         const input = document.querySelector('#group1');
-        const label = document.getElementById('group1-label');
         const validator = validate('form')[0];
         const validityState = await validator.validate();
-        // //validityState
         expect(validityState).toEqual(false);
-        // //realtimeValidation start
         expect(validator.getState().realTimeValidation).toEqual(true);
-        // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
-        //render error message
         expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Range error message');
     });
 
@@ -108,16 +98,11 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 type="text">
         </form>`;
         const input = document.querySelector('#group1');
-        const label = document.getElementById('group1-label');
         const validator = validate('form')[0];
         const validityState = await validator.validate();
-        // //validityState
         expect(validityState).toEqual(false);
-        // //realtimeValidation start
         expect(validator.getState().realTimeValidation).toEqual(true);
-        // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
-        //render error message
         expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Range error message');
     });
 

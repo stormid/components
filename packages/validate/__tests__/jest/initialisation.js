@@ -4,7 +4,6 @@ import { getSelection } from '../../src/lib/validator/utils';
 
 let validators;
 const setUpDOM = () => {
-    // Set up our document body
     document.body.innerHTML = `<form class="form" method="post" action="">
         <label for="group1-1">Text (required, min 2 characters, max 8 characters)</label>
         <input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="${defaults.messages.required()}" data-val-length-min="2" data-val-length-max="8" type="text">

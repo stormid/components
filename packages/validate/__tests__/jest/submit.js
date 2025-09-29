@@ -1,7 +1,6 @@
 import validate from '../../src';
 
 describe('Validate > Integration > Submit', () => {
-
     it('should call the submit function if validation passes', async () => {
         expect.assertions(2);
         document.body.innerHTML = `<form method="post" action="">
@@ -19,5 +18,4 @@ describe('Validate > Integration > Submit', () => {
         expect(validator.getState().settings.submit).toEqual(submit);
         expect(submit).toBeCalled();
     });
-
 });

@@ -1,13 +1,8 @@
 const { test, expect } = require('@playwright/test');
 import AxeBuilder from '@axe-core/playwright';
 
-let tabKey;
-
-test.beforeEach(async ({ page }, testInfo) => {
+test.beforeEach(async ({ page }) => {
 	await page.goto('/');
-	tabKey = testInfo.project.use.defaultBrowserType === 'webkit'
-			? "Alt+Tab"
-			: "Tab";
 });
 
 test.describe('Validate > Accessibility > Axe', { tag: '@reduced'}, () => {

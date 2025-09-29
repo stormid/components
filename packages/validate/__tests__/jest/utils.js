@@ -24,6 +24,7 @@ describe('Validate > Unit > Utils > isCheckable', () => {
         const field = document.getElementById('radio');
         expect(isCheckable(field)).toEqual(true);
     });
+
     it('should return true if the field is of type checkbox', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -32,6 +33,7 @@ describe('Validate > Unit > Utils > isCheckable', () => {
         const field = document.getElementById('checkbox');
         expect(isCheckable(field)).toEqual(true);
     });
+
     it('should return false if the field is not of type radio or checkbox', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -51,6 +53,7 @@ describe('Validate > Unit > Utils > isFile', () => {
         const field = document.getElementById('file');
         expect(isFile(field)).toEqual(true);
     });
+
     it('should return false if the field is not of type file', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -72,6 +75,7 @@ describe('Validate > Unit > Utils > isSelect', () => {
         const field = document.getElementById('select');
         expect(isSelect(field)).toEqual(true);
     });
+
     it('should return false if the field is not a select', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -91,6 +95,7 @@ describe('Validate > Unit > Utils > isSubmitButton', () => {
         const node = document.getElementById('btn');
         expect(isSubmitButton(node)).toEqual(true);
     });
+
     it('should return true if the node is a button', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -99,6 +104,7 @@ describe('Validate > Unit > Utils > isSubmitButton', () => {
         const node = document.getElementById('btn');
         expect(isSubmitButton(node)).toEqual(true);
     });
+
     it('should return false if the node is not a button and not of type submit', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -118,6 +124,7 @@ describe('Validate > Unit > Utils > hasNameValue', () => {
         const node = document.getElementById('field');
         expect(hasNameValue(node)).toEqual(true);
     });
+
     it('should return false if the node has no name attribute', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -126,6 +133,7 @@ describe('Validate > Unit > Utils > hasNameValue', () => {
         const node = document.getElementById('field');
         expect(hasNameValue(node)).toEqual(false);
     });
+
     it('should return false if the node has no value attribute', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -144,6 +152,7 @@ describe('Validate > Unit > Utils > isRequired', () => {
         };
         expect(isRequired(group)).toEqual(true);
     });
+
     it('should return false if the group does not contain a required validator', async () => {
         expect.assertions(1);
         const group = {
@@ -161,6 +170,7 @@ describe('Validate > Unit > Utils > isHidden', () => {
 
         expect(isHidden(field)).toEqual(true);
     });
+
     it('should return false if the field is not of type hidden', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input name="fields" id="field-1" type="text" />`;
@@ -180,6 +190,7 @@ describe('Validate > Unit > Utils > hasValue', () => {
 
         expect(hasValue(field)).toEqual(true);
     });
+
     it('should return false if the field has an empty value', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -189,6 +200,7 @@ describe('Validate > Unit > Utils > hasValue', () => {
 
         expect(hasValue(field)).toEqual(false);
     });
+
     it('should return false if the field has no value attribute', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -200,7 +212,6 @@ describe('Validate > Unit > Utils > hasValue', () => {
     });
 });
 
-//groupValueReducer
 describe('Validate > Unit > Utils > groupValueReducer', () => {
     it('should return the String value given an input with a value', async () => {
         expect.assertions(1);
@@ -210,6 +221,7 @@ describe('Validate > Unit > Utils > groupValueReducer', () => {
         const field = document.querySelector('#field');
         expect(groupValueReducer('', field)).toEqual('Test value');
     });
+
     it('should trim String value given an input with a value whitespace', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -218,6 +230,7 @@ describe('Validate > Unit > Utils > groupValueReducer', () => {
         const field = document.querySelector('#field');
         expect(groupValueReducer('', field)).toEqual('Test value');
     });
+
     it('should return an empty String given an input without a value and an initial empty string', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -226,6 +239,7 @@ describe('Validate > Unit > Utils > groupValueReducer', () => {
         const field = document.querySelector('#field');
         expect(groupValueReducer('', field)).toEqual('');
     });
+
     it('should return an Array containing a String value given a checkable input with a value', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -234,6 +248,7 @@ describe('Validate > Unit > Utils > groupValueReducer', () => {
         const field = document.querySelector('#field');
         expect(groupValueReducer('', field)).toEqual(['Test value']);
     });
+
     it('should return an Array containing a String value given a checkable input with a value and an initial Array', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -242,6 +257,7 @@ describe('Validate > Unit > Utils > groupValueReducer', () => {
         const field = document.querySelector('#field');
         expect(groupValueReducer([], field)).toEqual(['Test value']);
     });
+    
     it('should return an empty String given a checkable input that is not checked and an initial empty string', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -252,7 +268,6 @@ describe('Validate > Unit > Utils > groupValueReducer', () => {
     });
 });
 
-// resolveGetParams
 describe('Validate > Unit > Utils > resolveGetParams', () => {
     it('should return a url param String name/value pair given an array containing a single array of a single input', async () => {
         expect.assertions(1);
@@ -262,6 +277,7 @@ describe('Validate > Unit > Utils > resolveGetParams', () => {
         const fields = [document.querySelector('#field')];
         expect(resolveGetParams([fields])).toEqual('field=Test');
     });
+
     it('should return a url param String name/value pair given an array containing multiple arrays of single inputs', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -272,6 +288,7 @@ describe('Validate > Unit > Utils > resolveGetParams', () => {
         const field2 = [document.querySelector('#field2')];
         expect(resolveGetParams([field1, field2])).toEqual('field1=One&field2=Two');
     });
+
     it('should return a uri-encoded url param String name/value pair given an array containing multiple arrays of single inputs', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -284,7 +301,6 @@ describe('Validate > Unit > Utils > resolveGetParams', () => {
     });
 });
 
-// domNodesFromCommaList
 describe('Validate > Unit > Utils > domNodesFromCommaList', () => {
     it('should return an array of arrays of nodes matching each name in a comma separated String', async () => {
         expect.assertions(1);
@@ -296,6 +312,7 @@ describe('Validate > Unit > Utils > domNodesFromCommaList', () => {
         const field2s = document.querySelector('#field2');
         expect(domNodesFromCommaList('field1,field2')).toEqual([[field1s], [field2s]]);
     });
+
     it('should return an array of empty arrays for a comma separated String that does not select any node name attributes', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -306,17 +323,12 @@ describe('Validate > Unit > Utils > domNodesFromCommaList', () => {
     });
 });
 
-// escapeAttributeValue
 describe('Validate > Unit > Utils > escapeAttributeValue', () => {
     it('should escape special characters matching /([!"#$%&\'()*+,./:;<=>?@[\\]^`{|}~] in a String', async () => {
         expect(escapeAttributeValue('<script>alert("Boo")</script>')).toEqual('\\<script\\>alert\\(\\"Boo\\"\\)\\<\\/script\\>');
     });
 });
 
-//getStatePrefix
-//appendStatePrefix
-
-//extractValueFromGroup // -> see groupValueReducer
 describe('Validate > Unit > Utils > extractValueFromGroup', () => {
     it('should return the String value given a group with a field array containing an input with a value', async () => {
         expect.assertions(1);
@@ -326,6 +338,7 @@ describe('Validate > Unit > Utils > extractValueFromGroup', () => {
         const group = { fields: [document.querySelector('#field')] };
         expect(extractValueFromGroup(group)).toEqual('Test value');
     });
+
     it('should return the String value given a field array containing an input with a value', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form>
@@ -336,10 +349,7 @@ describe('Validate > Unit > Utils > extractValueFromGroup', () => {
     });
 });
 
-//fetch
-
 describe('Validate > Unit > Utils > findErrors', () => {
-
     it('Should find serverErrorNodes and convert string error messages to DOM nodes', async () => {
         document.body.innerHTML = `<form class="form" method="post" action="">
             <label id="test-label" for="group1">Text</label>
@@ -356,5 +366,4 @@ describe('Validate > Unit > Utils > findErrors', () => {
         const errors = findErrors(groups);
         expect(errors.group1).toEqual(serverErrorNode.textContent);
     });
-
 });

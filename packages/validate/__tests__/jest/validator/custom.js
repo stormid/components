@@ -1,4 +1,4 @@
-import { validate } from '../../../../src/lib/validator';
+import { validate } from '../../../src/lib/validator';
 
 describe('Validate > Integration > validator > custom', () => {
 

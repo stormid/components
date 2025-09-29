@@ -5,7 +5,7 @@ let Store;
 beforeAll(() => {
     Store = createStore();
 });
-//createStore
+
 describe('Validate > Unit > Store > createStore', () => {
     it('should create a store object with update and get functions', async () => {
         expect.assertions(5);
@@ -17,7 +17,6 @@ describe('Validate > Unit > Store > createStore', () => {
     });
 });
 
-//getState
 describe('Validate > Unit > Store > getState', () => {
     it('should return the state object', async () => {
         expect.assertions(1);
@@ -25,7 +24,6 @@ describe('Validate > Unit > Store > getState', () => {
     });
 });
 
-//update
 describe('Validate > Unit > Store > update', () => {
     it('should update state using reducers and nextState payload', async () => {
         expect.assertions(1);

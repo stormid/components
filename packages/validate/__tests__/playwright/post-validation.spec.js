@@ -1,9 +1,7 @@
 const { test, expect } = require("@playwright/test");
-let tabKey;
 
-test.beforeEach(async ({ page }, testInfo) => {
+test.beforeEach(async ({ page }) => {
 	await page.goto("/");
-	tabKey = testInfo.project.use.defaultBrowserType === "webkit" ? "Alt+Tab" : "Tab";
 });
 
 test.describe("Validate > Post-validation", { tag: "@all" }, () => {

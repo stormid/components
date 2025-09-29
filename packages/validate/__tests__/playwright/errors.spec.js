@@ -1,12 +1,8 @@
 const { test, expect } = require('@playwright/test');
 import { DOTNET_CLASSNAMES } from '../../src/lib/constants';
-let tabKey;
 
-test.beforeEach(async ({ page }, testInfo) => {
+test.beforeEach(async ({ page }) => {
 	await page.goto('/');
-	tabKey = testInfo.project.use.defaultBrowserType === 'webkit'
-			? "Alt+Tab"
-			: "Tab";
 });
 
 

@@ -15,12 +15,10 @@ describe('Validate  > Reset', () => {
         </form>`;
        
         const [ validator ] = validate('.form');
-        //Validate and set errors in state and DOM
         await validator.validate();
         expect(validator.getState().groups.group1.valid).toEqual(false);
         expect(validator.getState().groups.group2.valid).toEqual(false);
 
-        //reset to remove errors from state and DOM
         validator.getState().form.dispatchEvent(new Event('reset'));
         expect(validator.getState().groups.group1.valid).toEqual(true);
         expect(validator.getState().groups.group2.valid).toEqual(true);

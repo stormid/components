@@ -1,5 +1,4 @@
 const { test, expect } = require('@playwright/test');
-const exp = require('constants');
 
 test.describe('Validate > Realtime validation', { tag: '@all'}, () => {
 	test('Should start real-time validation after first form submission', async ({ page }) => {	

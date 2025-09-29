@@ -5,7 +5,6 @@ import {
 } from '../../src/lib/dom';
 import { DOTNET_CLASSNAMES } from '../../src/lib/constants';
 
-//clearError
 describe('Validate > Unit > DOM > clearError', () => {
     
     it('should delete the errorNode for the group from state', async () => {
@@ -27,7 +26,6 @@ describe('Validate > Unit > DOM > clearError', () => {
                 group1: document.getElementById('test-error-node')
             }
         };
-        //all side effects to test
         clearError('group1')(mockState);
         expect(mockState.errors.group1).toBeUndefined();
     });
@@ -41,7 +39,6 @@ describe('Validate > Unit > DOM > clearError', () => {
                 <span id="test-server-error-node" data-valmsg-for="group1" class="${DOTNET_CLASSNAMES.ERROR}"></span>
             </div>
         </form>`;
-        //have to create a text node and append it to the serverError node to test fn this in isolation
         const errorNode = document.createTextNode('This field is required');
         const serverErrorNode = document.getElementById('test-server-error-node');
         serverErrorNode.appendChild(errorNode);
@@ -62,7 +59,6 @@ describe('Validate > Unit > DOM > clearError', () => {
     });
 });
 
-//clearErrors
 describe('Validate > Unit > DOM > clearErrors', () => {
     
     it('Should remove all errors from state for valid groups', async () => {

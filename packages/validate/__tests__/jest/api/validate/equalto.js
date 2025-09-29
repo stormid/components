@@ -22,16 +22,11 @@ describe('Validate > Integration >  api > validate > equalto', () => {
                 name="DoubleConfirmEmail"
                 value="not.the.same.email.address@stormid.com" /></form>`;
         const input = document.querySelector('#DoubleConfirmEmail');
-        // const label = document.getElementById('DoubleConfirmEmail-label');
         const validator = library('form')[0];
         const validityState = await validator.validate();
-        // //validityState
         expect(validityState).toEqual(false);
-        // //realtimeValidation start
         expect(validator.getState().realTimeValidation).toEqual(true);
-        // //focus on first invalid node
         expect(document.activeElement).toEqual(input);
-        //render error message
         expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Equalto error message');
     });
 

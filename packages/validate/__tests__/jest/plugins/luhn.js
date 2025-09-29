@@ -109,15 +109,6 @@ describe('Validate > Integration > Plugins > Luhn', () => {
             const validityState = await validator.validate();
             expect(validityState).toEqual(true);
         }
-
-        // Alternative implementation of the test... 
-        // const validityStates = await Promise.all(Object.values(formats).map(format => async () => {
-        //     field.value = formats[format];
-        //     return await validator.validate();
-        // }));
-
-        // const aggregage = validityStates.reduce((acc, curr) => !curr ? false : acc, true);
-        // expect(aggregage).toEqual(true);
     });
 
 });

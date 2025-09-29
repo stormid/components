@@ -1,7 +1,6 @@
 import mock from 'xhr-mock';
 import Methods from '../../src/lib/validator/methods';
 
-//required
 describe('Validate > Unit > Validator > methods > required', () => {
 
     it('should return false for group containing a single empty field', () => {
@@ -36,10 +35,7 @@ describe('Validate > Unit > Validator > methods > required', () => {
 
 });
 
-
-//email
 describe('Validate > Unit > Validator > methods > email', () => {
-
     it('should return true for group with no value that is not required', () => {
         document.body.innerHTML = `<form><input type="email" name="field" id="field" value="" /></form>`;
         const group = {
@@ -69,10 +65,7 @@ describe('Validate > Unit > Validator > methods > email', () => {
 
 });
 
-
-//url
 describe('Validate > Unit > Validator > methods > url', () => {
-
     it('should return true for group with no value that is not required', () => {
         document.body.innerHTML = `<form><input type="url" name="field" id="field" value="" /></form>`;
         const group = {
@@ -102,9 +95,7 @@ describe('Validate > Unit > Validator > methods > url', () => {
     
 });
 
-//dateISO
 describe('Validate > Unit > Validator > methods > dateISO', () => {
-
     it('should return true for group with no value that is not required', () => {
         document.body.innerHTML = `<form><input type="text" name="field" id="field" value="" /></form>`;
         const group = {
@@ -134,9 +125,7 @@ describe('Validate > Unit > Validator > methods > dateISO', () => {
     
 });
 
-//number
 describe('Validate > Unit > Validator > methods > number', () => {
-
     it('should return true for group with no value that is not required', () => {
         document.body.innerHTML = `<form><input type="text" name="field" id="field" value="" /></form>`;
         const group = {
@@ -180,10 +169,7 @@ describe('Validate > Unit > Validator > methods > number', () => {
     
 });
 
-
-//digits
 describe('Validate > Unit > Validator > methods > digits', () => {
-
     it('should return true for group with no value that is not required', () => {
         document.body.innerHTML = `<form><input type="text" name="field" id="field" value="" /></form>`;
         const group = {
@@ -231,8 +217,6 @@ describe('Validate > Unit > Validator > methods > digits', () => {
     
 });
 
-
-//minlength
 describe('Validate > Unit > Validator > methods > minlength', () => {
 
     it('should return true for group with no value that is not required', () => {
@@ -279,9 +263,7 @@ describe('Validate > Unit > Validator > methods > minlength', () => {
     
 });
 
-//maxlength
 describe('Validate > Unit > Validator > methods > maxlength', () => {
-
     it('should return true for group with no value that is not required', () => {
         document.body.innerHTML = `<form><input type="text" name="field" id="field" value="" /></form>`;
         const group = {
@@ -326,9 +308,7 @@ describe('Validate > Unit > Validator > methods > maxlength', () => {
     
 });
 
-//equalto
 describe('Validate > Unit > Validator > methods > equalto', () => {
-
     it('should return true for groups with no value', () => {
         document.body.innerHTML = `<form>
             <input type="text" name="field1" id="field1" value="" />
@@ -382,8 +362,6 @@ describe('Validate > Unit > Validator > methods > equalto', () => {
     
 });
 
-
-//pattern
 describe('Validate > Unit > Validator > methods > pattern', () => {
 
     it('should return true for group with no value that is not required', () => {
@@ -430,8 +408,6 @@ describe('Validate > Unit > Validator > methods > pattern', () => {
     
 });
 
-
-//regex
 describe('Validate > Unit > Validator > methods > regex', () => {
 
     it('should return true for group with no value that is not required', () => {
@@ -478,9 +454,7 @@ describe('Validate > Unit > Validator > methods > regex', () => {
     
 });
 
-//min
 describe('Validate > Unit > Validator > methods > min', () => {
-
     it('should return true for group with no value that is not required', () => {
         document.body.innerHTML = `<form><input type="number" name="field" id="field" value="" /></form>`;
         const group = {
@@ -525,9 +499,7 @@ describe('Validate > Unit > Validator > methods > min', () => {
     
 });
 
-//max
 describe('Validate > Unit > Validator > methods > max', () => {
-
     it('should return true for group with no value that is not required', () => {
         document.body.innerHTML = `<form><input type="number" name="field" id="field" value="" /></form>`;
         const group = {
@@ -572,10 +544,7 @@ describe('Validate > Unit > Validator > methods > max', () => {
     
 });
 
-
-//stringlength
 describe('Validate > Unit > Validator > methods > stringlength', () => {
-
     it('should return true for group with no value that is not required', () => {
         document.body.innerHTML = `<form><input type="text" name="field" id="field" value="" /></form>`;
         const group = {
@@ -620,10 +589,7 @@ describe('Validate > Unit > Validator > methods > stringlength', () => {
     
 });
 
-
-//length
 describe('Validate > Unit > Validator > methods > length', () => {
-
     it('should return true for group with no value that is not required', () => {
         document.body.innerHTML = `<form><input type="text" name="field" id="field" value="" /></form>`;
         const group = {
@@ -682,10 +648,7 @@ describe('Validate > Unit > Validator > methods > length', () => {
     
 });
 
-
-//range
 describe('Validate > Unit > Validator > methods > range', () => {
-
     it('should return true for group with no value that is not required', () => {
         document.body.innerHTML = `<form><input type="number" name="field" id="field" value="" /></form>`;
         const group = {
@@ -744,16 +707,11 @@ describe('Validate > Unit > Validator > methods > range', () => {
     
 });
 
-
-//remote
 describe('Validate > Unit > Validator > methods > remote', () => {
-
     beforeEach(() => mock.setup());
-
     afterEach(() => mock.teardown());
 
     it('should return false for when the remote validation returns \'false\'', async () => {
-
         mock.post('/api/validate', {
             status: 201,
             body: 'false'
@@ -772,12 +730,10 @@ describe('Validate > Unit > Validator > methods > remote', () => {
     });
 
     it('should return false for when the remote validation returns "false"', async () => {
-
         mock.post('/api/validate', {
             status: 201,
             body: 'true'
         });
-
         document.body.innerHTML = `<form><input type="number" name="field" id="field" value="" /></form>`;
         const group = {
             validators: [],
@@ -789,11 +745,8 @@ describe('Validate > Unit > Validator > methods > remote', () => {
         const res = await Methods.remote(group, params);
         expect(res).toEqual('true');
     });
-
-
 });
 
-//custom
 describe('Validate > Unit > Validator > methods > custom', () => {
     const customValidator = (value, fields) => value === 'Contrived validator';
 
@@ -824,5 +777,4 @@ describe('Validate > Unit > Validator > methods > custom', () => {
         };
         expect(Methods.custom(customValidator, group)).toEqual(true);
     });
-
 });

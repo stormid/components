@@ -1,10 +1,9 @@
-import validate from "../../src";
-import { GROUP_ATTRIBUTE, DOTNET_CLASSNAMES } from "../../src/lib/constants";
-import defaults from "../../src/lib/defaults";
+import validate from "../../../src";
+import { GROUP_ATTRIBUTE, DOTNET_CLASSNAMES } from "../../../src/lib/constants";
+import defaults from "../../../src/lib/defaults";
 
 describe("Validate > Integration > API > addGroup", () => {
 	it("should add a validation group", async () => {
-		// expect.assertions(6);
 		document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
             <input
@@ -13,7 +12,6 @@ describe("Validate > Integration > API > addGroup", () => {
                 value=""
                 type="text" />
         </form>`;
-		// const form = document.querySelector('.form');
 		const input = document.querySelector("#group1-1");
 		const validator = validate("form")[0];
 
@@ -52,7 +50,6 @@ describe("Validate > Integration > API > addGroup", () => {
 
 describe("Validate > Integration > API > removeGroup", () => {
 	it("should remove a validation group", async () => {
-		// expect.assertions(6);
 		document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
             <input
@@ -81,7 +78,6 @@ describe("Validate > Integration > API > removeGroup", () => {
 
 describe("Validate > Integration > API > validateGroup", () => {
 	it("should validate an individual validation group when called", async () => {
-		// expect.assertions(6);
 		document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
             <input
@@ -91,7 +87,6 @@ describe("Validate > Integration > API > validateGroup", () => {
                 value=""
                 type="text" />
         </form>`;
-		// const form = document.querySelector('.form');
 		const input = document.querySelector("#group1-1");
 		const validator = validate("form")[0];
 		await validator.validateGroup("group1");
@@ -106,7 +101,6 @@ describe("Validate > Integration > API > validateGroup", () => {
 
 describe("Validate > Integration > API > addMethod", () => {
 	it("should add a validation method to a group", async () => {
-		// expect.assertions(6);
 		document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
             <input
@@ -142,7 +136,6 @@ describe("Validate > Integration > API > addMethod", () => {
 	});
 
 	it("should not add a validation method if parameters are missing", async () => {
-		// expect.assertions(6);
 		document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
             <input
@@ -180,7 +173,6 @@ describe("Validate > Integration > API > addMethod", () => {
 	});
 
 	it("should not add a validation method if fields cannot be found", async () => {
-		// expect.assertions(6);
 		document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
             <input

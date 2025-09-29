@@ -9,7 +9,6 @@ import {
 } from '../../src/lib/validator';
 import defaults from '../../src/lib/defaults';
 
-//resolveParam
 describe('Validate > Unit > Validator > resolveParam', () => {
     it('should return a param Object indexed by second part of param name and String value', async () => {
         expect.assertions(1);
@@ -27,6 +26,7 @@ describe('Validate > Unit > Validator > resolveParam', () => {
         const resolved = resolveParam(param, input);
         expect(resolved).toEqual({ min: '2' });
     });
+
     it('should return a param Object indexed by second part of param name, and an array of arrays of DOMNodes', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input data-val="true" 
@@ -54,13 +54,12 @@ describe('Validate > Unit > Validator > resolveParam', () => {
     });
 });
 
-
-//extractParams
 describe('Validate > Unit > Validator > extractParams', () => {
     it('should return false when supplied an unknown .NET MVC adaptors/validation method', async () => {
         expect.assertions(1);
         expect(extractParams(null, 'unknown-adaptor')).toEqual(false);
     });
+
     it('should return an Object containing all parameters for matched adaptor/validation method on an input', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<input
@@ -79,7 +78,6 @@ describe('Validate > Unit > Validator > extractParams', () => {
     });
 });
 
-//extractDataValValidators
 describe('Validate > Unit > Validator > extractDataValValidators', () => {
     it('should return an empty array if a given node does not contain data-attributes defining known validators', async () => {
         expect.assertions(1);
@@ -110,7 +108,6 @@ describe('Validate > Unit > Validator > extractDataValValidators', () => {
     });
 });
 
-//extractAttrValidators
 describe('Validate > Unit > Validator > extractAttrValidators', () => {
     it('should return an empty array if a given node does not contain HTML5 constraint validation attributes', async () => {
         expect.assertions(1);
@@ -153,14 +150,6 @@ describe('Validate > Unit > Validator > extractAttrValidators', () => {
     });
 });
 
-//normaliseValidators --> see integration tests
-
-
-//validate --> see integration validate tests
-
-//assembleValidationGroup -> see integration assembleValidationGroup tests
-
-//extractErrorMessage
 describe('Validate > Unit > Validator > extractErrorMessage', () => {
     it('should return an error message given a validator containing a message', async () => {
         expect.assertions(1);
@@ -194,13 +183,6 @@ describe('Validate > Unit > Validator > extractErrorMessage', () => {
     });
 
 });
-
-
-// To do
-// can do better here, factory > validate function in need of refactor
-//
-//extractErrorMessage
-
 
 describe('Validate > Unit > Validator > removeUnvalidatableGroups', () => {
     it('should remove groups that do not contain validators from the array of vaidationGroups', async () => {
@@ -239,7 +221,6 @@ describe('Validate > Unit > Validator > removeUnvalidatableGroups', () => {
                 valid: false
             }
         });
-    
     });
 
     it('should remove groups with all hidden fields from the array of validationGroups', async () => {
@@ -263,13 +244,10 @@ describe('Validate > Unit > Validator > removeUnvalidatableGroups', () => {
                 valid: false
             }
         };
-
         expect(removeUnvalidatableGroups(groups)).toEqual({});
     });
-
 });
 
-//getInitialState
 describe('Validate > Unit > Validator > getInitialState', () => {
     it('should return a state object containing only groups that are validatable', async () => {
         expect.assertions(1);
@@ -283,7 +261,6 @@ describe('Validate > Unit > Validator > getInitialState', () => {
             name="group2"
             type="text"></form>`;
         const input1 = document.querySelector('#group1');
-        // const input2 = document.querySelector('#group2');
         const form = document.querySelector('form');
 
         expect(getInitialState(form, {})).toEqual({
@@ -301,6 +278,7 @@ describe('Validate > Unit > Validator > getInitialState', () => {
             }
         });
     });
+    
     it('should return a state object containing any settings passed to init', async () => {
         expect.assertions(1);
         document.body.innerHTML = `<form><input

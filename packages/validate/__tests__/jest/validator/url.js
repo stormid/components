@@ -1,4 +1,4 @@
-import { validate, assembleValidationGroup } from '../../../../src/lib/validator';
+import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
 describe('Validate > Integration > validator > url', () => {
     //html5 spec regex approximation:
