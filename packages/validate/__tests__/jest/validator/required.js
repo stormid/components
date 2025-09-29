@@ -1,4 +1,4 @@
-import { validate, assembleValidationGroup } from '../../../../src/lib/validator';
+import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
 describe('Validate > Integration > assembleValidationGroup > required', () => {
     it('should return the validation group for HTML5 required validator', async () => {

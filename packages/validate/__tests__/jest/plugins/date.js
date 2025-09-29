@@ -1,5 +1,5 @@
-import validate from '../../../../src';
-import { isValidDate, isFutureDate, isPastDate } from '../../../../src/lib/plugins/methods/date';
+import validate from '../../../src';
+import { isValidDate, isFutureDate, isPastDate } from '../../../src/lib/plugins/methods/date';
 
 describe('Validate > Integration > Plugins > Valid Date', () => {
 

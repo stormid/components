@@ -1,15 +1,8 @@
-import validate from '../../../../../src';
-import { DOTNET_CLASSNAMES } from '../../../../../src/lib/constants';
-import defaults from '../../../../../src/lib/defaults';
+import validate from '../../../../src';
+import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
+import defaults from '../../../../src/lib/defaults';
 
 describe('Validate > Integration > api > validate > required', () => {
-    //return boolean validityState
-    //start realtimevalidation
-    //render errors
-    //focus on first invalid field
-
-    //return boolean validityState
-    //submit form
 
     it('should validate a form based on the HTML5 required validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {
         expect.assertions(4);

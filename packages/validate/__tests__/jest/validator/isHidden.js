@@ -1,4 +1,4 @@
-import { isFormValid, getValidityState, assembleValidationGroup } from '../../../../src/lib/validator';
+import { isFormValid, getValidityState, assembleValidationGroup } from '../../../src/lib/validator';
 
 describe('Validate > Integration > assembleValidationGroup > With hidden element', () => {
     it('should return the validation group minus hidden inputs', async () => {

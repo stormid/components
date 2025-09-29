@@ -1,6 +1,6 @@
-import validate from '../../../../../src';
-import { DOTNET_CLASSNAMES } from '../../../../../src/lib/constants';
-import defaults from '../../../../../src/lib/defaults';
+import validate from '../../../../src';
+import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
+import defaults from '../../../../src/lib/defaults';
 
 describe('Validate > Integration >  api > validate > email', () => {
     it('should validate a form based on the HTML5 email validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if a field is invalid', async () => {

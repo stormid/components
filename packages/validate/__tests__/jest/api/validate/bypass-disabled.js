@@ -1,4 +1,4 @@
-import validate from '../../../../../src';
+import validate from '../../../../src';
 
 describe('Validate > Integration > api > validate > bypass disabled fields', () => {
 

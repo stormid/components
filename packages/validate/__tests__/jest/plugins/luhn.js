@@ -1,5 +1,5 @@
-import validate from '../../../../src';
-import luhn from '../../../../src/lib/plugins/methods/luhn';
+import validate from '../../../src';
+import luhn from '../../../src/lib/plugins/methods/luhn';
 
 describe('Validate > Integration > Plugins > Luhn', () => {
 

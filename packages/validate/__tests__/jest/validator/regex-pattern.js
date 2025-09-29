@@ -1,4 +1,4 @@
-import { validate, assembleValidationGroup } from '../../../../src/lib/validator';
+import { validate, assembleValidationGroup } from '../../../src/lib/validator';
 
 describe('Validate > Integration > validator > regex/pattern', () => {
     it('should return the validityState false for HTML5 pattern validator with non-matching value', async () => {

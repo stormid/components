@@ -1,6 +1,6 @@
-import validate from '../../../../../src';
-import { DOTNET_CLASSNAMES } from '../../../../../src/lib/constants';
-import defaults from '../../../../../src/lib/defaults';
+import validate from '../../../../src';
+import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
+import defaults from '../../../../src/lib/defaults';
 
 describe('Validate > Integration >  api > validate > url', () => {
     //html5 spec regex approximation:
@@ -60,9 +60,7 @@ describe('Validate > Integration >  api > validate > url', () => {
         expect(validator.getState().realTimeValidation).toEqual(true);
         expect(document.activeElement).toEqual(input);
         expect(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent).toEqual('Url error message');
-        
     });
-
 
     it('should validate a form based on the data-val url validator returning true if valid', async () => {
         expect.assertions(1);

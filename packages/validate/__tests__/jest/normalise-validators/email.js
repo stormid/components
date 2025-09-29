@@ -1,4 +1,4 @@
-import { normaliseValidators } from '../../../../src/lib/validator';
+import { normaliseValidators } from '../../../src/lib/validator';
 
 describe('Validate > Integration > normalise-vaidators > email', () => {
     

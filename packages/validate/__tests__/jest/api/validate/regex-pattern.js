@@ -1,6 +1,6 @@
-import validate from '../../../../../src';
-import { DOTNET_CLASSNAMES } from '../../../../../src/lib/constants';
-import defaults from '../../../../../src/lib/defaults';
+import validate from '../../../../src';
+import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
+import defaults from '../../../../src/lib/defaults';
 
 describe('Validate > Integration > api > validate > regex/pattern', () => {
     it('should validate a form based on the HTML5 pattern validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if the value does not match', async () => {

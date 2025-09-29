@@ -1,4 +1,4 @@
-import { normaliseValidators } from '../../../../src/lib/validator';
+import { normaliseValidators } from '../../../src/lib/validator';
 
 describe('Validate > Integration > normalise-validators > url', () => {
     it('should return the correct validation model for HTML5 url', async () => {

@@ -1,6 +1,6 @@
-import validate from '../../../../../src';
-import { DOTNET_CLASSNAMES } from '../../../../../src/lib/constants';
-import defaults from '../../../../../src/lib/defaults';
+import validate from '../../../../src';
+import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
+import defaults from '../../../../src/lib/defaults';
 
 describe('Validate > Integration > api > validate > maxlength', () => {
     

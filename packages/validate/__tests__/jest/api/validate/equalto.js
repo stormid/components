@@ -1,6 +1,6 @@
-import library from '../../../../../src';
-import { validate, assembleValidationGroup } from '../../../../../src/lib/validator';
-import { DOTNET_CLASSNAMES } from '../../../../../src/lib/constants';
+import library from '../../../../src';
+import { DOTNET_CLASSNAMES } from '../../../../src/lib/constants';
+import { validate, assembleValidationGroup } from '../../../../src/lib/validator';
 
 describe('Validate > Integration >  api > validate > equalto', () => {
     
