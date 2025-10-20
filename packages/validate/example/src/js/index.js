@@ -2,44 +2,39 @@ import validate from '../../../src';
 import { isValidDate, isFutureDate, isPastDate } from '../../../src/lib/plugins/methods/date';
 
 {
-    const [ validator ] = validate('form');
+    const formToValidate = document.querySelector('.js-validate');
+    const resetBtn = document.getElementById('resetBtn');
 
-    validator.addMethod(
-        'date', //name of custom validation group
-        isValidDate, // date validation method imported from the library 
-        'Enter a valid date', // error message
-        [ document.getElementById('dateDay'), document.getElementById('dateMonth'), document.getElementById('dateYear') ] //date fields array [day, month, year]
-    );
+    if(resetBtn) resetBtn.addEventListener('click', () => {     
+        const event = new Event('reset');
+        formToValidate.dispatchEvent(event);
+    });
+    
+    const [ validator ] = validate(formToValidate, {
+        preSubmitHook: () => {
+            const hiddenCheck = document.createElement('input');
+            hiddenCheck.setAttribute('type', 'hidden');
+            hiddenCheck.setAttribute('name', 'hiddenCheck');
+            hiddenCheck.setAttribute('value', 'true');
+            formToValidate.appendChild(hiddenCheck);
+        }
+    });
 
-    validator.addMethod(
-        'date', //name of custom validation group
-        isFutureDate, // date validation method imported from the library 
-        'Enter a valid date in the future', // error message
-        [ document.getElementById('dateDay'), document.getElementById('dateMonth'), document.getElementById('dateYear') ] //date fields array [day, month, year]
-    );
+    if(document.getElementById('dateDay') && document.getElementById('dateMonth') && document.getElementById('dateYear')) {
+        validator.addMethod(
+            'date', 
+            isValidDate, 
+            'Enter a valid date', 
+            [ document.getElementById('dateDay'), document.getElementById('dateMonth'), document.getElementById('dateYear') ] 
+        );
 
-    // const later = document.getElementById('Later');
-    // document.querySelector('.js-add').addEventListener('click', e => {
-    //     if (later.hasAttribute('required')) {
-    //         later.removeAttribute('required');
-    //         validator[0].removeGroup(later.getAttribute('name'));
-    //     } else {
-    //         later.setAttribute('required', 'required');
-    //         validator[0].addGroup([later]);
-    //     }
-    // });
-    // const inputs = [ document.querySelector('#f1'), document.querySelector('#f2') ];
-    // validator.addMethod(
-    //     'CustomGroup',
-    //     (value, fields) => {
-    //         console.log(value);
-    //         console.log(inputs);
-    //         return inputs[0].value.trim() === 'potato' || inputs[1].value.trim() === 'potato';
-    //     },
-    //     'One of the inputs must be the word "potato"',
-    //     inputs
-    // );
+        validator.addMethod(
+            'date', 
+            isFutureDate, 
+            'Enter a valid date in the future', 
+            [ document.getElementById('dateDay'), document.getElementById('dateMonth'), document.getElementById('dateYear') ] 
+        );
+    }
 
-    console.log(validator.getState());
-
+    window.validator = validator;
 };

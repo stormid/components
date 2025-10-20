@@ -12,23 +12,28 @@ export const postValidation = (event, resolve, store) => {
     const submit = () => {
         if (settings.submit) settings.submit();
         else form.submit();
+
+        buttonValueNode && cleanupButtonValueNode(buttonValueNode);
+        cachedAction && form.setAttribute('action', cachedAction);
     };
-    if (isSubmitButton(document.activeElement)) {
-        if (hasNameValue(document.activeElement)) {
-            buttonValueNode = createButtonValueNode(document.activeElement, form);
+
+    const formSubmitButtons = Array.from(form.querySelectorAll('[type="submit"]'));
+    formSubmitButtons.forEach(formSubmitButton => {
+        if (hasNameValue(formSubmitButton)) {
+            buttonValueNode = createButtonValueNode(formSubmitButton, form);
         }
-        if (hasFormactionValue(document.activeElement)) {
+        if (hasFormactionValue(formSubmitButton)) {
             cachedAction = form.getAttribute('action');
-            form.setAttribute('action', document.activeElement.getAttribute('formaction'));
+            form.setAttribute('action', formSubmitButton.getAttribute('formaction'));
         }
-    }
+    });
+
     if (event && event.target) {
         if (settings.preSubmitHook) {
             settings.preSubmitHook();
             window.setTimeout(submit, PREHOOK_DELAY);
         } else submit();
     }
-    buttonValueNode && cleanupButtonValueNode(buttonValueNode);
-    cachedAction && form.setAttribute('action', cachedAction);
+    
     return resolve(true);
 };
