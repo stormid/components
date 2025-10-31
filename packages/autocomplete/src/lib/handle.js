@@ -37,7 +37,7 @@ const handleEscape = store => {
     if (!open) return;
     document.activeElement.setAttribute('aria-selected', 'false');
     dom.input.focus();
-    store.update({ ...store.getState(), open: false, ...(settings.clearOnBlur ? { options: [], selected: null } : {}) }, [ hideList, clearStatus ]);
+    store.update({ ...store.getState(), open: false }, [ hideList, clearStatus ]);
 };
 
 const handleUpArrow = (store, event) => {
@@ -71,9 +71,12 @@ export const inputFocus = store => event => {
 };
 
 export const inputBlur = store => event => {
-    const { dom, open  } = store.getState();
+    const { dom, open, settings  } = store.getState();
     if (dom.list.contains(document.activeElement) || dom.list.contains(event.relatedTarget)) return;
-    if (open) store.update({ ...store.getState(), open: false }, [ hideList ]);
+    if (open) {
+        if (settings.clearOnBlur) dom.input.value = '';
+        store.update({ ...store.getState(), open: false, ...(settings.clearOnBlur ? { options: [] } : {}) }, [ renderList, clearStatus ]);
+    }
 };
 
 export const inputChange = store => event => {
