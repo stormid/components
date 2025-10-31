@@ -5,7 +5,15 @@
  * @property 
  */
 export default {
-    minLength: 3,
+    minlength: 3,
     multiple: false,
-    noResultsMsg: 'No results found'
+    noResultsMsg: 'No results found',
+    inputClassname: 'autocomplete__input',
+    clearOnBlur: false,
+    template(option) {
+        return option.value;
+    },
+    extractValue(option) {
+        return option.value;
+    }
 };

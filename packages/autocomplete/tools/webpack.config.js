@@ -22,16 +22,6 @@ module.exports = {
             title: pkg.name,
             template: './example/src/index.html',
             filename: 'index.html'
-        }),
-        new HtmlWebpackPlugin({
-            title: pkg.name,
-            template: './example/src/start-open.html',
-            filename: 'start-open.html'
-        }),
-        new HtmlWebpackPlugin({
-            title: pkg.name,
-            template: './example/src/attribute.html',
-            filename: 'attribute.html'
         })
     ],
     module: {
