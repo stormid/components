@@ -26,3 +26,21 @@ export const broadcast = (type, store) => () => {
     });
     window.document.dispatchEvent(event);
 };
+
+export const debounce = (func, delay = 200) => {
+    let debounceTimer;
+    return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    };
+};
+
+export const defaultSearch = values => query => values.filter(item => item.toLowerCase().includes(query.toLowerCase()));
+
+export const areEqual = (first, second) => {
+    //compare two arrays
+    if (first.length !== second.length) return false;
+    return JSON.stringify(first) === JSON.stringify(second);
+};
