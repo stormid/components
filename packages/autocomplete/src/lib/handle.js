@@ -1,5 +1,5 @@
 import { emptyList, renderList, renderStatus, clearStatus, showList, hideList, setValue } from './dom';
-import { areEqual } from './utils';
+import { areEqual, isPrintableKeyCode } from './utils';
 import { KEYCODES } from './constants';
 
 export const keydown = store => event => {
@@ -11,29 +11,60 @@ export const keydown = store => event => {
         handleDownArrow(store, event);
         break;
     case 'space':
-        // this.handleSpace(event);
+        handleSpace(store, event);
         break;
     case 'enter':
-        // this.handleEnter(event);
+        handleEnter(store, event);
         break;
     case 'escape':
         handleEscape(store);
         break;
     case 'tab':
-        // this.handleComponentBlur({
-        //     query: this.state.query
-        // });
+        handleBlur(store, event);
         break;
     default:
-        // if (isPrintableKeyCode(event.keyCode)) {
-        //     this.handlePrintableKey(event);
-        // }
+        if (isPrintableKeyCode(event.keyCode)) handlePrintableKey(store, event);
         break;
     }
 };
 
+const handlePrintableKey = (store, event) => {
+    const { dom } = store.getState();
+    if (event.target !== dom.input) dom.input.focus();
+};
+
+const handleBlur = (store, event) => {
+    const { dom, open, settings, options  } = store.getState();
+    if (!open && event.target.parentElement !== dom.list) return;
+    if (settings.confirmOnBlur) store.update({ ...store.getState(), selected: options[Number(event.target.getAttribute('aria-posinset'))-1], open: false  }, [ setValue, hideList, emptyList, renderStatus ]);
+};
+
+const handleEnter = (store, event) => {
+    const { open, dom, options } = store.getState();
+    if (!open && event.target.parentElement !== dom.list) return;
+    event.preventDefault();
+    store.update({ ...store.getState(), selected: options[Number(event.target.getAttribute('aria-posinset'))-1], open: false  }, [ setValue, hideList, emptyList, renderStatus ]);
+};
+
+const handleSpace = (store, event) => {
+    const { open, dom, settings, options } = store.getState();
+    //if event is fired from the input, and the list is closed, and it's there is no query, open it
+    //if settings.list is empty then the options are being loaded dynamically, so do nothing
+    if (event.target === dom.input && !open && !!settings.list && dom.input.value === '') {
+        event.preventDefault();
+        store.update({ ...store.getState(), options: settings.list, open: true }, [ renderList, clearStatus ]);
+        return;
+    }
+    //if event is fired from an option, select it
+    if (event.target.parentElement === dom.list) {
+        event.preventDefault();
+        store.update({ ...store.getState(), selected: options[Number(event.target.getAttribute('aria-posinset'))-1], open: false }, [ setValue, hideList, emptyList, renderStatus ]);
+    }
+};
+
+
 const handleEscape = store => {
-    const { open, dom, settings } = store.getState();
+    const { open, dom } = store.getState();
     if (!open) return;
     document.activeElement.setAttribute('aria-selected', 'false');
     dom.input.focus();
@@ -89,21 +120,24 @@ export const inputChange = store => event => {
         return;
     }
     const results = settings.search(value);
+    if (results.length === 0 && areEqual(options, results)) return;
     if (results.length && areEqual(options, results)) {
         if (!open) store.update({ ...store.getState(), open: true }, [ showList ]);
         return;
     }
-    store.update({ ...store.getState(), options: results, open: true }, [ renderList, renderStatus ]);
+    store.update({ ...store.getState(), options: results, open: results.length > 0 }, [ renderList, renderStatus ]);
 };
 
 export const optionClick = store => event => {
     const { options } = store.getState();
-    store.update({ ...store.getState(), selected: options[Number(event.target.getAttribute('aria-posinset'))-1] }, [ setValue, hideList, emptyList, renderStatus ]);
+    store.update({ ...store.getState(), selected: options[Number(event.target.getAttribute('aria-posinset'))-1], open: false }, [ setValue, hideList, emptyList, renderStatus ]);
 };
 
 export const optionBlur = store => event => {
     const { dom  } = store.getState();
-    //remove highlight from option
+    //if focus has moved outside of the list
+        //close menu 
+        //select current option
 };
 
 export const optionMouseDown = event => {

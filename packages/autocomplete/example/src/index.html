@@ -579,10 +579,9 @@
 
         <form class="form" action="#">
             <div class="form-row">
-                    <label for="default" class="label">Default</label>
-                    <span class="error-message" data-valmsg-for="default"></span>
-                    <div class="autocomplete js-autocomplete" id="default"></div>
-                </div>
+                <label for="default" class="label">Default</label>
+                <span class="error-message" data-valmsg-for="default"></span>
+                <div class="autocomplete js-autocomplete" id="default"></div>
             </div>
             <!-- 
                 Roadmap
@@ -609,6 +608,14 @@
                     <option value="option2">Option 2</option>
                 </select>
             </div> -->
+            <div class="form-row">
+                <label for="email" class="label">Email</label>
+                <span class="error-message" data-valmsg-for="email"></span>
+                <input data-val="true" data-val-required="Email must not be empty"
+                    data-val-email="{{value}} is not a valid email address" class="input" type="email" id="email"
+                    autocomplete="email" name="email" />
+                </div>
+            </div>
         </form>
     </main>
 </body>
