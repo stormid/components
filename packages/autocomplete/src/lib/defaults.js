@@ -9,7 +9,8 @@ export default {
     multiple: false,
     noResultsMsg: 'No results found',
     inputClassname: 'autocomplete__input',
-    clearOnBlur: true,
+    confirmOnBlur: true,
+    list: false,
     template(option) {
         return option.value;
     },

@@ -9,6 +9,8 @@ export const input = ({ node, settings }) => {
     input.setAttribute('autocomplete', 'off');
     input.setAttribute('aria-controls', 'autocomplete-list');
     input.classList.add(settings.inputClassname);
+    //if not multiple, set name attribute on input
+    if (!settings.multiple) input.setAttribute('name', settings.name);
     node.appendChild(input);
     
     return input;
@@ -25,16 +27,6 @@ export const list = (node, id) => {
 
     return list;
 };
-
-// export const option = ({ value, label }) => {
-//     const option = document.createElement('li');
-//     option.setAttribute('role', 'option');
-//     option.classList.add('autocomplete__option');
-//     option.tabIndex = -1;
-//     // option.setAttribute('aria-posinset', index + 1);
-//     // option.setAttribute('aria-setsize', options.length);
-//     // option.textContent = templates(data);
-// };
 
 export const status = node => {
     const status = document.createElement('div');
@@ -61,6 +53,7 @@ export const listen = state => {
     state.dom.list.addEventListener('click', state.handle.option.click);
     state.dom.node.addEventListener('keydown', state.handle.container.keydown);
     state.dom.list.addEventListener('mousedown', state.handle.option.mousedown);
+    // state.dom.list.addEventListener('blur', state.handle.option.blur);
 };
 
 export const emptyList = state => state.dom.list.replaceChildren();

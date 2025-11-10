@@ -24,11 +24,11 @@ export default ({ node, settings }) => {
             input: input({ node, settings }),
             list: list(node, node.id),
             status: status(node),
-            // output: output({ node, settings }) //list of hidden inputs, single hidden input
+            // output: output({ node, settings }) //list of hidden inputs, single hidden input, or get from setting.output
         },
         selected: null,
         open: false,
-        options: [],
+        options: settings.list || [],
         search: settings.search || defaultSearch(settings.values),
         handle: { //or just delegate everything?
             container: { keydown: keydown(store) },
