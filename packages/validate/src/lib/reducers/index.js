@@ -1,5 +1,4 @@
 import { ACTIONS, DOTNET_ERROR_SPAN_DATA_ATTRIBUTE, GROUP_ATTRIBUTE } from '../constants';
-import { findErrors } from '../validator/utils';
 
 export default {
     [ACTIONS.SET_INITIAL_STATE]: (state, data) => Object.assign({}, state, data),
@@ -22,15 +21,21 @@ export default {
             groups: Object.assign({}, state.groups, nextGroup)
         });
     },
-    [ACTIONS.ADD_GROUP]: (state, data) => Object.assign({}, state, {
-        groups: Object.assign({}, state.groups, data),
-        errors: Object.assign({}, state.errors, findErrors(data))
+    [ACTIONS.ADD_GROUP]: (state, groups, errors) => Object.assign({}, state, {
+        groups: Object.assign({}, state.groups, groups),
+        errors: Object.assign({}, state.errors, errors)
     }),
     [ACTIONS.REMOVE_GROUP]: (state, groupName) => Object.assign({}, state, {
         groups: Object.keys(state.groups).reduce((acc, group) => {
             if (group !== groupName) acc[group] = state.groups[group];
             return acc;
-        }, {})
+        }, {}),
+        ...(state.errors !== undefined ? {
+            errors: Object.keys(state.errors).reduce((acc, error) => {
+                if (error !== groupName) acc[error] = state.errors[error];
+                return acc;
+            }, {})
+        } : {})
     }),
     [ACTIONS.ADD_VALIDATION_METHOD]: (state, data) => {
         const nextGroup = Object.assign({},

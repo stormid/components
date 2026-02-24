@@ -360,7 +360,7 @@ describe('Validate > Unit > Reducers > Add group', () => {
                 valid: false
             }
         };
-        const output = Reducers[ACTIONS.ADD_GROUP](state, newGroup);
+        const output = Reducers[ACTIONS.ADD_GROUP](state, newGroup, {});
         expect(output).toEqual({
             groups: {
                 group1: {
@@ -412,6 +412,43 @@ describe('Validate > Unit > Reducers > Remove group', () => {
                     errorMessages: ['This field is required'],
                     valid: false
                 }
+            }
+        });
+    });
+
+    it('should remove errors associated with a validation group', async () => {
+        expect.assertions(1);
+        const state = {
+            groups: {
+                group1: {
+                    fields: [document.createElement('input')],
+                    validators: [],
+                    errorMessages: ['This field is required'],
+                    valid: false
+                },
+                group2: {
+                    fields: [document.createElement('input')],
+                    validators: [],
+                    valid: false
+                }
+            },
+            errors: {
+                group1: 'This field is required',
+                group2: 'This field is required'
+            }
+        };
+        const output = Reducers[ACTIONS.REMOVE_GROUP](state, 'group2');
+        expect(output).toEqual({
+            groups: {
+                group1: {
+                    fields: [document.createElement('input')],
+                    validators: [],
+                    errorMessages: ['This field is required'],
+                    valid: false
+                }
+            },
+            errors: {
+                group1: 'This field is required'
             }
         });
     });
