@@ -350,7 +350,8 @@ describe('Validate > Unit > Reducers > Add group', () => {
                     validators: [],
                     valid: false
                 }
-            }
+            },
+            errors: {}
         };
         const newGroup = {
             group3: {
@@ -378,7 +379,8 @@ describe('Validate > Unit > Reducers > Add group', () => {
                     validators: [],
                     valid: false
                 }
-            }
+            },
+            errors: {}
         });
     });
 });
