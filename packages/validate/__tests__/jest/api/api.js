@@ -28,6 +28,28 @@ describe("Validate > Integration > API > addGroup", () => {
 		});
 	});
 
+	it("should find errors in an added validation group", async () => {
+		document.body.innerHTML = `<form class="form">
+            <label id="group1-1-label" for="group1-1">group1</label>
+			<span id="group1-error-message" class=" error-message" data-valmsg-for="group1">You must enter a value</span>
+            <input
+                id="group1-1"
+                name="group1"
+                value=""
+                type="text" />
+        </form>`;
+		const input = document.querySelector("#group1-1");
+		const validator = validate("form")[0];
+
+		expect(validator.getState().groups).toEqual({});
+		input.setAttribute("required", "required");
+		validator.addGroup([input]);
+		console.log(validator.getState().errors);
+		expect(validator.getState().errors).toEqual({
+			group1: "You must enter a value",
+		});
+});
+
 	it("should return leave state unchanged if it cannot add the validation group", async () => {
 		document.body.innerHTML = `<form class="form">
             <label id="group1-1-label" for="group1-1">group1</label>
