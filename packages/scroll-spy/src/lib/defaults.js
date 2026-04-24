@@ -5,5 +5,5 @@ export default {
     threshold: 0,
     activeClassName: 'is--active',
     callback: null,
-    single: true
+    single: true,
 };
