@@ -1,6 +1,6 @@
 {
   "name": "components",
-  "private": false,
+  "private": true,
   "scripts": {
     "test": "lerna run test --stream",
     "lint": "eslint packages -c .eslintrc --ext js"
