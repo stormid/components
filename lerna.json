@@ -4,7 +4,7 @@
   ],
   "command": {
     "publish": {
-      "ignoreChanges": ["*.md", "/packages/boilerplate/**"],
+      "ignoreChanges": ["*.md", "/packages/boilerplate"],
       "message": "Publish"
     },
     "version": {
