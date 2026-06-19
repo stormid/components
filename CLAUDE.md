@@ -51,7 +51,7 @@ export default (selector, options) => {
 Rules that keep components consistent:
 
 - **Input flexibility**: `getSelection` (in `lib/utils`) accepts a string selector, an Array of nodes, a NodeList, or a single HTMLElement. Reuse it; don't reimplement selection.
-- **Settings precedence**: `{ ...defaults, ...options, ...node.dataset }` — `data-*` attributes override instantiation options, which override defaults.
+- **Settings precedence**: always merge in the order `{ ...defaults, ...options, ...node.dataset }` - each spread overrides the previous, so `data-*` attributes win over `options` passed to init, which win over `defaults`. The `...node.dataset` part is optional and not present on every component; include it only when the component reads `data-*` config, but keep this order when you do.
 - **Return value**: always an array of instance objects created with `Object.create(factory(...))`. The factory's return value becomes the instance prototype.
 - **Instance API shape**: the factory returns an object that always exposes `node` and `getState`, plus the component's action methods (e.g. toggle exposes `toggle`, `startToggle`). Keep public APIs to a small set of named functions.
 - **Defaults** live in `src/lib/defaults.js` as a default-exported object (prefix the file with `/* istanbul ignore file */`).

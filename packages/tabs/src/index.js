@@ -18,7 +18,7 @@ export default (selector, options) => {
     //and a settings property composed from defaults, data-attributes on the node, and options passed to init
     return nodes.map(node => {
         const instance = factory({
-            settings: { ...defaults, ...node.dataset, ...options },
+            settings: { ...defaults, ...options, ...node.dataset },
             node
         });
         return instance ? Object.create(instance) : void console.warn('Tab not initialised, required markup not found');

@@ -15,8 +15,11 @@ export default (selector, options) => {
     if (nodes.length === 0) return void console.warn(`boilerplate not initialised, no elements found for selector '${selector}'`);
     
     //return array of objects, one for each DOM node found
+    //settings precedence: each spread overrides the previous, so node.dataset (data-* attributes)
+    //wins over options passed to init, which win over defaults
+    //...node.dataset is optional - remove it if this component does not read data-* config
     return nodes.map(node => Object.create(factory({
-        settings: { ...defaults, ...options },
+        settings: { ...defaults, ...options, ...node.dataset },
         node
     })));
 };
