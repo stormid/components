@@ -19,11 +19,13 @@ Set:
 - `private`: `false`, `publishConfig.access`: `public`
 - the microbundle `--name <camelCaseName>` in the `build` script
 
-Mirror the script block from an existing package (`build` / `dev` / `prod` / `prepublish` / `test`).
+Mirror the script block from an existing package (`build` / `dev` / `prod` / `prepublish` / `test`). **For `test`, use `jest --coverage && npx playwright test`** — chain with `&&`, not a single `&` (a lone `&` backgrounds Jest on POSIX and discards its exit code, so failing unit tests wouldn't fail the build). Some existing packages still carry the old `&` form; do not copy it.
 
 ## Step 3 — Implement the source
 
-Keep the factory contract from `src/index.js` (default export → `getSelection` → warn-and-return on no match → `nodes.map(node => Object.create(factory({ settings: { ...defaults, ...options, ...node.dataset }, node })))`).
+First identify the **archetype** (see CLAUDE.md): most new components are **A — per-node augmentation** and follow the contract below. **B** (shared state across nodes), **C** (singleton), and **D** (side-effect module) deliberately diverge — if yours is one of those, follow the matching existing component (`scroll-spy`, `cookie-banner`, `skip`) instead of forcing the Archetype A shape.
+
+For Archetype A, keep the factory contract from `src/index.js` (default export → `getSelection` → warn-and-return on no match → `nodes.map(node => Object.create(factory({ settings: { ...defaults, ...options, ...node.dataset }, node })))`). Note the merge order: `defaults → options → dataset` (data attributes win). A factory may return a falsy value to skip a node whose required markup is missing (`index.js` warns and filters it out).
 
 - **Stateless / simple component**: implement behaviour in `src/lib/factory.js`, options in `src/lib/defaults.js`, helpers in `src/lib/utils.js`. See `packages/boilerplate`.
 - **Stateful component**: add `src/lib/store.js` (the minimal `createStore`), `src/lib/dom.js` (listeners + effect functions), and `src/lib/constants.js`. Use `packages/toggle` as the reference — note how `factory.js` builds the store, derives state from the DOM, sets initial state with an array of effects, and returns `{ node, getState, ...actions }`.
@@ -53,6 +55,7 @@ describe('Component > Init', () => {
     it('should expose the expected API', () => {
         const instances = component('.js-component');
         expect(instances[0].node).not.toBeNull();
+        // getState only for stateful components (those with a store); omit for stateless ones
         expect(instances[0].getState).not.toBeNull();
     });
 
