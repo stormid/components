@@ -73,7 +73,7 @@ Add further Jest files per concern (e.g. `store.js`, `events-hooks.js`, `state-f
 
 ### Playwright — `__tests__/playwright/playwright.spec.js`
 
-Use the standard describe-block structure. The `Axe` block is fixed boilerplate and is required:
+Use the `Component > Category` describe-block naming. `Functionality` and the `Axe` block (fixed boilerplate, required) are the always-present blocks; add `Keyboard`, `Aria`, or component-specific blocks only for the behaviour the component actually has — don't ship empty placeholder blocks:
 
 ```js
 const { test, expect } = require('@playwright/test');
@@ -89,15 +89,12 @@ test.describe('Component > Functionality', { tag: '@all' }, () => {
     });
 });
 
-test.describe('Component > Keyboard', { tag: '@all' }, () => {
-    // keyboard interaction + focus management tests (if applicable)
-});
-
-test.describe('Component > Aria', { tag: '@all' }, () => {
-    test('should keep aria attributes in sync', async ({ page }) => {
-        // assert aria-controls / aria-expanded
-    });
-});
+// Add further describe blocks for whichever categories apply, following the
+// 'Component > Category' naming, e.g.:
+//   'Component > Keyboard' - keyboard interaction + focus management
+//   'Component > Aria'     - aria attributes staying in sync (aria-controls / aria-expanded)
+// Only add what the component actually does. See toggle / modal / tabs for
+// interactive examples, or textarea / skip for non-standard categories.
 
 test.describe('Component > Axe', { tag: '@reduced' }, () => {
     test('Should not have any automatically detectable accessibility issues', async ({ page }) => {

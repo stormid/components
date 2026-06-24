@@ -111,7 +111,7 @@ The DOM-effects file is `dom.js` by convention; `cookie-banner` uses `ui.js` for
 ## Testing (both layers are required)
 
 - **Jest** unit tests in `packages/*/__tests__/jest/` (jsdom env, run with `--coverage`). Every component has an init suite asserting: the returned array length, the instance API shape, no-throw when no nodes match, and that `data-*` overrides options.
-- **Playwright** e2e + a11y tests in `packages/*/__tests__/playwright/`, organised into `Functionality` / `Keyboard` / `Aria` / `Axe` describe blocks (tagged `@all` / `@reduced`). The `Axe` block asserts zero violations.
+- **Playwright** e2e + a11y tests in `packages/*/__tests__/playwright/`, using the `Component > Category` describe-block naming (tagged `@all` / `@reduced`). The `Axe` block is required for every component and asserts zero violations; add `Functionality` and, where the component warrants them, `Keyboard` / `Aria` (or component-specific) blocks — only the categories the component actually exercises (`textarea` / `skip` show non-standard sets). Don't ship empty placeholder blocks.
 - Both layers are required for any component with DOM/a11y behaviour. **Archetype D** (side-effect modules, e.g. `outliner`/`skip`) may be Playwright-only — Jest runs with `--passWithNoTests`.
 - A package's `test` script runs both layers and **must fail if either fails**: chain them (`jest --coverage && npx playwright test`) or split into `test:unit` / `test:e2e` — do not use a single `&`, which backgrounds Jest and discards its exit code. The `new-component` skill has the exact test templates.
 
