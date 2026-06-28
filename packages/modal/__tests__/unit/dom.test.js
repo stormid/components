@@ -1,7 +1,9 @@
-import * as DOM from '../../src/lib/dom';
+import { describe, it, mock } from 'node:test';
+import assert from 'node:assert/strict';
+import * as DOM from '../../src/lib/dom.js';
 
 describe(`Modal > DOM > findDialog`, () => {
-	
+
     it('should return a node with an aria-role of dialog', async () => {
         document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle">
 			<div class="modal__inner" role="dialog" aria-labelledby="modal-label">
@@ -15,7 +17,7 @@ describe(`Modal > DOM > findDialog`, () => {
 				</svg>
 			</div>
 		</div>`;
-        expect(DOM.findDialog(document.querySelector('#modal-1'))).toEqual(document.querySelector('.modal__inner'));
+        assert.deepStrictEqual(DOM.findDialog(document.querySelector('#modal-1')), document.querySelector('.modal__inner'));
     });
 
     it('should return a node with an aria-role of alertdialog', async () => {
@@ -24,15 +26,22 @@ describe(`Modal > DOM > findDialog`, () => {
                 <h1 id="modal-label">Modal</h1>
             </div>
         </div>`;
-        expect(DOM.findDialog(document.querySelector('#modal'))).toEqual(document.querySelector('.modal__inner'));
+        assert.deepStrictEqual(DOM.findDialog(document.querySelector('#modal')), document.querySelector('.modal__inner'));
     });
 
     it('should return undefined if it cant find a dialog or alertdialog', async () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warn = mock.method(console, 'warn', () => {});
         document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle"></div>`;
-        expect(DOM.findDialog(document.querySelector('#modal-1'))).toEqual(undefined);
-        expect(warn).toHaveBeenCalledWith('No dialog or alertdialog found in modal node');
-        warn.mockRestore();
+        assert.deepStrictEqual(DOM.findDialog(document.querySelector('#modal-1')), undefined);
+        assert.ok(warn.mock.calls.some(call => {
+            try {
+                assert.deepStrictEqual(call.arguments, ['No dialog or alertdialog found in modal node']);
+                return true;
+            } catch {
+                return false;
+            }
+        }));
+        warn.mock.restore();
     });
 
 });
@@ -42,13 +51,13 @@ describe(`Modal > DOM > findToggles`, () => {
     it('should return an array of nodes to toggle (open and close) the modal', async () => {
         document.body.innerHTML = `<button class="js-modal-toggle"></button>
 			<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle"></div>`;
-		
-        expect(DOM.findToggles(document.querySelector('#modal-1'), { toggleSelectorAttribute: 'data-modal-toggle' })).toEqual([document.querySelector('.js-modal-toggle')]);
+
+        assert.deepStrictEqual(DOM.findToggles(document.querySelector('#modal-1'), { toggleSelectorAttribute: 'data-modal-toggle' }), [document.querySelector('.js-modal-toggle')]);
     });
 
     it('should return an empty array if it cant find any buttons', async () => {
         document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle"></div>`;
-        expect(DOM.findToggles(document.querySelector('#modal-1'), { toggleSelectorAttribute: 'data-modal-toggle' })).toEqual([]);
+        assert.deepStrictEqual(DOM.findToggles(document.querySelector('#modal-1'), { toggleSelectorAttribute: 'data-modal-toggle' }), []);
     });
 });
 
@@ -57,16 +66,14 @@ describe(`Modal > DOM > getFocusableChildren`, () => {
     it('should return an array of focusable nodes ', async () => {
         document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle">
 			<button class="btn"></button>
-			<input class="input" />		
+			<input class="input" />
 		</div>`;
-		
-        expect(DOM.getFocusableChildren(document.querySelector('#modal-1'))).toEqual([document.querySelector('.btn'), document.querySelector('.input')]);
+
+        assert.deepStrictEqual(DOM.getFocusableChildren(document.querySelector('#modal-1')), [document.querySelector('.btn'), document.querySelector('.input')]);
     });
 
     it('should return an empty array if it cant find any focusable nodes', async () => {
         document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle"></div>`;
-        expect(DOM.getFocusableChildren(document.querySelector('#modal-1'))).toEqual([]);
+        assert.deepStrictEqual(DOM.getFocusableChildren(document.querySelector('#modal-1')), []);
     });
 });
-
-

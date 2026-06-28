@@ -1,4 +1,6 @@
-import modal from '../../src';
+import { describe, it, before } from 'node:test';
+import assert from 'node:assert/strict';
+import modal from '../../src/index.js';
 
 let instance;
 
@@ -42,19 +44,19 @@ const init = () => {
 };
 
 describe(`Modal > API > open ? close`, () => {
-    
-    beforeAll(init);
+
+    before(init);
 
     it('should allow instance to be opened via API', () => {
-        expect(instance.getState().isOpen).toEqual(false);
+        assert.deepStrictEqual(instance.getState().isOpen, false);
         instance.open();
-        expect(instance.getState().isOpen).toEqual(true);
+        assert.deepStrictEqual(instance.getState().isOpen, true);
     });
 
     it('should allow instance to be closed via API', () => {
-        expect(instance.getState().isOpen).toEqual(true);
+        assert.deepStrictEqual(instance.getState().isOpen, true);
         instance.close();
-        expect(instance.getState().isOpen).toEqual(false);
+        assert.deepStrictEqual(instance.getState().isOpen, false);
     });
 
 });

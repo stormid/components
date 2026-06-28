@@ -1,5 +1,7 @@
-import modal from '../../src';
-import { getSelection } from '../../src/lib/utils';
+import { describe, it, before, mock } from 'node:test';
+import assert from 'node:assert/strict';
+import modal from '../../src/index.js';
+import { getSelection } from '../../src/lib/utils.js';
 
 let ModalSet;
 
@@ -20,7 +22,7 @@ const init = () => {
             </button>
         </div>
     </div>
-    
+
     <button class="js-modal-toggle__2">Open modal</button>
     <div id="modal-2" class="js-modal modal" data-delay="20" data-modal-toggle="js-modal-toggle__2">
         <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label-2">
@@ -36,7 +38,7 @@ const init = () => {
             </button>
         </div>
     </div>
-    
+
     <div id="modal-3" class="js-modal__dialogless modal" data-delay="20" data-modal-toggle="js-modal-toggle__3">
         <div class="modal__inner">
             <h1 id="modal-label-2">Modal three</h1>
@@ -71,54 +73,75 @@ const init = () => {
     </div>`;
 
     ModalSet = modal('.js-modal');
-    
+
 };
 
 
 describe(`Modal > Initialisation`, () => {
-    
-    beforeAll(init);
+
+    before(init);
 
     it('should initialise multiple modals and return an Array of instances', async () => {
-        expect(ModalSet.length).toEqual(2);
+        assert.deepStrictEqual(ModalSet.length, 2);
     });
 
     it('should return the expected API', () => {
-        expect(ModalSet[0]).not.toBeNull();
-        expect(ModalSet[0].getState).not.toBeNull();
+        assert.notStrictEqual(ModalSet[0], null);
+        assert.notStrictEqual(ModalSet[0].getState, null);
     });
 
     it('should return without throwing and a console warning if no DOM nodes are found', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-        expect(modal('.js-not-found')).toBeUndefined();
-        expect(warn).toHaveBeenCalledWith(`Modal not initialised, no elements found for selector '.js-not-found'`);
-        warn.mockRestore();
+        const warn = mock.method(console, 'warn', () => {});
+        assert.strictEqual(modal('.js-not-found'), undefined);
+        assert.ok(warn.mock.calls.some(call => {
+            try {
+                assert.deepStrictEqual(call.arguments, [`Modal not initialised, no elements found for selector '.js-not-found'`]);
+                return true;
+            } catch {
+                return false;
+            }
+        }));
+        warn.mock.restore();
     });
 
     it('should return without throwing and a console warning if no dialog is found', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warn = mock.method(console, 'warn', () => {});
         modal('.js-modal__unlabelled');
-        expect(warn).toHaveBeenCalledWith('The modal dialog should have an aria-labelledby attribute that matches the id of an element that contains text, or an aria-label attribute.');
-        warn.mockRestore();
+        assert.ok(warn.mock.calls.some(call => {
+            try {
+                assert.deepStrictEqual(call.arguments, ['The modal dialog should have an aria-labelledby attribute that matches the id of an element that contains text, or an aria-label attribute.']);
+                return true;
+            } catch {
+                return false;
+            }
+        }));
+        warn.mock.restore();
     });
 
     it('should console.warn if an alertdialog does not have a description linked with an aria-describedby attribute', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-        expect(modal('.js-not-found')).toBeUndefined();
-        expect(warn).toHaveBeenCalledWith(`Modal not initialised, no elements found for selector '.js-not-found'`);
-        warn.mockRestore();
+        const warn = mock.method(console, 'warn', () => {});
+        assert.strictEqual(modal('.js-not-found'), undefined);
+        assert.ok(warn.mock.calls.some(call => {
+            try {
+                assert.deepStrictEqual(call.arguments, [`Modal not initialised, no elements found for selector '.js-not-found'`]);
+                return true;
+            } catch {
+                return false;
+            }
+        }));
+        warn.mock.restore();
     });
 
     it('should create instance with different options based on node data-attributes from same init function', () => {
-        expect(ModalSet[0].getState().settings.delay).not.toEqual(ModalSet[1].getState().settings.delay);
+        assert.notDeepStrictEqual(ModalSet[0].getState().settings.delay, ModalSet[1].getState().settings.delay);
     });
 
     it('should find toggles associated with the modal', () => {
         const [ modal ] = ModalSet;
         const { toggles } = modal.getState();
-        expect(toggles.length).toEqual(2);
-        expect(toggles[0].getAttribute('data-id')).toEqual('toggle-1');
-        expect(toggles[1].getAttribute('data-id')).toEqual('toggle-2');
+        assert.deepStrictEqual(toggles.length, 2);
+        assert.deepStrictEqual(toggles[0].getAttribute('data-id'), 'toggle-1');
+        assert.deepStrictEqual(toggles[1].getAttribute('data-id'), 'toggle-2');
     });
 
 });
@@ -143,33 +166,33 @@ describe('Modal > Initialisation > Get Selection', () => {
         </div>`;
     }
 
-    beforeAll(setupDOM);
+    before(setupDOM);
 
     it('should return an array when passed a DOM element', async () => {
         const modal = document.querySelector('.js-modal');
         const els = getSelection(modal);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
     it('should return an array when passed a NodeList element', async () => {
         const modal = document.querySelectorAll('.js-modal');
         const els = getSelection(modal);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
     it('should return an array when passed an array of DOM elements', async () => {
         const modal = document.querySelector('.js-modal');
         const els = getSelection([modal]);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
     it('should return an array when passed a string', async () => {
         const els = getSelection('.js-modal');
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
 });
@@ -192,9 +215,9 @@ describe('Modal > Initialisation > Start open', () => {
                 </button>
             </div>
         </div>`;
-        
+
         const [ instance ] = modal('.js-modal', { startOpen: true });
-        expect(instance.getState().isOpen).toBe(true);
+        assert.strictEqual(instance.getState().isOpen, true);
     });
 
     it('should start open based on data-attribute', async () => {
@@ -212,9 +235,9 @@ describe('Modal > Initialisation > Start open', () => {
                 </button>
             </div>
         </div>`;
-        
+
         const [ instance ] = modal('.js-modal');
-        expect(instance.getState().isOpen).toBe(true);
+        assert.strictEqual(instance.getState().isOpen, true);
     });
 
 });

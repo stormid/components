@@ -1,5 +1,5 @@
-import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, EVENTS } from './constants';
-import { broadcast } from './utils';
+import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, EVENTS } from './constants.js';
+import { broadcast } from './utils.js';
 
 /*
  * @param node, HTMLElement 

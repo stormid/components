@@ -1,7 +1,9 @@
-import { createStore } from '../../src/lib/store';
-import { broadcast } from '../../src/lib/utils';
-import { EVENTS } from '../../src/lib/constants';
-import defaults from '../../src/lib/defaults';
+import { describe, it, mock } from 'node:test';
+import assert from 'node:assert/strict';
+import { createStore } from '../../src/lib/store.js';
+import { broadcast } from '../../src/lib/utils.js';
+import { EVENTS } from '../../src/lib/constants.js';
+import defaults from '../../src/lib/defaults.js';
 
 
 describe(`Modal > Utils > broadcast`, () => {
@@ -12,14 +14,14 @@ describe(`Modal > Utils > broadcast`, () => {
             settings: defaults
         };
         store.update(state);
-        const listener = jest.fn();
+        const listener = mock.fn();
         document.addEventListener(EVENTS.OPEN, listener);
         document.addEventListener(EVENTS.OPEN, e => {
-            expect(e.detail).toEqual({ getState: store.getState });
+            assert.deepStrictEqual(e.detail, { getState: store.getState });
         });
 
         broadcast(EVENTS.OPEN, store)(state);
-        expect(listener).toHaveBeenCalled();
+        assert.ok(listener.mock.callCount() > 0);
     });
 
 });
