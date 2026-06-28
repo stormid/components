@@ -1,11 +1,11 @@
-import { createStore } from '../store';
-import { ACTIONS } from '../constants';
-import reducers from '../reducers';
-import { getInitialState } from '../validator';
-import { validate }  from './validate';
-import { clearErrors, addAXAttributes }  from '../dom';
-import { addMethod } from './add-method';
-import { addGroup, validateGroup, removeGroup } from './group';
+import { createStore } from '../store/index.js';
+import { ACTIONS } from '../constants/index.js';
+import reducers from '../reducers/index.js';
+import { getInitialState } from '../validator/index.js';
+import { validate }  from './validate.js';
+import { clearErrors, addAXAttributes }  from '../dom/index.js';
+import { addMethod } from './add-method.js';
+import { addGroup, validateGroup, removeGroup } from './group.js';
 
 
 /**

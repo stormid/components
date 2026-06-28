@@ -3,12 +3,12 @@ import {
     assembleValidationGroup,
     getGroupValidityState,
     reduceGroupValidityState,
-    reduceErrorMessages } from '../validator';
-import { initRealTimeValidation } from '../validator/real-time-validation';
-import { renderError, clearError, addAXAttributes } from '../dom';
-import { findErrors } from '../validator/utils';
-import { ACTIONS } from '../constants';
-import reducers from '../reducers';
+    reduceErrorMessages } from '../validator/index.js';
+import { initRealTimeValidation } from '../validator/real-time-validation.js';
+import { renderError, clearError, addAXAttributes } from '../dom/index.js';
+import { findErrors } from '../validator/utils.js';
+import { ACTIONS } from '../constants/index.js';
+import reducers from '../reducers/index.js';
 
 /**
  * Adds a group to the validation model, used via the API

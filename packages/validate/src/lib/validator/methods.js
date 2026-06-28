@@ -4,13 +4,13 @@ import {
     DATE_ISO_REGEX,
     NUMBER_REGEX,
     DIGITS_REGEX
-} from '../constants';
+} from '../constants/index.js';
 import {
     fetch,
     isRequired,
     extractValueFromGroup,
     resolveGetParams
-} from './utils';
+} from './utils.js';
 
 const isOptional = group => !isRequired(group) && extractValueFromGroup(group) === '';
 

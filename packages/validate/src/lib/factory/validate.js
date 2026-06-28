@@ -1,18 +1,18 @@
-import { ACTIONS } from '../constants';
-import reducers from '../reducers';
+import { ACTIONS } from '../constants/index.js';
+import reducers from '../reducers/index.js';
 import {
     getValidityState,
     reduceGroupValidityState,
     isFormValid,
     reduceErrorMessages
-} from '../validator';
-import { postValidation } from '../validator/post-validation';
-import { initRealTimeValidation } from '../validator/real-time-validation';
+} from '../validator/index.js';
+import { postValidation } from '../validator/post-validation.js';
+import { initRealTimeValidation } from '../validator/real-time-validation.js';
 import {
     clearErrors,
     renderErrors,
     focusFirstInvalidField
-}  from '../dom';
+}  from '../dom/index.js';
 
 /**
  * Returns a function that extracts the validityState of the entire form

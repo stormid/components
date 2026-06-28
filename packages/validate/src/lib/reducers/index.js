@@ -1,4 +1,4 @@
-import { ACTIONS, DOTNET_ERROR_SPAN_DATA_ATTRIBUTE, GROUP_ATTRIBUTE } from '../constants';
+import { ACTIONS, DOTNET_ERROR_SPAN_DATA_ATTRIBUTE, GROUP_ATTRIBUTE } from '../constants/index.js';
 
 export default {
     [ACTIONS.SET_INITIAL_STATE]: (state, data) => Object.assign({}, state, data),

@@ -60,7 +60,7 @@ export const extractValueFromGroup = group => Object.prototype.hasOwnProperty.ca
     : group.reduce(groupValueReducer, '');
 
 
-/* istanbul ignore next */
+/* node:coverage ignore next */
 export const fetch = (url, props) =>
     new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();

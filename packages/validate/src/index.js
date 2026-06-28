@@ -1,6 +1,6 @@
-import factory from './lib/factory';
-import defaults from './lib/defaults';
-import { getSelection } from './lib/validator/utils';
+import factory from './lib/factory/index.js';
+import defaults from './lib/defaults/index.js';
+import { getSelection } from './lib/validator/utils.js';
 
 /*
  * Returns an array of objects augmenting DOM elements that match a selector
