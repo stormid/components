@@ -1,4 +1,6 @@
-import { getActiveIndexByHash, getActiveIndexOnLoad } from '../../src/lib/utils';
+import { describe, it, before } from 'node:test';
+import assert from 'node:assert/strict';
+import { getActiveIndexByHash, getActiveIndexOnLoad } from '../../src/lib/utils.js';
 
 const init = () => {
     document.body.innerHTML = `<div role="tablist" data-active-index="1">
@@ -22,8 +24,8 @@ const init = () => {
 };
 
 describe(`Tabs > utils > getActiveIndexByHash`, () => {
-    beforeAll(init);
-    
+    before(init);
+
     it('should return the index of a tab with an id matching the hash', async () => {
         delete global.window.location;
         global.window = Object.create(window);
@@ -33,8 +35,9 @@ describe(`Tabs > utils > getActiveIndexByHash`, () => {
             hostname: 'localhost',
             hash: '#panel-2'
         };
+        global.location = global.window.location;
         const panels = [].slice.call(document.querySelectorAll('.tabs__section'));
-        expect(getActiveIndexByHash(panels)).toEqual(1);
+        assert.deepStrictEqual(getActiveIndexByHash(panels), 1);
     });
 
     it('should return undefined if no hash is present on window location', async () => {
@@ -45,8 +48,9 @@ describe(`Tabs > utils > getActiveIndexByHash`, () => {
             protocol: 'http:',
             hostname: 'localhost'
         };
+        global.location = global.window.location;
         const panels = [].slice.call(document.querySelectorAll('.js-tabs__link'));
-        expect(getActiveIndexByHash(panels)).toEqual(undefined);
+        assert.deepStrictEqual(getActiveIndexByHash(panels), undefined);
     });
 
     it('should return undefined if hash does not match id of any tabs', async () => {
@@ -58,8 +62,9 @@ describe(`Tabs > utils > getActiveIndexByHash`, () => {
             hostname: 'localhost',
             hash: '#not-found'
         };
+        global.location = global.window.location;
         const panels = [].slice.call(document.querySelectorAll('.js-tabs__link'));
-        expect(getActiveIndexByHash(panels)).toEqual(undefined);
+        assert.deepStrictEqual(getActiveIndexByHash(panels), undefined);
     });
 
 });
@@ -87,7 +92,7 @@ const initWithAttribute = () => {
 
 
 describe(`Tabs > utils > getActiveIndexOnLoad`, () => {
-    beforeAll(initWithAttribute);
+    before(initWithAttribute);
 
     it('should use the data attribute if no hash is available', async () => {
         delete global.window.location;
@@ -98,18 +103,19 @@ describe(`Tabs > utils > getActiveIndexOnLoad`, () => {
             hostname: 'localhost',
             hash: ''
         };
+        global.location = global.window.location;
         const node = document.querySelector('[role="tablist"]');
         const panels = [].slice.call(document.querySelectorAll('[role=tabpanel]'));
-        expect(getActiveIndexOnLoad(panels, node)).toEqual(2);
+        assert.deepStrictEqual(getActiveIndexOnLoad(panels, node), 2);
     });
 
     it('should return undefined if neither hash or attribute', async () => {
         const node = document.querySelector('[role="tablist"]');
         node.removeAttribute('data-active-index');
         const panels = [].slice.call(document.querySelectorAll('[role=tabpanel]'));
-        expect(getActiveIndexOnLoad(panels, node)).toEqual(undefined);
+        assert.deepStrictEqual(getActiveIndexOnLoad(panels, node), undefined);
     });
-   
+
     it('should use the hash as priority if available', async () => {
         const node = document.querySelector('[role="tablist"]');
         node.setAttribute('data-active-index', "1");
@@ -122,10 +128,10 @@ describe(`Tabs > utils > getActiveIndexOnLoad`, () => {
             hostname: 'localhost',
             hash: '#panel-3'
         };
+        global.location = global.window.location;
 
-        const panels = [].slice.call(document.querySelectorAll('[role=tabpanel]'));   
-        expect(getActiveIndexOnLoad(panels, node)).toEqual(2);
+        const panels = [].slice.call(document.querySelectorAll('[role=tabpanel]'));
+        assert.deepStrictEqual(getActiveIndexOnLoad(panels, node), 2);
     });
 
 });
-

@@ -1,6 +1,6 @@
-import { createStore } from './store';
-import { findTabsAndPanels, initUI, open } from './dom';
-import { getActiveIndexOnLoad } from './utils';
+import { createStore } from './store.js';
+import { findTabsAndPanels, initUI, open } from './dom.js';
+import { getActiveIndexOnLoad } from './utils.js';
 
 /* 
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
