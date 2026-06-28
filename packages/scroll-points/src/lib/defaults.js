@@ -1,4 +1,4 @@
-/* istanbul ignore file */
+/* node:coverage disable */
 export default {
     root: null,
     rootMargin: '0px 0px 0px 0px',

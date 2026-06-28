@@ -1,5 +1,7 @@
-import { callback } from '../../src/lib/factory';
-import defaults from '../../src/lib/defaults';
+import { describe, it, mock } from 'node:test';
+import assert from 'node:assert/strict';
+import { callback } from '../../src/lib/factory.js';
+import defaults from '../../src/lib/defaults.js';
 
 describe('Scroll points > unit > callback', () => {
 
@@ -11,7 +13,7 @@ describe('Scroll points > unit > callback', () => {
         const observer = { disconnect: () => {} };
         callback({ settings, node })(entries, observer);
 
-        expect(node.classList.contains(defaults.className)).toEqual(false);
+        assert.deepStrictEqual(node.classList.contains(defaults.className), false);
     });
 
     it('should change className if entries[0] is intersecting', () => {
@@ -22,31 +24,31 @@ describe('Scroll points > unit > callback', () => {
         const observer = { disconnect: () => {} };
         callback({ settings, node })(entries, observer);
 
-        expect(node.classList.contains(defaults.className)).toEqual(true);
+        assert.deepStrictEqual(node.classList.contains(defaults.className), true);
     });
 
     it('should invoke callback if intersecting and settings.callback defined', () => {
         document.body.innerHTML = '<div class="test"></div>';
-        const mockCallback = jest.fn();
+        const mockCallback = mock.fn();
         const node = document.querySelector('.test');
         const settings = Object.assign({}, defaults, { callback: mockCallback });
         const entries = [{ isIntersecting: true }];
         const observer = { disconnect: () => {} };
         callback({ settings, node })(entries, observer);
 
-        expect(mockCallback).toBeCalled();
+        assert.ok(mockCallback.mock.callCount() > 0);
     });
 
     it('should invoke disconnect if intersecting and settings.unload truthy', () => {
         document.body.innerHTML = '<div class="test"></div>';
-        const mockDisconnect = jest.fn();
+        const mockDisconnect = mock.fn();
         const node = document.querySelector('.test');
         const settings = defaults;
         const entries = [{ isIntersecting: true }];
         const observer = { disconnect: mockDisconnect };
         callback({ settings, node })(entries, observer);
 
-        expect(mockDisconnect).toBeCalledWith(node);
+        assert.ok(mockDisconnect.mock.calls.some(c => { try { assert.deepStrictEqual(c.arguments, [node]); return true; } catch { return false; } }));
     });
 
     it('should remove className if entries[0] is not intersecting and replay and unload options set to allow replaying', () => {
@@ -55,10 +57,10 @@ describe('Scroll points > unit > callback', () => {
         const settings = { ...defaults, replay: true, unload: false };
         const observer = { disconnect: () => {} };
         callback({ settings, node })([{ isIntersecting: true }], observer);
-        expect(node.classList.contains(defaults.className)).toEqual(true);
-        
+        assert.deepStrictEqual(node.classList.contains(defaults.className), true);
+
         callback({ settings, node })([{ isIntersecting: false }], observer);
-        expect(node.classList.contains(defaults.className)).toEqual(false);
+        assert.deepStrictEqual(node.classList.contains(defaults.className), false);
     });
 
 
