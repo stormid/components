@@ -1,6 +1,6 @@
 ---
 name: new-component
-description: Scaffold a new @stormid component package in this Lerna monorepo, following the boilerplate contract, store/dom patterns, accessibility requirements, and the Jest + Playwright test structure. Use when adding a new component package to packages/, or when the user asks to create/scaffold/start a new component.
+description: Scaffold a new @stormid component package in this Lerna monorepo, following the boilerplate contract, store/dom patterns, accessibility requirements, and the node:test + Playwright test structure. Use when adding a new component package to packages/, or when the user asks to create/scaffold/start a new component.
 ---
 
 # Scaffold a new component
@@ -9,7 +9,7 @@ This monorepo publishes small, framework-agnostic JavaScript behaviour component
 
 ## Step 1 — Copy the boilerplate
 
-Copy `packages/boilerplate` to `packages/<name>` (kebab-case). This gives you the correct file structure, webpack/playwright/jest configs, and an example app skeleton.
+Copy `packages/boilerplate` to `packages/<name>` (kebab-case). This gives you the correct file structure, webpack/playwright configs, and an example app skeleton. Keep the `.js` extensions on relative imports (required by Node's native ESM, which the `node:test` runner uses).
 
 ## Step 2 — Update `package.json`
 
@@ -19,7 +19,13 @@ Set:
 - `private`: `false`, `publishConfig.access`: `public`
 - the microbundle `--name <camelCaseName>` in the `build` script
 
-Mirror the script block from an existing package (`build` / `dev` / `prod` / `prepublish` / `test`). **For `test`, use `jest --coverage && npx playwright test`** — chain with `&&`, not a single `&` (a lone `&` backgrounds Jest on POSIX and discards its exit code, so failing unit tests wouldn't fail the build). Some existing packages still carry the old `&` form; do not copy it.
+Mirror the script block from an existing package (`build` / `dev` / `prod` / `prepublish` / `test`). **For `test`, use:**
+
+```
+node --test --experimental-test-coverage --test-coverage-include="src/**" --import ../../tools/test-setup.mjs "__tests__/unit/*.test.js" && npx playwright test
+```
+
+(use `"__tests__/unit/**/*.test.js"` if you nest unit tests in sub-directories). Chain with `&&`, not a single `&` (a lone `&` backgrounds the unit run on POSIX and discards its exit code). **Archetype D** (no unit tests) uses just `npx playwright test`.
 
 ## Step 3 — Implement the source
 
@@ -34,33 +40,35 @@ Accessibility is mandatory (see CLAUDE.md): keep `aria-expanded` in sync, set `a
 
 ## Step 4 — Write the tests (both layers required)
 
-### Jest — `__tests__/jest/init.js`
+### Unit (`node:test`) — `__tests__/unit/init.test.js`
 
-Set up the DOM with `document.body.innerHTML`, init the component, and assert the contract:
+Test files live in `__tests__/unit/` and are named `*.test.js`. Use Node's built-in runner and `node:assert/strict`; jsdom is provided by the shared `tools/test-setup.mjs` (loaded via `--import` in the `test` script), so just use `document` directly. Set up the DOM with `document.body.innerHTML`, init the component, and assert the contract:
 
 ```js
-import component from '../../src';
-import { getSelection } from '../../src/lib/utils';
+import { describe, it, before } from 'node:test';
+import assert from 'node:assert/strict';
+import component from '../../src/index.js';
+import { getSelection } from '../../src/lib/utils.js';
 
 describe('Component > Init', () => {
-    beforeAll(() => {
+    before(() => {
         document.body.innerHTML = `<div class="js-component"></div>`;
     });
 
     it('should return an array with one instance per matched node', () => {
         const instances = component('.js-component');
-        expect(instances.length).toEqual(1);
+        assert.strictEqual(instances.length, 1);
     });
 
     it('should expose the expected API', () => {
         const instances = component('.js-component');
-        expect(instances[0].node).not.toBeNull();
+        assert.notStrictEqual(instances[0].node, null);
         // getState only for stateful components (those with a store); omit for stateless ones
-        expect(instances[0].getState).not.toBeNull();
+        assert.notStrictEqual(instances[0].getState, null);
     });
 
     it('should return without throwing if no DOM nodes are found', () => {
-        expect(component('.js-not-found')).toBeUndefined();
+        assert.strictEqual(component('.js-not-found'), undefined);
     });
 
     it('should use data attributes as settings, overriding options', () => {
@@ -69,7 +77,7 @@ describe('Component > Init', () => {
 });
 ```
 
-Add further Jest files per concern (e.g. `store.js`, `events-hooks.js`, `state-from-dom.js`) as toggle does.
+Assertion mapping (Jest → node:assert): `toEqual`→`deepStrictEqual`, `toBe`→`strictEqual`, `not.toBeNull()`→`notStrictEqual(x, null)`, `toBeUndefined()`→`strictEqual(x, undefined)`. Mocks use `mock.fn()` from `node:test` (`fn.mock.callCount()`, `fn.mock.calls[i].arguments`). Add further unit files per concern (`store.test.js`, `events-hooks.test.js`, …) as `toggle` does. jsdom lacks `IntersectionObserver`/`ResizeObserver` — stub those at the top of the test file that needs them (see `scroll-points`).
 
 ### Playwright — `__tests__/playwright/playwright.spec.js`
 
@@ -121,4 +129,4 @@ npm run lint -- --fix
 lerna run dev --scope=@stormid/<name>   # sanity-check the example app
 ```
 
-All Jest and Playwright tests (including the Axe block) must pass before the package is considered done.
+All unit (`node:test`) and Playwright tests (including the Axe block) must pass before the package is considered done.

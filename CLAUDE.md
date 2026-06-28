@@ -31,9 +31,9 @@ The library has **four legitimate component shapes**. The contract below describ
 - **A — Per-node augmentation** (default): one instance per matched node, via the factory contract below. `boilerplate`, `toggle`, `modal`, `tabs`, `scroll-points`, `textarea`, `validate`. **The full contract applies.**
 - **B — Shared state across nodes**: one instance coordinates many nodes through a single state machine, so it returns a single object, not an array. `scroll-spy`, `modal-gallery` (gallery mode). Exempt from the per-node / array-return rules.
 - **C — Singleton**: one per page, no selector — takes options only and renders its own DOM. `cookie-banner`. Exempt from `getSelection` / array-return; its DOM-effects file is named `ui.js` (an accepted variant of `dom.js`).
-- **D — Side-effect module**: runs on import to attach a global listener; no factory, no defaults, no instance API. `outliner`, `skip`. Exempt from the factory contract and from Jest (Playwright-only is fine).
+- **D — Side-effect module**: runs on import to attach a global listener; no factory, no defaults, no instance API. `outliner`, `skip`. Exempt from the factory contract and from the unit-test layer (Playwright-only is fine).
 
-**Required of every component** (within its archetype): never throw on init; settings precedence `defaults → options → dataset` wherever `data-*` is read; `defaults.js` default-exported and prefixed `/* istanbul ignore file */`; accessibility correct with axe passing; a `README.md` registered in the root table; and — for any component with DOM/a11y behaviour — both test layers with an axe block (see Testing).
+**Required of every component** (within its archetype): never throw on init; settings precedence `defaults → options → dataset` wherever `data-*` is read; `defaults.js` default-exported and prefixed `/* node:coverage disable */`; accessibility correct with axe passing; a `README.md` registered in the root table; and — for any component with DOM/a11y behaviour — both test layers with an axe block (see Testing).
 
 **Allowed to scale with complexity** (do not force convergence): file granularity (single-file → simple → stateful → directory-per-concern, e.g. `validate`); use of `reducers.js` alongside `store.js` for multi-action state (`validate`, `cookie-banner`, `scroll-spy`); presence of `constants.js`.
 
@@ -43,9 +43,9 @@ Most components are **Archetype A**: the default export is a **factory function*
 
 ```js
 // src/index.js
-import defaults from './lib/defaults';
-import factory from './lib/factory';
-import { getSelection } from './lib/utils';
+import defaults from './lib/defaults.js';
+import factory from './lib/factory.js';
+import { getSelection } from './lib/utils.js';
 
 export default (selector, options) => {
     const nodes = getSelection(selector);
@@ -64,10 +64,11 @@ export default (selector, options) => {
 Rules that keep components consistent:
 
 - **Input flexibility**: `getSelection` (in `lib/utils`) accepts a string selector, an Array of nodes, a NodeList, or a single HTMLElement. Reuse it; don't reimplement selection.
+- **Import extensions**: relative imports include the explicit `.js` extension (`./lib/defaults.js`), or `/index.js` for a directory module. Required by Node's native ESM, which the `node:test` runner loads source under; microbundle and webpack accept them too.
 - **Settings precedence**: always merge in the order `{ ...defaults, ...options, ...node.dataset }` - each spread overrides the previous, so `data-*` attributes win over `options` passed to init, which win over `defaults`. The `...node.dataset` part is optional and not present on every component; include it only when the component reads `data-*` config, but keep this order when you do.
 - **Return value**: always an array of instance objects created with `Object.create(factory(...))`. The factory's return value becomes the instance prototype. **Per-node precondition guard (accepted):** a factory may return a falsy value when a matched node fails an internal markup requirement (e.g. `tabs` returns `false` when no tabs/panels are found); `index.js` then warns and filters that node out. The array length can therefore be shorter than the node count — that is correct, not a contract violation. Warn with the selector named.
 - **Instance API shape**: the factory returns an object that always exposes `node`, plus the component's action methods (e.g. toggle exposes `toggle`, `startToggle`). **`getState` is required only for stateful components** — components with a store expose it; genuinely stateless components (e.g. `textarea`, whose only state is the DOM-readable height) do not, and a no-op `getState` is not worth adding. Keep public APIs to a small set of named functions.
-- **Defaults** live in `src/lib/defaults.js` as a default-exported object (prefix the file with `/* istanbul ignore file */`).
+- **Defaults** live in `src/lib/defaults.js` as a default-exported object (prefix the file with `/* node:coverage disable */` so it's excluded from V8 coverage; inline exclusions use `/* node:coverage ignore next */`).
 - **Errors are warnings**: when input is missing or invalid, `console.warn` and return gracefully — components must never throw during init.
 
 ## File structure within a package
@@ -110,10 +111,10 @@ The DOM-effects file is `dom.js` by convention; `cookie-banner` uses `ui.js` for
 
 ## Testing (both layers are required)
 
-- **Jest** unit tests in `packages/*/__tests__/jest/` (jsdom env, run with `--coverage`). Every component has an init suite asserting: the returned array length, the instance API shape, no-throw when no nodes match, and that `data-*` overrides options.
+- **`node:test`** unit tests in `packages/*/__tests__/unit/` as `*.test.js` (Node's built-in runner, `node:assert/strict` assertions). jsdom is supplied per test-file process by the shared `tools/test-setup.mjs` via `--import`; coverage is V8-based, scoped with `--test-coverage-include="src/**"`. Every component has an init suite asserting: the returned array length (a single object for Archetype B), the instance API shape, no-throw when no nodes match, and that `data-*` overrides options.
 - **Playwright** e2e + a11y tests in `packages/*/__tests__/playwright/`, using the `Component > Category` describe-block naming (tagged `@all` / `@reduced`). The `Axe` block is required for every component and asserts zero violations; add `Functionality` and, where the component warrants them, `Keyboard` / `Aria` (or component-specific) blocks — only the categories the component actually exercises (`textarea` / `skip` show non-standard sets). Don't ship empty placeholder blocks.
-- Both layers are required for any component with DOM/a11y behaviour. **Archetype D** (side-effect modules, e.g. `outliner`/`skip`) may be Playwright-only — Jest runs with `--passWithNoTests`.
-- A package's `test` script runs both layers and **must fail if either fails**: chain them (`jest --coverage && npx playwright test`) or split into `test:unit` / `test:e2e` — do not use a single `&`, which backgrounds Jest and discards its exit code. The `new-component` skill has the exact test templates.
+- Both layers are required for any component with DOM/a11y behaviour. **Archetype D** (side-effect modules, e.g. `outliner`/`skip`) may be Playwright-only — the package omits the `node --test` command from its `test` script entirely (node:test has no `--passWithNoTests` and errors on an empty glob), leaving just `npx playwright test`.
+- A package's `test` script runs both layers and **must fail if either fails**: chain them with `&&` (`node --test … && npx playwright test`) — do not use a single `&`, which backgrounds the unit run and discards its exit code. The `new-component` skill has the exact test templates and the full `node --test` invocation.
 
 ## Code style
 
