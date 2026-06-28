@@ -1,4 +1,4 @@
-/* istanbul ignore file */
+/* node:coverage disable */
 /*
  * Default settings used by a Toggle instance if not otherwise overwritten with config
  *

@@ -1,5 +1,7 @@
-import toggle from '../../src';
-import { getSelection } from '../../src/lib/utils';
+import { describe, it, before } from 'node:test';
+import assert from 'node:assert/strict';
+import toggle from '../../src/index.js';
+import { getSelection } from '../../src/lib/utils.js';
 
 let Toggles, ToggleLocals;
 
@@ -12,7 +14,7 @@ const init = () => {
             <div tabindex="0">Test focusable content</div>
             <div tabindex="0">Test focusable content</div>
         </div>
-        
+
         <button id="target-4" class="js-toggle__btn-2">Test toggle</button>
         <div id="target-4" class="js-toggle-local" data-toggle="js-toggle__btn-2" data-start-open="true"></div>`;
 
@@ -25,35 +27,35 @@ const init = () => {
 };
 
 
-describe(`Toggle > Init`, () => {
-    
-    beforeAll(init);
+describe('Toggle > Init', () => {
 
-    it('should return array of length 2', async () => {
-        expect(Toggles.length).toEqual(1);
+    before(init);
+
+    it('should return array of length 2', () => {
+        assert.strictEqual(Toggles.length, 1);
     });
 
     it('should return the expected API', () => {
-        expect(Toggles[0]).not.toBeNull();
-        expect(Toggles[0].node).not.toBeNull();
-        expect(Toggles[0].startToggle).not.toBeNull();
-        expect(Toggles[0].toggle).not.toBeNull();
-        expect(Toggles[0].getState).not.toBeNull();
+        assert.notStrictEqual(Toggles[0], null);
+        assert.notStrictEqual(Toggles[0].node, null);
+        assert.notStrictEqual(Toggles[0].startToggle, null);
+        assert.notStrictEqual(Toggles[0].toggle, null);
+        assert.notStrictEqual(Toggles[0].getState, null);
     });
 
     it('should return without throwing if no DOM nodes are found', () => {
-        expect(toggle('.js-not-found')).toBeUndefined();
+        assert.strictEqual(toggle('.js-not-found'), undefined);
     });
 
     it('should use data attributes as settings, overriding options', () => {
-        expect(ToggleLocals[0].getState().settings.startOpen).toEqual('true');
-        expect(ToggleLocals[0].getState().isOpen).toEqual(true);
+        assert.strictEqual(ToggleLocals[0].getState().settings.startOpen, 'true');
+        assert.strictEqual(ToggleLocals[0].getState().isOpen, true);
     });
 
-    it('should expose a toggle function that toggles the state of the instance', async () => {
-        expect(Toggles[0].getState().isOpen).toEqual(false);
+    it('should expose a toggle function that toggles the state of the instance', () => {
+        assert.strictEqual(Toggles[0].getState().isOpen, false);
         Toggles[0].toggle();
-        expect(Toggles[0].getState().isOpen).toEqual(true);
+        assert.strictEqual(Toggles[0].getState().isOpen, true);
         Toggles[0].toggle();
     });
 
@@ -70,38 +72,38 @@ describe('Toggle > Initialisation > Get Selection', () => {
             <div tabindex="0">Test focusable content</div>
             <div tabindex="0">Test focusable content</div>
         </div>
-        
+
         <button id="target-4" class="js-toggle__btn-2">Test toggle</button>
         <div id="target-4" class="js-toggle-local" data-toggle="js-toggle__btn-2" data-start-open="true"></div>`;
-    }
+    };
 
-    beforeAll(setupDOM);
+    before(setupDOM);
 
-    it('should return an array when passed a DOM element', async () => {
+    it('should return an array when passed a DOM element', () => {
         const toggles = document.querySelector('.js-toggle');
         const els = getSelection(toggles);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.strictEqual(els.length, 1);
     });
 
-    it('should return an array when passed a NodeList element', async () => {
+    it('should return an array when passed a NodeList element', () => {
         const toggles = document.querySelectorAll('.js-toggle');
         const els = getSelection(toggles);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.strictEqual(els.length, 1);
     });
 
-    it('should return an array when passed an array of DOM elements', async () => {
+    it('should return an array when passed an array of DOM elements', () => {
         const toggles = document.querySelector('.js-toggle');
         const els = getSelection([toggles]);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.strictEqual(els.length, 1);
     });
 
-    it('should return an array when passed a string', async () => {
+    it('should return an array when passed a string', () => {
         const els = getSelection('.js-toggle');
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.strictEqual(els.length, 1);
     });
 
 });

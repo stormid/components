@@ -1,4 +1,4 @@
-import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, EVENTS } from './constants';
+import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, EVENTS } from './constants.js';
 
 /*
  * Partially applied function
