@@ -42,7 +42,7 @@ Accessibility is mandatory (see CLAUDE.md): keep `aria-expanded` in sync, set `a
 
 ### Unit (`node:test`) — `__tests__/unit/init.test.js`
 
-Test files live in `__tests__/unit/` and are named `*.test.js`. Use Node's built-in runner and `node:assert/strict`; jsdom is provided by the shared `tools/test-setup.mjs` (loaded via `--import` in the `test` script), so just use `document` directly. Set up the DOM with `document.body.innerHTML`, init the component, and assert the contract:
+Test files live in `__tests__/unit/` and are named `*.test.js`. Use Node's built-in runner and `node:assert/strict`; a DOM (happy-dom) is provided by the shared `tools/test-setup.mjs` (loaded via `--import` in the `test` script), so just use `document` directly. Set up the DOM with `document.body.innerHTML`, init the component, and assert the contract:
 
 ```js
 import { describe, it, before } from 'node:test';
@@ -77,7 +77,7 @@ describe('Component > Init', () => {
 });
 ```
 
-Assertion mapping (Jest → node:assert): `toEqual`→`deepStrictEqual`, `toBe`→`strictEqual`, `not.toBeNull()`→`notStrictEqual(x, null)`, `toBeUndefined()`→`strictEqual(x, undefined)`. Mocks use `mock.fn()` from `node:test` (`fn.mock.callCount()`, `fn.mock.calls[i].arguments`). Add further unit files per concern (`store.test.js`, `events-hooks.test.js`, …) as `toggle` does. jsdom lacks `IntersectionObserver`/`ResizeObserver` — stub those at the top of the test file that needs them (see `scroll-points`).
+Assertion mapping (Jest → node:assert): `toEqual`→`deepStrictEqual`, `toBe`→`strictEqual`, `not.toBeNull()`→`notStrictEqual(x, null)`, `toBeUndefined()`→`strictEqual(x, undefined)`. Mocks use `mock.fn()` from `node:test` (`fn.mock.callCount()`, `fn.mock.calls[i].arguments`). Add further unit files per concern (`store.test.js`, `events-hooks.test.js`, …) as `toggle` does. The DOM environment doesn't provide `IntersectionObserver`/`ResizeObserver` — stub those at the top of the test file that needs them (see `scroll-points`).
 
 ### Playwright — `__tests__/playwright/playwright.spec.js`
 
