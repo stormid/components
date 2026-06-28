@@ -1,4 +1,4 @@
-/* istanbul ignore file */
+/* node:coverage disable */
 export default {
     events: [
         'input'

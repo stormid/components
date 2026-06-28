@@ -1,5 +1,5 @@
-import defaults from './lib/defaults';
-import { getSelection } from './lib/utils';
+import defaults from './lib/defaults.js';
+import { getSelection } from './lib/utils.js';
 
 const isHidden = el => el.offsetParent === null;
 
