@@ -1,5 +1,7 @@
-import component from '../../src';
-import { getSelection } from '../../src/lib/utils';
+import { describe, it, before } from 'node:test';
+import assert from 'node:assert/strict';
+import component from '../../src/index.js';
+import { getSelection } from '../../src/lib/utils.js';
 
 let basic, withCallback;
 const init = () => {
@@ -18,26 +20,26 @@ const init = () => {
 };
 
 describe(`Boilerplate > Initialisation`, () => {
-    
-    beforeAll(init);
+
+    before(init);
 
     it('should return two instances for a selector matching two DOMElements', async () => {
-        expect(basic.length).toEqual(2);
+        assert.deepStrictEqual(basic.length, 2);
     });
 
     it('should return undefined if no DOMElements are matched', async () => {
-        expect(component('.js-unfound')).toEqual(undefined);
+        assert.deepStrictEqual(component('.js-unfound'), undefined);
     });
 
     it('each instances should be an object with DOMElement, settings, and  click properties', () => {
-        expect(basic[0]).not.toBeNull();
-        expect(basic[0].node).not.toBeNull();
-        expect(basic[0].settings).not.toBeNull();
-        expect(basic[0].click).not.toBeNull();
+        assert.notStrictEqual(basic[0], null);
+        assert.notStrictEqual(basic[0].node, null);
+        assert.notStrictEqual(basic[0].settings, null);
+        assert.notStrictEqual(basic[0].click, null);
     });
 
     it('should initialisation with different settings if different options are passed', () => {
-        expect(basic[0].settings.callback).not.toEqual(withCallback[0].settings.callback);
+        assert.notStrictEqual(basic[0].settings.callback, withCallback[0].settings.callback);
     });
 
 });
@@ -45,14 +47,14 @@ describe(`Boilerplate > Initialisation`, () => {
 describe('Boilerplate > Options', () => {
 
     it('should be passed in options', () => {
-        expect(withCallback[0].settings.callback).not.toBeNull();
-        expect(basic[0].settings.callback).toBeNull();
+        assert.notStrictEqual(withCallback[0].settings.callback, null);
+        assert.strictEqual(basic[0].settings.callback, null);
     });
 
     it('should be execute a callback passed in options', () => {
-        expect(withCallback[0].node.classList).not.toContain('callback-test');
+        assert.ok(!withCallback[0].node.classList.contains('callback-test'));
         withCallback[0].node.click();
-        expect(withCallback[0].node.classList).toContain('callback-test');
+        assert.ok(withCallback[0].node.classList.contains('callback-test'));
     });
 
 });
@@ -63,33 +65,33 @@ describe('Boilerplate > Initialisation > Get Selection', () => {
         document.body.innerHTML = `<div class="js-boilerplate test"></div>`;
     }
 
-    beforeAll(setupDOM);
+    before(setupDOM);
 
     it('should return an array when passed a DOM element', async () => {
         const boilerplate = document.querySelector('.js-boilerplate');
         const els = getSelection(boilerplate);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
     it('should return an array when passed a NodeList element', async () => {
         const boilerplate = document.querySelectorAll('.js-boilerplate');
         const els = getSelection(boilerplate);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
     it('should return an array when passed an array of DOM elements', async () => {
         const boilerplate = document.querySelector('.js-boilerplate');
         const els = getSelection([boilerplate]);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
     it('should return an array when passed a string', async () => {
         const els = getSelection('.js-boilerplate');
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
 });
