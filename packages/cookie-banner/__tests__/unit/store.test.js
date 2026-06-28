@@ -1,4 +1,6 @@
-import { createStore } from '../../src/lib/store';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import { createStore } from '../../src/lib/store.js';
 
 describe(`Cookie banner > Store`, () => {
 
@@ -9,31 +11,31 @@ describe(`Cookie banner > Store`, () => {
     };
 
     it('createStore should return an Object with an API', async () => {
-        expect(Store).not.toBeNull();
-        expect(Store.getState).not.toBeNull();
-        expect(Store.update).not.toBeNull();
+        assert.notStrictEqual(Store, null);
+        assert.notStrictEqual(Store.getState, null);
+        assert.notStrictEqual(Store.update, null);
     });
 
     it('should have a getState function that returns a private state Object', async () => {
-        expect(Store.state).toBeUndefined();
-        expect(Store.getState()).toEqual({});
+        assert.strictEqual(Store.state, undefined);
+        assert.deepStrictEqual(Store.getState(), {});
     });
 
     it('should have an update function that updates state', async () => {
         const nextState = { isOpen: true };
         Store.update(nextState);
-        expect(Store.getState()).toEqual(nextState);
+        assert.deepStrictEqual(Store.getState(), nextState);
     });
 
     it('should have an update function that does not update state if nextState is not passed', async () => {
         const Store = createStore();
         Store.update();
-        expect(Store.getState()).toEqual({});
+        assert.deepStrictEqual(Store.getState(), {});
     });
 
     it('should have an update function that invokes any side effect functions passed after the state change, with new null or undefined state', async () => {
         Store.update(null, [sideEffect]);
-        expect(effect).toEqual(true);
+        assert.deepStrictEqual(effect, true);
     });
 
 

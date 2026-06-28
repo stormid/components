@@ -1,4 +1,6 @@
-import { applyEffects } from '../../src/lib/consent';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import { applyEffects } from '../../src/lib/consent.js';
 
 describe(`Cookie banner > consent > callback`, () => {
     document.body.innerHTML = `<main><div class="privacy-banner__form-container"></div><p id="test"><p><p id="test2"></p></main>`;
@@ -31,9 +33,9 @@ describe(`Cookie banner > consent > callback`, () => {
 
         const state = { settings: { types }, consent: { test: 1, test2: 0 }};
         applyEffects(state);
-        expect(document.getElementById('test').textContent).toEqual("Consent given");
-        expect(document.getElementById('test2').textContent).toEqual("");
-            
+        assert.deepStrictEqual(document.getElementById('test').textContent, "Consent given");
+        assert.deepStrictEqual(document.getElementById('test2').textContent, "");
+
     });
 
 });

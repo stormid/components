@@ -1,6 +1,8 @@
-import cookieBanner from '../../src';
-import defaults from '../../src/lib/defaults';
-import sampleTemplates from '../../example/src/js/sample-templates';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import cookieBanner from '../../src/index.js';
+import defaults from '../../src/lib/defaults.js';
+import sampleTemplates from '../../example/src/js/sample-templates.js';
 
 describe(`Cookie banner > DOM > form > render by api`, () => {
 
@@ -36,11 +38,11 @@ describe(`Cookie banner > DOM > form > render by api`, () => {
                 }
             }
         });
-        expect(document.querySelector(`.${defaults.classNames.form}`)).toBeNull();
-        
+        assert.strictEqual(document.querySelector(`.${defaults.classNames.form}`), null);
+
         document.querySelector('main').innerHTML = `<div class="privacy-banner__form-container"></div>`;
         instance.renderForm();
-        expect(document.querySelector(`.${defaults.classNames.form}`)).not.toBeNull();
+        assert.notStrictEqual(document.querySelector(`.${defaults.classNames.form}`), null);
 
     });
 

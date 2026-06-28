@@ -1,6 +1,8 @@
-import cookieBanner from '../../src';
-import { updateConsent, updateExecuted } from '../../src/lib/reducers';
-import sampleTemplates from '../../example/src/js/sample-templates';
+import { describe, it, before } from 'node:test';
+import assert from 'node:assert/strict';
+import cookieBanner from '../../src/index.js';
+import { updateConsent, updateExecuted } from '../../src/lib/reducers.js';
+import sampleTemplates from '../../example/src/js/sample-templates.js';
 
 const init = () => {
     // Set up container for form
@@ -9,7 +11,7 @@ const init = () => {
 };
 
 describe(`Cookie banner > state > update/reducers`, () => {
-    beforeAll(init);
+    before(init);
 
     it('initialState should set the initial state based on options', async () => {
         const types = {
@@ -27,7 +29,12 @@ describe(`Cookie banner > state > update/reducers`, () => {
         };
         const Store = cookieBanner({ ...sampleTemplates, types });
 
-        expect(Store.getState().settings.types).toEqual(types);
+        // Jest's toEqual ignored undefined-valued properties; node:assert's
+        // deepStrictEqual does not. Init runs the `executed` reducer, which sets
+        // types.test.executed to undefined (no consent yet), so reflect that here.
+        assert.deepStrictEqual(Store.getState().settings.types, {
+            test: { ...types.test, executed: undefined }
+        });
     });
 
 
@@ -58,7 +65,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
         };
         const state = { settings: { types } };
         const data = { test: 1, test2: 0 };
-        expect(updateConsent(state, data)).toEqual({
+        assert.deepStrictEqual(updateConsent(state, data), {
             consent: {
                 test: 1, test2: 0
             },
@@ -112,7 +119,7 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 fns: []
             }
         };
-        expect(updateExecuted(state, data)).toEqual({
+        assert.deepStrictEqual(updateExecuted(state, data), {
             consent: { test: 1, test2: 0 },
             settings: {
                 types: {

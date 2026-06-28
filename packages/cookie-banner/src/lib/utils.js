@@ -1,4 +1,4 @@
-import { FOCUSABLE_ELEMENTS } from './constants';
+import { FOCUSABLE_ELEMENTS } from './constants.js';
 
 //Modernizr cookie test
 export const cookiesEnabled = () => {

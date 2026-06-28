@@ -1,5 +1,5 @@
-/* istanbul ignore file */
-import { removeSubdomain } from './utils';
+/* node:coverage disable */
+import { removeSubdomain } from './utils.js';
 
 export default {
     name: '.CookiePreferences',

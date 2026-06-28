@@ -1,10 +1,10 @@
-import { cookiesEnabled, extractFromCookie, renderIframe, gtmSnippet, setGoogleConsent } from './utils';
-import { showBanner, initBanner, initForm, initBannerListeners, keyListener } from './ui';
-import { necessary, apply } from './consent';
-import { createStore } from './store';
+import { cookiesEnabled, extractFromCookie, renderIframe, gtmSnippet, setGoogleConsent } from './utils.js';
+import { showBanner, initBanner, initForm, initBannerListeners, keyListener } from './ui.js';
+import { necessary, apply } from './consent.js';
+import { createStore } from './store.js';
 
 export default settings => {
-    /* istanbul ignore next */
+    /* node:coverage ignore next */
     if (!cookiesEnabled()) return;
     if(!settings.bannerTemplate || !settings.formTemplate) {
         console.warn('Missing required cookie banner and/or preferences form markup. Cookie banner not initialised.');

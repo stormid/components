@@ -1,6 +1,8 @@
-import cookieBanner from '../../src';
-import defaults from '../../src/lib/defaults';
-import sampleTemplates from '../../example/src/js/sample-templates';
+import { describe, it, before, mock } from 'node:test';
+import assert from 'node:assert/strict';
+import cookieBanner from '../../src/index.js';
+import defaults from '../../src/lib/defaults.js';
+import sampleTemplates from '../../example/src/js/sample-templates.js';
 
 let instance;
 
@@ -38,30 +40,30 @@ const init = () => {
 };
 
 describe(`Cookie banner > showBanner > show banner`, () => {
-    beforeAll(init);
+    before(init);
 
     it('It should not show the banner if is already showing', async () => {
-        expect(document.querySelector(`.${defaults.classNames.banner}`)).not.toBeNull();
-        expect(instance.getState().bannerOpen).toBe(true);
+        assert.notStrictEqual(document.querySelector(`.${defaults.classNames.banner}`), null);
+        assert.strictEqual(instance.getState().bannerOpen, true);
         instance.showBanner();
-        expect(document.querySelectorAll(`.${defaults.classNames.banner}`).length).toBe(1);
+        assert.strictEqual(document.querySelectorAll(`.${defaults.classNames.banner}`).length, 1);
     });
 
     it('It should show the banner and invoke the callback function', async () => {
-        expect(document.querySelector(`.${defaults.classNames.banner}`)).not.toBeNull();
-        expect(instance.getState().bannerOpen).toBe(true);
+        assert.notStrictEqual(document.querySelector(`.${defaults.classNames.banner}`), null);
+        assert.strictEqual(instance.getState().bannerOpen, true);
         //hide it
         document.querySelector(`.${defaults.classNames.acceptBtn}`).click();
-        expect(instance.getState().bannerOpen).toBe(false);
-        expect(document.querySelector(`.${defaults.classNames.banner}`)).toBeNull();
+        assert.strictEqual(instance.getState().bannerOpen, false);
+        assert.strictEqual(document.querySelector(`.${defaults.classNames.banner}`), null);
 
         //show it
-        const cb = jest.fn();
+        const cb = mock.fn();
         instance.showBanner(cb);
-        expect(instance.getState().bannerOpen).toBe(true);
-        expect(document.querySelector(`.${defaults.classNames.banner}`)).not.toBeNull();
+        assert.strictEqual(instance.getState().bannerOpen, true);
+        assert.notStrictEqual(document.querySelector(`.${defaults.classNames.banner}`), null);
         const nextState = instance.getState();
-        expect(cb).toHaveBeenCalledWith(nextState);
+        assert.ok(cb.mock.calls.some(c => { try { assert.deepStrictEqual(c.arguments, [nextState]); return true; } catch { return false; } }));
     });
 
 });
