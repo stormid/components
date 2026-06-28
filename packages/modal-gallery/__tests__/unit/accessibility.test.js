@@ -1,5 +1,7 @@
-import modalGallery from '../../src';
-import { KEY_CODES } from '../../src/lib/constants';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import modalGallery from '../../src/index.js';
+import { KEY_CODES } from '../../src/lib/constants.js';
 
 describe(`Modal Gallery > accessibility > keyboard > escape`, () => {
 
@@ -22,9 +24,9 @@ describe(`Modal Gallery > accessibility > keyboard > escape`, () => {
 
         const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[0].trigger.click();
-        expect(Gallery.getState().isOpen).toEqual(true);
+        assert.deepStrictEqual(Gallery.getState().isOpen, true);
         document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.ESC, bubbles: true }));
-        expect(Gallery.getState().isOpen).toEqual(false);
+        assert.deepStrictEqual(Gallery.getState().isOpen, false);
     });
 
 });
@@ -50,10 +52,10 @@ describe(`Modal Gallery > accessibility > keyboard > left`, () => {
 
         const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[1].trigger.click();
-        expect(Gallery.getState().current).toEqual(1);
+        assert.deepStrictEqual(Gallery.getState().current, 1);
         document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.LEFT, bubbles: true }));
-        expect(Gallery.getState().current).toEqual(0);
-    
+        assert.deepStrictEqual(Gallery.getState().current, 0);
+
     });
 
 });
@@ -79,10 +81,10 @@ describe(`Modal Gallery > accessibility > keyboard > right`, () => {
 
         const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[0].trigger.click();
-        expect(Gallery.getState().current).toEqual(0);
+        assert.deepStrictEqual(Gallery.getState().current, 0);
         document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.RIGHT, bubbles: true }));
-        expect(Gallery.getState().current).toEqual(1);
-    
+        assert.deepStrictEqual(Gallery.getState().current, 1);
+
     });
 
 });
@@ -108,7 +110,7 @@ describe(`Modal Gallery > accessibility > keyboard > tab`, () => {
 
         const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[0].trigger.click();
-        expect(Gallery.getState().current).toEqual(0);
+        assert.deepStrictEqual(Gallery.getState().current, 0);
         // expect(document.activeElement).toEqual(Gallery.getState().dom.focusableChildren[0]);
         //urgh, JSDOM doesn't dig document.activeElement
         //checking the test coverage it doesa appear that the correct items are being focused and tab is trapped
@@ -120,7 +122,7 @@ describe(`Modal Gallery > accessibility > keyboard > tab`, () => {
         document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
         document.dispatchEvent(new window.KeyboardEvent('keydown', { shiftKey: true, keyCode: KEY_CODES.TAB, bubbles: true }));
         // expect(document.activeElement).toEqual(Gallery.getState().dom.focusableChildren[0]);
-    
+
     });
 
 });
@@ -147,10 +149,10 @@ describe(`Modal Gallery > accessibility > keyboard`, () => {
 
         const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[0].trigger.click();
-        expect(Gallery.getState().current).toEqual(0);
+        assert.deepStrictEqual(Gallery.getState().current, 0);
         document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: 83, bubbles: true }));
-        expect(Gallery.getState().current).toEqual(0);
-    
+        assert.deepStrictEqual(Gallery.getState().current, 0);
+
     });
 
 });

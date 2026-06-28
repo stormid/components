@@ -1,5 +1,7 @@
-import modalGallery from '../../src';
-import { getSelection} from '../../src/lib/init'
+import { describe, it, before } from 'node:test';
+import assert from 'node:assert/strict';
+import modalGallery from '../../src/index.js';
+import { getSelection } from '../../src/lib/init.js';
 
 describe(`Modal Gallery > Initialisation > gallery`, () => {
 
@@ -11,19 +13,19 @@ describe(`Modal Gallery > Initialisation > gallery`, () => {
 			<img src="https://placehold.co/200x200" alt="">
 		</a>`;
         const gallery = modalGallery('.js-modal-gallery');
-        expect(gallery).not.toBeUndefined();
-        expect(gallery.getState).not.toBeUndefined();
-        expect(gallery.getState().items.length).toEqual(2);
-        expect(gallery.getState().isOpen).toEqual(false);
-        expect(gallery.getState().current).toEqual(null);
+        assert.notStrictEqual(gallery, undefined);
+        assert.notStrictEqual(gallery.getState, undefined);
+        assert.deepStrictEqual(gallery.getState().items.length, 2);
+        assert.deepStrictEqual(gallery.getState().isOpen, false);
+        assert.deepStrictEqual(gallery.getState().current, null);
     });
 
     it('should return undefined when passed a DOM selector that does not match links', async () => {
-        expect(modalGallery('.js-not-found')).toBeUndefined();
+        assert.strictEqual(modalGallery('.js-not-found'), undefined);
     });
-	
+
     it('should return undefined when passed a zero-length selector or node array', async () => {
-        expect(modalGallery('')).toBeUndefined();
+        assert.strictEqual(modalGallery(''), undefined);
     });
 
     it('should return an Object with minimal possible options when passed a DOM selector matching links', async () => {
@@ -34,11 +36,11 @@ describe(`Modal Gallery > Initialisation > gallery`, () => {
 			<img src="https://placehold.co/200x200" alt="">
 		</a>`;
         const gallery = modalGallery('.js-modal-gallery');
-        expect(gallery).not.toBeUndefined();
-        expect(gallery.getState).not.toBeUndefined();
-        expect(gallery.getState().items.length).toEqual(2);
-        expect(gallery.getState().isOpen).toEqual(false);
-        expect(gallery.getState().current).toEqual(null);
+        assert.notStrictEqual(gallery, undefined);
+        assert.notStrictEqual(gallery.getState, undefined);
+        assert.deepStrictEqual(gallery.getState().items.length, 2);
+        assert.deepStrictEqual(gallery.getState().isOpen, false);
+        assert.deepStrictEqual(gallery.getState().current, null);
     });
 
 });
@@ -53,12 +55,12 @@ describe(`Modal Gallery > Initisation > single`, () => {
 			<img src="https://placehold.co/200x200" alt="">
 		</a>`;
         const gallery = modalGallery('.js-modal-gallery', { single: true });
-        expect(gallery).not.toBeUndefined();
-        expect(gallery.length).toEqual(2);
+        assert.notStrictEqual(gallery, undefined);
+        assert.deepStrictEqual(gallery.length, 2);
     });
 
     it('should return undefined when passed a DOM selector that does not match links', async () => {
-        expect(modalGallery('.js-not-found', { single: true })).toBeUndefined();
+        assert.strictEqual(modalGallery('.js-not-found', { single: true }), undefined);
     });
 
     it('should return an Object with minimal possible options when passed a DOM selector matching links', async () => {
@@ -69,8 +71,8 @@ describe(`Modal Gallery > Initisation > single`, () => {
 			<img src="https://placehold.co/200x200" alt="">
 		</a>`;
         const gallery = modalGallery('.js-modal-gallery', { single: true });
-        expect(gallery).not.toBeUndefined();
-        expect(gallery.length).toEqual(2);
+        assert.notStrictEqual(gallery, undefined);
+        assert.deepStrictEqual(gallery.length, 2);
     });
 
 });
@@ -94,13 +96,13 @@ describe(`Modal Gallery > Initialisation > gallery from code`, () => {
             title: el.getAttribute('data-title') || '',
             description: el.getAttribute('data-description') || ''
         }));
-        
+
         const gallery = modalGallery(items);
-        expect(gallery).not.toBeUndefined();
-        expect(gallery.getState).not.toBeUndefined();
-        expect(gallery.getState().items.length).toEqual(2);
-        expect(gallery.getState().isOpen).toEqual(false);
-        expect(gallery.getState().current).toEqual(null);
+        assert.notStrictEqual(gallery, undefined);
+        assert.notStrictEqual(gallery.getState, undefined);
+        assert.deepStrictEqual(gallery.getState().items.length, 2);
+        assert.deepStrictEqual(gallery.getState().isOpen, false);
+        assert.deepStrictEqual(gallery.getState().current, null);
     });
 
 });
@@ -113,33 +115,33 @@ describe('Modal gallery > Initialisation > Get Selection', () => {
         </a>`;
     }
 
-    beforeAll(setupDOM);
+    before(setupDOM);
 
     it('should return an array when passed a DOM element', async () => {
         const modal = document.querySelector('.js-modal-gallery');
         const els = getSelection(modal);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
     it('should return an array when passed a NodeList element', async () => {
         const modal = document.querySelectorAll('.js-modal-gallery');
         const els = getSelection(modal);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
     it('should return an array when passed an array of DOM elements', async () => {
         const modal = document.querySelector('.js-modal-gallery');
         const els = getSelection([modal]);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
     it('should return an array when passed a string', async () => {
         const els = getSelection('.js-modal-gallery');
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
 });

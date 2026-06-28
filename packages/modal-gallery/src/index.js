@@ -1,4 +1,4 @@
-import { singles, galleries } from './lib/init';
+import { singles, galleries } from './lib/init.js';
 
 export default (src, options) => {
     if (!src) return void console.warn('Modal Gallery cannot be initialised, no images found');

@@ -1,4 +1,4 @@
-import { FOCUSABLE_ELEMENTS } from './constants';
+import { FOCUSABLE_ELEMENTS } from './constants.js';
 
 export const sanitize = item => item.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 

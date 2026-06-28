@@ -1,11 +1,13 @@
-/* istanbul ignore file */
-import { sanitize } from '../utils';
+/* node:coverage disable */
+import { sanitize } from '../utils.js';
 
 export const overlay = () => {
     const overlay = document.createElement('div');
 
     overlay.className = 'modal-gallery__outer js-modal-gallery__outer';
     overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Image gallery');
     overlay.setAttribute('tabindex', '-1');
     overlay.setAttribute('aria-hidden', true);
 
