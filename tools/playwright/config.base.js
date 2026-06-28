@@ -1,6 +1,6 @@
 const { devices } = require('@playwright/test');
 
-// CURRENT MAX PORT NUMBER IN USE: 8092
+// CURRENT MAX PORT NUMBER IN USE: 8094
 
 module.exports = {
   testDir: './__tests__/playwright',
