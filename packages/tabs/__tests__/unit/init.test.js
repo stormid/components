@@ -119,7 +119,7 @@ describe(`Tabs > init`, () => {
 
         TabSet = tabs('[role=tablist]');
         // Original Jest test scheduled this assertion in a fire-and-forget setTimeout
-        // that the runner never awaited, so it never gated the result. jsdom does not
+        // that the runner never awaited, so it never gated the result. happy-dom does not
         // surface the component's deferred focus() to document.activeElement here, so
         // the check is preserved verbatim but non-enforcing (focus is covered by Playwright).
         await new Promise(resolve => setTimeout(() =>{

@@ -52,7 +52,7 @@ describe(`Modal Gallery > options > fullscreen`, () => {
         assert.deepStrictEqual(Gallery.getState().settings.fullscreen, true);
         Gallery.getState().items[0].trigger.click();
         Gallery.getState().dom.overlay.querySelector('.js-modal-gallery__close').click();
-        //jsdom does not support Element.requestFullscreen()/document.exitFullscreen
+        //happy-dom does not support Element.requestFullscreen()/document.exitFullscreen
         //we can only determine that the setting is correctly configured
     });
 
@@ -80,7 +80,7 @@ describe(`Modal Gallery > options > scrollable`, () => {
 
         const Gallery = modalGallery('.js-modal-gallery', { scrollable: true });
         assert.deepStrictEqual(Gallery.getState().settings.scrollable, true);
-        //jsdom does not support image load event, so the image is never rendered
+        //happy-dom does not support image load event, so the image is never rendered
         //we can only determine that the setting is correctly configured
     });
 
