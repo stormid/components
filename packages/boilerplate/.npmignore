@@ -4,4 +4,3 @@ src
 __tests__
 example
 coverage
-jest.config.js
