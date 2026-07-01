@@ -98,7 +98,7 @@ describe(`Tabs > init`, () => {
     });
 
     it('should set focus on first tab by default', async () => {
-        document.body.innerHTML = `<div role="tablist" data-active-index="1">
+        document.body.innerHTML = `<div role="tablist">
             <nav class="tabs__nav">
                 <a id="tab-1" class="tabs__nav-link js-tabs__link" href="#panel-1" role="tab">Tab 1</a>
                 <a id="tab-2" class="tabs__nav-link js-tabs__link" href="#panel-2" role="tab">Tab 2</a>
@@ -117,15 +117,10 @@ describe(`Tabs > init`, () => {
             </section>
         </div>`;
 
-        TabSet = tabs('[role=tablist]');
-        // Original Jest test scheduled this assertion in a fire-and-forget setTimeout
-        // that the runner never awaited, so it never gated the result. happy-dom does not
-        // surface the component's deferred focus() to document.activeElement here, so
-        // the check is preserved verbatim but non-enforcing (focus is covered by Playwright).
-        await new Promise(resolve => setTimeout(() =>{
-            try {
-                assert.ok(document.activeElement.classList.contains('tabs__nav-link'));
-            } catch { /* non-enforcing, matches original Jest behaviour */ }
+        TabSet = tabs('[role=tablist]', { focusOnLoad: true });
+        await new Promise(resolve => setTimeout(() => {
+            assert.ok(document.activeElement.classList.contains('tabs__nav-link'));
+            assert.strictEqual(document.activeElement.id, 'tab-1');
             resolve();
         }, 1));
     });
