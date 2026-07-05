@@ -123,6 +123,7 @@ Enforced by `@stormid/eslint-config` (lint before committing). Observed conventi
 ## Git
 
 - Do not add a `Co-Authored-By: Claude` trailer to commits — use a plain commit message.
+- Keep commit messages concise: a single short subject line. Don't add long descriptive bodies unless the change genuinely needs explanation.
 
 ## Per-package docs
 
