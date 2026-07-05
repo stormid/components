@@ -1,4 +1,4 @@
-import { isSubmitButton, hasNameValue, hasFormactionValue } from './utils.js';
+import { hasNameValue, hasFormactionValue } from './utils.js';
 import {
     createButtonValueNode,
     cleanupButtonValueNode

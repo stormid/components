@@ -7,7 +7,7 @@ export const cookiesEnabled = () => {
         const ret = document.cookie.indexOf('cookietest=') !== -1;
         document.cookie = 'cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT';
         return ret;
-    } catch (error) {
+    } catch {
         return false;
     }
 };
@@ -61,7 +61,7 @@ export const extractFromCookie = settings => {
         const hasCookie = consent !== undefined;
         if (!categoriesMatch(Object.keys(consent), Object.keys(settings.types))) return [false, {}];
         return [hasCookie, consent || {}];
-    } catch (e){
+    } catch {
         return [false, {}];
     }
 };
