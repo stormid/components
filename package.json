@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "test": "lerna run test --stream",
-    "lint": "eslint packages -c .eslintrc --ext js"
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
@@ -12,16 +13,13 @@
     "@babel/preset-env": "^7.7.4",
     "@happy-dom/global-registrator": "^20.10.6",
     "@playwright/test": "^1.50.1",
-    "@stormid/eslint-config": "^1.0.0",
     "@types/node": "^22.13.9",
-    "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^1.0.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-babel": "^5.3.0",
     "html-webpack-plugin": "^5.6.3",
     "lerna": "^8.1.9",
     "microbundle": "^0.15.1",
+    "oxlint": "^1.72.0",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0",
