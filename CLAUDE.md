@@ -20,7 +20,8 @@ Run per-package with `--scope=PACKAGE_NAME` (the package's `name`, e.g. `@stormi
 | Build for distribution | `lerna run build --scope=PACKAGE_NAME` |
 | Test a package | `lerna run test --scope=PACKAGE_NAME` |
 | Test all | `npm test` |
-| Lint all (autofix) | `npm run lint -- --fix` |
+| Lint all | `npm run lint` |
+| Lint all (autofix) | `npm run lint:fix` |
 
 Build is via **microbundle**; example apps run on **webpack-dev-server**. Node version is pinned in `.nvmrc`.
 
@@ -118,7 +119,7 @@ The DOM-effects file is `dom.js` by convention; `cookie-banner` uses `ui.js` for
 
 ## Code style
 
-Enforced by `@stormid/eslint-config` (lint before committing). Observed conventions: ES modules, 4-space indentation, single quotes, semicolons, arrow functions for top-level/pure helpers, JSDoc-style block comments on exported functions. Don't fight the linter — run `npm run lint -- --fix`.
+Linted by **oxlint** (config in `.oxlintrc.json`) — run `npm run lint` (or `npm run lint:fix` to autofix) before committing. The config turns on the `correctness` category as errors plus a few explicit rules (`eqeqeq`, `no-var`, `no-console` allowing only `warn`/`error`, `no-eval` and friends); `no-console` is relaxed to off inside `**/__tests__/**`. Observed conventions not enforced by the linter but kept consistent: ES modules, 4-space indentation, single quotes, semicolons, arrow functions for top-level/pure helpers, and JSDoc-style block comments on exported functions.
 
 ## Git
 

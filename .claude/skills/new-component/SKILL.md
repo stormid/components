@@ -27,6 +27,10 @@ node --test --experimental-test-coverage --test-coverage-include="src/**" --impo
 
 (use `"__tests__/unit/**/*.test.js"` if you nest unit tests in sub-directories). Chain with `&&`, not a single `&` (a lone `&` backgrounds the unit run on POSIX and discards its exit code). **Archetype D** (no unit tests) uses just `npx playwright test`.
 
+**Assign a unique dev-server port** in `tools/playwright.webpack.config.js` (`devServer.port`) — packages must not share one, since `lerna run test` runs their Playwright suites concurrently. `tools/playwright/config.base.js` carries a `// CURRENT MAX PORT NUMBER IN USE: NNNN` marker; use `NNNN + 1` and bump the marker.
+
+Leave the copied `.npmignore` as-is — it already excludes `playwright.config.js` and the other build-time files from the published package.
+
 ## Step 3 — Implement the source
 
 First identify the **archetype** (see CLAUDE.md): most new components are **A — per-node augmentation** and follow the contract below. **B** (shared state across nodes), **C** (singleton), and **D** (side-effect module) deliberately diverge — if yours is one of those, follow the matching existing component (`scroll-spy`, `cookie-banner`, `skip`) instead of forcing the Archetype A shape.
@@ -125,7 +129,7 @@ Update `example/src/index.html` and `example/src/js/index.js` to demonstrate the
 
 ```
 lerna run test --scope=@stormid/<name>
-npm run lint -- --fix
+npm run lint:fix
 lerna run dev --scope=@stormid/<name>   # sanity-check the example app
 ```
 
