@@ -120,6 +120,10 @@ The DOM-effects file is `dom.js` by convention; `cookie-banner` uses `ui.js` for
 
 Enforced by `@stormid/eslint-config` (lint before committing). Observed conventions: ES modules, 4-space indentation, single quotes, semicolons, arrow functions for top-level/pure helpers, JSDoc-style block comments on exported functions. Don't fight the linter — run `npm run lint -- --fix`.
 
+## Git
+
+- Do not add a `Co-Authored-By: Claude` trailer to commits — use a plain commit message.
+
 ## Per-package docs
 
 Each package has a `README.md` that is its public npm documentation — keep it accurate when changing behaviour or options, and register new packages in the root `README.md` table.
