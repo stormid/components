@@ -123,7 +123,7 @@ export const renderIframe = () => {
         iframe.src = node.getAttribute('data-iframe-src');
         if (node.hasAttribute('data-iframe-height')) iframe.style.height = node.getAttribute('data-iframe-height');
         iframe.setAttribute('title', node.getAttribute('data-iframe-title') || 'iFrame embed');
-        if (node.hasAttribute('data-iframe-width')) iframe.style.width =  node.getAttribute('data-iframe-width' || '100%');
+        if (node.hasAttribute('data-iframe-width')) iframe.style.width = node.getAttribute('data-iframe-width') || '100%';
         iframe.setAttribute('tabindex', '0');
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('webkitallowfullscreen', 'webkitallowfullscreen');
