@@ -135,18 +135,19 @@ export const renderIframe = () => {
 };
 
 export const gtmSnippet = id => {
+    /* oxlint-disable no-unused-expressions, no-var -- minified Google Tag Manager vendor snippet, kept verbatim */
     !function(e, t, c, n, w, o) {
         e[n] = e[n] || [], e[n].push({
             "gtm.start": (new Date).getTime(),
             event: "gtm.js"
         });
-        var r = t.getElementsByTagName(c)[0], 
+        var r = t.getElementsByTagName(c)[0],
             s = t.createElement(c);
         s.async = !0, s.src = 'https://www.googletagmanager.com/gtm.js?id=' + w, r.parentNode.insertBefore(s, r)
     }(window, document, "script", "dataLayer", id);
+    /* oxlint-enable no-unused-expressions, no-var */
 };
 
-/* eslint-disable prefer-rest-params */
 function gtag() {
     window.dataLayer = window.dataLayer || [];
     //The Google libraries that use the dataLayer do not work if arguments are spread
