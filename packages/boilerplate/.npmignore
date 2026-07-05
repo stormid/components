@@ -4,3 +4,4 @@ src
 __tests__
 example
 coverage
+playwright.config.js
