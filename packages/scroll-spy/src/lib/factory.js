@@ -1,6 +1,6 @@
-import { createStore } from './store';
-import { findSpies, setActive } from './dom';
-import { addActive, removeActive, setScrolled } from './reducers';
+import { createStore } from './store.js';
+import { findSpies, setActive } from './dom.js';
+import { addActive, removeActive, setScrolled } from './reducers.js';
 
 export const intersectionCallback = (store, spy) => (entries, observer) => {
     //check if the interstion has happened.  If the element is visible, it's a candidate for being active.

@@ -1,12 +1,15 @@
-import scrollSpy from '../../src';
-import { getSelection } from '../../src/lib/utils';
+import { describe, it, before, mock } from 'node:test';
+import assert from 'node:assert/strict';
+import scrollSpy from '../../src/index.js';
+import { getSelection } from '../../src/lib/utils.js';
 
 let basic, withCallback;
 const init = () => {
-    window.IntersectionObserver = jest.fn(function(cb) {
+    window.IntersectionObserver = mock.fn(function(cb) {
 	  this.observe = () => {};
 	  this.entries = [{ isIntersecting: true }];
     });
+    globalThis.IntersectionObserver = window.IntersectionObserver;
 
     // Set up our document body
     document.body.innerHTML = `<header>
@@ -45,21 +48,21 @@ const init = () => {
 
 describe(`Scroll Spy > Initialisation`, () => {
 
-    beforeAll(init);
+    before(init);
 
     it('should return undefined if no nodes match the init selector', async () => {
-	  expect(scrollSpy('.not-found')).toEqual(undefined);
+	  assert.strictEqual(scrollSpy('.not-found'), undefined);
     });
 
     it('should return an object with the expected properties', () => {
-        expect(basic).not.toBeNull();
-        expect(basic.getState().spies).not.toBeNull();
-        expect(basic.getState().settings).not.toBeNull();
-        expect(basic.getState()).not.toBeNull();
+        assert.notStrictEqual(basic, null);
+        assert.notStrictEqual(basic.getState().spies, null);
+        assert.notStrictEqual(basic.getState().settings, null);
+        assert.notStrictEqual(basic.getState(), null);
     });
 
     it('should initialisation with different settings if different options are passed', () => {
-        expect(basic.getState().settings.callback).not.toEqual(withCallback.getState().settings.callback);
+        assert.notDeepStrictEqual(basic.getState().settings.callback, withCallback.getState().settings.callback);
     });
 
 });
@@ -82,33 +85,33 @@ describe('Scroll spy > Initialisation > Get Selection', () => {
         </section>`;
     }
 
-    beforeAll(setupDOM);
+    before(setupDOM);
 
     it('should return an array when passed a DOM element', async () => {
         const scroll = document.querySelector('.js-scroll-spy');
         const els = getSelection(scroll);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
     it('should return an array when passed a NodeList element', async () => {
         const scroll = document.querySelectorAll('.js-scroll-spy');
         const els = getSelection(scroll);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
     it('should return an array when passed an array of DOM elements', async () => {
         const scroll = document.querySelector('.js-scroll-spy');
         const els = getSelection([scroll]);
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
     it('should return an array when passed a string', async () => {
         const els = getSelection('.js-scroll-spy');
-        expect(els instanceof Array).toBe(true);
-        expect(els.length).toEqual(1);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
     });
 
 });

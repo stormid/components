@@ -1,4 +1,6 @@
-import { addActive, removeActive } from '../../src/lib/reducers';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import { addActive, removeActive } from '../../src/lib/reducers.js';
 
 describe(`Scroll spy > reducers > addActive`, () => {
 
@@ -7,7 +9,7 @@ describe(`Scroll spy > reducers > addActive`, () => {
         const state = {
             active: [{ node: {}, target: {} }]
         };
-        expect(addActive(state, newSpy)).toEqual({
+        assert.deepStrictEqual(addActive(state, newSpy), {
             active: [
                 { node: {}, target: {} },
                 newSpy
@@ -20,7 +22,7 @@ describe(`Scroll spy > reducers > addActive`, () => {
         const state = {
             active: [{ node: {}, target: {} }, newSpy],
         };
-        expect(addActive(state, newSpy)).toEqual(state);
+        assert.deepStrictEqual(addActive(state, newSpy), state);
     });
 
 });
@@ -32,7 +34,7 @@ describe(`Scroll spy > reducers > removeActive`, () => {
         const state = {
             active: [{ node: {}, target: {} }, spy]
         };
-        expect(removeActive(state, spy)).toEqual({
+        assert.deepStrictEqual(removeActive(state, spy), {
             active: [
                 { node: {}, target: {} }
             ]
@@ -44,7 +46,7 @@ describe(`Scroll spy > reducers > removeActive`, () => {
         const state = {
             active: [{ node: {}, target: {} }]
         };
-        expect(removeActive(state, newSpy)).toEqual(state);
+        assert.deepStrictEqual(removeActive(state, newSpy), state);
     });
 
 });
