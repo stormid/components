@@ -24,7 +24,7 @@
     "test": "npx playwright test",
     "dev": "webpack-dev-server --config tools/webpack.config.js",
     "prod": "webpack --config tools/webpack.config.js --mode production",
-    "prepublish": "npm run -s build"
+    "prepare": "npm run -s build"
   },
   "gitHead": "9042db4005411c4360ba3e8188e03333c10098f2"
 }
