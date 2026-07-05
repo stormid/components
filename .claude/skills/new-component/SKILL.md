@@ -19,7 +19,7 @@ Set:
 - `private`: `false`, `publishConfig.access`: `public`
 - the microbundle `--name <camelCaseName>` in the `build` script
 
-Mirror the script block from an existing package (`build` / `dev` / `prod` / `prepublish` / `test`). **For `test`, use:**
+Mirror the script block from an existing package (`build` / `dev` / `prod` / `prepare` / `test`). **For `test`, use:**
 
 ```
 node --test --experimental-test-coverage --test-coverage-include="src/**" --import ../../tools/test-setup.mjs "__tests__/unit/*.test.js" && npx playwright test
