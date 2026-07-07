@@ -1,6 +1,6 @@
-import { emptyList, renderList, renderStatus, clearStatus, showList, hideList, setValue } from './dom';
-import { areEqual, isPrintableKeyCode } from './utils';
-import { KEYCODES } from './constants';
+import { emptyList, renderList, renderStatus, clearStatus, showList, hideList, setValue } from './dom.js';
+import { areEqual, isPrintableKeyCode } from './utils.js';
+import { KEYCODES } from './constants.js';
 
 export const keydown = store => event => {
     switch (KEYCODES[event.keyCode]) {

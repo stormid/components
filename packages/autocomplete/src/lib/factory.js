@@ -1,17 +1,17 @@
-import { createStore } from './store';
+import { createStore } from './store.js';
 import {
     input,
     // output,
     list,
     status,
     listen
-} from './dom';
+} from './dom.js';
 import {
     inputFocus, inputBlur, inputChange,
     optionClick, optionBlur, optionMouseDown,
     keydown
-} from './handle';
-import { defaultSearch } from './utils';
+} from './handle.js';
+import { defaultSearch } from './utils.js';
 
 export default ({ node, settings }) => {
     const store = createStore();

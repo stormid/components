@@ -1,7 +1,7 @@
 
 const { defineConfig } = require('@playwright/test');
 const baseConfig = require('../../tools/playwright/config.base.js');
-const server = require('./tools/playwright.webpack.config.js');
+const server = require('./tools/playwright.rspack.config.js');
 
 module.exports = defineConfig({
     ...baseConfig,
