@@ -19,7 +19,7 @@ import textarea from '@stormid/textarea';
 
 Initialise the module via selector string
 ```
-const [ instance ] = boilerplate('.js-boilerplate');
+const [ instance ] = textarea('textarea');
 ```
 
 Initialise with a DOM element
