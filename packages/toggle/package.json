@@ -24,8 +24,8 @@
   "scripts": {
     "build": "microbundle --name Toggle",
     "test": "node --test --experimental-test-coverage --test-coverage-include=\"src/**\" --import ../../tools/test-setup.mjs \"__tests__/unit/*.test.js\" && npx playwright test",
-    "dev": "webpack-dev-server --config tools/webpack.config.js",
-    "prod": "webpack --config tools/webpack.config.js --mode production",
+    "dev": "rspack serve --config tools/rspack.config.js",
+    "prod": "rspack build --config tools/rspack.config.js --mode production",
     "prepare": "npm run -s build"
   },
   "gitHead": "9042db4005411c4360ba3e8188e03333c10098f2"

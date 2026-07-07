@@ -1,14 +1,13 @@
 const path = require('path');
-const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const rspack = require('@rspack/core');
 const pkg = require('../package.json');
 
 module.exports = {
     entry: './example/src/js/index.js',
     output: {
         filename: 'app.js',
-        path: path.resolve(__dirname, './build')
+        path: path.resolve(__dirname, './build'),
+        clean: true
     },
     mode: 'development',
     devtool: 'source-map',
@@ -16,19 +15,17 @@ module.exports = {
         port: 8081
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new CleanWebpackPlugin(['./build']),
-        new HtmlWebpackPlugin({
+        new rspack.HtmlRspackPlugin({
             title: pkg.name,
             template: './example/src/index.html',
             filename: 'index.html'
         }),
-        new HtmlWebpackPlugin({
+        new rspack.HtmlRspackPlugin({
             title: pkg.name,
             template: './example/src/mini.html',
             filename: 'mini.html'
         }),
-        new HtmlWebpackPlugin({
+        new rspack.HtmlRspackPlugin({
             title: pkg.name,
             template: './example/src/mini-no-server-errors.html',
             filename: 'mini-no-server-errors.html'
@@ -38,15 +35,18 @@ module.exports = {
         rules: [{
             test: /\.js$/,
             exclude: /(node_modules|bower_components)/,
-            use: {
-                loader: 'babel-loader',
+            loader: 'builtin:swc-loader',
+            options: {
+                jsc: {
+                    parser: {
+                        syntax: 'ecmascript'
+                    }
+                }
             }
         },
         {
             test: /\.(ico)$/,
-            use: {
-                loader: 'file-loader'
-            }
+            type: 'asset/resource'
         }]
     }
 };

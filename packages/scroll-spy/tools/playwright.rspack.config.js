@@ -1,4 +1,4 @@
-const baseConfig = require('./webpack.config');
+const baseConfig = require('./rspack.config');
 
 module.exports = {
     ...baseConfig,

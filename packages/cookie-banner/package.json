@@ -24,8 +24,8 @@
   "scripts": {
     "build": "microbundle --name CookieBanner",
     "test": "node --test --experimental-test-coverage --test-coverage-include=\"src/**\" --import ../../tools/test-setup.mjs \"__tests__/unit/*.test.js\" && npx playwright test",
-    "dev": "webpack-dev-server --config tools/webpack.config.js",
-    "prod": "webpack --config tools/webpack.config.js --mode production",
+    "dev": "rspack serve --config tools/rspack.config.js",
+    "prod": "rspack build --config tools/rspack.config.js --mode production",
     "prepare": "npm run -s build"
   },
   "gitHead": "042ec0cbf12848b50c5962a5c8ab139cfb04df39"

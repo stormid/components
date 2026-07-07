@@ -48,7 +48,7 @@ module.exports = {
     },
   ],
   webServer: {
-    command: 'webpack-dev-server --config tools/playwright.webpack.config.js --hot --no-open',
+    command: 'rspack serve --config tools/playwright.rspack.config.js',
     url: 'http://localhost:8081',
     reuseExistingServer: !process.env.CI,
   },
