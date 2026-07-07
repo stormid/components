@@ -121,6 +121,8 @@ The DOM-effects file is `dom.js` by convention; `cookie-banner` uses `ui.js` for
 
 Linted by **oxlint** (config in `.oxlintrc.json`) — run `npm run lint` (or `npm run lint:fix` to autofix) before committing. The config turns on the `correctness` category as errors plus a few explicit rules (`eqeqeq`, `no-var`, `no-console` allowing only `warn`/`error`, `no-eval` and friends); `no-console` is relaxed to off inside `**/__tests__/**`. Observed conventions not enforced by the linter but kept consistent: ES modules, 4-space indentation, single quotes, semicolons, arrow functions for top-level/pure helpers, and JSDoc-style block comments on exported functions.
 
+**Keep changes minimal and justified.** Add a default, constant, or abstraction only alongside the code that consumes it — no speculative settings for features not yet written, and don't extract a single-use string literal into a named constant. Be able to name what reads each `defaults.js` entry. Don't silently change existing behaviour (e.g. altering an existing default value); if a change alters behaviour, call it out rather than folding it in.
+
 ## Git
 
 - Do not add a `Co-Authored-By: Claude` trailer to commits — use a plain commit message.

@@ -40,6 +40,8 @@ For Archetype A, keep the factory contract from `src/index.js` (default export �
 - **Stateless / simple component**: implement behaviour in `src/lib/factory.js`, options in `src/lib/defaults.js`, helpers in `src/lib/utils.js`. See `packages/boilerplate`.
 - **Stateful component**: add `src/lib/store.js` (the minimal `createStore`), `src/lib/dom.js` (listeners + effect functions), and `src/lib/constants.js`. Use `packages/toggle` as the reference — note how `factory.js` builds the store, derives state from the DOM, sets initial state with an array of effects, and returns `{ node, getState, ...actions }`.
 
+Keep the implementation minimal and justified (see CLAUDE.md Code style): only add a `defaults.js` entry, constant, or abstraction when the code that consumes it exists — no speculative settings for features you haven't written yet.
+
 Accessibility is mandatory (see CLAUDE.md): keep `aria-expanded` in sync, set `aria-controls`/`role="button"` on triggers, manage and restore focus, and make closed regions keyboard-unreachable.
 
 ## Step 4 — Write the tests (both layers required)
