@@ -8,9 +8,6 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
-    "@babel/core": "^7.7.4",
-    "@babel/node": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
     "@happy-dom/global-registrator": "^20.10.6",
     "@playwright/test": "^1.50.1",
     "@rspack/cli": "^1.7.12",
