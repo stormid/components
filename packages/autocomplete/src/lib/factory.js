@@ -1,7 +1,7 @@
 import { createStore } from './store.js';
 import {
     input,
-    // output,
+    output,
     list,
     status,
     listen
@@ -9,7 +9,7 @@ import {
 import {
     inputFocus, inputBlur, inputChange,
     optionClick, optionBlur, optionMouseDown,
-    keydown, clear
+    chipRemove, keydown, clear
 } from './handle.js';
 import { defaultSearch, uid } from './utils.js';
 
@@ -29,9 +29,12 @@ export default ({ node, settings }) => {
             node,
             input: input({ node, settings, id, listId }),
             list: list({ node, id: listId, labelledby: id }),
-            status: status(node)
+            status: status(node),
+            //chips + hidden fields live in the output list, multiple mode only
+            ...(settings.multiple ? { output: output({ node }) } : {})
         },
-        selected: null,
+        //single mode carries one selection (or null); multiple accumulates an array
+        selected: settings.multiple ? [] : null,
         open: false,
         options: settings.list || [],
         handle: {
@@ -45,7 +48,8 @@ export default ({ node, settings }) => {
                 click: optionClick(store),
                 blur: optionBlur(store),
                 mousedown: optionMouseDown
-            }
+            },
+            chip: { remove: chipRemove(store) }
         }
     }, [
         listen

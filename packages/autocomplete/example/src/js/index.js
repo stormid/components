@@ -31,4 +31,12 @@ window.addEventListener('DOMContentLoaded', () => {
             return values.filter(item => item.value.toLowerCase().includes(query.toLowerCase()));
         }
     });
+
+    autocomplete('.js-autocomplete-multiple', {
+        name: 'fruits',
+        multiple: true,
+        search(query){
+            return values.filter(item => item.value.toLowerCase().includes(query.toLowerCase()));
+        }
+    });
 });

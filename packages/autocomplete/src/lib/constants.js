@@ -1,5 +1,6 @@
 /* node:coverage disable */
 export const KEYCODES = {
+    8: 'backspace',
     9: 'tab',
     13: 'enter',
     27: 'escape',

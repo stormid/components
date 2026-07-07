@@ -570,6 +570,42 @@
         .autocomplete__option:first-child {
             border-top: 0 none;
         }
+        .autocomplete__output {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 8px 0 0 0;
+            padding: 0;
+        }
+        .autocomplete__chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #1d70b8;
+            color: white;
+            padding: 4px 4px 4px 10px;
+            border-radius: 2px;
+            line-height: 1.4;
+        }
+        .autocomplete__chip-remove {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background-color: transparent;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .autocomplete__chip-remove::before {
+            content: '\00d7';
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+        .autocomplete__chip-remove:focus {
+            outline: 3px solid hsl(49, 98%, 56%);
+        }
     </style>
 </head>
 
@@ -582,6 +618,11 @@
                 <label for="default" class="label">Default</label>
                 <span class="error-message" data-valmsg-for="default"></span>
                 <div class="autocomplete js-autocomplete" id="default"></div>
+            </div>
+            <div class="form-row">
+                <label for="fruits" class="label">Multiple <span class="label__hint">Pick as many as you like</span></label>
+                <span class="error-message" data-valmsg-for="fruits"></span>
+                <div class="autocomplete js-autocomplete-multiple" id="fruits"></div>
             </div>
             <!-- 
                 Roadmap

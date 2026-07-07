@@ -39,13 +39,13 @@ export const status = node => {
     return status;
 };
 
-// export const output = ({ node, settings }) => {
-//     const output = document.createElement(settings.multiple ? 'ul' : 'div');
-//     output.classList.add('autocomplete__output');
-//     node.appendChild(output);
+export const output = ({ node }) => {
+    const output = document.createElement('ul');
+    output.classList.add('autocomplete__output');
+    node.appendChild(output);
 
-//     return output;
-// };
+    return output;
+};
 
 export const listen = state => {
     state.dom.input.addEventListener('input', state.handle.input.input);
@@ -55,6 +55,9 @@ export const listen = state => {
     state.dom.node.addEventListener('keydown', state.handle.container.keydown);
     state.dom.list.addEventListener('mousedown', state.handle.option.mousedown);
     // state.dom.list.addEventListener('blur', state.handle.option.blur);
+    //chips (multiple mode only): remove buttons are delegated on the output list,
+    //the handler ignores any click that isn't on a remove button
+    if (state.dom.output) state.dom.output.addEventListener('click', state.handle.chip.remove);
 };
 
 export const emptyList = state => state.dom.list.replaceChildren();
@@ -99,3 +102,43 @@ export const renderStatus = state => {
 export const clearStatus = state => state.dom.status.textContent = '';
 
 export const setValue = state => state.dom.input.value = state.selected ? state.settings.extractValue(state.selected) : '';
+
+export const clearInput = state => state.dom.input.value = '';
+
+export const focusInput = state => state.dom.input.focus();
+
+/*
+ * Multiple mode: build a removable chip per selected option — display label,
+ * a remove button (labelled for screen readers) and a hidden input carrying the
+ * value under settings.name so each selection is submitted with the form.
+ */
+export const renderChips = state => state.selected.map(option => {
+    const { template, extractValue, name } = state.settings;
+    const chip = document.createElement('li');
+    chip.classList.add('autocomplete__chip');
+
+    const label = document.createElement('span');
+    label.classList.add('autocomplete__chip-label');
+    label.textContent = template(option);
+    chip.appendChild(label);
+
+    const remove = document.createElement('button');
+    remove.setAttribute('type', 'button');
+    remove.classList.add('autocomplete__chip-remove');
+    remove.setAttribute('aria-label', `Remove ${template(option)}`);
+    remove.dataset.value = extractValue(option);
+    chip.appendChild(remove);
+
+    //no name means the component has no form value — chips are UI only
+    if (name) {
+        const hidden = document.createElement('input');
+        hidden.setAttribute('type', 'hidden');
+        hidden.setAttribute('name', name);
+        hidden.value = extractValue(option);
+        chip.appendChild(hidden);
+    }
+
+    return chip;
+});
+
+export const syncOutput = state => state.dom.output.replaceChildren(...renderChips(state));
