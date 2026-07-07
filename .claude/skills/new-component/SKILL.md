@@ -9,7 +9,7 @@ This monorepo publishes small, framework-agnostic JavaScript behaviour component
 
 ## Step 1 — Copy the boilerplate
 
-Copy `packages/boilerplate` to `packages/<name>` (kebab-case). This gives you the correct file structure, webpack/playwright configs, and an example app skeleton. Keep the `.js` extensions on relative imports (required by Node's native ESM, which the `node:test` runner uses).
+Copy `packages/boilerplate` to `packages/<name>` (kebab-case). This gives you the correct file structure, rspack/playwright configs, and an example app skeleton. Keep the `.js` extensions on relative imports (required by Node's native ESM, which the `node:test` runner uses).
 
 ## Step 2 — Update `package.json`
 
@@ -27,7 +27,7 @@ node --test --experimental-test-coverage --test-coverage-include="src/**" --impo
 
 (use `"__tests__/unit/**/*.test.js"` if you nest unit tests in sub-directories). Chain with `&&`, not a single `&` (a lone `&` backgrounds the unit run on POSIX and discards its exit code). **Archetype D** (no unit tests) uses just `npx playwright test`.
 
-**Assign a unique dev-server port** in `tools/playwright.webpack.config.js` (`devServer.port`) — packages must not share one, since `lerna run test` runs their Playwright suites concurrently. `tools/playwright/config.base.js` carries a `// CURRENT MAX PORT NUMBER IN USE: NNNN` marker; use `NNNN + 1` and bump the marker.
+**Assign a unique dev-server port** in `tools/playwright.rspack.config.js` (`devServer.port`) — packages must not share one, since `lerna run test` runs their Playwright suites concurrently. `tools/playwright/config.base.js` carries a `// CURRENT MAX PORT NUMBER IN USE: NNNN` marker; use `NNNN + 1` and bump the marker.
 
 Leave the copied `.npmignore` as-is — it already excludes `playwright.config.js` and the other build-time files from the published package.
 
@@ -118,7 +118,7 @@ test.describe('Component > Axe', { tag: '@reduced' }, () => {
 
 ## Step 5 — Example app
 
-Update `example/src/index.html` and `example/src/js/index.js` to demonstrate the component (the Playwright tests run against this app via webpack). Cover each configurable option in the markup so tests have something to target.
+Update `example/src/index.html` and `example/src/js/index.js` to demonstrate the component (the Playwright tests run against this app via rspack). Cover each configurable option in the markup so tests have something to target.
 
 ## Step 6 — Docs and registration
 

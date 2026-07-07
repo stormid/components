@@ -23,7 +23,7 @@ Run per-package with `--scope=PACKAGE_NAME` (the package's `name`, e.g. `@stormi
 | Lint all | `npm run lint` |
 | Lint all (autofix) | `npm run lint:fix` |
 
-Build is via **microbundle**; example apps run on **webpack-dev-server**. Node version is pinned in `.nvmrc`.
+Build is via **microbundle**; example apps run on the **rspack dev server**. Node version is pinned in `.nvmrc`.
 
 ## Component archetypes
 
@@ -65,7 +65,7 @@ export default (selector, options) => {
 Rules that keep components consistent:
 
 - **Input flexibility**: `getSelection` (in `lib/utils`) accepts a string selector, an Array of nodes, a NodeList, or a single HTMLElement. Reuse it; don't reimplement selection.
-- **Import extensions**: relative imports include the explicit `.js` extension (`./lib/defaults.js`), or `/index.js` for a directory module. Required by Node's native ESM, which the `node:test` runner loads source under; microbundle and webpack accept them too.
+- **Import extensions**: relative imports include the explicit `.js` extension (`./lib/defaults.js`), or `/index.js` for a directory module. Required by Node's native ESM, which the `node:test` runner loads source under; microbundle and rspack accept them too.
 - **Settings precedence**: always merge in the order `{ ...defaults, ...options, ...node.dataset }` - each spread overrides the previous, so `data-*` attributes win over `options` passed to init, which win over `defaults`. The `...node.dataset` part is optional and not present on every component; include it only when the component reads `data-*` config, but keep this order when you do.
 - **Return value**: always an array of instance objects created with `Object.create(factory(...))`. The factory's return value becomes the instance prototype. **Per-node precondition guard (accepted):** a factory may return a falsy value when a matched node fails an internal markup requirement (e.g. `tabs` returns `false` when no tabs/panels are found); `index.js` then warns and filters that node out. The array length can therefore be shorter than the node count — that is correct, not a contract violation. Warn with the selector named.
 - **Instance API shape**: the factory returns an object that always exposes `node`, plus the component's action methods (e.g. toggle exposes `toggle`, `startToggle`). **`getState` is required only for stateful components** — components with a store expose it; genuinely stateless components (e.g. `textarea`, whose only state is the DOM-readable height) do not, and a no-op `getState` is not worth adding. Keep public APIs to a small set of named functions.
