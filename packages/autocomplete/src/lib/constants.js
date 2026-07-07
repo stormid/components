@@ -1,4 +1,4 @@
-/* istanbul ignore file */
+/* node:coverage disable */
 export const KEYCODES = {
     9: 'tab',
     13: 'enter',

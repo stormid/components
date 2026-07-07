@@ -1,6 +1,6 @@
-import defaults from './lib/defaults';
-import factory from './lib/factory';
-import { getSelection } from './lib/utils';
+import defaults from './lib/defaults.js';
+import factory from './lib/factory.js';
+import { getSelection } from './lib/utils.js';
 
 /*
  * Returns an array of objects augmenting DOM elements that match a selector
@@ -19,7 +19,7 @@ export default (selector, options) => {
     //each Object has a prototype consisting of the node (HTMLElement),
     //and a settings property composed from defaults, data-attributes on the node, and options passed to init
     return nodes.map(node => Object.create(factory({
-        settings: { ...defaults, ...node.dataset, ...options },
+        settings: { ...defaults, ...options, ...node.dataset },
         node
     })));
 };

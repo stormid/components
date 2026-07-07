@@ -1,8 +1,7 @@
-/* istanbul ignore file */
+/* node:coverage disable */
 /*
- * Default settings used by a Modal instance if not otherwise overwritten with config
- *
- * @property 
+ * Default settings used by an Autocomplete instance unless overridden by
+ * options passed to init or by data-* attributes on the node.
  */
 export default {
     minlength: 3,
@@ -11,6 +10,7 @@ export default {
     inputClassname: 'autocomplete__input',
     confirmOnBlur: true,
     list: false,
+    values: [],
     template(option) {
         return option.value;
     },
