@@ -45,6 +45,14 @@ export const areEqual = (first, second) => {
     return JSON.stringify(first) === JSON.stringify(second);
 };
 
+let count = 0;
+/*
+ * Returns a process-unique id with the given prefix, so each instance's
+ * input / listbox / option ids and aria-controls wiring stay collision-free
+ * when several autocompletes share a page.
+ */
+export const uid = prefix => `${prefix}-${++count}`;
+
 export const isPrintableKeyCode = keyCode => (
     (keyCode > 47 && keyCode < 58) || // number keys
     keyCode === 32 || keyCode === 8 || // spacebar or backspace

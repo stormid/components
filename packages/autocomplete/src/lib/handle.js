@@ -134,10 +134,13 @@ export const optionClick = store => event => {
 };
 
 export const optionBlur = store => event => {
-    const { dom  } = store.getState();
-    //if focus has moved outside of the list
-        //close menu 
-        //select current option
+    const { dom, open, settings, options } = store.getState();
+    //ignore focus moving elsewhere inside the component (another option or the input)
+    if (dom.node.contains(event.relatedTarget)) return;
+    //already closed (e.g. a selection just committed and emptied the list)
+    if (!open) return;
+    if (settings.confirmOnBlur) store.update({ ...store.getState(), selected: options[Number(event.target.getAttribute('aria-posinset'))-1], open: false  }, [ setValue, hideList, emptyList, renderStatus ]);
+    else store.update({ ...store.getState(), open: false }, [ hideList, clearStatus ]);
 };
 
 export const optionMouseDown = event => {
@@ -149,3 +152,5 @@ export const optionMouseDown = event => {
     // See: http://stackoverflow.com/questions/7621711/how-to-prevent-blur-running-when-clicking-a-link-in-jquery
     event.preventDefault();
 };
+
+export const clear = store => () => store.update({ ...store.getState(), selected: null, options: [], open: false }, [ setValue, hideList, emptyList, clearStatus ]);

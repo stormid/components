@@ -9,28 +9,32 @@ import {
 import {
     inputFocus, inputBlur, inputChange,
     optionClick, optionBlur, optionMouseDown,
-    keydown
+    keydown, clear
 } from './handle.js';
-import { defaultSearch } from './utils.js';
+import { defaultSearch, uid } from './utils.js';
 
 export default ({ node, settings }) => {
     const store = createStore();
-    
+
+    // The node's id (if any) moves onto the input, so derive ids before build.
+    const id = node.getAttribute('id') || settings.id || uid('autocomplete');
+    const listId = `${id}-listbox`;
+
+    // Normalise the search fn up front so handlers can always call settings.search.
+    settings.search = settings.search || defaultSearch(settings.values);
+
     store.update({
         settings,
         dom: {
             node,
-            select: node.querySelector('select'),
-            input: input({ node, settings }),
-            list: list(node, node.id),
-            status: status(node),
-            // output: output({ node, settings }) //list of hidden inputs, single hidden input, or get from setting.output
+            input: input({ node, settings, id, listId }),
+            list: list({ node, id: listId, labelledby: id }),
+            status: status(node)
         },
         selected: null,
         open: false,
         options: settings.list || [],
-        search: settings.search || defaultSearch(settings.values),
-        handle: { //or just delegate everything?
+        handle: {
             container: { keydown: keydown(store) },
             input: {
                 focus: inputFocus(store),
@@ -44,11 +48,12 @@ export default ({ node, settings }) => {
             }
         }
     }, [
-        listen,
+        listen
     ]);
 
     return {
+        node,
         getState: store.getState,
-        //clear - dispatch update to store, remove selected, close list, clear options, clear dom elements
+        clear: clear(store)
     };
 };
