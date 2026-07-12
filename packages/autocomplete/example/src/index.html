@@ -629,31 +629,33 @@
                 <span class="error-message" data-valmsg-for="country"></span>
                 <div class="autocomplete js-autocomplete-async" id="country"></div>
             </div>
-            <!-- 
-                Roadmap
-                1. single value from API
-                2. multiple from array
-                3. multiple from select
-                4. single value from select (?)
-        -->
-            <!-- <div class="form-row">
-                <label for="email" class="label">Email</label>
-                <span class="error-message" data-valmsg-for="email"></span>
-                <input data-val="true" data-val-required="Email must not be empty"
-                    data-val-email="{{value}} is not a valid email address" class="input" type="email" id="email"
-                    autocomplete="email" name="email" />
+            <div class="form-row">
+                <label for="flavour" class="label">From select <span class="label__hint">Enhances a native &lt;select&gt;</span></label>
+                <span class="error-message" data-valmsg-for="flavour"></span>
+                <div class="autocomplete js-autocomplete-select">
+                    <select id="flavour" name="flavour">
+                        <option value="">Choose a fruit</option>
+                        <option value="apple">Apple</option>
+                        <option value="banana">Banana</option>
+                        <option value="cherry">Cherry</option>
+                        <option value="potato">Potato</option>
+                        <option value="sweet-potato">Sweet potato</option>
+                    </select>
+                </div>
             </div>
             <div class="form-row">
-                <label for="selectexample" class="label">Select an option</label>
-                <span class="error-message" data-valmsg-for="selectexample"></span>
-                <select data-val="true" data-val-required="You must select an option" class="select input" id="selectexample" name="selectexample">
-                    <option value=""></option>
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option2">Option 2</option>
-                </select>
-            </div> -->
+                <label for="toppings" class="label">Multiple from select <span class="label__hint">Enhances &lt;select multiple&gt;</span></label>
+                <span class="error-message" data-valmsg-for="toppings"></span>
+                <div class="autocomplete js-autocomplete-select-multiple">
+                    <select id="toppings" name="toppings" multiple>
+                        <option value="apple">Apple</option>
+                        <option value="banana" selected>Banana</option>
+                        <option value="cherry">Cherry</option>
+                        <option value="potato">Potato</option>
+                        <option value="sweet-potato">Sweet potato</option>
+                    </select>
+                </div>
+            </div>
             <div class="form-row">
                 <label for="email" class="label">Email</label>
                 <span class="error-message" data-valmsg-for="email"></span>

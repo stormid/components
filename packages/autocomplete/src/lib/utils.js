@@ -39,6 +39,33 @@ export const debounce = (func, delay = 200) => {
 
 export const defaultSearch = values => query => values.filter(item => item.toLowerCase().includes(query.toLowerCase()));
 
+/*
+ * Default search over an array of option objects, matching the query against
+ * each option's display text (template). Used when the source is a <select> or
+ * an object list and the consumer hasn't supplied their own search.
+ */
+export const filterOptions = (options, template) => query => options.filter(option => template(option).toLowerCase().includes(query.toLowerCase()));
+
+const toOption = option => ({ value: option.value, label: option.textContent.trim() });
+
+/*
+ * Progressive enhancement: derive an autocomplete source from a native <select>.
+ * Its non-placeholder <option>s (value !== '') become { value, label } items,
+ * pre-selected options seed the initial selection, and its name/multiple carry
+ * over to the enhanced combobox.
+ */
+export const fromSelect = select => {
+    const usable = [...select.options].filter(option => option.value !== '');
+    return {
+        options: usable.map(toOption),
+        //seed from options the author explicitly marked selected (the attribute,
+        //not the live .selected property, which a browser defaults to the first option)
+        selected: usable.filter(option => option.hasAttribute('selected')).map(toOption),
+        name: select.getAttribute('name'),
+        multiple: select.multiple
+    };
+};
+
 export const areEqual = (first, second) => {
     //compare two arrays
     if (first.length !== second.length) return false;

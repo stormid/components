@@ -51,4 +51,8 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+
+    //progressive enhancement: options, name and multiple are read from the <select>
+    autocomplete('.js-autocomplete-select');
+    autocomplete('.js-autocomplete-select-multiple');
 });
