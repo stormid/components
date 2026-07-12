@@ -6,7 +6,9 @@
 export default {
     minlength: 3,
     multiple: false,
+    async: false,
     noResultsMsg: 'No results found',
+    loadingMsg: 'Loading…',
     inputClassname: 'autocomplete__input',
     confirmOnBlur: true,
     list: false,

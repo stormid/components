@@ -39,4 +39,16 @@ window.addEventListener('DOMContentLoaded', () => {
             return values.filter(item => item.value.toLowerCase().includes(query.toLowerCase()));
         }
     });
+
+    autocomplete('.js-autocomplete-async', {
+        name: 'country',
+        async: true,
+        //stand-in for a remote endpoint: resolve the local list after a short
+        //delay to simulate network latency. Swap for fetch(...).then(r => r.json()).
+        search(query){
+            return new Promise(resolve => {
+                setTimeout(() => resolve(values.filter(item => item.value.toLowerCase().includes(query.toLowerCase()))), 300);
+            });
+        }
+    });
 });

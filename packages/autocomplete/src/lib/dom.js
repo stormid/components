@@ -101,6 +101,8 @@ export const renderStatus = state => {
 
 export const clearStatus = state => state.dom.status.textContent = '';
 
+export const showLoading = state => state.dom.status.textContent = state.settings.loadingMsg;
+
 export const setValue = state => state.dom.input.value = state.selected ? state.settings.extractValue(state.selected) : '';
 
 export const clearInput = state => state.dom.input.value = '';

@@ -1,5 +1,5 @@
-import { emptyList, renderList, renderStatus, clearStatus, showList, hideList, setValue, clearInput, focusInput, syncOutput } from './dom.js';
-import { areEqual, isPrintableKeyCode } from './utils.js';
+import { emptyList, renderList, renderStatus, clearStatus, showList, hideList, showLoading, setValue, clearInput, focusInput, syncOutput } from './dom.js';
+import { areEqual, debounce, isPrintableKeyCode } from './utils.js';
 import { KEYCODES } from './constants.js';
 
 //resolve the option an event fired from via its aria-posinset
@@ -28,6 +28,15 @@ const commit = (store, option, refocus = false) => {
     } else {
         store.update({ ...state, selected: option, open: false }, [ setValue, hideList, emptyList, renderStatus ]);
     }
+};
+
+// ignore requests whose query no longer matches current user input - ensures latest keystroke wins
+// if user has typed after original request fired
+
+const resolveAsyncResults = (store, value, results) => {
+    const state = store.getState();
+    if (state.dom.input.value !== value) return;
+    store.update({ ...state, options: results, open: results.length > 0 }, [ renderList, renderStatus ]);
 };
 
 export const keydown = store => event => {
@@ -154,23 +163,42 @@ export const inputBlur = store => event => {
     }
 };
 
-export const inputChange = store => event => {
-    const { settings, open, options, selected } = store.getState();
-    const value = event.target.value;
-    //single mode: editing the input away from the shown selection clears it
-    if (!settings.multiple && selected && settings.template(selected) !== value) store.update({ ...store.getState(), selected: null }, [ clearStatus ]);
-    if (value.length < settings.minlength) {
-        if (open) store.update({ ...store.getState(), open: false }, [ hideList ]);
-        if (options.length) store.update({ ...store.getState(), options: [] }, [ emptyList, renderStatus ]);
-        return;
-    }
-    const results = settings.search(value);
-    if (results.length === 0 && areEqual(options, results)) return;
-    if (results.length && areEqual(options, results)) {
-        if (!open) store.update({ ...store.getState(), open: true }, [ showList ]);
-        return;
-    }
-    store.update({ ...store.getState(), options: results, open: results.length > 0 }, [ renderList, renderStatus ]);
+export const inputChange = store => {
+    //async mode: debounce the remote search so a request fires once the user
+    //pauses, not on every keystroke. The timer lives in this closure across the
+    //instance's lifetime (inputChange runs once per instance at build time).
+    const runAsyncSearch = debounce(value => {
+        const state = store.getState();
+        //the input may have changed during the debounce window — skip a stale query
+        if (state.dom.input.value !== value) return;
+        showLoading(state);
+        state.settings.search(value)
+            .then(results => resolveAsyncResults(store, value, results))
+            .catch(error => {
+                console.warn(`Autocomplete search failed for query '${value}': ${error}`);
+                resolveAsyncResults(store, value, []);
+            });
+    });
+
+    return event => {
+        const { settings, open, options, selected } = store.getState();
+        const value = event.target.value;
+        //single mode: editing the input away from the shown selection clears it
+        if (!settings.multiple && selected && settings.template(selected) !== value) store.update({ ...store.getState(), selected: null }, [ clearStatus ]);
+        if (value.length < settings.minlength) {
+            if (open) store.update({ ...store.getState(), open: false }, [ hideList ]);
+            if (options.length) store.update({ ...store.getState(), options: [] }, [ emptyList, renderStatus ]);
+            return;
+        }
+        if (settings.async) return runAsyncSearch(value);
+        const results = settings.search(value);
+        if (results.length === 0 && areEqual(options, results)) return;
+        if (results.length && areEqual(options, results)) {
+            if (!open) store.update({ ...store.getState(), open: true }, [ showList ]);
+            return;
+        }
+        store.update({ ...store.getState(), options: results, open: results.length > 0 }, [ renderList, renderStatus ]);
+    };
 };
 
 export const optionClick = store => event => {
