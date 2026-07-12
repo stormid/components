@@ -606,6 +606,56 @@
         .autocomplete__chip-remove:focus {
             outline: 3px solid hsl(49, 98%, 56%);
         }
+        /*
+         * Multiple mode: render the selected chips inside the field alongside the
+         * text input (a token/tag input), with the results list dropping below as
+         * an overlay rather than pushing the form down.
+         */
+        .autocomplete--multiple {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 4px 8px;
+            min-height: 40px;
+            background-color: #ffffff;
+            border: 1px solid hsl(0, 0%, 70%);
+        }
+        .autocomplete--multiple:focus-within {
+            outline: 4px solid hsl(49, 98%, 56%);
+        }
+        /* the text input shares the field box: no border, grows to fill, sits after the chips */
+        .autocomplete--multiple .autocomplete__input {
+            order: 2;
+            flex: 1 1 80px;
+            width: auto;
+            min-width: 80px;
+            height: 30px;
+            line-height: 28px;
+            margin-top: 0;
+            padding: 0;
+            border: 0;
+        }
+        .autocomplete--multiple .autocomplete__input:focus {
+            outline: none;
+        }
+        /* let the chip <li>s flow as siblings of the input inside the field box */
+        .autocomplete--multiple .autocomplete__output {
+            display: contents;
+        }
+        .autocomplete--multiple .autocomplete__chip {
+            order: 1;
+        }
+        /* results list overlays the content below the field */
+        .autocomplete--multiple .autocomplete__list {
+            position: absolute;
+            top: 100%;
+            left: -1px;
+            right: -1px;
+            z-index: 10;
+        }
     </style>
 </head>
 
@@ -622,7 +672,7 @@
             <div class="form-row">
                 <label for="fruits" class="label">Multiple <span class="label__hint">Pick as many as you like</span></label>
                 <span class="error-message" data-valmsg-for="fruits"></span>
-                <div class="autocomplete js-autocomplete-multiple" id="fruits"></div>
+                <div class="autocomplete autocomplete--multiple js-autocomplete-multiple" id="fruits"></div>
             </div>
             <div class="form-row">
                 <label for="country" class="label">Remote <span class="label__hint">Options loaded from an async source</span></label>
@@ -646,7 +696,7 @@
             <div class="form-row">
                 <label for="toppings" class="label">Multiple from select <span class="label__hint">Enhances &lt;select multiple&gt;</span></label>
                 <span class="error-message" data-valmsg-for="toppings"></span>
-                <div class="autocomplete js-autocomplete-select-multiple">
+                <div class="autocomplete autocomplete--multiple js-autocomplete-select-multiple">
                     <select id="toppings" name="toppings" multiple>
                         <option value="apple">Apple</option>
                         <option value="banana" selected>Banana</option>
@@ -655,13 +705,6 @@
                         <option value="sweet-potato">Sweet potato</option>
                     </select>
                 </div>
-            </div>
-            <div class="form-row">
-                <label for="email" class="label">Email</label>
-                <span class="error-message" data-valmsg-for="email"></span>
-                <input data-val="true" data-val-required="Email must not be empty"
-                    data-val-email="{{value}} is not a valid email address" class="input" type="email" id="email"
-                    autocomplete="email" name="email" />
             </div>
         </form>
     </main>
