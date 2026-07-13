@@ -122,6 +122,8 @@ test.describe('Component > Axe', { tag: '@reduced' }, () => {
 
 Update `example/src/index.html` and `example/src/js/index.js` to demonstrate the component (the Playwright tests run against this app via rspack). Cover each configurable option in the markup so tests have something to target.
 
+Keep the example page visually consistent with the other packages: reuse boilerplate's shared `<style>` block and its `<main>` → `.container` layout wrapper rather than hand-rolling a different reset or bespoke CSS. Copy the shared styling (`.container`, `.form`, `.input`, `.btn`, `.label`, …) from boilerplate or the closest existing example and add only component-specific rules on top. If you use a layout class like `.container`, make sure its rule is actually present — don't reference it without defining it.
+
 ## Step 6 — Docs and registration
 
 - Write `packages/<name>/README.md` (public npm docs): what it does, install, usage, options table, instance API. Match the tone/structure of existing package READMEs.

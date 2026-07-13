@@ -94,6 +94,8 @@ src/lib/reducers.js     # optional: action-type reducers when state has many tra
 
 The DOM-effects file is `dom.js` by convention; `cookie-banner` uses `ui.js` for the same role as an accepted singleton variant. For a component large enough to warrant it, promote each `lib` file to a directory of the same name (`src/lib/validator/`, `src/lib/factory/`, …) — see `validate`. Match granularity to complexity; don't split a tiny component to look like a big one, or vice versa.
 
+Each package's `example/` app shares a common look: reuse boilerplate's example `<style>` block and its `<main>` → `.container` layout wrapper rather than hand-rolling a bespoke reset or CSS — see the `new-component` skill's *Step 5 — Example app*.
+
 ## Patterns to follow
 
 - **State**: use the minimal store pattern — `createStore()` returns `{ getState, update }`; `update(nextState, effects)` replaces state and runs an array of effect functions against the new state. No external state library.
