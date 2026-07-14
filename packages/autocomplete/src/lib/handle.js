@@ -2,8 +2,13 @@ import { emptyList, renderList, renderStatus, clearStatus, showList, hideList, s
 import { areEqual, debounce, isPrintableKeyCode } from './utils.js';
 import { KEYCODES } from './constants.js';
 
-//resolve the option an event fired from via its aria-posinset
-const optionAt = (options, target) => options[Number(target.getAttribute('aria-posinset')) - 1];
+//resolve the option an event fired from via its aria-posinset. closest() finds
+//the option element even when a click lands on a child node of a custom
+//optionTemplate; returns undefined off the list background or the no-results item
+const optionAt = (options, target) => {
+    const option = target.closest('[role="option"]');
+    return option && options[Number(option.getAttribute('aria-posinset')) - 1];
+};
 
 //multiple: add the option, or remove it if already selected (toggle-select)
 const toggleSelection = ({ selected, settings }, option) => {

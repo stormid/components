@@ -74,6 +74,38 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    //custom option template: the list shows a second detail line per option, while
+    //the input still shows just the name (template) and the form submits the code
+    //(extractValue). optionTemplate builds a DOM node — no HTML string, so untrusted
+    //API values are set as text and can't inject markup.
+    const airports = [
+        { value: 'LHR', label: 'Heathrow', detail: 'London, United Kingdom' },
+        { value: 'JFK', label: 'John F. Kennedy', detail: 'New York, United States' },
+        { value: 'CDG', label: 'Charles de Gaulle', detail: 'Paris, France' },
+        { value: 'HND', label: 'Haneda', detail: 'Tokyo, Japan' },
+        { value: 'SYD', label: 'Kingsford Smith', detail: 'Sydney, Australia' }
+    ];
+    autocomplete('.js-autocomplete-detail', {
+        name: 'airport',
+        template: option => option.label,
+        extractValue: option => option.value,
+        optionTemplate(option){
+            const title = document.createElement('span');
+            title.classList.add('autocomplete__option-title');
+            title.textContent = option.label;
+            const detail = document.createElement('small');
+            detail.classList.add('autocomplete__option-detail');
+            detail.textContent = option.detail;
+            const wrap = document.createElement('span');
+            wrap.append(title, detail);
+            return wrap;
+        },
+        search(query){
+            const q = query.toLowerCase();
+            return airports.filter(airport => airport.label.toLowerCase().includes(q) || airport.detail.toLowerCase().includes(q));
+        }
+    });
+
     //free text: submit a chosen suggestion's value, or whatever the user types
     autocomplete('.js-autocomplete-freetext', {
         name: 'herb',

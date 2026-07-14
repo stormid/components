@@ -1,4 +1,3 @@
-// import { optionMouseDown } from './handle';
 import { resolveMsg } from './utils.js';
 import { EVENTS } from './constants.js';
 
@@ -85,7 +84,6 @@ export const listen = state => {
     state.dom.list.addEventListener('click', state.handle.option.click);
     state.dom.node.addEventListener('keydown', state.handle.container.keydown);
     state.dom.list.addEventListener('mousedown', state.handle.option.mousedown);
-    // state.dom.list.addEventListener('blur', state.handle.option.blur);
     //chips (multiple mode only): remove buttons are delegated on the output list,
     //the handler ignores any click that isn't on a remove button
     if (state.dom.output) state.dom.output.addEventListener('click', state.handle.chip.remove);
@@ -98,7 +96,12 @@ export const renderOptions = state => state.options.map((option, index) => {
     el.setAttribute('role', 'option');
     el.classList.add('autocomplete__option');
     el.tabIndex = -1;
-    el.textContent = state.settings.template(option);
+    //optionTemplate (falling back to template) renders the option's content: a
+    //string is set as text (safe), a DOM node is appended as-is so an option can
+    //show richer markup — e.g. a detail line — beyond the plain display label
+    const content = (state.settings.optionTemplate || state.settings.template)(option);
+    if (content && content.nodeType) el.appendChild(content);
+    else el.textContent = content;
     el.setAttribute('aria-posinset', index + 1);
     el.setAttribute('aria-setsize', state.options.length);
     el.setAttribute('aria-selected', 'false');

@@ -587,6 +587,26 @@
             cursor: default;
             font-style: italic;
         }
+        /* a custom optionTemplate can render a taller, multi-line option: relax the
+           fixed single-line height for options in the detail-template demo */
+        .js-autocomplete-detail .autocomplete__option {
+            height: auto;
+            line-height: 1.3;
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+        .autocomplete__option-title {
+            display: block;
+        }
+        .autocomplete__option-detail {
+            display: block;
+            font-size: 0.8rem;
+            color: hsl(0, 0%, 45%);
+        }
+        .autocomplete__option:hover .autocomplete__option-detail,
+        .autocomplete__option:focus .autocomplete__option-detail {
+            color: hsl(0, 0%, 90%);
+        }
         .autocomplete__output {
             display: flex;
             flex-wrap: wrap;
@@ -700,6 +720,11 @@
                 <label for="country-code" class="label">Remote (fetch) <span class="label__hint">Searches a mocked API endpoint</span></label>
                 <span class="error-message" data-valmsg-for="country-code"></span>
                 <div class="autocomplete js-autocomplete-endpoint" id="country-code"></div>
+            </div>
+            <div class="form-row">
+                <label for="airport" class="label">Custom option template <span class="label__hint">Each option shows a second detail line</span></label>
+                <span class="error-message" data-valmsg-for="airport"></span>
+                <div class="autocomplete js-autocomplete-detail" id="airport"></div>
             </div>
             <div class="form-row">
                 <label for="herb" class="label">Free text <span class="label__hint">Pick a suggestion or submit your own</span></label>

@@ -122,6 +122,24 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		await expect(container.locator('input[type="hidden"]')).toHaveValue('kumquat');
 	});
 
+	test('Should render a custom option template with a detail line, leaving the label and value unaffected', async ({ page }) => {
+		const container = page.locator('.js-autocomplete-detail');
+		const input = page.locator('#airport');
+		const listbox = page.locator('#airport-listbox');
+
+		await input.fill('kennedy');
+		await expect(listbox).toBeVisible();
+		const option = listbox.locator('[role="option"]').first();
+		//the list option carries the display label plus an extra detail line
+		await expect(option.locator('.autocomplete__option-title')).toHaveText('John F. Kennedy');
+		await expect(option.locator('.autocomplete__option-detail')).toHaveText('New York, United States');
+
+		//selecting shows just the label in the input and submits the code
+		await option.click();
+		await expect(input).toHaveValue('John F. Kennedy');
+		await expect(container.locator('input[type="hidden"]')).toHaveValue('JFK');
+	});
+
 	test('Should dispatch a bubbling confirm event from the node when an option is selected', async ({ page }) => {
 		const listbox = page.locator('#default-listbox');
 
@@ -341,6 +359,15 @@ test.describe('Autocomplete > Axe', { tag: '@reduced'}, () => {
 	test('Should not have any accessibility issues with the no-results list open', async ({ page }) => {
 		const listbox = page.locator('#default-listbox');
 		await page.locator('#default').fill('zzz');
+		await expect(listbox).toBeVisible();
+
+		const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+		expect(accessibilityScanResults.violations).toEqual([]);
+	});
+
+	test('Should not have any accessibility issues with a custom option template list open', async ({ page }) => {
+		const listbox = page.locator('#airport-listbox');
+		await page.locator('#airport').fill('ne');
 		await expect(listbox).toBeVisible();
 
 		const accessibilityScanResults = await new AxeBuilder({ page }).analyze();

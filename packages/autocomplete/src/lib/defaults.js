@@ -25,6 +25,10 @@ export default {
     template(option) {
         return option.value;
     },
+    //renders each option in the list; falls back to template when not set. May
+    //return a string (shown as text) or a DOM node for richer markup (e.g. a
+    //second detail line) than the display label — see renderOptions.
+    optionTemplate: false,
     extractValue(option) {
         return option.value;
     }

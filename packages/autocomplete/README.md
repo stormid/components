@@ -93,6 +93,36 @@ Wrap a `<select>` and its options, `name` and `multiple` are adopted, pre-select
 </div>
 ```
 
+### Custom option template
+
+`template` maps an option to the single line of text shown in the input, chips and
+list. To show richer content in the **list only** — for example a second detail line —
+supply an `optionTemplate`. It renders each list option (falling back to `template` when
+omitted) and may return either a string (set as text) or a DOM node you build, so the
+list can carry markup the display label and submitted value don't:
+
+```js
+autocomplete('.js-autocomplete', {
+    name: 'airport',
+    template: option => option.label,      // input / chips show the name
+    extractValue: option => option.value,  // form submits the code
+    //list shows the name plus a second detail line
+    optionTemplate(option){
+        const title = document.createElement('span');
+        title.textContent = option.label;
+        const detail = document.createElement('small');
+        detail.textContent = option.detail;
+        const wrap = document.createElement('span');
+        wrap.append(title, detail);
+        return wrap;
+    },
+    search
+});
+```
+
+Return a DOM node (not an HTML string) for untrusted values — the node's `textContent`
+is set safely, so option data from an API can't inject markup.
+
 ### Restoring a server-rendered value
 
 To restore a previously submitted / prefilled value on load, render `data-value` (and
@@ -118,6 +148,7 @@ or use a `<select multiple>` with pre-selected options.
 | `list` | `array` | `false` | The full option set shown when the input is opened with no query (e.g. via Space). |
 | `values` | `string[]` | `[]` | Source strings for the built-in search when no `search` is supplied. |
 | `template` | `function` | `option => option.value` | Maps an option to the text shown in the input, list and chips. |
+| `optionTemplate` | `function` | `false` | Renders each option in the list only (falls back to `template`). May return a string (shown as text) or a DOM node for richer markup — e.g. a second detail line — beyond the display label. |
 | `extractValue` | `function` | `option => option.value` | Maps an option to the value submitted via the hidden field. |
 | `value` | `string` \| `string[]` | — | Initial selection value(s) restored on load (e.g. from `data-value`) and submitted via the hidden field. Array for multiple mode. |
 | `label` | `string` \| `string[]` | — | Display label(s) for the initial `value`(s) (e.g. from `data-label`); falls back to the value when omitted. |
