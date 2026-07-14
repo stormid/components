@@ -23,10 +23,10 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		const input = page.locator('#default');
 		const listbox = page.locator('#default-listbox');
 
-		await input.fill('ap');
+		await input.fill('a');
 		await expect(listbox).not.toBeVisible();
 
-		await input.fill('app');
+		await input.fill('ap');
 		await expect(listbox).toBeVisible();
 		await expect(listbox.locator('[role="option"]')).toHaveText(['Apple']);
 	});
@@ -291,8 +291,8 @@ test.describe('Autocomplete > Status', { tag: '@all'}, () => {
 	test('Should announce that the query is too short below minlength', async ({ page }) => {
 		const status = page.locator('.js-autocomplete .autocomplete__status');
 
-		await page.locator('#default').fill('ap');
-		await expect(status).toHaveText('Type 3 or more characters for results');
+		await page.locator('#default').fill('a');
+		await expect(status).toHaveText('Type 2 or more characters for results');
 	});
 
 	test('Should announce the result count once the query is long enough', async ({ page }) => {

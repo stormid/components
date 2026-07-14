@@ -4,7 +4,7 @@
  * options passed to init or by data-* attributes on the node.
  */
 export default {
-    minlength: 3,
+    minlength: 2,
     multiple: false,
     async: false,
     noResultsMsg: 'No results found',

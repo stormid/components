@@ -30,7 +30,7 @@ describe('Autocomplete > Init', () => {
 
     it('should let data attributes override options', () => {
         document.body.innerHTML = '<div class="js-autocomplete" data-minlength="5"></div>';
-        const [instance] = autocomplete('.js-autocomplete', { minlength: 2, values });
+        const [instance] = autocomplete('.js-autocomplete', { minlength: 3, values });
         assert.strictEqual(instance.getState().settings.minlength, '5');
     });
 
