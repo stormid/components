@@ -86,4 +86,33 @@ window.addEventListener('DOMContentLoaded', () => {
     //progressive enhancement: options, name and multiple are read from the <select>
     autocomplete('.js-autocomplete-select');
     autocomplete('.js-autocomplete-select-multiple');
+
+    //prefilled: a server-rendered value/label pair restored on load — the label
+    //(data-label) shows in the combobox, the value (data-value) submits via the
+    //hidden field. Distinct value/label (a code vs a display name) shows the split.
+    const countries = [
+        { value: 'GB', label: 'United Kingdom' },
+        { value: 'FR', label: 'France' },
+        { value: 'DE', label: 'Germany' },
+        { value: 'ES', label: 'Spain' }
+    ];
+    autocomplete('.js-autocomplete-prefilled', {
+        name: 'prefilled',
+        template: option => option.label,
+        search(query){
+            return countries.filter(country => country.label.toLowerCase().includes(query.toLowerCase()));
+        }
+    });
+
+    //prefilled multiple: initial selections restored as chips from value/label arrays
+    autocomplete('.js-autocomplete-prefilled-multiple', {
+        name: 'prefilled-multiple',
+        multiple: true,
+        value: ['GB', 'FR'],
+        label: ['United Kingdom', 'France'],
+        template: option => option.label,
+        search(query){
+            return countries.filter(country => country.label.toLowerCase().includes(query.toLowerCase()));
+        }
+    });
 });

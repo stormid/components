@@ -128,4 +128,66 @@ describe('Autocomplete > Init', () => {
         //nothing selected, so nothing is submitted
         assert.strictEqual(node.querySelector('input[type="hidden"][name="fruit"]').value, '');
     });
+
+    it('should seed a server-rendered value/label pair into the combobox and hidden field', () => {
+        document.body.innerHTML = '<div class="js-autocomplete" data-value="GB" data-label="United Kingdom"></div>';
+        const [instance] = autocomplete('.js-autocomplete', { name: 'country', template: option => option.label, search: () => [] });
+        const { node } = instance;
+
+        //the label shows in the visible combobox, the value submits via the hidden field
+        assert.strictEqual(node.querySelector('input[role="combobox"]').value, 'United Kingdom');
+        assert.strictEqual(node.querySelector('input[type="hidden"][name="country"]').value, 'GB');
+        //and it's a real selection, not just seeded text
+        assert.strictEqual(instance.getState().selected.value, 'GB');
+    });
+
+    it('should seed an initial value/label passed as options', () => {
+        const [instance] = autocomplete('.js-autocomplete', { name: 'country', value: 'GB', label: 'United Kingdom', template: option => option.label, search: () => [] });
+        const { node } = instance;
+
+        assert.strictEqual(node.querySelector('input[role="combobox"]').value, 'United Kingdom');
+        assert.strictEqual(node.querySelector('input[type="hidden"][name="country"]').value, 'GB');
+    });
+
+    it('should fall back to the value for display when no label is given', () => {
+        document.body.innerHTML = '<div class="js-autocomplete" data-value="Apple"></div>';
+        const [instance] = autocomplete('.js-autocomplete', { name: 'fruit', search: () => [] });
+        const { node } = instance;
+
+        assert.strictEqual(node.querySelector('input[role="combobox"]').value, 'Apple');
+        assert.strictEqual(node.querySelector('input[type="hidden"][name="fruit"]').value, 'Apple');
+    });
+
+    it('should clear a seeded selection and its hidden value once the input is edited', () => {
+        document.body.innerHTML = '<div class="js-autocomplete" data-value="GB" data-label="United Kingdom"></div>';
+        const [instance] = autocomplete('.js-autocomplete', { name: 'country', template: option => option.label, search: () => [] });
+        const input = instance.node.querySelector('input[role="combobox"]');
+
+        input.value = 'Fra';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+
+        //editing away from the restored selection drops it and clears the submit value
+        assert.strictEqual(instance.getState().selected, null);
+        assert.strictEqual(instance.node.querySelector('input[type="hidden"][name="country"]').value, '');
+    });
+
+    it('should seed multiple server-rendered value/label pairs as chips in multiple mode', () => {
+        const [instance] = autocomplete('.js-autocomplete', {
+            name: 'countries',
+            multiple: true,
+            value: ['GB', 'FR'],
+            label: ['United Kingdom', 'France'],
+            template: option => option.label,
+            search: () => []
+        });
+        const { node } = instance;
+
+        const chips = node.querySelectorAll('.autocomplete__chip');
+        assert.strictEqual(chips.length, 2);
+        assert.strictEqual(chips[0].querySelector('.autocomplete__chip-label').textContent, 'United Kingdom');
+        //each selection submits its value under the repeated name
+        const hidden = [...node.querySelectorAll('input[type="hidden"][name="countries"]')].map(i => i.value);
+        assert.deepStrictEqual(hidden, ['GB', 'FR']);
+        assert.strictEqual(instance.getState().selected.length, 2);
+    });
 });

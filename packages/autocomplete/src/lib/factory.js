@@ -53,7 +53,25 @@ export default ({ node, settings }) => {
     // Normalise the search fn up front so handlers can always call settings.search.
     settings.search = settings.search || defaultSearch(settings.values);
 
-    // Seed the DOM from any initial selection carried over from the <select>.
+    // Seed an initial selection from a server-rendered value/label pair (e.g. a
+    // restored or pre-filled form): data-value/data-label on the node, or value/
+    // label options. Multiple mode accepts arrays (one chip per pair). The setValue
+    // (single) / syncOutput (multiple) seed below then shows the label(s) via the
+    // template and submits the value(s) via the hidden field(s), so a restored
+    // value behaves exactly like a user-picked one. Uses the { value, label } option
+    // shape; a <select>'s own pre-selected options take precedence, and a missing
+    // label falls back to the value for display.
+    if (settings.value !== undefined && settings.value !== null && settings.value !== '') {
+        if (settings.multiple && !selected.length) {
+            const values = [].concat(settings.value);
+            const labels = [].concat(settings.label ?? []);
+            selected = values.map((value, i) => ({ value, label: labels[i] ?? value }));
+        } else if (!settings.multiple && !selected) {
+            selected = { value: settings.value, label: settings.label ?? settings.value };
+        }
+    }
+
+    // Seed the DOM from any initial selection (from the <select> or the value above).
     const seed = [];
     if (!settings.multiple && selected) seed.push(setValue);
     if (settings.multiple && selected.length) seed.push(syncOutput);

@@ -733,6 +733,16 @@
                     </select>
                 </div>
             </div>
+            <div class="form-row">
+                <label for="prefilled" class="label">Prefilled <span class="label__hint">Server-rendered value/label restored on load</span></label>
+                <span class="error-message" data-valmsg-for="prefilled"></span>
+                <div class="autocomplete js-autocomplete-prefilled" id="prefilled" data-value="GB" data-label="United Kingdom"></div>
+            </div>
+            <div class="form-row">
+                <label for="prefilled-multiple" class="label">Prefilled multiple <span class="label__hint">Server-rendered selections restored as chips</span></label>
+                <span class="error-message" data-valmsg-for="prefilled-multiple"></span>
+                <div class="autocomplete autocomplete--multiple js-autocomplete-prefilled-multiple" id="prefilled-multiple"></div>
+            </div>
         </form>
     </main>
 </body>
