@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
 	await page.goto('/');
 });
 
-test.describe('Boilerplate', { tag: '@all'}, () => {
+test.describe('Boilerplate > Functionality', { tag: '@all'}, () => {
 	test("DOM elements should exist", async ({ page }) => {
         await expect(page.locator(".js-boilerplate")).toHaveCount(2);  
 	});	
@@ -18,6 +18,13 @@ test.describe('Boilerplate', { tag: '@all'}, () => {
         await expect(element).not.toHaveClass(/clicked/);
     });
 });
+
+// Add further describe blocks for whichever categories apply to this component,
+// following the 'Boilerplate > Category' naming convention, e.g.:
+//   'Boilerplate > Keyboard' - keyboard-interaction and focus-management tests
+//   'Boilerplate > Aria'     - aria attributes staying in sync (aria-controls / aria-expanded etc.)
+// Only add what the component actually does. See toggle / modal / tabs for
+// interactive examples, or textarea / skip for non-standard categories.
 
 test.describe('Boilerplate > Axe', { tag: '@reduced'}, () => {
 	test('Should not have any automatically detectable accessibility issues', async ({ page }) => {	

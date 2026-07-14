@@ -1,5 +1,5 @@
-import { KEY_CODES, ACCEPTED_TRIGGERS } from './constants';
-import { getFocusableChildren } from './utils';
+import { KEY_CODES, ACCEPTED_TRIGGERS } from './constants.js';
+import { getFocusableChildren } from './utils.js';
 
 export const initTriggers = store => state => {
     const { items, settings } = state;
@@ -146,11 +146,11 @@ const trapTab = (store, e) => {
     const { dom } = store.getState();
     const focusedIndex = dom.focusableChildren.indexOf(document.activeElement);
     if (e.shiftKey && focusedIndex === 0) {
-        /* istanbul ignore next */
+        /* node:coverage ignore next */
         e.preventDefault();
         dom.focusableChildren[dom.focusableChildren.length - 1].focus();
     }
-    /* istanbul ignore next */
+    /* node:coverage ignore next */
     if (!e.shiftKey && focusedIndex === dom.focusableChildren.length - 1) {
         e.preventDefault();
         dom.focusableChildren[0].focus();
@@ -175,16 +175,16 @@ const writeTotals = ({ dom, current, items, settings }) => {
 const toggleFullScreen = ({ isOpen, dom }) => {
     if (isOpen){
         dom.overlay.requestFullscreen && dom.overlay.requestFullscreen();
-        /* istanbul ignore next */
+        /* node:coverage ignore next */
         dom.overlay.webkitRequestFullscreen && dom.overlay.webkitRequestFullscreen();
-        /* istanbul ignore next */
+        /* node:coverage ignore next */
         dom.overlay.mozRequestFullScreen && dom.overlay.mozRequestFullScreen();
     } else {
-        /* istanbul ignore next */
+        /* node:coverage ignore next */
         document.exitFullscreen && document.exitFullscreen();
-        /* istanbul ignore next */
+        /* node:coverage ignore next */
         document.mozCancelFullScreen && document.mozCancelFullScreen();
-        /* istanbul ignore next */
+        /* node:coverage ignore next */
         document.webkitExitFullscreen && document.webkitExitFullscreen();
     }
 };

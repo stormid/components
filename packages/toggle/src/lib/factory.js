@@ -1,4 +1,4 @@
-import { createStore } from './store';
+import { createStore } from './store.js';
 import {
     findToggles,
     getFocusableChildren,
@@ -9,7 +9,7 @@ import {
     startToggleLifecycle,
     toggle,
     getStateFromDOM
-} from './dom';
+} from './dom.js';
 
 
 /* 

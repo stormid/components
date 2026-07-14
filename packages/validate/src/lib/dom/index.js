@@ -1,4 +1,4 @@
-import { DOTNET_CLASSNAMES, TOKENS } from '../constants';
+import { DOTNET_CLASSNAMES, TOKENS } from '../constants/index.js';
 
 /**
  * Hypertext DOM factory function

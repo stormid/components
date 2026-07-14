@@ -1,4 +1,4 @@
-import { FOCUSABLE_ELEMENTS } from './constants';
+import { FOCUSABLE_ELEMENTS } from './constants.js';
 
 //Modernizr cookie test
 export const cookiesEnabled = () => {
@@ -7,7 +7,7 @@ export const cookiesEnabled = () => {
         const ret = document.cookie.indexOf('cookietest=') !== -1;
         document.cookie = 'cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT';
         return ret;
-    } catch (error) {
+    } catch {
         return false;
     }
 };
@@ -61,7 +61,7 @@ export const extractFromCookie = settings => {
         const hasCookie = consent !== undefined;
         if (!categoriesMatch(Object.keys(consent), Object.keys(settings.types))) return [false, {}];
         return [hasCookie, consent || {}];
-    } catch (e){
+    } catch {
         return [false, {}];
     }
 };
@@ -123,7 +123,7 @@ export const renderIframe = () => {
         iframe.src = node.getAttribute('data-iframe-src');
         if (node.hasAttribute('data-iframe-height')) iframe.style.height = node.getAttribute('data-iframe-height');
         iframe.setAttribute('title', node.getAttribute('data-iframe-title') || 'iFrame embed');
-        if (node.hasAttribute('data-iframe-width')) iframe.style.width =  node.getAttribute('data-iframe-width' || '100%');
+        if (node.hasAttribute('data-iframe-width')) iframe.style.width = node.getAttribute('data-iframe-width') || '100%';
         iframe.setAttribute('tabindex', '0');
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('webkitallowfullscreen', 'webkitallowfullscreen');
@@ -135,18 +135,19 @@ export const renderIframe = () => {
 };
 
 export const gtmSnippet = id => {
+    /* oxlint-disable no-unused-expressions, no-var -- minified Google Tag Manager vendor snippet, kept verbatim */
     !function(e, t, c, n, w, o) {
         e[n] = e[n] || [], e[n].push({
             "gtm.start": (new Date).getTime(),
             event: "gtm.js"
         });
-        var r = t.getElementsByTagName(c)[0], 
+        var r = t.getElementsByTagName(c)[0],
             s = t.createElement(c);
         s.async = !0, s.src = 'https://www.googletagmanager.com/gtm.js?id=' + w, r.parentNode.insertBefore(s, r)
     }(window, document, "script", "dataLayer", id);
+    /* oxlint-enable no-unused-expressions, no-var */
 };
 
-/* eslint-disable prefer-rest-params */
 function gtag() {
     window.dataLayer = window.dataLayer || [];
     //The Google libraries that use the dataLayer do not work if arguments are spread

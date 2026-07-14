@@ -1,5 +1,5 @@
 import validate from '../../../src';
-import { isValidDate, isFutureDate, isPastDate } from '../../../src/lib/plugins/methods/date';
+import { isValidDate, isFutureDate } from '../../../src/lib/plugins/methods/date';
 
 {
     const formToValidate = document.querySelector('.js-validate');

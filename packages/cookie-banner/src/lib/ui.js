@@ -1,7 +1,7 @@
-import { writeCookie, groupValueReducer, deleteCookies, getFocusableChildren, broadcast, setGoogleConsent } from './utils';
-import { ACCEPTED_TRIGGERS, EVENTS } from './constants';
-import { apply } from './consent';
-import { updateConsent, updateBannerOpen, updateBanner } from './reducers';
+import { writeCookie, groupValueReducer, deleteCookies, getFocusableChildren, broadcast, setGoogleConsent } from './utils.js';
+import { ACCEPTED_TRIGGERS, EVENTS } from './constants.js';
+import { apply } from './consent.js';
+import { updateConsent, updateBannerOpen, updateBanner } from './reducers.js';
 
 export const initBanner = store => () => {
     const state = store.getState();
@@ -212,7 +212,7 @@ export const initForm = store => () => {
 export const renderMessage = button => state => {
     button.insertAdjacentHTML('afterend', state.settings.messageTemplate(state));
     button.setAttribute('disabled', 'disabled');
-    /* istanbul ignore next */
+    /* node:coverage ignore next */
     window.setTimeout(() => {
         button.parentNode.removeChild(button.nextElementSibling);
         button.removeAttribute('disabled');
@@ -221,7 +221,7 @@ export const renderMessage = button => state => {
 
 export const renderAnnouncement = container => state => {
     container.textContent = state.settings.savedMessage;
-    /* istanbul ignore next */
+    /* node:coverage ignore next */
     window.setTimeout(() => {
         container.textContent = '';
     }, 3000);

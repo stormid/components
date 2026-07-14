@@ -1,13 +1,8 @@
 const { test, expect } = require('@playwright/test');
 import AxeBuilder from '@axe-core/playwright';
 
-let tabKey;
-
-test.beforeEach(async ({ page }, testInfo) => {
+test.beforeEach(async ({ page }) => {
 	await page.goto('/');
-	tabKey = testInfo.project.use.defaultBrowserType === 'webkit'
-			? "Alt+Tab"
-			: "Tab";
 });
 
 test.describe('Scroll spy > functionality', { tag: '@all'}, () => {
@@ -39,10 +34,14 @@ test.describe('Scroll spy > functionality', { tag: '@all'}, () => {
 		await expect(matchingLink).toHaveClass(/is--active/);
 	});
 
-	test('Activate the last link when the page is at the bottom, even if not intersecting top of window', async ({ page }) => {	
-		const matchingLink = page.locator('nav a[href="#section3"]');		
+	test('Activate the last link when the page is at the bottom, even if not intersecting top of window', async ({ page }) => {
+		const matchingLink = page.locator('nav a[href="#section3"]');
 		await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight));
 		await expect(matchingLink).toHaveClass(/is--active/);
+	});
+
+	test('Should not activate a link whose href has no matching target', async ({ page }) => {
+		await expect(page.locator('a[href="no-hash"]')).not.toHaveClass(/is--active/);
 	});
 });
 

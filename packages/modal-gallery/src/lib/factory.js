@@ -1,5 +1,5 @@
-import { createStore } from './store';
-import { initTriggers, keyListener, open } from './dom';
+import { createStore } from './store.js';
+import { initTriggers, keyListener, open } from './dom.js';
 
 /* 
  * @param items, HTMLElement, DOM node to be toggled

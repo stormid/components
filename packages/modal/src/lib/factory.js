@@ -1,4 +1,4 @@
-import { createStore } from './store';
+import { createStore } from './store.js';
 import {
     findDialog,
     findToggles,
@@ -6,7 +6,7 @@ import {
     getFocusableChildren,
     keyListener,
     lifecycle
-} from './dom';
+} from './dom.js';
 
 export default ({ node, settings }) => {
     const store = createStore();

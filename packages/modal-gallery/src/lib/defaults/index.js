@@ -1,5 +1,5 @@
-/* istanbul ignore file */
-import * as templates from './templates';
+/* node:coverage disable */
+import * as templates from './templates.js';
 
 export default {
     fullscreen: false,

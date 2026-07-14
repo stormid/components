@@ -1,6 +1,6 @@
 const { devices } = require('@playwright/test');
 
-// CURRENT MAX PORT NUMBER IN USE: 8092
+// CURRENT MAX PORT NUMBER IN USE: 8094
 
 module.exports = {
   testDir: './__tests__/playwright',
@@ -48,7 +48,7 @@ module.exports = {
     },
   ],
   webServer: {
-    command: 'webpack-dev-server --config tools/playwright.webpack.config.js --hot --no-open',
+    command: 'rspack serve --config tools/playwright.rspack.config.js',
     url: 'http://localhost:8081',
     reuseExistingServer: !process.env.CI,
   },

@@ -1,4 +1,4 @@
-/* istanbul ignore file */
+/* node:coverage disable */
 export const KEY_CODES = {
     TAB: 9,
     ESC: 27,

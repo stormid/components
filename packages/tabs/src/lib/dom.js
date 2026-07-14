@@ -1,4 +1,4 @@
-import { KEYCODES, MODES } from './constants';
+import { KEYCODES, MODES } from './constants.js';
 
 /*
  * Returns an Object composed of two Array of HTMLElements - tabs and panels

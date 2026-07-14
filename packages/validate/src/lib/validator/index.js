@@ -1,4 +1,4 @@
-import methods from './methods';
+import methods from './methods.js';
 import {
     isCheckable,
     isSelect,
@@ -8,14 +8,14 @@ import {
     groupIsDisabled,
     findErrors,
     groupIsAllHidden
-} from './utils';
+} from './utils.js';
 import {
     DOTNET_ADAPTORS,
     DOTNET_PARAMS,
     DOTNET_ERROR_SPAN_DATA_ATTRIBUTE,
     DOM_SELECTOR_PARAMS,
     GROUP_ATTRIBUTE
-} from '../constants';
+} from '../constants/index.js';
 
 /**
  * Resolve validation parameter to a string or array of DOM nodes

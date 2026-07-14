@@ -1,5 +1,5 @@
-import { MODES } from './constants';
-/* istanbul ignore file */
+import { MODES } from './constants.js';
+/* node:coverage disable */
 /*
  * Default settings used by a Tabs instance if not otherwise overwritten with config
  *

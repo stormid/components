@@ -4,4 +4,4 @@ src
 __tests__
 example
 coverage
-jest.config.js
+playwright.config.js

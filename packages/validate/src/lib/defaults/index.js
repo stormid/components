@@ -1,3 +1,4 @@
+/* node:coverage disable */
 export default {
     messages: {
         required() { return 'You must answer this question.'; } ,

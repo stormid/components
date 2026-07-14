@@ -1,5 +1,5 @@
-import { ACTIONS } from '../constants';
-import reducers from '../reducers';
+import { ACTIONS } from '../constants/index.js';
+import reducers from '../reducers/index.js';
 
 /**
  * Adds a custom validation method to the validation model, used via the API

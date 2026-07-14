@@ -1,9 +1,9 @@
-import { isSubmitButton, hasNameValue, hasFormactionValue } from './utils';
+import { hasNameValue, hasFormactionValue } from './utils.js';
 import {
     createButtonValueNode,
     cleanupButtonValueNode
-}  from '../dom';
-import { PREHOOK_DELAY } from '../constants';
+}  from '../dom/index.js';
+import { PREHOOK_DELAY } from '../constants/index.js';
 
 export const postValidation = (event, resolve, store) => {
     const { settings, form } = store.getState();

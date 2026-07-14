@@ -3,32 +3,20 @@
   "private": true,
   "scripts": {
     "test": "lerna run test --stream",
-    "lint": "eslint packages -c .eslintrc --ext js"
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
-    "@babel/core": "^7.7.4",
-    "@babel/node": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
+    "@happy-dom/global-registrator": "^20.10.6",
     "@playwright/test": "^1.50.1",
-    "@stormid/eslint-config": "^1.0.0",
-    "@types/node": "^22.13.9",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^10.0.3",
-    "babel-jest": "^27.4.6",
-    "babel-loader": "^8.0.6",
-    "clean-webpack-plugin": "^1.0.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-babel": "^5.3.0",
-    "eslint-plugin-jest": "^23.1.1",
-    "html-webpack-plugin": "^5.6.3",
-    "jest": "^27.4.7",
-    "jest-environment-jsdom": "^27.4.6",
+    "@rspack/cli": "^1.7.12",
+    "@rspack/core": "^1.7.12",
+    "@rspack/dev-server": "^1.2.1",
+    "@types/node": "^24.13.3",
     "lerna": "^8.1.9",
     "microbundle": "^0.15.1",
-    "webpack": "^5.97.1",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0",
+    "oxlint": "^1.72.0",
     "xhr-mock": "^2.5.1"
   }
 }

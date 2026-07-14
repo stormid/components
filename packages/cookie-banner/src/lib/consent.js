@@ -1,4 +1,4 @@
-import { updateExecuted } from './reducers';
+import { updateExecuted } from './reducers.js';
 
 export const applyEffects = state => {
     Object.keys(state.consent).forEach(key => {

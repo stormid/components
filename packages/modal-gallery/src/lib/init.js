@@ -1,5 +1,5 @@
-import defaults from './defaults/';
-import factory from './factory';
+import defaults from './defaults/index.js';
+import factory from './factory.js';
 
 const create = (items, options) => Object.create(factory({
     items,

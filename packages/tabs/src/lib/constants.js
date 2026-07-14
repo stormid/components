@@ -1,4 +1,4 @@
-/* istanbul ignore file */
+/* node:coverage disable */
 // Event keycodes that initiate toggle for keyboard events
 export const KEYCODES = {
     SPACE: 32,

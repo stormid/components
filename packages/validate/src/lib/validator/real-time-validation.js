@@ -1,15 +1,15 @@
-import { ACTIONS } from '../constants';
-import reducers from '../reducers';
+import { ACTIONS } from '../constants/index.js';
+import reducers from '../reducers/index.js';
 import {
     getGroupValidityState,
     resolveRealTimeValidationEvent,
     reduceGroupValidityState,
     reduceErrorMessages
-} from './';
+} from './index.js';
 import {
     clearError,
     renderError
-}  from '../dom';
+}  from '../dom/index.js';
 
 /**
  * Starts real-time validation on each group, adding an eventListener to each field 

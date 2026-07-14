@@ -1,0 +1,36 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["import", "react", "unicorn", "oxc"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "env": {
+    "builtin": true,
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "eqeqeq": "error",
+    "no-var": "error",
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-unused-vars": ["error", { "args": "none" }],
+    "no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }],
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "no-new-func": "error",
+    "no-proto": "error",
+    "unicorn/no-empty-file": "off",
+    "react/react-in-jsx-scope": "off"
+  },
+  "ignorePatterns": ["**/dist/**", "coverage/", "node_modules/"],
+  "overrides": [
+    {
+      "files": ["**/__tests__/**/*.js"],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
+}
