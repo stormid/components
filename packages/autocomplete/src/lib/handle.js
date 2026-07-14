@@ -1,4 +1,4 @@
-import { emptyList, renderList, renderStatus, clearStatus, showList, hideList, showLoading, setValue, clearInput, focusInput, syncOutput } from './dom.js';
+import { emptyList, renderList, renderStatus, clearStatus, showList, hideList, showLoading, setValue, clearInput, focusInput, syncOutput, syncHiddenValue } from './dom.js';
 import { areEqual, debounce, isPrintableKeyCode } from './utils.js';
 import { KEYCODES } from './constants.js';
 
@@ -159,7 +159,14 @@ export const inputBlur = store => event => {
     if (dom.list.contains(document.activeElement) || dom.list.contains(event.relatedTarget)) return;
     if (open) {
         if (settings.clearOnBlur) dom.input.value = '';
-        store.update({ ...store.getState(), open: false, ...(settings.clearOnBlur ? { options: [] } : {}) }, [ renderList, clearStatus ]);
+        //clearOnBlur blanks the field; in single mode also drop the selection and
+        //sync its hidden value, so a blanked field can't leave a stale value behind
+        //in state or the form
+        const dropSelection = settings.clearOnBlur && !settings.multiple;
+        store.update(
+            { ...store.getState(), open: false, ...(settings.clearOnBlur ? { options: [] } : {}), ...(dropSelection ? { selected: null } : {}) },
+            dropSelection ? [ renderList, clearStatus, syncHiddenValue ] : [ renderList, clearStatus ]
+        );
     }
 };
 
@@ -184,7 +191,10 @@ export const inputChange = store => {
         const { settings, open, options, selected } = store.getState();
         const value = event.target.value;
         //single mode: editing the input away from the shown selection clears it
-        if (!settings.multiple && selected && settings.template(selected) !== value) store.update({ ...store.getState(), selected: null }, [ clearStatus ]);
+        //(and the hidden value field, so a stale value isn't submitted)
+        if (!settings.multiple && selected && settings.template(selected) !== value) store.update({ ...store.getState(), selected: null }, [ clearStatus, syncHiddenValue ]);
+        //free-text single mode: with nothing selected, keep submitting what's typed
+        else if (!settings.multiple && settings.allowFreeText && !selected) syncHiddenValue(store.getState());
         if (value.length < settings.minlength) {
             if (open) store.update({ ...store.getState(), open: false }, [ hideList ]);
             if (options.length) store.update({ ...store.getState(), options: [] }, [ emptyList, renderStatus ]);

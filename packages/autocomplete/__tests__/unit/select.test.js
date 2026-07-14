@@ -49,11 +49,13 @@ describe('Autocomplete > Select', () => {
         ]);
     });
 
-    it('should adopt the select name onto the combobox input and move its id there for the label', () => {
+    it('should carry the select name on a hidden value field and move its id onto the combobox input for the label', () => {
         const { node } = init(single);
         const input = node.querySelector('input');
-        assert.strictEqual(input.getAttribute('name'), 'flavour');
+        //the visible combobox is display/search only; a hidden field submits the value
+        assert.strictEqual(input.hasAttribute('name'), false);
         assert.strictEqual(input.getAttribute('id'), 'flavour');
+        assert.strictEqual(node.querySelector('input[type="hidden"]').getAttribute('name'), 'flavour');
     });
 
     it('should display option labels but submit option values', () => {
@@ -66,14 +68,30 @@ describe('Autocomplete > Select', () => {
         assert.strictEqual(option.textContent, 'Apple');
 
         option.dispatchEvent(new Event('click', { bubbles: true }));
-        assert.strictEqual(input.value, 'apple');
+        //the input shows the display label, the hidden field submits the value
+        assert.strictEqual(input.value, 'Apple');
+        assert.strictEqual(node.querySelector('input[type="hidden"][name="flavour"]').value, 'apple');
+    });
+
+    it('should clear the hidden value when the input is edited away from the selection', () => {
+        const { node } = init(single);
+        const input = node.querySelector('input');
+        input.value = 'app';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        node.querySelector('[role="option"]').dispatchEvent(new Event('click', { bubbles: true }));
+        assert.strictEqual(node.querySelector('input[type="hidden"]').value, 'apple');
+
+        //typing over the committed selection drops it, so no stale value is submitted
+        input.value = 'ban';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        assert.strictEqual(node.querySelector('input[type="hidden"]').value, '');
     });
 
     it('should let an explicit option override the select for name and template', () => {
         const { node } = init(single, { name: 'fruit', template: option => `${option.label}!` });
-        const input = node.querySelector('input');
-        assert.strictEqual(input.getAttribute('name'), 'fruit');
+        assert.strictEqual(node.querySelector('input[type="hidden"]').getAttribute('name'), 'fruit');
 
+        const input = node.querySelector('input');
         input.value = 'app';
         input.dispatchEvent(new Event('input', { bubbles: true }));
         assert.strictEqual(node.querySelector('[role="option"]').textContent, 'Apple!');
@@ -91,7 +109,9 @@ describe('Autocomplete > Select', () => {
         const markup = single.replace('<option value="banana">', '<option value="banana" selected>');
         const instance = init(markup);
         assert.deepStrictEqual(instance.getState().selected, { value: 'banana', label: 'Banana' });
-        assert.strictEqual(instance.node.querySelector('input').value, 'banana');
+        //visible input shows the label, the hidden field carries the submit value
+        assert.strictEqual(instance.node.querySelector('input').value, 'Banana');
+        assert.strictEqual(instance.node.querySelector('input[type="hidden"]').value, 'banana');
     });
 
     it('should seed pre-selected options as chips with hidden inputs in multiple mode', () => {

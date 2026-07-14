@@ -11,6 +11,8 @@ export default {
     loadingMsg: 'Loading…',
     inputClassname: 'autocomplete__input',
     confirmOnBlur: true,
+    //single mode: submit typed text when nothing is selected (vs strict picker)
+    allowFreeText: false,
     list: false,
     values: [],
     template(option) {

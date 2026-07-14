@@ -52,6 +52,15 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    //free text: submit a chosen suggestion's value, or whatever the user types
+    autocomplete('.js-autocomplete-freetext', {
+        name: 'herb',
+        allowFreeText: true,
+        search(query){
+            return values.filter(item => item.value.toLowerCase().includes(query.toLowerCase()));
+        }
+    });
+
     //progressive enhancement: options, name and multiple are read from the <select>
     autocomplete('.js-autocomplete-select');
     autocomplete('.js-autocomplete-select-multiple');

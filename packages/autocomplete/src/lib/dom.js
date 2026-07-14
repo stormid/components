@@ -10,10 +10,10 @@ export const input = ({ node, settings, id, listId }) => {
     input.setAttribute('autocomplete', 'off');
     input.setAttribute('aria-controls', listId);
     input.classList.add(settings.inputClassname);
-    //if not multiple, set name attribute on input
-    if (!settings.multiple) input.setAttribute('name', settings.name);
+    //the visible input is display/search only in every mode; the form value is
+    //carried by a hidden field (single mode) or the chips' hidden inputs (multiple)
     node.appendChild(input);
-    
+
     return input;
 };
 
@@ -45,6 +45,20 @@ export const output = ({ node }) => {
     node.appendChild(output);
 
     return output;
+};
+
+/*
+ * Single-mode hidden field carrying the submit value under settings.name, so the
+ * visible combobox can display the option label (template) while the form still
+ * receives the option value (extractValue).
+ */
+export const hiddenValue = ({ node, name }) => {
+    const hidden = document.createElement('input');
+    hidden.setAttribute('type', 'hidden');
+    if (name) hidden.setAttribute('name', name);
+    node.appendChild(hidden);
+
+    return hidden;
 };
 
 export const listen = state => {
@@ -103,7 +117,28 @@ export const clearStatus = state => state.dom.status.textContent = '';
 
 export const showLoading = state => state.dom.status.textContent = state.settings.loadingMsg;
 
-export const setValue = state => state.dom.input.value = state.selected ? state.settings.extractValue(state.selected) : '';
+/*
+ * Keep the hidden field's form value in step with the current state: the
+ * selection's extractValue when something is selected, otherwise the raw typed
+ * text if free text is allowed (else empty). A no-op in multiple mode and in
+ * single mode with no name (where no hidden field exists).
+ */
+export const syncHiddenValue = state => {
+    if (!state.dom.hidden) return;
+    state.dom.hidden.value = state.selected
+        ? state.settings.extractValue(state.selected)
+        : (state.settings.allowFreeText ? state.dom.input.value : '');
+};
+
+/*
+ * Show the selection's display label in the visible input, and keep the hidden
+ * value field (when present) in sync with the submit value — so the combobox
+ * reads "Apple" while the form still submits "apple".
+ */
+export const setValue = state => {
+    state.dom.input.value = state.selected ? state.settings.template(state.selected) : '';
+    syncHiddenValue(state);
+};
 
 export const clearInput = state => state.dom.input.value = '';
 

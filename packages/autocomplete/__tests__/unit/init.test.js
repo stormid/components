@@ -51,4 +51,51 @@ describe('Autocomplete > Init', () => {
         assert.strictEqual(list.getAttribute('role'), 'listbox');
         assert.strictEqual(list.hasAttribute('hidden'), true);
     });
+
+    it('should display the template but submit extractValue via a hidden field in single mode', () => {
+        const list = [{ id: 42, label: 'Apple' }, { id: 7, label: 'Banana' }];
+        const [instance] = autocomplete('.js-autocomplete', {
+            name: 'fruit',
+            list,
+            template: option => option.label,
+            extractValue: option => option.id,
+            search: query => list.filter(option => option.label.toLowerCase().includes(query.toLowerCase()))
+        });
+        const { node } = instance;
+        const input = node.querySelector('input');
+        //the visible combobox is display/search only; the hidden field submits the value
+        assert.strictEqual(input.hasAttribute('name'), false);
+
+        input.value = 'app';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        node.querySelector('[role="option"]').dispatchEvent(new Event('click', { bubbles: true }));
+
+        //display is the label, the submitted value is the distinct extractValue
+        assert.strictEqual(input.value, 'Apple');
+        assert.strictEqual(node.querySelector('input[type="hidden"][name="fruit"]').value, '42');
+    });
+
+    it('should submit typed text via the hidden field when allowFreeText is set', () => {
+        const [instance] = autocomplete('.js-autocomplete', { name: 'fruit', allowFreeText: true, search: () => [] });
+        const { node } = instance;
+        const input = node.querySelector('input');
+
+        input.value = 'kumquat';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+
+        //no matching option selected, but the free text is carried to the form
+        assert.strictEqual(node.querySelector('input[type="hidden"][name="fruit"]').value, 'kumquat');
+    });
+
+    it('should not submit typed text when allowFreeText is not set (strict picker)', () => {
+        const [instance] = autocomplete('.js-autocomplete', { name: 'fruit', search: () => [] });
+        const { node } = instance;
+        const input = node.querySelector('input');
+
+        input.value = 'kumquat';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+
+        //nothing selected, so nothing is submitted
+        assert.strictEqual(node.querySelector('input[type="hidden"][name="fruit"]').value, '');
+    });
 });

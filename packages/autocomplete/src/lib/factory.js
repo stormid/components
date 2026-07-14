@@ -7,7 +7,8 @@ import {
     status,
     listen,
     setValue,
-    syncOutput
+    syncOutput,
+    hiddenValue
 } from './dom.js';
 import {
     inputFocus, inputBlur, inputChange,
@@ -44,6 +45,11 @@ export default ({ node, settings }) => {
 
     if (select) select.remove();
 
+    // Single mode submits via a hidden value field (when there's a name to submit
+    // under), freeing the visible input to display the option label (template)
+    // while the form receives the value (extractValue) — see setValue / hiddenValue.
+    const usesHiddenValue = !settings.multiple && !!settings.name;
+
     // Normalise the search fn up front so handlers can always call settings.search.
     settings.search = settings.search || defaultSearch(settings.values);
 
@@ -60,7 +66,9 @@ export default ({ node, settings }) => {
             list: list({ node, id: listId, labelledby: id }),
             status: status(node),
             //chips + hidden fields live in the output list, multiple mode only
-            ...(settings.multiple ? { output: output({ node }) } : {})
+            ...(settings.multiple ? { output: output({ node }) } : {}),
+            //single mode: a hidden field carries the submit value under the name
+            ...(usesHiddenValue ? { hidden: hiddenValue({ node, name: settings.name }) } : {})
         },
         selected,
         open: false,

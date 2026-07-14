@@ -81,6 +81,21 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		await expect(listbox.locator('[role="option"]')).toHaveText(['Apple']);
 	});
 
+	test('Should submit typed text via a hidden field when allowFreeText is set', async ({ page }) => {
+		const container = page.locator('.js-autocomplete-freetext');
+		const input = page.locator('#herb');
+
+		//a chosen suggestion submits its value
+		await input.fill('app');
+		await page.locator('#herb-listbox [role="option"]', { hasText: 'Apple' }).click();
+		await expect(container.locator('input[type="hidden"]')).toHaveValue('Apple');
+
+		//typing text that matches no option still carries it to the form
+		await input.fill('kumquat');
+		await expect(container.locator('input[type="hidden"]')).toHaveAttribute('name', 'herb');
+		await expect(container.locator('input[type="hidden"]')).toHaveValue('kumquat');
+	});
+
 	test('Should progressively enhance a <select>, removing it and sourcing its options', async ({ page }) => {
 		const container = page.locator('.js-autocomplete-select');
 		const input = page.locator('#flavour');
@@ -96,7 +111,9 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 
 		//display is the option label, the submitted value is the option value
 		await listbox.locator('[role="option"]', { hasText: 'Apple' }).click();
-		await expect(input).toHaveValue('apple');
+		await expect(input).toHaveValue('Apple');
+		await expect(container.locator('input[type="hidden"]')).toHaveAttribute('name', 'flavour');
+		await expect(container.locator('input[type="hidden"]')).toHaveValue('apple');
 	});
 
 	test('Should seed a chip from a pre-selected option when enhancing <select multiple>', async ({ page }) => {
