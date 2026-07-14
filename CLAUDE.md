@@ -103,6 +103,7 @@ Each package's `example/` app shares a common look: reuse boilerplate's example 
 - **Event handlers needing `this`/`.bind()`** are written as non-arrow named function expressions with settings partially applied (e.g. `const handleClick = ({ callback }) => function handler(e) { ... }`).
 - **Lifecycle hooks**: support optional `prehook` and `callback` functions in settings, invoked around the main action with relevant state passed in.
 - **Cross-component communication**: dispatch `CustomEvent`s from the node with `{ bubbles: true, detail: { getState } }` so other components/consumers can react. Event names live in `constants.js`.
+- **Async / remote option sources**: debounce the query; pass an `AbortController` **signal as the second argument** to the consumer's search function and abort the superseded request on the next keystroke (swallow the resulting `AbortError` rather than treating it as a failure); and drop stale responses by re-checking the current input value before rendering, so the latest keystroke always wins.
 - **Naming conventions**: `js-` prefixed classes are JS hooks (never style them); `is--` / `on--` classes are state; `data-*` attributes carry config. Keep these consistent across components.
 
 ## Accessibility (a hard requirement, not an enhancement)
@@ -110,6 +111,8 @@ Each package's `example/` app shares a common look: reuse boilerplate's example 
 - Interactive triggers must set `aria-controls` and keep `aria-expanded` in sync with state; non-`<button>` triggers get `role="button"`.
 - Manage focus explicitly: move focus into opened regions when configured, restore it to the previously focused element on close, and support focus trapping where relevant.
 - Use the `hidden` attribute / focusability so closed regions are unreachable by keyboard.
+- **Live-region status messages**: a `role="status"` region already carries an implicit `aria-live="polite"` and `aria-atomic="true"` — don't restate either. Write the whole message with `textContent` (replacing the single text node is inherently atomic), and keep it empty when there's nothing to announce.
+- **Match announcements to the focus model**: with **roving focus** (real `.focus()` moved onto each option/item) the focused element is announced natively — do *not* also announce the active option in a live region. Announce the active option (e.g. `"{label}, N of M"`) only under the **`aria-activedescendant`** model, where DOM focus stays on the input. Pick one model per component; don't double-announce.
 - **Playwright runs axe-core; zero violations is required** — an a11y violation fails the build.
 
 ## Testing (both layers are required)

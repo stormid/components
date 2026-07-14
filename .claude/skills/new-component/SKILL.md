@@ -42,7 +42,9 @@ For Archetype A, keep the factory contract from `src/index.js` (default export �
 
 Keep the implementation minimal and justified (see CLAUDE.md Code style): only add a `defaults.js` entry, constant, or abstraction when the code that consumes it exists — no speculative settings for features you haven't written yet.
 
-Accessibility is mandatory (see CLAUDE.md): keep `aria-expanded` in sync, set `aria-controls`/`role="button"` on triggers, manage and restore focus, and make closed regions keyboard-unreachable.
+Accessibility is mandatory (see CLAUDE.md): keep `aria-expanded` in sync, set `aria-controls`/`role="button"` on triggers, manage and restore focus, and make closed regions keyboard-unreachable. If the component announces results/state through a `role="status"` live region, follow the CLAUDE.md Accessibility rules — don't restate the implicit `aria-live`/`aria-atomic`, and don't announce an option that roving focus already voices.
+
+If the component sources its options from a remote/async endpoint, follow the async pattern in CLAUDE.md *Patterns to follow* (debounce → `AbortController` signal → drop stale responses).
 
 ## Step 4 — Write the tests (both layers required)
 
