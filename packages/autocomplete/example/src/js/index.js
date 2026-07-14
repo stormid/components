@@ -61,8 +61,9 @@ window.addEventListener('DOMContentLoaded', () => {
         async: true,
         //display the country name, submit the country code (see mapping below)
         template: option => option.label,
-        search(query){
-            return fetch(`/api/countries?q=${encodeURIComponent(query)}`)
+        //signal aborts this request if a newer keystroke supersedes it
+        search(query, signal){
+            return fetch(`/api/countries?q=${encodeURIComponent(query)}`, { signal })
                 .then(res => {
                     if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
                     return res.json();

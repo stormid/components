@@ -105,6 +105,46 @@ describe('Autocomplete > Remote', () => {
         assert.deepStrictEqual(rendered, ['Apricot']);
     });
 
+    it('should abort the in-flight request when a newer query supersedes it', async () => {
+        const signals = [];
+        const { node } = init({ search: (query, signal) => {
+            signals.push(signal);
+            return new Promise(resolve => setTimeout(() => resolve(filter(query)), 60));
+        } });
+        const input = node.querySelector('input');
+
+        input.value = 'ap';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await wait();          // debounce fires; first request in flight
+        input.value = 'apr';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await wait();          // second request fires and aborts the first
+
+        assert.strictEqual(signals.length, 2);
+        assert.strictEqual(signals[0].aborted, true);
+        assert.strictEqual(signals[1].aborted, false);
+    });
+
+    it('should not warn or clear results when a superseded request rejects with AbortError', async () => {
+        //a real fetch rejects with an AbortError when aborted — that must be swallowed
+        const { node } = init({ search: (query, signal) => new Promise((resolve, reject) => {
+            signal.addEventListener('abort', () => reject(Object.assign(new Error('aborted'), { name: 'AbortError' })));
+            setTimeout(() => resolve(filter(query)), query === 'ap' ? 60 : 10);
+        }) });
+        const input = node.querySelector('input');
+
+        input.value = 'ap';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await wait();
+        input.value = 'apr';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await wait();
+
+        //the aborted 'ap' rejection is ignored; the 'apr' result wins
+        const rendered = [...node.querySelectorAll('[role="option"]')].map(el => el.textContent);
+        assert.deepStrictEqual(rendered, ['Apricot']);
+    });
+
     it('should not throw and should clear results when the async search rejects', async () => {
         const { node } = init({ noResultsMsg: 'Nothing', search: () => Promise.reject(new Error('boom')) });
         const input = node.querySelector('input');

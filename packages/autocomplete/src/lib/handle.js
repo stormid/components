@@ -177,14 +177,21 @@ export const inputChange = store => {
     //async mode: debounce the remote search so a request fires once the user
     //pauses, not on every keystroke. The timer lives in this closure across the
     //instance's lifetime (inputChange runs once per instance at build time).
+    //controller aborts the in-flight request when a newer query supersedes it —
+    //search receives the signal as a second argument to pass to fetch.
+    let controller = null;
     const runAsyncSearch = debounce(value => {
         const state = store.getState();
         //the input may have changed during the debounce window — skip a stale query
         if (state.dom.input.value !== value) return;
+        if (controller) controller.abort();
+        controller = new AbortController();
         showLoading(state);
-        state.settings.search(value)
+        state.settings.search(value, controller.signal)
             .then(results => resolveAsyncResults(store, value, results))
             .catch(error => {
+                //a superseded request aborts by design — leave the newer one to render
+                if (error && error.name === 'AbortError') return;
                 console.warn(`Autocomplete search failed for query '${value}': ${error}`);
                 resolveAsyncResults(store, value, []);
             });
