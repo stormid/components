@@ -1,4 +1,5 @@
 // import { optionMouseDown } from './handle';
+import { resolveMsg } from './utils.js';
 
 export const input = ({ node, settings, id, listId }) => {
     const input = document.createElement('input');
@@ -108,9 +109,14 @@ export const showList = state => {
 };
 
 export const renderStatus = state => {
-    const { options, dom } = state;
-    if (options.length === 0) dom.status.textContent = state.settings.noResultsMsg;
-    else dom.status.textContent = `${options.length} results are available`;
+    const { options, dom, settings } = state;
+    const query = dom.input.value;
+    //nothing typed: keep the live region silent
+    if (query.length === 0) dom.status.textContent = '';
+    //typed, but not enough to search yet: say so rather than "no results"
+    else if (query.length < Number(settings.minlength)) dom.status.textContent = resolveMsg(settings.queryTooShortMsg, settings.minlength);
+    else if (options.length === 0) dom.status.textContent = settings.noResultsMsg;
+    else dom.status.textContent = `${options.length} ${options.length === 1 ? 'result is' : 'results are'} available`;
 };
 
 export const clearStatus = state => state.dom.status.textContent = '';

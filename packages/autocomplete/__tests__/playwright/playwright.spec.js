@@ -240,6 +240,24 @@ test.describe('Autocomplete > Aria', { tag: '@all'}, () => {
 
 });
 
+test.describe('Autocomplete > Status', { tag: '@all'}, () => {
+
+	test('Should announce that the query is too short below minlength', async ({ page }) => {
+		const status = page.locator('.js-autocomplete .autocomplete__status');
+
+		await page.locator('#default').fill('ap');
+		await expect(status).toHaveText('Type 3 or more characters for results');
+	});
+
+	test('Should announce the result count once the query is long enough', async ({ page }) => {
+		const status = page.locator('.js-autocomplete .autocomplete__status');
+
+		await page.locator('#default').fill('app');
+		await expect(status).toHaveText('1 result is available');
+	});
+
+});
+
 test.describe('Autocomplete > Axe', { tag: '@reduced'}, () => {
 	test('Should not have any automatically detectable accessibility issues', async ({ page }) => {
 		const accessibilityScanResults = await new AxeBuilder({ page }).analyze();

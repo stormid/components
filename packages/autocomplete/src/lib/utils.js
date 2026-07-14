@@ -37,6 +37,13 @@ export const debounce = (func, delay = 200) => {
     };
 };
 
+/*
+ * Resolve a status message that may be either a plain string or a function of
+ * some context (e.g. queryTooShortMsg takes minlength). Lets messages either
+ * interpolate config or stay as static strings / data-* overrides.
+ */
+export const resolveMsg = (msg, ...args) => (typeof msg === 'function' ? msg(...args) : msg);
+
 export const defaultSearch = values => query => values.filter(item => item.toLowerCase().includes(query.toLowerCase()));
 
 /*

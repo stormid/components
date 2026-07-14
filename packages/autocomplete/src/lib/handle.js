@@ -197,7 +197,9 @@ export const inputChange = store => {
         else if (!settings.multiple && settings.allowFreeText && !selected) syncHiddenValue(store.getState());
         if (value.length < settings.minlength) {
             if (open) store.update({ ...store.getState(), open: false }, [ hideList ]);
-            if (options.length) store.update({ ...store.getState(), options: [] }, [ emptyList, renderStatus ]);
+            //empty the list and re-announce so a too-short query says "type more"
+            //(not "no results"), including when typing up from an empty field
+            store.update({ ...store.getState(), options: [] }, [ emptyList, renderStatus ]);
             return;
         }
         if (settings.async) return runAsyncSearch(value);

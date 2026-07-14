@@ -9,6 +9,11 @@ export default {
     async: false,
     noResultsMsg: 'No results found',
     loadingMsg: 'Loading…',
+    //announced when the query is too short to search; receives minlength so the
+    //message can name it. A plain string is also accepted (see resolveMsg).
+    queryTooShortMsg(minlength) {
+        return `Type ${minlength} or more characters for results`;
+    },
     inputClassname: 'autocomplete__input',
     confirmOnBlur: true,
     //single mode: submit typed text when nothing is selected (vs strict picker)
