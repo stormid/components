@@ -15,6 +15,8 @@ export default {
         return `Type ${minlength} or more characters for results`;
     },
     inputClassname: 'autocomplete__input',
+    //optional placeholder text for the combobox input
+    placeholder: '',
     confirmOnBlur: true,
     //single mode: submit typed text when nothing is selected (vs strict picker)
     allowFreeText: false,

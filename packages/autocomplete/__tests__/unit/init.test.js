@@ -41,6 +41,16 @@ describe('Autocomplete > Init', () => {
         assert.strictEqual(node.querySelector('input').getAttribute('id'), 'fruit');
     });
 
+    it('should set the placeholder on the input when the option is given', () => {
+        const [withPlaceholder] = autocomplete('.js-autocomplete', { values, placeholder: 'Search fruit' });
+        assert.strictEqual(withPlaceholder.node.querySelector('input').getAttribute('placeholder'), 'Search fruit');
+    });
+
+    it('should not set a placeholder attribute when none is given', () => {
+        const [instance] = autocomplete('.js-autocomplete', { values });
+        assert.strictEqual(instance.node.querySelector('input').hasAttribute('placeholder'), false);
+    });
+
     it('should render an accessible combobox/listbox structure', () => {
         const [instance] = autocomplete('.js-autocomplete', { values });
         const input = instance.node.querySelector('input');

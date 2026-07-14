@@ -270,6 +270,10 @@ test.describe('Autocomplete > Aria', { tag: '@all'}, () => {
 		await expect(page.locator(':focus')).toHaveAttribute('aria-selected', 'true');
 	});
 
+	test('Should set the placeholder on the input when the option is given', async ({ page }) => {
+		await expect(page.locator('#default')).toHaveAttribute('placeholder', 'e.g. Apple');
+	});
+
 });
 
 test.describe('Autocomplete > Status', { tag: '@all'}, () => {

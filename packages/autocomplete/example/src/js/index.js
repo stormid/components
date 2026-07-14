@@ -26,6 +26,7 @@ const values = [
 window.addEventListener('DOMContentLoaded', () => {
     autocomplete('.js-autocomplete', {
         name: 'default',
+        placeholder: 'e.g. Apple',
         // list: values,
         search(query){
             return values.filter(item => item.value.toLowerCase().includes(query.toLowerCase()));

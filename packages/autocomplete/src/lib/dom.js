@@ -25,6 +25,7 @@ export const input = ({ node, settings, id, listId }) => {
     input.setAttribute('aria-expanded', 'false');
     input.setAttribute('autocomplete', 'off');
     input.setAttribute('aria-controls', listId);
+    if (settings.placeholder) input.setAttribute('placeholder', settings.placeholder);
     input.classList.add(settings.inputClassname);
     //the visible input is display/search only in every mode; the form value is
     //carried by a hidden field (single mode) or the chips' hidden inputs (multiple)
