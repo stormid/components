@@ -1,4 +1,4 @@
-import { emptyList, renderList, renderStatus, clearStatus, showList, hideList, showLoading, setValue, clearInput, focusInput, syncOutput, syncHiddenValue } from './dom.js';
+import { emptyList, renderList, renderStatus, clearStatus, showList, hideList, showLoading, setValue, clearInput, focusInput, syncOutput, syncHiddenValue, broadcast } from './dom.js';
 import { areEqual, debounce, isPrintableKeyCode } from './utils.js';
 import { KEYCODES } from './constants.js';
 
@@ -28,6 +28,7 @@ const commit = (store, option, refocus = false) => {
     } else {
         store.update({ ...state, selected: option, open: false }, [ setValue, hideList, emptyList, renderStatus ]);
     }
+    broadcast(store, 'confirm', option);
 };
 
 // ignore requests whose query no longer matches current user input - ensures latest keystroke wins
@@ -78,7 +79,9 @@ const handlePrintableKey = (store, event) => {
 const handleBackspace = (store, event) => {
     const { dom, settings, selected } = store.getState();
     if (settings.multiple && event.target === dom.input && dom.input.value === '' && selected.length) {
+        const removed = selected[selected.length - 1];
         store.update({ ...store.getState(), selected: selected.slice(0, -1) }, [ syncOutput ]);
+        broadcast(store, 'remove', removed);
         return;
     }
     if (event.target !== dom.input) dom.input.focus();
@@ -242,6 +245,7 @@ export const clear = store => () => {
     const state = store.getState();
     if (state.settings.multiple) store.update({ ...state, selected: [], options: [], open: false }, [ clearInput, syncOutput, hideList, emptyList, clearStatus ]);
     else store.update({ ...state, selected: null, options: [], open: false }, [ setValue, hideList, emptyList, clearStatus ]);
+    broadcast(store, 'clear');
 };
 
 export const chipRemove = store => event => {
@@ -250,5 +254,7 @@ export const chipRemove = store => event => {
     if (!button) return;
     const state = store.getState();
     const value = button.dataset.value;
+    const removed = state.selected.find(item => String(state.settings.extractValue(item)) === value);
     store.update({ ...state, selected: state.selected.filter(item => String(state.settings.extractValue(item)) !== value) }, [ syncOutput, focusInput ]);
+    broadcast(store, 'remove', removed);
 };

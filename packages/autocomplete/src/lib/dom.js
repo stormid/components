@@ -1,5 +1,20 @@
 // import { optionMouseDown } from './handle';
 import { resolveMsg } from './utils.js';
+import { EVENTS } from './constants.js';
+
+/*
+ * Dispatch a selection event from the component node so consumers can react
+ * without holding the instance reference. Bubbles to document; detail carries
+ * the action, the option acted on (null for clear), the current selection and
+ * the live getState. Event name per action lives in constants EVENTS.
+ */
+export const broadcast = (store, action, option = null) => {
+    const state = store.getState();
+    state.dom.node.dispatchEvent(new CustomEvent(EVENTS[action], {
+        bubbles: true,
+        detail: { action, option, selected: state.selected, getState: store.getState }
+    }));
+};
 
 export const input = ({ node, settings, id, listId }) => {
     const input = document.createElement('input');

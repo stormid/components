@@ -112,6 +112,23 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		await expect(container.locator('input[type="hidden"]')).toHaveValue('kumquat');
 	});
 
+	test('Should dispatch a bubbling confirm event from the node when an option is selected', async ({ page }) => {
+		const listbox = page.locator('#default-listbox');
+
+		//capture events bubbling up to the document
+		await page.evaluate(() => {
+			window.confirmedSelections = [];
+			document.addEventListener('autocomplete:confirm', e => window.confirmedSelections.push(e.detail.selected));
+		});
+
+		await page.locator('#default').fill('app');
+		await listbox.locator('[role="option"]', { hasText: 'Apple' }).click();
+
+		const confirmed = await page.evaluate(() => window.confirmedSelections);
+		expect(confirmed).toHaveLength(1);
+		expect(confirmed[0].value).toBe('Apple');
+	});
+
 	test('Should progressively enhance a <select>, removing it and sourcing its options', async ({ page }) => {
 		const container = page.locator('.js-autocomplete-select');
 		const input = page.locator('#flavour');
