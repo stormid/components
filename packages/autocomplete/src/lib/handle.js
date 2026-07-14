@@ -19,6 +19,9 @@ const toggleSelection = ({ selected, settings }, option) => {
  * the search input and (when refocus) keeps focus in the input to keep typing.
  */
 const commit = (store, option, refocus = false) => {
+    //nothing to commit — e.g. a click/blur/keypress landed while the list only
+    //held the non-selectable no-results message (optionAt returns undefined)
+    if (!option) return;
     const state = store.getState();
     if (state.settings.multiple) {
         //clear the results so retyping the same query re-renders the (now emptied) list
@@ -37,7 +40,9 @@ const commit = (store, option, refocus = false) => {
 const resolveAsyncResults = (store, value, results) => {
     const state = store.getState();
     if (state.dom.input.value !== value) return;
-    store.update({ ...state, options: results, open: results.length > 0 }, [ renderList, renderStatus ]);
+    //open regardless of count: empty results show the no-results message, so the
+    //list is never left silently shut after a search has run
+    store.update({ ...state, options: results, open: true }, [ renderList, renderStatus ]);
 };
 
 export const keydown = store => event => {
@@ -95,6 +100,9 @@ const handleBlur = (store, event) => {
 
 const handleEnter = (store, event) => {
     const { open, dom, options } = store.getState();
+    //no selectable options (e.g. the list is showing the no-results message) —
+    //leave Enter alone so a normal form submit isn't swallowed
+    if (options.length === 0) return;
     if (!open && event.target.parentElement !== dom.list) return;
     event.preventDefault();
     commit(store, optionAt(options, event.target), true);
@@ -138,8 +146,9 @@ const handleUpArrow = (store, event) => {
 
 const handleDownArrow = (store, event) => {
     event.preventDefault();
-    const { dom, open } = store.getState();
-    if (!open || !document.activeElement.nextElementSibling) return;
+    const { dom, open, options } = store.getState();
+    //no real options to move onto (the no-results message isn't focusable)
+    if (!open || options.length === 0 || !document.activeElement.nextElementSibling) return;
     if (document.activeElement === dom.input && open) {
         dom.list.firstElementChild.focus();
     } else {
@@ -215,12 +224,14 @@ export const inputChange = store => {
         }
         if (settings.async) return runAsyncSearch(value);
         const results = settings.search(value);
-        if (results.length === 0 && areEqual(options, results)) return;
-        if (results.length && areEqual(options, results)) {
-            if (!open) store.update({ ...store.getState(), open: true }, [ showList ]);
+        //same result set already rendered — just make sure the list is open (this
+        //also reopens onto the no-results message when the set stays empty)
+        if (areEqual(options, results)) {
+            if (!open) store.update({ ...store.getState(), open: true }, [ renderList, renderStatus ]);
             return;
         }
-        store.update({ ...store.getState(), options: results, open: results.length > 0 }, [ renderList, renderStatus ]);
+        //open regardless of count: empty results render the no-results message
+        store.update({ ...store.getState(), options: results, open: true }, [ renderList, renderStatus ]);
     };
 };
 

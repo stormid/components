@@ -64,4 +64,23 @@ describe('Autocomplete > Status', () => {
         type(input, '');
         assert.strictEqual(node.querySelector('.autocomplete__status').textContent, '');
     });
+
+    it('should open the list with a visible no-results message when a search returns nothing', () => {
+        const { node } = init({ minlength: 1, noResultsMsg: 'No results found' });
+        const input = node.querySelector('input');
+        type(input, 'zz');
+        const list = node.querySelector('ul[role="listbox"]');
+        assert.strictEqual(list.hasAttribute('hidden'), false);
+        assert.strictEqual(input.getAttribute('aria-expanded'), 'true');
+        assert.strictEqual(node.querySelector('.autocomplete__option--empty').textContent, 'No results found');
+    });
+
+    it('should not show the no-results message while the query is below minlength', () => {
+        const { node } = init({ minlength: 3 });
+        const input = node.querySelector('input');
+        type(input, 'zz');
+        const list = node.querySelector('ul[role="listbox"]');
+        assert.strictEqual(list.hasAttribute('hidden'), true);
+        assert.strictEqual(node.querySelector('.autocomplete__option--empty'), null);
+    });
 });

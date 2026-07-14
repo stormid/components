@@ -107,10 +107,27 @@ export const renderOptions = state => state.options.map((option, index) => {
     return el;
 });
 
+/*
+ * A single, non-selectable listbox item shown when a search returns nothing, so
+ * an open list reads as "searched, found nothing" rather than looking broken by
+ * staying shut. aria-disabled and the absence of aria-posinset/tabindex keep it
+ * out of option navigation and selection; the live status region announces the
+ * same message for assistive tech.
+ */
+export const renderNoResults = state => {
+    const el = document.createElement('li');
+    el.setAttribute('role', 'option');
+    el.setAttribute('aria-disabled', 'true');
+    el.classList.add('autocomplete__option', 'autocomplete__option--empty');
+    el.textContent = state.settings.noResultsMsg;
+
+    return el;
+};
+
 export const renderList = state => {
     const { open, options, dom } = state;
-    dom.list.replaceChildren(...renderOptions(state));
-    if (open && options.length > 0) showList(state);
+    dom.list.replaceChildren(...(options.length > 0 ? renderOptions(state) : [ renderNoResults(state) ]));
+    if (open) showList(state);
     else hideList(state);
 };
 

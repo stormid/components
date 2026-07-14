@@ -580,6 +580,13 @@
         .autocomplete__option:first-child {
             border-top: 0 none;
         }
+        .autocomplete__option--empty,
+        .autocomplete__option--empty:hover {
+            color: hsl(0, 0%, 40%);
+            background-color: #fff;
+            cursor: default;
+            font-style: italic;
+        }
         .autocomplete__output {
             display: flex;
             flex-wrap: wrap;

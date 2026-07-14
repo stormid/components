@@ -84,7 +84,9 @@ describe('Autocomplete > Remote', () => {
         await wait();
 
         assert.strictEqual(node.querySelector('.autocomplete__status').textContent, 'Nothing');
-        assert.strictEqual(node.querySelector('ul[role="listbox"]').hasAttribute('hidden'), true);
+        //the list opens and shows the no-results message rather than staying shut
+        assert.strictEqual(node.querySelector('ul[role="listbox"]').hasAttribute('hidden'), false);
+        assert.strictEqual(node.querySelector('.autocomplete__option--empty').textContent, 'Nothing');
     });
 
     it('should ignore results from a stale query that resolves after a newer one', async () => {
@@ -145,14 +147,16 @@ describe('Autocomplete > Remote', () => {
         assert.deepStrictEqual(rendered, ['Apricot']);
     });
 
-    it('should not throw and should clear results when the async search rejects', async () => {
+    it('should not throw and should fall back to the no-results message when the async search rejects', async () => {
         const { node } = init({ noResultsMsg: 'Nothing', search: () => Promise.reject(new Error('boom')) });
         const input = node.querySelector('input');
         input.value = 'ap';
         input.dispatchEvent(new Event('input', { bubbles: true }));
         await wait();
 
-        assert.strictEqual(node.querySelectorAll('[role="option"]').length, 0);
-        assert.strictEqual(node.querySelector('ul[role="listbox"]').hasAttribute('hidden'), true);
+        //a rejected search is treated as empty results: no options, no-results shown
+        assert.strictEqual(node.querySelectorAll('.autocomplete__option:not(.autocomplete__option--empty)').length, 0);
+        assert.strictEqual(node.querySelector('ul[role="listbox"]').hasAttribute('hidden'), false);
+        assert.strictEqual(node.querySelector('.autocomplete__option--empty').textContent, 'Nothing');
     });
 });

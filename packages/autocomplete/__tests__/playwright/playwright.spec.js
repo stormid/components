@@ -43,6 +43,16 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		await expect(input).toHaveAttribute('aria-expanded', 'false');
 	});
 
+	test('Should open the list with a no-results message when nothing matches', async ({ page }) => {
+		const input = page.locator('#default');
+		const listbox = page.locator('#default-listbox');
+
+		await input.fill('zzz');
+		await expect(listbox).toBeVisible();
+		await expect(input).toHaveAttribute('aria-expanded', 'true');
+		await expect(listbox.locator('.autocomplete__option--empty')).toHaveText('No results found');
+	});
+
 	test('Should add a removable chip with a hidden field for each selection in multiple mode', async ({ page }) => {
 		const input = page.locator('#fruits');
 		const output = page.locator('.js-autocomplete-multiple .autocomplete__output');
@@ -292,10 +302,26 @@ test.describe('Autocomplete > Status', { tag: '@all'}, () => {
 		await expect(status).toHaveText('1 result is available');
 	});
 
+	test('Should announce the no-results message when nothing matches', async ({ page }) => {
+		const status = page.locator('.js-autocomplete .autocomplete__status');
+
+		await page.locator('#default').fill('zzz');
+		await expect(status).toHaveText('No results found');
+	});
+
 });
 
 test.describe('Autocomplete > Axe', { tag: '@reduced'}, () => {
 	test('Should not have any automatically detectable accessibility issues', async ({ page }) => {
+		const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+		expect(accessibilityScanResults.violations).toEqual([]);
+	});
+
+	test('Should not have any accessibility issues with the no-results list open', async ({ page }) => {
+		const listbox = page.locator('#default-listbox');
+		await page.locator('#default').fill('zzz');
+		await expect(listbox).toBeVisible();
+
 		const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
 		expect(accessibilityScanResults.violations).toEqual([]);
 	});
