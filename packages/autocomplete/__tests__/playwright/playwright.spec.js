@@ -81,6 +81,22 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		await expect(listbox.locator('[role="option"]')).toHaveText(['Apple']);
 	});
 
+	test('Should search a remote endpoint via fetch and submit the mapped value', async ({ page }) => {
+		const container = page.locator('.js-autocomplete-endpoint');
+		const input = page.locator('#country-code');
+		const listbox = page.locator('#country-code-listbox');
+
+		//results come from the mocked /api/countries route, mapped from { code, name }
+		await input.fill('united');
+		await expect(listbox).toBeVisible();
+		await expect(listbox.locator('[role="option"]')).toHaveText(['United Kingdom', 'United States']);
+
+		//display is the name, the hidden field submits the mapped code
+		await listbox.locator('[role="option"]', { hasText: 'United Kingdom' }).click();
+		await expect(input).toHaveValue('United Kingdom');
+		await expect(container.locator('input[type="hidden"]')).toHaveValue('GB');
+	});
+
 	test('Should submit typed text via a hidden field when allowFreeText is set', async ({ page }) => {
 		const container = page.locator('.js-autocomplete-freetext');
 		const input = page.locator('#herb');

@@ -44,11 +44,31 @@ window.addEventListener('DOMContentLoaded', () => {
         name: 'country',
         async: true,
         //stand-in for a remote endpoint: resolve the local list after a short
-        //delay to simulate network latency. Swap for fetch(...).then(r => r.json()).
+        //delay to simulate network latency (see the fetch example below for the
+        //real-API pattern).
         search(query){
             return new Promise(resolve => {
                 setTimeout(() => resolve(values.filter(item => item.value.toLowerCase().includes(query.toLowerCase()))), 300);
             });
+        }
+    });
+
+    //remote search against a real endpoint (mocked by the dev server at
+    ///api/countries — see tools/rspack.config.js). The component debounces the
+    //call, only fires past minlength, and discards stale responses.
+    autocomplete('.js-autocomplete-endpoint', {
+        name: 'country-code',
+        async: true,
+        //display the country name, submit the country code (see mapping below)
+        template: option => option.label,
+        search(query){
+            return fetch(`/api/countries?q=${encodeURIComponent(query)}`)
+                .then(res => {
+                    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+                    return res.json();
+                })
+                //map the API's { code, name } shape to the { value, label } options expect
+                .then(rows => rows.map(row => ({ value: row.code, label: row.name })));
         }
     });
 
