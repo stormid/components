@@ -199,6 +199,21 @@ test.describe('Autocomplete > Keyboard', { tag: '@all'}, () => {
 		await expect(page.locator(':focus')).toHaveAttribute('id', 'default');
 	});
 
+	test('Should select the committed value on refocus so typing replaces it', async ({ page }) => {
+		const input = page.locator('#default');
+		const listbox = page.locator('#default-listbox');
+
+		await input.fill('app');
+		await listbox.locator('[role="option"]', { hasText: 'Apple' }).click();
+		await expect(input).toHaveValue('Apple');
+
+		//blur then refocus: the whole value should be selected
+		await page.locator('#fruits').focus();
+		await input.focus();
+		const selectionLength = await input.evaluate(el => el.selectionEnd - el.selectionStart);
+		expect(selectionLength).toBe('Apple'.length);
+	});
+
 	test('Should remove the last chip when Backspace is pressed on an empty input in multiple mode', async ({ page }) => {
 		const input = page.locator('#fruits');
 		const output = page.locator('.js-autocomplete-multiple .autocomplete__output');

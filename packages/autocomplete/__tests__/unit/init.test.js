@@ -75,6 +75,26 @@ describe('Autocomplete > Init', () => {
         assert.strictEqual(node.querySelector('input[type="hidden"][name="fruit"]').value, '42');
     });
 
+    it('should select the committed value when the input is refocused so typing replaces it', () => {
+        const list = [{ value: 'apple', label: 'Apple' }];
+        const [instance] = autocomplete('.js-autocomplete', {
+            name: 'fruit',
+            template: option => option.label,
+            search: query => list.filter(option => option.label.toLowerCase().includes(query.toLowerCase()))
+        });
+        const input = instance.node.querySelector('input');
+
+        input.value = 'app';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        instance.node.querySelector('[role="option"]').dispatchEvent(new Event('click', { bubbles: true }));
+        assert.strictEqual(input.value, 'Apple');
+
+        //refocusing the committed selection selects its whole text
+        input.dispatchEvent(new Event('focus'));
+        assert.strictEqual(input.selectionStart, 0);
+        assert.strictEqual(input.selectionEnd, input.value.length);
+    });
+
     it('should submit typed text via the hidden field when allowFreeText is set', () => {
         const [instance] = autocomplete('.js-autocomplete', { name: 'fruit', allowFreeText: true, search: () => [] });
         const { node } = instance;

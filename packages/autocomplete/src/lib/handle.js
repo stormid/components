@@ -152,8 +152,9 @@ const handleDownArrow = (store, event) => {
 export const inputFocus = store => event => {
     const { open, selected, settings } = store.getState();
     if (!event.target.value) return;
-    //single mode: the input shows the current selection, don't reopen for it
-    if (!settings.multiple && selected && settings.template(selected) === event.target.value) return;
+    //single mode: the input shows the current selection, don't reopen for it —
+    //select its text instead so the next keystroke replaces the whole value
+    if (!settings.multiple && selected && settings.template(selected) === event.target.value) return event.target.select();
     if (!open) store.update({ ...store.getState(), open: true }, [ showList ]);
 };
 
