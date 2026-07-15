@@ -42,6 +42,11 @@ For Archetype A, keep the factory contract from `src/index.js` (default export �
 
 Keep the implementation minimal and justified (see CLAUDE.md Code style): only add a `defaults.js` entry, constant, or abstraction when the code that consumes it exists — no speculative settings for features you haven't written yet.
 
+**Code style:**
+
+- **Descriptive names** — favour full, meaningful identifiers over vague one- or two-character ones (`query` not `q`, `selectableOptions` not `usable`). The name should say what the value is.
+- **Lean comments** — don't narrate what the code already says. In particular, don't describe what each `defaults.js` setting does in code comments: that belongs in the package README's options table, which is the source of truth for consumer-facing option descriptions. Repeating it inline just drifts out of date.
+
 Accessibility is mandatory (see CLAUDE.md): keep `aria-expanded` in sync, set `aria-controls`/`role="button"` on triggers, manage and restore focus, and make closed regions keyboard-unreachable. If the component announces results/state through a `role="status"` live region, follow the CLAUDE.md Accessibility rules — don't restate the implicit `aria-live`/`aria-atomic`, and don't announce an option that roving focus already voices.
 
 If the component sources its options from a remote/async endpoint, follow the async pattern in CLAUDE.md *Patterns to follow* (debounce → `AbortController` signal → drop stale responses).
