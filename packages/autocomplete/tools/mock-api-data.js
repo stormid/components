@@ -9,5 +9,10 @@ module.exports = [
     { code: 'ES', name: 'Spain' },
     { code: 'IT', name: 'Italy' },
     { code: 'NL', name: 'Netherlands' },
-    { code: 'IE', name: 'Ireland' }
+    { code: 'IE', name: 'Ireland' },
+    { code: 'IS', name: 'Iceland' },
+    { code: 'FI', name: 'Finland' },
+    { code: 'PL', name: 'Poland' },
+    { code: 'CH', name: 'Switzerland' },
+    { code: 'NZ', name: 'New Zealand' }
 ];

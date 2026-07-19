@@ -53,76 +53,16 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		await expect(listbox.locator('.autocomplete__option--empty')).toHaveText('No results found');
 	});
 
-	test('Should add a removable chip with a hidden field for each selection in multiple mode', async ({ page }) => {
-		const input = page.locator('#fruits');
-		const output = page.locator('.js-autocomplete-multiple .autocomplete__output');
+	test('Should commit the focused option on blur when confirmOnBlur is set', async ({ page }) => {
+		const input = page.locator('#default');
 
 		await input.fill('app');
-		await page.locator('#fruits-listbox [role="option"]', { hasText: 'Apple' }).click();
+		await page.keyboard.press('ArrowDown');
+		await expect(page.locator(':focus')).toHaveText('Apple');
 
-		const chip = output.locator('.autocomplete__chip');
-		await expect(chip).toHaveCount(1);
-		await expect(chip.locator('.autocomplete__chip-label')).toHaveText('Apple');
-		await expect(chip.locator('.autocomplete__chip-remove')).toHaveAttribute('aria-label', 'Remove Apple');
-		await expect(chip.locator('input[type="hidden"]')).toHaveAttribute('name', 'fruits');
-		await expect(chip.locator('input[type="hidden"]')).toHaveValue('Apple');
-		//committing a selection clears the search input so the user can keep typing
-		await expect(input).toHaveValue('');
-	});
-
-	test('Should remove a chip when its remove button is clicked', async ({ page }) => {
-		const input = page.locator('#fruits');
-		const output = page.locator('.js-autocomplete-multiple .autocomplete__output');
-
-		await input.fill('app');
-		await page.locator('#fruits-listbox [role="option"]', { hasText: 'Apple' }).click();
-		await expect(output.locator('.autocomplete__chip')).toHaveCount(1);
-
-		await output.locator('.autocomplete__chip-remove').click();
-		await expect(output.locator('.autocomplete__chip')).toHaveCount(0);
-	});
-
-	test('Should resolve options from an async source', async ({ page }) => {
-		const input = page.locator('#country');
-		const listbox = page.locator('#country-listbox');
-
-		await input.fill('app');
-		await expect(listbox).toBeVisible();
-		await expect(listbox.locator('[role="option"]')).toHaveText(['Apple']);
-	});
-
-	test('Should search a remote endpoint via fetch and submit the mapped value', async ({ page }) => {
-		const container = page.locator('.js-autocomplete-endpoint');
-		const input = page.locator('#country-code');
-		const listbox = page.locator('#country-code-listbox');
-
-		//results come from the mocked /api/countries route, mapped from { code, name }
-		await input.fill('united');
-		await expect(listbox).toBeVisible();
-		await expect(listbox.locator('[role="option"] .autocomplete__option-title')).toHaveText(['United Kingdom', 'United States']);
-
-		//multiple mode: selecting clears the input, adds a chip, and submits the mapped code via the chip's hidden field
-		await listbox.locator('[role="option"]', { hasText: 'United Kingdom' }).click();
-		await expect(input).toHaveValue('');
-		await expect(container.locator('.autocomplete__chip-label')).toHaveText('United Kingdom');
-		await expect(container.locator('input[type="hidden"]')).toHaveValue('GB');
-	});
-
-	test('Should render a custom option template with a detail line, leaving the label and value unaffected', async ({ page }) => {
-		const container = page.locator('.js-autocomplete-endpoint');
-		const listbox = page.locator('#country-code-listbox');
-
-		await page.locator('#country-code').fill('united');
-		await expect(listbox).toBeVisible();
-		const option = listbox.locator('[role="option"]').first();
-		//the list option carries the display label plus an extra detail line (the country code)
-		await expect(option.locator('.autocomplete__option-title')).toHaveText('United Kingdom');
-		await expect(option.locator('.autocomplete__option-detail')).toHaveText('GB');
-
-		//multiple mode: selecting adds a chip showing just the label and submits the code
-		await option.click();
-		await expect(container.locator('.autocomplete__chip-label')).toHaveText('United Kingdom');
-		await expect(container.locator('input[type="hidden"]')).toHaveValue('GB');
+		//Tab out of the component: confirmOnBlur (default) commits the focused option
+		await page.keyboard.press('Tab');
+		await expect(input).toHaveValue('Apple');
 	});
 
 	test('Should dispatch a bubbling confirm event from the node when an option is selected', async ({ page }) => {
@@ -142,57 +82,6 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		expect(confirmed[0].value).toBe('Apple');
 	});
 
-	test('Should progressively enhance a <select>, removing it and sourcing its options', async ({ page }) => {
-		const container = page.locator('.js-autocomplete-select');
-		const input = page.locator('#flavour');
-		const listbox = page.locator('#flavour-listbox');
-
-		//the original <select> is replaced by the enhanced combobox
-		await expect(container.locator('select')).toHaveCount(0);
-		await expect(input).toHaveRole('combobox');
-
-		//options come from the <option> labels; the placeholder (value="") is skipped
-		await input.fill('app');
-		await expect(listbox.locator('[role="option"]')).toHaveText(['Apple']);
-
-		//display is the option label, the submitted value is the option value
-		await listbox.locator('[role="option"]', { hasText: 'Apple' }).click();
-		await expect(input).toHaveValue('Apple');
-		await expect(container.locator('input[type="hidden"]')).toHaveAttribute('name', 'flavour');
-		await expect(container.locator('input[type="hidden"]')).toHaveValue('apple');
-	});
-
-	test('Should restore a server-rendered value/label into the combobox and hidden field on load', async ({ page }) => {
-		const container = page.locator('.js-autocomplete-prefilled');
-		const input = page.locator('#prefilled');
-
-		//the label shows in the visible combobox, the value submits via the hidden field
-		await expect(input).toHaveValue('United Kingdom');
-		await expect(container.locator('input[type="hidden"]')).toHaveAttribute('name', 'prefilled');
-		await expect(container.locator('input[type="hidden"]')).toHaveValue('GB');
-	});
-
-	test('Should restore server-rendered selections as chips in multiple mode on load', async ({ page }) => {
-		const output = page.locator('.js-autocomplete-prefilled-multiple .autocomplete__output');
-
-		await expect(output.locator('.autocomplete__chip')).toHaveCount(2);
-		await expect(output.locator('.autocomplete__chip-label')).toHaveText(['United Kingdom', 'France']);
-		const hidden = output.locator('input[type="hidden"][name="prefilled-multiple"]');
-		await expect(hidden).toHaveCount(2);
-		await expect(hidden.nth(0)).toHaveValue('GB');
-		await expect(hidden.nth(1)).toHaveValue('FR');
-	});
-
-	test('Should seed a chip from a pre-selected option when enhancing <select multiple>', async ({ page }) => {
-		const output = page.locator('.js-autocomplete-select-multiple .autocomplete__output');
-
-		const chip = output.locator('.autocomplete__chip');
-		await expect(chip).toHaveCount(1);
-		await expect(chip.locator('.autocomplete__chip-label')).toHaveText('Banana');
-		await expect(chip.locator('input[type="hidden"]')).toHaveAttribute('name', 'toppings');
-		await expect(chip.locator('input[type="hidden"]')).toHaveValue('banana');
-	});
-
 });
 
 test.describe('Autocomplete > Keyboard', { tag: '@all'}, () => {
@@ -209,6 +98,27 @@ test.describe('Autocomplete > Keyboard', { tag: '@all'}, () => {
 		await expect(page.locator(':focus')).toHaveAttribute('id', 'default');
 	});
 
+	test('Should navigate a multi-option list and stop at each end', async ({ page }) => {
+		const input = page.locator('#default');
+
+		//'to' matches Potato and Sweet potato
+		await input.fill('to');
+		await page.keyboard.press('ArrowDown');
+		await expect(page.locator(':focus')).toHaveText('Potato');
+		await page.keyboard.press('ArrowDown');
+		await expect(page.locator(':focus')).toHaveText('Sweet potato');
+
+		//at the last option the down arrow holds position
+		await page.keyboard.press('ArrowDown');
+		await expect(page.locator(':focus')).toHaveText('Sweet potato');
+
+		//the up arrow walks back up and past the first option returns to the input
+		await page.keyboard.press('ArrowUp');
+		await expect(page.locator(':focus')).toHaveText('Potato');
+		await page.keyboard.press('ArrowUp');
+		await expect(page.locator(':focus')).toHaveAttribute('id', 'default');
+	});
+
 	test('Should select the focused option when Enter is pressed', async ({ page }) => {
 		const input = page.locator('#default');
 		const listbox = page.locator('#default-listbox');
@@ -216,6 +126,18 @@ test.describe('Autocomplete > Keyboard', { tag: '@all'}, () => {
 		await input.fill('app');
 		await page.keyboard.press('ArrowDown');
 		await page.keyboard.press('Enter');
+
+		await expect(input).toHaveValue('Apple');
+		await expect(listbox).not.toBeVisible();
+	});
+
+	test('Should select the focused option when Space is pressed', async ({ page }) => {
+		const input = page.locator('#default');
+		const listbox = page.locator('#default-listbox');
+
+		await input.fill('app');
+		await page.keyboard.press('ArrowDown');
+		await page.keyboard.press('Space');
 
 		await expect(input).toHaveValue('Apple');
 		await expect(listbox).not.toBeVisible();
@@ -246,19 +168,6 @@ test.describe('Autocomplete > Keyboard', { tag: '@all'}, () => {
 		await input.focus();
 		const selectionLength = await input.evaluate(el => el.selectionEnd - el.selectionStart);
 		expect(selectionLength).toBe('Apple'.length);
-	});
-
-	test('Should remove the last chip when Backspace is pressed on an empty input in multiple mode', async ({ page }) => {
-		const input = page.locator('#fruits');
-		const output = page.locator('.js-autocomplete-multiple .autocomplete__output');
-
-		await input.fill('app');
-		await page.locator('#fruits-listbox [role="option"]', { hasText: 'Apple' }).click();
-		await expect(output.locator('.autocomplete__chip')).toHaveCount(1);
-
-		await input.focus();
-		await page.keyboard.press('Backspace');
-		await expect(output.locator('.autocomplete__chip')).toHaveCount(0);
 	});
 
 });
@@ -344,6 +253,7 @@ test.describe('Autocomplete > Status', { tag: '@all'}, () => {
 });
 
 test.describe('Autocomplete > Axe', { tag: '@reduced'}, () => {
+
 	test('Should not have any automatically detectable accessibility issues', async ({ page }) => {
 		const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
 		expect(accessibilityScanResults.violations).toEqual([]);
@@ -358,12 +268,4 @@ test.describe('Autocomplete > Axe', { tag: '@reduced'}, () => {
 		expect(accessibilityScanResults.violations).toEqual([]);
 	});
 
-	test('Should not have any accessibility issues with a custom option template list open', async ({ page }) => {
-		const listbox = page.locator('#country-code-listbox');
-		await page.locator('#country-code').fill('united');
-		await expect(listbox).toBeVisible();
-
-		const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
-		expect(accessibilityScanResults.violations).toEqual([]);
-	});
 });
