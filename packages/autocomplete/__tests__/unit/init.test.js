@@ -62,13 +62,13 @@ describe('Autocomplete > Init', () => {
         assert.strictEqual(list.hasAttribute('hidden'), true);
     });
 
-    it('should display the template but submit extractValue via a hidden field in single mode', () => {
+    it('should display the displayTemplate but submit submissionTemplate via a hidden field in single mode', () => {
         const list = [{ id: 42, label: 'Apple' }, { id: 7, label: 'Banana' }];
         const [instance] = autocomplete('.js-autocomplete', {
             name: 'fruit',
             list,
-            template: option => option.label,
-            extractValue: option => option.id,
+            displayTemplate: option => option.label,
+            submissionTemplate: option => option.id,
             search: query => list.filter(option => option.label.toLowerCase().includes(query.toLowerCase()))
         });
         const { node } = instance;
@@ -80,7 +80,7 @@ describe('Autocomplete > Init', () => {
         input.dispatchEvent(new Event('input', { bubbles: true }));
         node.querySelector('[role="option"]').dispatchEvent(new Event('click', { bubbles: true }));
 
-        //display is the label, the submitted value is the distinct extractValue
+        //display is the label, the submitted value is the distinct submissionTemplate
         assert.strictEqual(input.value, 'Apple');
         assert.strictEqual(node.querySelector('input[type="hidden"][name="fruit"]').value, '42');
     });
@@ -89,7 +89,7 @@ describe('Autocomplete > Init', () => {
         const list = [{ value: 'apple', label: 'Apple' }];
         const [instance] = autocomplete('.js-autocomplete', {
             name: 'fruit',
-            template: option => option.label,
+            displayTemplate: option => option.label,
             search: query => list.filter(option => option.label.toLowerCase().includes(query.toLowerCase()))
         });
         const input = instance.node.querySelector('input');
@@ -131,7 +131,7 @@ describe('Autocomplete > Init', () => {
 
     it('should seed a server-rendered value/label pair into the combobox and hidden field', () => {
         document.body.innerHTML = '<div class="js-autocomplete" data-value="GB" data-label="United Kingdom"></div>';
-        const [instance] = autocomplete('.js-autocomplete', { name: 'country', template: option => option.label, search: () => [] });
+        const [instance] = autocomplete('.js-autocomplete', { name: 'country', displayTemplate: option => option.label, search: () => [] });
         const { node } = instance;
 
         //the label shows in the visible combobox, the value submits via the hidden field
@@ -142,7 +142,7 @@ describe('Autocomplete > Init', () => {
     });
 
     it('should seed an initial value/label passed as options', () => {
-        const [instance] = autocomplete('.js-autocomplete', { name: 'country', value: 'GB', label: 'United Kingdom', template: option => option.label, search: () => [] });
+        const [instance] = autocomplete('.js-autocomplete', { name: 'country', value: 'GB', label: 'United Kingdom', displayTemplate: option => option.label, search: () => [] });
         const { node } = instance;
 
         assert.strictEqual(node.querySelector('input[role="combobox"]').value, 'United Kingdom');
@@ -160,7 +160,7 @@ describe('Autocomplete > Init', () => {
 
     it('should clear a seeded selection and its hidden value once the input is edited', () => {
         document.body.innerHTML = '<div class="js-autocomplete" data-value="GB" data-label="United Kingdom"></div>';
-        const [instance] = autocomplete('.js-autocomplete', { name: 'country', template: option => option.label, search: () => [] });
+        const [instance] = autocomplete('.js-autocomplete', { name: 'country', displayTemplate: option => option.label, search: () => [] });
         const input = instance.node.querySelector('input[role="combobox"]');
 
         input.value = 'Fra';
@@ -177,7 +177,7 @@ describe('Autocomplete > Init', () => {
             multiple: true,
             value: ['GB', 'FR'],
             label: ['United Kingdom', 'France'],
-            template: option => option.label,
+            displayTemplate: option => option.label,
             search: () => []
         });
         const { node } = instance;

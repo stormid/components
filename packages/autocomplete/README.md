@@ -29,8 +29,8 @@ autocomplete('.js-autocomplete', {
 ```
 
 The visible input is display/search only; the submitted value is carried by a hidden
-field (single mode) or one hidden field per chip (multiple mode), so `template` can show a
-label while the form receives the `extractValue`.
+field (single mode) or one hidden field per chip (multiple mode), so `displayTemplate` can
+show a label while the form receives the `submissionTemplate`.
 
 Any option can also be set with a `data-*` attribute on the node. Precedence is
 `defaults → options → data-*`, so a `data-*` attribute wins over an option passed to init.
@@ -44,15 +44,15 @@ responses from superseded queries are discarded.
 
 `search` receives the query and an `AbortSignal` as its second argument — pass it to
 `fetch` so an in-flight request is cancelled when a newer keystroke supersedes it. Map the
-API's response shape to the options your `template`/`extractValue` expect:
+API's response shape to the options your `displayTemplate`/`submissionTemplate` expect:
 
 ```js
 autocomplete('.js-autocomplete', {
     name: 'country',
     async: true,
     //show the country name, submit the country code
-    template: option => option.label,
-    extractValue: option => option.value,
+    displayTemplate: option => option.label,
+    submissionTemplate: option => option.value,
     search(query, signal){
         return fetch(`/api/countries?q=${encodeURIComponent(query)}`, { signal })
             .then(res => {
@@ -78,6 +78,14 @@ under a repeated `name`:
 autocomplete('.js-autocomplete', { name: 'fruits', multiple: true, search });
 ```
 
+Each selection is submitted under the same `name`, so a form post serialises them as
+repeated pairs (`fruits=apple&fruits=banana`) — every value is sent, none is overwritten.
+Whether your server exposes them as an array depends on how it parses the body:
+Node/Express, Java and ASP.NET collection binding give an array from a repeated name, but
+**PHP and Ruby/Rails keep only the last value** unless you use bracket notation. The `name`
+is applied verbatim, so pass `name: 'fruits[]'` if your backend needs it. Client-side,
+`new FormData(form).getAll('fruits')` returns every value (`.get()` returns only the first).
+
 ### Progressive enhancement from `<select>`
 
 Wrap a `<select>` and its options, `name` and `multiple` are adopted, pre-selected
@@ -95,17 +103,17 @@ Wrap a `<select>` and its options, `name` and `multiple` are adopted, pre-select
 
 ### Custom option template
 
-`template` maps an option to the single line of text shown in the input, chips and
+`displayTemplate` maps an option to the single line of text shown in the input, chips and
 list. To show richer content in the **list only** — for example a second detail line —
-supply an `optionTemplate`. It renders each list option (falling back to `template` when
-omitted) and may return either a string (set as text) or a DOM node you build, so the
+supply an `optionTemplate`. It renders each list option (falling back to `displayTemplate`
+when omitted) and may return either a string (set as text) or a DOM node you build, so the
 list can carry markup the display label and submitted value don't:
 
 ```js
 autocomplete('.js-autocomplete', {
     name: 'airport',
-    template: option => option.label,      // input / chips show the name
-    extractValue: option => option.value,  // form submits the code
+    displayTemplate: option => option.label,      // input / chips show the name
+    submissionTemplate: option => option.value,   // form submits the code
     //list shows the name plus a second detail line
     optionTemplate(option){
         const title = document.createElement('span');
@@ -141,15 +149,15 @@ or use a `<select multiple>` with pre-selected options.
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `search` | `function` | derived from `values` | `(query, signal) => options`, or `Promise<options>` when `async`. The `signal` (async only) aborts a superseded request. |
-| `minlength` | `number` | `2` | Characters required before a search runs. Below it the list stays closed and `queryTooShortMsg` is announced. |
+| `minlength` | `number` | `2` | Characters required before a search runs. Below it the list stays closed; the requirement is carried by `hintMsg` (see below). |
 | `multiple` | `boolean` | `false` | Allow multiple selections, rendered as removable chips, each with its own hidden field. |
 | `async` | `boolean` | `false` | Treat `search` as returning a Promise; requests are debounced and `loadingMsg` is announced while in flight. |
 | `name` | `string` | — | Form field name. Single mode adds one hidden field; multiple mode repeats it per selection. |
 | `list` | `array` | `false` | The full option set shown when the input is opened with no query (e.g. via Space). |
 | `values` | `string[]` | `[]` | Source strings for the built-in search when no `search` is supplied. |
-| `template` | `function` | `option => option.value` | Maps an option to the text shown in the input, list and chips. |
-| `optionTemplate` | `function` | `false` | Renders each option in the list only (falls back to `template`). May return a string (shown as text) or a DOM node for richer markup — e.g. a second detail line — beyond the display label. |
-| `extractValue` | `function` | `option => option.value` | Maps an option to the value submitted via the hidden field. |
+| `displayTemplate` | `function` | `option => option.value` | Maps an option to the text shown wherever it appears as text — the input value and the chips/aria-labels in multiple mode. Returns a string. |
+| `optionTemplate` | `function` | `false` | Renders each option in the list only (falls back to `displayTemplate`). May return a string (shown as text) or a DOM node for richer markup — e.g. a second detail line — beyond the display label. |
+| `submissionTemplate` | `function` | `option => option.value` | Maps an option to the value submitted via the hidden field, and used to identify a selection. The "value" half of the label/value split. |
 | `value` | `string` \| `string[]` | — | Initial selection value(s) restored on load (e.g. from `data-value`) and submitted via the hidden field. Array for multiple mode. |
 | `label` | `string` \| `string[]` | — | Display label(s) for the initial `value`(s) (e.g. from `data-label`); falls back to the value when omitted. |
 | `placeholder` | `string` | `''` | Placeholder text for the generated input. |
@@ -158,8 +166,8 @@ or use a `<select multiple>` with pre-selected options.
 | `clearOnBlur` | `boolean` | `false` | Clear the input (and, in single mode, the selection) when focus leaves without a committed selection. |
 | `noResultsMsg` | `string` | `'No results found'` | Shown in the open list, and announced, when a search matches nothing. |
 | `loadingMsg` | `string` | `'Loading…'` | Announced while an async search is in flight. |
-| `queryTooShortMsg` | `string` \| `function` | `` `Type ${minlength} or more characters for results` `` | Announced below `minlength`. A function receives `minlength`. |
-| `inputClassname` | `string` | `'autocomplete__input'` | Class applied to the generated input. |
+| `hintMsg` | `string` \| `function` | `` `Type ${minlength} or more characters for results` `` | The minlength requirement. Rendered in a visually-hidden hint linked to the input via `aria-describedby`, so it's announced on focus rather than while typing. A function receives `minlength`. Only added when `minlength` is above 1. |
+| `inputClassName` | `string` | `'autocomplete__input'` | Class applied to the generated input. |
 | `id` | `string` | derived | Id for the input/listbox wiring; otherwise taken from the node or `<select>`, or generated. |
 
 ## API

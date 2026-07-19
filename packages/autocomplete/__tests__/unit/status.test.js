@@ -25,16 +25,33 @@ describe('Autocomplete > Status', () => {
         document.body.innerHTML = '';
     });
 
-    it('should announce that the query is too short below minlength', () => {
+    it('should keep the live region silent below minlength', () => {
         const { node } = init({ minlength: 3 });
         type(node.querySelector('input'), 'ap');
-        assert.strictEqual(node.querySelector('.autocomplete__status').textContent, 'Type 3 or more characters for results');
+        assert.strictEqual(node.querySelector('.autocomplete__status').textContent, '');
     });
 
-    it('should let queryTooShortMsg be overridden', () => {
-        const { node } = init({ minlength: 3, queryTooShortMsg: n => `Keep going (${n})` });
-        type(node.querySelector('input'), 'a');
-        assert.strictEqual(node.querySelector('.autocomplete__status').textContent, 'Keep going (3)');
+    it('should link the minlength hint to the input via aria-describedby', () => {
+        const { node } = init({ minlength: 3 });
+        const input = node.querySelector('input');
+        const hint = node.querySelector('.autocomplete__hint');
+        assert.strictEqual(input.getAttribute('aria-describedby'), hint.getAttribute('id'));
+    });
+
+    it('should render the default hint message from minlength', () => {
+        const { node } = init({ minlength: 3 });
+        assert.strictEqual(node.querySelector('.autocomplete__hint').textContent, 'Type 3 or more characters for results');
+    });
+
+    it('should let hintMsg override the default hint message', () => {
+        const { node } = init({ minlength: 3, hintMsg: n => `Keep going (${n})` });
+        assert.strictEqual(node.querySelector('.autocomplete__hint').textContent, 'Keep going (3)');
+    });
+
+    it('should not render a hint when minlength is not above one', () => {
+        const { node } = init({ minlength: 1 });
+        assert.strictEqual(node.querySelector('.autocomplete__hint'), null);
+        assert.strictEqual(node.querySelector('input').getAttribute('aria-describedby'), null);
     });
 
     it('should announce a singular result count', () => {

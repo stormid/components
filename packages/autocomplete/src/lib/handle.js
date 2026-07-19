@@ -12,9 +12,9 @@ const optionAt = (options, target) => {
 
 //multiple: add the option, or remove it if already selected (toggle-select)
 const toggleSelection = ({ selected, settings }, option) => {
-    const value = settings.extractValue(option);
-    return selected.some(item => settings.extractValue(item) === value)
-        ? selected.filter(item => settings.extractValue(item) !== value)
+    const value = settings.submissionTemplate(option);
+    return selected.some(item => settings.submissionTemplate(item) === value)
+        ? selected.filter(item => settings.submissionTemplate(item) !== value)
         : [ ...selected, option ];
 };
 
@@ -23,9 +23,7 @@ const toggleSelection = ({ selected, settings }, option) => {
  * writes it to the input; multiple mode toggles it into the chip list, clears
  * the search input and (when refocus) keeps focus in the input to keep typing.
  */
-const commit = (store, option, refocus = false) => {
-    //nothing to commit — e.g. a click/blur/keypress landed while the list only
-    //held the non-selectable no-results message (optionAt returns undefined)
+const commitSelection = (store, option, refocus = false) => {
     if (!option) return;
     const state = store.getState();
     if (state.settings.multiple) {
@@ -39,14 +37,11 @@ const commit = (store, option, refocus = false) => {
     broadcast(store, 'confirm', option);
 };
 
-// ignore requests whose query no longer matches current user input - ensures latest keystroke wins
-// if user has typed after original request fired
-
+// ignore async requests whose query no longer matches current user input 
+// - ensures latest keystroke wins if user types after a request already fired
 const resolveAsyncResults = (store, value, results) => {
     const state = store.getState();
     if (state.dom.input.value !== value) return;
-    //open regardless of count: empty results show the no-results message, so the
-    //list is never left silently shut after a search has run
     store.update({ ...state, options: results, open: true }, [ renderList, renderStatus ]);
 };
 
@@ -100,7 +95,7 @@ const handleBackspace = (store, event) => {
 const handleBlur = (store, event) => {
     const { dom, open, settings, options  } = store.getState();
     if (!open && event.target.parentElement !== dom.list) return;
-    if (settings.confirmOnBlur) commit(store, optionAt(options, event.target));
+    if (settings.confirmOnBlur) commitSelection(store, optionAt(options, event.target));
 };
 
 const handleEnter = (store, event) => {
@@ -110,12 +105,12 @@ const handleEnter = (store, event) => {
     if (options.length === 0) return;
     if (!open && event.target.parentElement !== dom.list) return;
     event.preventDefault();
-    commit(store, optionAt(options, event.target), true);
+    commitSelection(store, optionAt(options, event.target), true);
 };
 
 const handleSpace = (store, event) => {
     const { open, dom, settings, options } = store.getState();
-    //if event is fired from the input, and the list is closed, and it's there is no query, open it
+    //if event is fired from input, and the list is closed and there's no query, open it
     //if settings.list is empty then the options are being loaded dynamically, so do nothing
     if (event.target === dom.input && !open && !!settings.list && dom.input.value === '') {
         event.preventDefault();
@@ -125,7 +120,7 @@ const handleSpace = (store, event) => {
     //if event is fired from an option, select it
     if (event.target.parentElement === dom.list) {
         event.preventDefault();
-        commit(store, optionAt(options, event.target), true);
+        commitSelection(store, optionAt(options, event.target), true);
     }
 };
 
@@ -152,7 +147,6 @@ const handleUpArrow = (store, event) => {
 const handleDownArrow = (store, event) => {
     event.preventDefault();
     const { dom, open, options } = store.getState();
-    //no real options to move onto (the no-results message isn't focusable)
     if (!open || options.length === 0 || !document.activeElement.nextElementSibling) return;
     if (document.activeElement === dom.input && open) {
         dom.list.firstElementChild.focus();
@@ -168,7 +162,7 @@ export const inputFocus = store => event => {
     if (!event.target.value) return;
     //single mode: the input shows the current selection, don't reopen for it —
     //select its text instead so the next keystroke replaces the whole value
-    if (!settings.multiple && selected && settings.template(selected) === event.target.value) return event.target.select();
+    if (!settings.multiple && selected && settings.displayTemplate(selected) === event.target.value) return event.target.select();
     if (!open) store.update({ ...store.getState(), open: true }, [ showList ]);
 };
 
@@ -177,9 +171,6 @@ export const inputBlur = store => event => {
     if (dom.list.contains(document.activeElement) || dom.list.contains(event.relatedTarget)) return;
     if (open) {
         if (settings.clearOnBlur) dom.input.value = '';
-        //clearOnBlur blanks the field; in single mode also drop the selection and
-        //sync its hidden value, so a blanked field can't leave a stale value behind
-        //in state or the form
         const dropSelection = settings.clearOnBlur && !settings.multiple;
         store.update(
             { ...store.getState(), open: false, ...(settings.clearOnBlur ? { options: [] } : {}), ...(dropSelection ? { selected: null } : {}) },
@@ -217,41 +208,34 @@ export const inputChange = store => {
         const value = event.target.value;
         //single mode: editing the input away from the shown selection clears it
         //(and the hidden value field, so a stale value isn't submitted)
-        if (!settings.multiple && selected && settings.template(selected) !== value) store.update({ ...store.getState(), selected: null }, [ clearStatus, syncHiddenValue ]);
+        if (!settings.multiple && selected && settings.displayTemplate(selected) !== value) store.update({ ...store.getState(), selected: null }, [ clearStatus, syncHiddenValue ]);
         //free-text single mode: with nothing selected, keep submitting what's typed
         else if (!settings.multiple && settings.allowFreeText && !selected) syncHiddenValue(store.getState());
         if (value.length < settings.minlength) {
             if (open) store.update({ ...store.getState(), open: false }, [ hideList ]);
-            //empty the list and re-announce so a too-short query says "type more"
-            //(not "no results"), including when typing up from an empty field
             store.update({ ...store.getState(), options: [] }, [ emptyList, renderStatus ]);
             return;
         }
         if (settings.async) return runAsyncSearch(value);
         const results = settings.search(value);
-        //same result set already rendered — just make sure the list is open (this
-        //also reopens onto the no-results message when the set stays empty)
         if (areEqual(options, results)) {
             if (!open) store.update({ ...store.getState(), open: true }, [ renderList, renderStatus ]);
             return;
         }
-        //open regardless of count: empty results render the no-results message
         store.update({ ...store.getState(), options: results, open: true }, [ renderList, renderStatus ]);
     };
 };
 
 export const optionClick = store => event => {
     const { options } = store.getState();
-    commit(store, optionAt(options, event.target), true);
+    commitSelection(store, optionAt(options, event.target), true);
 };
 
 export const optionBlur = store => event => {
     const { dom, open, settings, options } = store.getState();
-    //ignore focus moving elsewhere inside the component (another option or the input)
     if (dom.node.contains(event.relatedTarget)) return;
-    //already closed (e.g. a selection just committed and emptied the list)
     if (!open) return;
-    if (settings.confirmOnBlur) commit(store, optionAt(options, event.target));
+    if (settings.confirmOnBlur) commitSelection(store, optionAt(options, event.target));
     else store.update({ ...store.getState(), open: false }, [ hideList, clearStatus ]);
 };
 
@@ -278,7 +262,7 @@ export const chipRemove = store => event => {
     if (!button) return;
     const state = store.getState();
     const value = button.dataset.value;
-    const removed = state.selected.find(item => String(state.settings.extractValue(item)) === value);
-    store.update({ ...state, selected: state.selected.filter(item => String(state.settings.extractValue(item)) !== value) }, [ syncOutput, focusInput ]);
+    const removed = state.selected.find(item => String(state.settings.submissionTemplate(item)) === value);
+    store.update({ ...state, selected: state.selected.filter(item => String(state.settings.submissionTemplate(item)) !== value) }, [ syncOutput, focusInput ]);
     broadcast(store, 'remove', removed);
 };

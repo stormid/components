@@ -87,8 +87,8 @@ describe('Autocomplete > Select', () => {
         assert.strictEqual(node.querySelector('input[type="hidden"]').value, '');
     });
 
-    it('should let an explicit option override the select for name and template', () => {
-        const { node } = init(single, { name: 'fruit', template: option => `${option.label}!` });
+    it('should let an explicit option override the select for name and displayTemplate', () => {
+        const { node } = init(single, { name: 'fruit', displayTemplate: option => `${option.label}!` });
         assert.strictEqual(node.querySelector('input[type="hidden"]').getAttribute('name'), 'fruit');
 
         const input = node.querySelector('input');

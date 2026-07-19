@@ -23,7 +23,7 @@ export const debounce = (func, delay = 200) => {
 
 /*
  * Resolve a status message that may be either a plain string or a function of
- * some context (e.g. queryTooShortMsg takes minlength). Lets messages either
+ * some context (e.g. hintMsg takes minlength). Lets messages either
  * interpolate config or stay as static strings / data-* overrides.
  */
 export const resolveMsg = (msg, ...args) => (typeof msg === 'function' ? msg(...args) : msg);
@@ -40,18 +40,15 @@ export const filterOptions = (options, template) => query => options.filter(opti
 const toOption = option => ({ value: option.value, label: option.textContent.trim() });
 
 /*
- * Progressive enhancement: derive an autocomplete source from a native <select>.
- * Its non-placeholder <option>s (value !== '') become { value, label } items,
- * pre-selected options seed the initial selection, and its name/multiple carry
- * over to the enhanced combobox.
+ * Progressive enhancement: derive autocomplete source from a native <select>.
+ * Non-placeholder <option>s (value !== '') become { value, label } items.
+ * Pre-selected options seed initial selection, name/multiple carry over to the enhanced combobox
  */
 export const fromSelect = select => {
-    const usable = [...select.options].filter(option => option.value !== '');
+    const selectableOptions = [...select.options].filter(option => option.value !== '');
     return {
-        options: usable.map(toOption),
-        //seed from options the author explicitly marked selected (the attribute,
-        //not the live .selected property, which a browser defaults to the first option)
-        selected: usable.filter(option => option.hasAttribute('selected')).map(toOption),
+        options: selectableOptions.map(toOption),
+        selected: selectableOptions.filter(option => option.hasAttribute('selected')).map(toOption),
         name: select.getAttribute('name'),
         multiple: select.multiple
     };
@@ -63,13 +60,15 @@ export const areEqual = (first, second) => {
     return JSON.stringify(first) === JSON.stringify(second);
 };
 
-let count = 0;
 /*
  * Returns a process-unique id with the given prefix, so each instance's
  * input / listbox / option ids and aria-controls wiring stay collision-free
  * when several autocompletes share a page.
  */
-export const uid = prefix => `${prefix}-${++count}`;
+export const uid = (() => {
+    let count = 0;
+    return prefix => `${prefix}-${++count}`;
+})();
 
 export const isPrintableKeyCode = keyCode => (
     (keyCode > 47 && keyCode < 58) || // number keys

@@ -3,9 +3,7 @@ import { EVENTS } from './constants.js';
 
 /*
  * Dispatch a selection event from the component node so consumers can react
- * without holding the instance reference. Bubbles to document; detail carries
- * the action, the option acted on (null for clear), the current selection and
- * the live getState. Event name per action lives in constants EVENTS.
+ * without holding the instance reference.
  */
 export const broadcast = (store, action, option = null) => {
     const state = store.getState();
@@ -15,7 +13,7 @@ export const broadcast = (store, action, option = null) => {
     }));
 };
 
-export const input = ({ node, settings, id, listId }) => {
+export const createInput = ({ node, settings, id, listId, describedby }) => {
     const input = document.createElement('input');
     input.setAttribute('id', id);
     node.removeAttribute('id');
@@ -24,8 +22,10 @@ export const input = ({ node, settings, id, listId }) => {
     input.setAttribute('aria-expanded', 'false');
     input.setAttribute('autocomplete', 'off');
     input.setAttribute('aria-controls', listId);
+    //link the minlength hint so it's announced on focus (see hint below)
+    if (describedby) input.setAttribute('aria-describedby', describedby);
     if (settings.placeholder) input.setAttribute('placeholder', settings.placeholder);
-    input.classList.add(settings.inputClassname);
+    input.classList.add(settings.inputClassName);
     //the visible input is display/search only in every mode; the form value is
     //carried by a hidden field (single mode) or the chips' hidden inputs (multiple)
     node.appendChild(input);
@@ -33,7 +33,23 @@ export const input = ({ node, settings, id, listId }) => {
     return input;
 };
 
-export const list = ({ node, id, labelledby }) => {
+/*
+ * Visually-hidden hint linked to the combobox via aria-describedby, so the
+ * minlength requirement (hintMsg) is announced when the input gains focus —
+ * before typing — rather than reactively from the live region. Only created
+ * when minlength makes the requirement meaningful (see factory).
+ */
+export const createHint = ({ node, id, settings }) => {
+    const hint = document.createElement('span');
+    hint.setAttribute('id', id);
+    hint.classList.add('autocomplete__hint');
+    hint.textContent = resolveMsg(settings.hintMsg, settings.minlength);
+    node.appendChild(hint);
+
+    return hint;
+};
+
+export const createList = ({ node, id, labelledby }) => {
     const list = document.createElement('ul');
     list.setAttribute('role', 'listbox');
     list.setAttribute('hidden', 'hidden');
@@ -45,7 +61,7 @@ export const list = ({ node, id, labelledby }) => {
     return list;
 };
 
-export const status = node => {
+export const createStatus = node => {
     const status = document.createElement('div');
     status.setAttribute('role', 'status');
     status.setAttribute('aria-live', 'polite');
@@ -55,7 +71,7 @@ export const status = node => {
     return status;
 };
 
-export const output = ({ node }) => {
+export const createOutput = ({ node }) => {
     const output = document.createElement('ul');
     output.classList.add('autocomplete__output');
     node.appendChild(output);
@@ -65,10 +81,10 @@ export const output = ({ node }) => {
 
 /*
  * Single-mode hidden field carrying the submit value under settings.name, so the
- * visible combobox can display the option label (template) while the form still
- * receives the option value (extractValue).
+ * visible combobox can display the option label (displayTemplate) while the form
+ * still receives the option value (submissionTemplate).
  */
-export const hiddenValue = ({ node, name }) => {
+export const createHiddenValue = ({ node, name }) => {
     const hidden = document.createElement('input');
     hidden.setAttribute('type', 'hidden');
     if (name) hidden.setAttribute('name', name);
@@ -77,7 +93,7 @@ export const hiddenValue = ({ node, name }) => {
     return hidden;
 };
 
-export const listen = state => {
+export const setupListeners = state => {
     state.dom.input.addEventListener('input', state.handle.input.input);
     state.dom.input.addEventListener('focus', state.handle.input.focus);
     state.dom.input.addEventListener('blur', state.handle.input.blur);
@@ -96,10 +112,10 @@ export const renderOptions = state => state.options.map((option, index) => {
     el.setAttribute('role', 'option');
     el.classList.add('autocomplete__option');
     el.tabIndex = -1;
-    //optionTemplate (falling back to template) renders the option's content: a
-    //string is set as text (safe), a DOM node is appended as-is so an option can
+    //optionTemplate (falling back to displayTemplate) renders the option's content:
+    //a string is set as text (safe), a DOM node is appended as-is so an option can
     //show richer markup — e.g. a detail line — beyond the plain display label
-    const content = (state.settings.optionTemplate || state.settings.template)(option);
+    const content = (state.settings.optionTemplate || state.settings.displayTemplate)(option);
     if (content && content.nodeType) el.appendChild(content);
     else el.textContent = content;
     el.setAttribute('aria-posinset', index + 1);
@@ -112,10 +128,8 @@ export const renderOptions = state => state.options.map((option, index) => {
 
 /*
  * A single, non-selectable listbox item shown when a search returns nothing, so
- * an open list reads as "searched, found nothing" rather than looking broken by
- * staying shut. aria-disabled and the absence of aria-posinset/tabindex keep it
- * out of option navigation and selection; the live status region announces the
- * same message for assistive tech.
+ * an open list reads as "searched, found nothing" - the live status region announces 
+ * the same message for assistive tech.
  */
 export const renderNoResults = state => {
     const el = document.createElement('li');
@@ -147,10 +161,7 @@ export const showList = state => {
 export const renderStatus = state => {
     const { options, dom, settings } = state;
     const query = dom.input.value;
-    //nothing typed: keep the live region silent
-    if (query.length === 0) dom.status.textContent = '';
-    //typed, but not enough to search yet: say so rather than "no results"
-    else if (query.length < Number(settings.minlength)) dom.status.textContent = resolveMsg(settings.queryTooShortMsg, settings.minlength);
+    if (query.length === 0 || query.length < Number(settings.minlength)) dom.status.textContent = '';
     else if (options.length === 0) dom.status.textContent = settings.noResultsMsg;
     else dom.status.textContent = `${options.length} ${options.length === 1 ? 'result is' : 'results are'} available`;
 };
@@ -161,14 +172,14 @@ export const showLoading = state => state.dom.status.textContent = state.setting
 
 /*
  * Keep the hidden field's form value in step with the current state: the
- * selection's extractValue when something is selected, otherwise the raw typed
+ * selection's submissionTemplate when something is selected, otherwise the raw typed
  * text if free text is allowed (else empty). A no-op in multiple mode and in
  * single mode with no name (where no hidden field exists).
  */
 export const syncHiddenValue = state => {
     if (!state.dom.hidden) return;
     state.dom.hidden.value = state.selected
-        ? state.settings.extractValue(state.selected)
+        ? state.settings.submissionTemplate(state.selected)
         : (state.settings.allowFreeText ? state.dom.input.value : '');
 };
 
@@ -178,7 +189,7 @@ export const syncHiddenValue = state => {
  * reads "Apple" while the form still submits "apple".
  */
 export const setValue = state => {
-    state.dom.input.value = state.selected ? state.settings.template(state.selected) : '';
+    state.dom.input.value = state.selected ? state.settings.displayTemplate(state.selected) : '';
     syncHiddenValue(state);
 };
 
@@ -192,20 +203,20 @@ export const focusInput = state => state.dom.input.focus();
  * value under settings.name so each selection is submitted with the form.
  */
 export const renderChips = state => state.selected.map(option => {
-    const { template, extractValue, name } = state.settings;
+    const { displayTemplate, submissionTemplate, name } = state.settings;
     const chip = document.createElement('li');
     chip.classList.add('autocomplete__chip');
 
     const label = document.createElement('span');
     label.classList.add('autocomplete__chip-label');
-    label.textContent = template(option);
+    label.textContent = displayTemplate(option);
     chip.appendChild(label);
 
     const remove = document.createElement('button');
     remove.setAttribute('type', 'button');
     remove.classList.add('autocomplete__chip-remove');
-    remove.setAttribute('aria-label', `Remove ${template(option)}`);
-    remove.dataset.value = extractValue(option);
+    remove.setAttribute('aria-label', `Remove ${displayTemplate(option)}`);
+    remove.dataset.value = submissionTemplate(option);
     chip.appendChild(remove);
 
     //no name means the component has no form value — chips are UI only
@@ -213,7 +224,7 @@ export const renderChips = state => state.selected.map(option => {
         const hidden = document.createElement('input');
         hidden.setAttribute('type', 'hidden');
         hidden.setAttribute('name', name);
-        hidden.value = extractValue(option);
+        hidden.value = submissionTemplate(option);
         chip.appendChild(hidden);
     }
 

@@ -1,14 +1,15 @@
 import { createStore } from './store.js';
 import defaults from './defaults.js';
 import {
-    input,
-    output,
-    list,
-    status,
-    listen,
+    createInput,
+    createOutput,
+    createList,
+    createStatus,
+    createHint,
+    setupListeners,
     setValue,
     syncOutput,
-    hiddenValue
+    createHiddenValue
 } from './dom.js';
 import {
     inputFocus, inputBlur, inputChange,
@@ -33,8 +34,8 @@ export default ({ node, settings }) => {
         settings.name = settings.name || selectSource.name;
         settings.list = selectSource.options;
         //<option> display text is the label, its value the submit value
-        if (settings.template === defaults.template) settings.template = option => option.label;
-        settings.search = settings.search || filterOptions(selectSource.options, settings.template);
+        if (settings.displayTemplate === defaults.displayTemplate) settings.displayTemplate = option => option.label;
+        settings.search = settings.search || filterOptions(selectSource.options, settings.displayTemplate);
         selected = settings.multiple ? selectSource.selected : (selectSource.selected[selectSource.selected.length - 1] || null);
     }
 
@@ -42,22 +43,26 @@ export default ({ node, settings }) => {
     // <label for> keeps its association after enhancement.
     const id = (select && select.getAttribute('id')) || node.getAttribute('id') || settings.id || uid('autocomplete');
     const listId = `${id}-listbox`;
+    // A minlength above one carries a "type N or more characters" requirement, so
+    // expose it as a visually-hidden hint linked to the input via aria-describedby.
+    const usesHint = Number(settings.minlength) > 1;
+    const hintId = `${id}-hint`;
 
     if (select) select.remove();
 
     // Single mode submits via a hidden value field (when there's a name to submit
-    // under), freeing the visible input to display the option label (template)
-    // while the form receives the value (extractValue) — see setValue / hiddenValue.
+    // under), freeing the visible input to display the option label (displayTemplate)
+    // while the form receives the value (submissionTemplate) — see setValue / createHiddenValue.
     const usesHiddenValue = !settings.multiple && !!settings.name;
 
-    // Normalise the search fn up front so handlers can always call settings.search.
+    // Normalise the search function up front so handlers can always call settings.search.
     settings.search = settings.search || defaultSearch(settings.values);
 
     // Seed an initial selection from a server-rendered value/label pair (e.g. a
     // restored or pre-filled form): data-value/data-label on the node, or value/
     // label options. Multiple mode accepts arrays (one chip per pair). The setValue
     // (single) / syncOutput (multiple) seed below then shows the label(s) via the
-    // template and submits the value(s) via the hidden field(s), so a restored
+    // displayTemplate and submits the value(s) via the hidden field(s), so a restored
     // value behaves exactly like a user-picked one. Uses the { value, label } option
     // shape; a <select>'s own pre-selected options take precedence, and a missing
     // label falls back to the value for display.
@@ -80,13 +85,15 @@ export default ({ node, settings }) => {
         settings,
         dom: {
             node,
-            input: input({ node, settings, id, listId }),
-            list: list({ node, id: listId, labelledby: id }),
-            status: status(node),
+            input: createInput({ node, settings, id, listId, describedby: usesHint ? hintId : null }),
+            list: createList({ node, id: listId, labelledby: id }),
+            status: createStatus(node),
+            //minlength requirement, announced on focus via aria-describedby
+            ...(usesHint ? { hint: createHint({ node, id: hintId, settings }) } : {}),
             //chips + hidden fields live in the output list, multiple mode only
-            ...(settings.multiple ? { output: output({ node }) } : {}),
+            ...(settings.multiple ? { output: createOutput({ node }) } : {}),
             //single mode: a hidden field carries the submit value under the name
-            ...(usesHiddenValue ? { hidden: hiddenValue({ node, name: settings.name }) } : {})
+            ...(usesHiddenValue ? { hidden: createHiddenValue({ node, name: settings.name }) } : {})
         },
         selected,
         open: false,
@@ -106,7 +113,7 @@ export default ({ node, settings }) => {
             chip: { remove: chipRemove(store) }
         }
     }, [
-        listen,
+        setupListeners,
         ...seed
     ]);
 

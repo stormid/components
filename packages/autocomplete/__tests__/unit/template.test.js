@@ -25,15 +25,15 @@ describe('Autocomplete > Option template', () => {
         document.body.innerHTML = '';
     });
 
-    it('should render list options with template when no optionTemplate is set', () => {
-        const { node } = init({ template: option => option.label });
+    it('should render list options with displayTemplate when no optionTemplate is set', () => {
+        const { node } = init({ displayTemplate: option => option.label });
         type(node.querySelector('input'), 'hea');
         assert.strictEqual(node.querySelector('.autocomplete__option').textContent, 'Heathrow');
     });
 
     it('should render list options with a string returned by optionTemplate', () => {
         const { node } = init({
-            template: option => option.label,
+            displayTemplate: option => option.label,
             optionTemplate: option => `${option.label} — ${option.detail}`
         });
         type(node.querySelector('input'), 'hea');
@@ -42,7 +42,7 @@ describe('Autocomplete > Option template', () => {
 
     it('should append a DOM node returned by optionTemplate for richer markup', () => {
         const { node } = init({
-            template: option => option.label,
+            displayTemplate: option => option.label,
             optionTemplate(option){
                 const title = document.createElement('span');
                 title.classList.add('title');
@@ -63,8 +63,8 @@ describe('Autocomplete > Option template', () => {
 
     it('should commit the option when a click lands on a child node of the template', () => {
         const { node } = init({
-            template: option => option.label,
-            extractValue: option => option.value,
+            displayTemplate: option => option.label,
+            submissionTemplate: option => option.value,
             optionTemplate(option){
                 const detail = document.createElement('small');
                 detail.classList.add('detail');
@@ -84,8 +84,8 @@ describe('Autocomplete > Option template', () => {
 
     it('should keep optionTemplate out of the input display and submitted value', () => {
         const { node } = init({
-            template: option => option.label,
-            extractValue: option => option.value,
+            displayTemplate: option => option.label,
+            submissionTemplate: option => option.value,
             optionTemplate: option => `${option.label} — ${option.detail}`
         });
         const input = node.querySelector('input');

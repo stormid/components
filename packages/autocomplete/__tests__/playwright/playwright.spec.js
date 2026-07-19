@@ -327,11 +327,19 @@ test.describe('Autocomplete > Aria', { tag: '@all'}, () => {
 
 test.describe('Autocomplete > Status', { tag: '@all'}, () => {
 
-	test('Should announce that the query is too short below minlength', async ({ page }) => {
+	test('Should link the minlength hint to the input via aria-describedby', async ({ page }) => {
+		const input = page.locator('#default');
+		const describedby = await input.getAttribute('aria-describedby');
+
+		expect(describedby).toBeTruthy();
+		await expect(page.locator(`#${describedby}`)).toHaveText('Type 2 or more characters for results');
+	});
+
+	test('Should keep the live region silent below minlength', async ({ page }) => {
 		const status = page.locator('.js-autocomplete .autocomplete__status');
 
 		await page.locator('#default').fill('a');
-		await expect(status).toHaveText('Type 2 or more characters for results');
+		await expect(status).toHaveText('');
 	});
 
 	test('Should announce the result count once the query is long enough', async ({ page }) => {
