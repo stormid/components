@@ -463,6 +463,11 @@
             outline: 4px solid hsl(49, 98%, 56%);
         }
 
+        .autocomplete__input:focus {
+            outline: 4px solid #1d70b8;
+            box-shadow: none;
+        }
+
         .input:disabled,
         .input[readonly] {
             background-color: hsl(0, 0%, 96%);
@@ -658,8 +663,8 @@
             background-color: #ffffff;
             border: 1px solid hsl(0, 0%, 70%);
         }
-        .autocomplete--multiple:focus-within {
-            outline: 4px solid hsl(49, 98%, 56%);
+        .autocomplete--multiple:has(.autocomplete__input:focus) {
+            outline: 4px solid #1d70b8;
         }
 
         .autocomplete--multiple .autocomplete__input {
