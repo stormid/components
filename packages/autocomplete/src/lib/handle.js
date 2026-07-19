@@ -20,8 +20,11 @@ const toggleSelection = ({ selected, settings }, option) => {
 
 /*
  * Commit a selection and close the list. Single mode replaces the selection and
- * writes it to the input; multiple mode toggles it into the chip list, clears
- * the search input and (when refocus) keeps focus in the input to keep typing.
+ * writes it to the input; multiple mode toggles it into the chip list and clears
+ * the search input. In both modes a refocus commit (keyboard select or click,
+ * but not a Tab/blur commit) returns focus to the input — otherwise a keyboard
+ * select leaves focus on the option element that emptyList then removes, dropping
+ * focus to document.body.
  */
 const commitSelection = (store, option, refocus = false) => {
     if (!option) return;
@@ -32,7 +35,9 @@ const commitSelection = (store, option, refocus = false) => {
         if (refocus) effects.push(focusInput);
         store.update({ ...state, selected: toggleSelection(state, option), options: [], open: false }, effects);
     } else {
-        store.update({ ...state, selected: option, open: false }, [ setValue, hideList, emptyList, renderStatus ]);
+        const effects = [ setValue, hideList, emptyList, renderStatus ];
+        if (refocus) effects.push(focusInput);
+        store.update({ ...state, selected: option, open: false }, effects);
     }
     broadcast(store, 'confirm', option);
 };

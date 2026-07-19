@@ -129,6 +129,8 @@ test.describe('Autocomplete > Keyboard', { tag: '@all'}, () => {
 
 		await expect(input).toHaveValue('Apple');
 		await expect(listbox).not.toBeVisible();
+		//committing from the option returns focus to the input, not document.body
+		await expect(page.locator(':focus')).toHaveAttribute('id', 'default');
 	});
 
 	test('Should select the focused option when Space is pressed', async ({ page }) => {
@@ -141,6 +143,8 @@ test.describe('Autocomplete > Keyboard', { tag: '@all'}, () => {
 
 		await expect(input).toHaveValue('Apple');
 		await expect(listbox).not.toBeVisible();
+		//committing from the option returns focus to the input, not document.body
+		await expect(page.locator(':focus')).toHaveAttribute('id', 'default');
 	});
 
 	test('Should close the list and return focus to the input when Escape is pressed', async ({ page }) => {
