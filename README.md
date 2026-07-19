@@ -10,6 +10,7 @@ Each package is available for use on npm. See [the docs](https://github.com/stor
 
 | Package                                   | Description                                                                                                                                         |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Autocomplete](./packages/autocomplete)   | Accessible autocomplete / combobox (single, multiple, async and `<select>` enhancement)                                                             |
 | [Boilerplate](./packages/boilerplate)     | Boilerplate for developing new components                                                                                                           |
 | [Cookie Banner](./packages/cookie-banner) | GDPR compliant cookie banner                                                                                                                        |
 | [Modal](./packages/modal)                 | Accessible modal dialog                                                                                                                             |
