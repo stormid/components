@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import autocomplete from '../../src/index.js';
+import { host, mount, type, clickOption, listen } from './helpers.js';
 
 const values = [
     { value: 'Apple', label: 'Apple' },
@@ -9,25 +9,7 @@ const values = [
 
 const search = query => values.filter(item => item.value.toLowerCase().includes(query.toLowerCase()));
 
-const init = (options = {}) => {
-    document.body.innerHTML = '<label for="fruit">Fruit</label><div class="js-autocomplete" id="fruit"></div>';
-    const [instance] = autocomplete('.js-autocomplete', { name: 'fruit', minlength: 1, search, ...options });
-    return instance;
-};
-
-const type = (input, value) => {
-    input.value = value;
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-};
-
-const clickOption = (node, index) => node.querySelectorAll('[role="option"]')[index].dispatchEvent(new Event('click', { bubbles: true }));
-
-//capture events of a type dispatched anywhere under (and bubbling to) document
-const listen = eventType => {
-    const events = [];
-    document.addEventListener(eventType, e => events.push(e));
-    return events;
-};
+const init = (options = {}) => mount(host(), { name: 'fruit', minlength: 1, search, ...options });
 
 describe('Autocomplete > Events', () => {
     beforeEach(() => {

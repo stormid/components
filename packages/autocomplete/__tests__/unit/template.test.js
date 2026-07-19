@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import autocomplete from '../../src/index.js';
+import { host, mount, type } from './helpers.js';
 
 const values = [
     { value: 'LHR', label: 'Heathrow', detail: 'London, United Kingdom' },
@@ -9,16 +9,7 @@ const values = [
 
 const search = query => values.filter(item => item.label.toLowerCase().includes(query.toLowerCase()));
 
-const init = (options = {}) => {
-    document.body.innerHTML = '<label for="airport">Airport</label><div class="js-autocomplete" id="airport"></div>';
-    const [instance] = autocomplete('.js-autocomplete', { minlength: 1, name: 'airport', search, ...options });
-    return instance;
-};
-
-const type = (input, value) => {
-    input.value = value;
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-};
+const init = (options = {}) => mount(host('airport', 'Airport'), { minlength: 1, name: 'airport', search, ...options });
 
 describe('Autocomplete > Option template', () => {
     beforeEach(() => {

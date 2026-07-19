@@ -1,25 +1,13 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import autocomplete from '../../src/index.js';
+import { host, mount, type, wait } from './helpers.js';
 
 //ten matching options, so any cap below ten is observable
 const values = Array.from({ length: 10 }, (_, i) => ({ value: `Apple ${i}`, label: `Apple ${i}` }));
 
 const search = query => values.filter(item => item.value.toLowerCase().includes(query.toLowerCase()));
 
-//the debounce delay is 200ms, so wait past it plus a tick for the resolved promise
-const wait = (ms = 250) => new Promise(resolve => setTimeout(resolve, ms));
-
-const init = (options = {}) => {
-    document.body.innerHTML = '<label for="fruit">Fruit</label><div class="js-autocomplete" id="fruit"></div>';
-    const [instance] = autocomplete('.js-autocomplete', { minlength: 1, search, ...options });
-    return instance;
-};
-
-const type = (input, value) => {
-    input.value = value;
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-};
+const init = (options = {}) => mount(host(), { minlength: 1, search, ...options });
 
 const optionCount = node => node.querySelectorAll('.autocomplete__option:not(.autocomplete__option--empty)').length;
 
@@ -59,8 +47,7 @@ describe('Autocomplete > Max results', () => {
     });
 
     it('should honour maxResults from a data-* attribute', () => {
-        document.body.innerHTML = '<label for="fruit">Fruit</label><div class="js-autocomplete" id="fruit" data-max-results="2"></div>';
-        const [{ node }] = autocomplete('.js-autocomplete', { minlength: 1, search });
+        const { node } = mount('<label for="fruit">Fruit</label><div class="js-autocomplete" id="fruit" data-max-results="2"></div>', { minlength: 1, search });
         type(node.querySelector('input'), 'apple');
         assert.strictEqual(optionCount(node), 2);
     });

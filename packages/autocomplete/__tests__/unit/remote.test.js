@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import autocomplete from '../../src/index.js';
+import { host, mount, wait } from './helpers.js';
 
 const values = [
     { value: 'Apple', label: 'Apple' },
@@ -10,14 +10,7 @@ const values = [
 
 const filter = query => values.filter(item => item.value.toLowerCase().includes(query.toLowerCase()));
 
-//the debounce delay is 200ms, so wait past it plus a tick for the resolved promise
-const wait = (ms = 250) => new Promise(resolve => setTimeout(resolve, ms));
-
-const init = (options = {}) => {
-    document.body.innerHTML = '<label for="fruit">Fruit</label><div class="js-autocomplete" id="fruit"></div>';
-    const [instance] = autocomplete('.js-autocomplete', { name: 'fruit', async: true, minlength: 1, ...options });
-    return instance;
-};
+const init = (options = {}) => mount(host(), { name: 'fruit', async: true, minlength: 1, ...options });
 
 describe('Autocomplete > Remote', () => {
     beforeEach(() => {

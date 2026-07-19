@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import autocomplete from '../../src/index.js';
+import { mount } from './helpers.js';
 
 const single = `
     <label for="flavour">Flavour</label>
@@ -23,24 +23,18 @@ const multiple = `
         </select>
     </div>`;
 
-const init = (markup, options) => {
-    document.body.innerHTML = markup;
-    const [instance] = autocomplete('.js-autocomplete', options);
-    return instance;
-};
-
 describe('Autocomplete > Select', () => {
     beforeEach(() => {
         document.body.innerHTML = '';
     });
 
     it('should remove the native select once enhanced', () => {
-        const { node } = init(single);
+        const { node } = mount(single);
         assert.strictEqual(node.querySelector('select'), null);
     });
 
     it('should source its options from the select options, skipping the empty placeholder', () => {
-        const instance = init(single);
+        const instance = mount(single);
         const options = instance.getState().options;
         assert.deepStrictEqual(options, [
             { value: 'apple', label: 'Apple' },
@@ -50,7 +44,7 @@ describe('Autocomplete > Select', () => {
     });
 
     it('should carry the select name on a hidden value field and move its id onto the combobox input for the label', () => {
-        const { node } = init(single);
+        const { node } = mount(single);
         const input = node.querySelector('input');
         //the visible combobox is display/search only; a hidden field submits the value
         assert.strictEqual(input.hasAttribute('name'), false);
@@ -59,7 +53,7 @@ describe('Autocomplete > Select', () => {
     });
 
     it('should display option labels but submit option values', () => {
-        const { node } = init(single);
+        const { node } = mount(single);
         const input = node.querySelector('input');
         input.value = 'app';
         input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -74,7 +68,7 @@ describe('Autocomplete > Select', () => {
     });
 
     it('should clear the hidden value when the input is edited away from the selection', () => {
-        const { node } = init(single);
+        const { node } = mount(single);
         const input = node.querySelector('input');
         input.value = 'app';
         input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -88,7 +82,7 @@ describe('Autocomplete > Select', () => {
     });
 
     it('should let an explicit option override the select for name and displayTemplate', () => {
-        const { node } = init(single, { name: 'fruit', displayTemplate: option => `${option.label}!` });
+        const { node } = mount(single, { name: 'fruit', displayTemplate: option => `${option.label}!` });
         assert.strictEqual(node.querySelector('input[type="hidden"]').getAttribute('name'), 'fruit');
 
         const input = node.querySelector('input');
@@ -98,7 +92,7 @@ describe('Autocomplete > Select', () => {
     });
 
     it('should enhance a multiple select into chip mode with a shared name', () => {
-        const instance = init(multiple);
+        const instance = mount(multiple);
         const { node } = instance;
         assert.strictEqual(instance.getState().settings.multiple, true);
         assert.notStrictEqual(node.querySelector('.autocomplete__output'), null);
@@ -107,7 +101,7 @@ describe('Autocomplete > Select', () => {
 
     it('should seed the initial selection from a pre-selected option in single mode', () => {
         const markup = single.replace('<option value="banana">', '<option value="banana" selected>');
-        const instance = init(markup);
+        const instance = mount(markup);
         assert.deepStrictEqual(instance.getState().selected, { value: 'banana', label: 'Banana' });
         //visible input shows the label, the hidden field carries the submit value
         assert.strictEqual(instance.node.querySelector('input').value, 'Banana');
@@ -115,7 +109,7 @@ describe('Autocomplete > Select', () => {
     });
 
     it('should seed pre-selected options as chips with hidden inputs in multiple mode', () => {
-        const instance = init(multiple);
+        const instance = mount(multiple);
         const { node } = instance;
         assert.deepStrictEqual(instance.getState().selected, [{ value: 'banana', label: 'Banana' }]);
 
