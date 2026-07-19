@@ -64,7 +64,7 @@ import assert from 'node:assert/strict';
 import component from '../../src/index.js';
 import { getSelection } from '../../src/lib/utils.js';
 
-describe('Component > Init', () => {
+describe('Component > Initialisation', () => {
     before(() => {
         document.body.innerHTML = `<div class="js-component"></div>`;
     });
@@ -89,13 +89,36 @@ describe('Component > Init', () => {
         // assert a data-* attribute wins over the same option
     });
 });
+
+// Canonical sub-block every existing component carries — init via each selector form.
+describe('Component > Initialisation > Get Selection', () => {
+    before(() => {
+        document.body.innerHTML = `<div class="js-component"></div>`;
+    });
+
+    it('should return an array when passed a DOM element', () => {
+        assert.strictEqual(getSelection(document.querySelector('.js-component')) instanceof Array, true);
+    });
+
+    it('should return an array when passed a NodeList', () => {
+        assert.strictEqual(getSelection(document.querySelectorAll('.js-component')) instanceof Array, true);
+    });
+
+    it('should return an array when passed an array of elements', () => {
+        assert.strictEqual(getSelection([document.querySelector('.js-component')]) instanceof Array, true);
+    });
+
+    it('should return an array when passed a string selector', () => {
+        assert.strictEqual(getSelection('.js-component') instanceof Array, true);
+    });
+});
 ```
 
-Assertion mapping (Jest → node:assert): `toEqual`→`deepStrictEqual`, `toBe`→`strictEqual`, `not.toBeNull()`→`notStrictEqual(x, null)`, `toBeUndefined()`→`strictEqual(x, undefined)`. Mocks use `mock.fn()` from `node:test` (`fn.mock.callCount()`, `fn.mock.calls[i].arguments`). Add further unit files per concern (`store.test.js`, `events-hooks.test.js`, …) as `toggle` does. The DOM environment doesn't provide `IntersectionObserver`/`ResizeObserver` — stub those at the top of the test file that needs them (see `scroll-points`).
+Assertion mapping (Jest → node:assert): `toEqual`→`deepStrictEqual`, `toBe`→`strictEqual`, `not.toBeNull()`→`notStrictEqual(x, null)`, `toBeUndefined()`→`strictEqual(x, undefined)`. Mocks use `mock.fn()` from `node:test` (`fn.mock.callCount()`, `fn.mock.calls[i].arguments`). Split into further unit files the way the peers do — a **layer backbone** mirroring `src/lib/` (`store.test.js` for `createStore`, `utils.test.js` exercising the pure helpers **directly**, not only through the factory) plus one file per feature/variant (`multiple.test.js`, `select.test.js`, `events-hooks.test.js`, …) as `toggle` / `modal-gallery` do. Name deeper describes `Component > Category > Subcategory` (e.g. `Utils > fnName`). The DOM environment doesn't provide `IntersectionObserver`/`ResizeObserver` — stub those at the top of the test file that needs them (see `scroll-points`).
 
 ### Playwright — `__tests__/playwright/playwright.spec.js`
 
-Use the `Component > Category` describe-block naming. `Functionality` and the `Axe` block (fixed boilerplate, required) are the always-present blocks; add `Keyboard`, `Aria`, or component-specific blocks only for the behaviour the component actually has — don't ship empty placeholder blocks:
+Use the `Component > Category` describe-block naming. `Functionality` and the `Axe` block (fixed boilerplate, required) are the always-present blocks; add `Keyboard`, `Aria`, or component-specific blocks only for the behaviour the component actually has — don't ship empty placeholder blocks. A single `playwright.spec.js` suits a simple component; for one with several variants, split into one `*.spec.js` per variant/concern (as `cookie-banner` and `scroll-spy` do), each self-contained (its own `beforeEach`) and carrying its own `Axe` block for that variant:
 
 ```js
 const { test, expect } = require('@playwright/test');
@@ -128,7 +151,7 @@ test.describe('Component > Axe', { tag: '@reduced' }, () => {
 
 ## Step 5 — Example app
 
-Update `example/src/index.html` and `example/src/js/index.js` to demonstrate the component (the Playwright tests run against this app via rspack). Cover each configurable option in the markup so tests have something to target.
+Update `example/src/index.html` and `example/src/js/index.js` to demonstrate the component (the Playwright tests run against this app via rspack). Cover each configurable option in the markup so tests have something to target — but prefer reusing or enriching an existing demo (or its mock data) to exercise an option over adding a bespoke demo for every one; keep the example lean.
 
 Keep the example page visually consistent with the other packages: reuse boilerplate's shared `<style>` block and its `<main>` → `.container` layout wrapper rather than hand-rolling a different reset or bespoke CSS. Copy the shared styling (`.container`, `.form`, `.input`, `.btn`, `.label`, …) from boilerplate or the closest existing example and add only component-specific rules on top. If you use a layout class like `.container`, make sure its rule is actually present — don't reference it without defining it.
 
