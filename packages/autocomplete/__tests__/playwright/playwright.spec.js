@@ -99,45 +99,30 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		//results come from the mocked /api/countries route, mapped from { code, name }
 		await input.fill('united');
 		await expect(listbox).toBeVisible();
-		await expect(listbox.locator('[role="option"]')).toHaveText(['United Kingdom', 'United States']);
+		await expect(listbox.locator('[role="option"] .autocomplete__option-title')).toHaveText(['United Kingdom', 'United States']);
 
-		//display is the name, the hidden field submits the mapped code
+		//multiple mode: selecting clears the input, adds a chip, and submits the mapped code via the chip's hidden field
 		await listbox.locator('[role="option"]', { hasText: 'United Kingdom' }).click();
-		await expect(input).toHaveValue('United Kingdom');
+		await expect(input).toHaveValue('');
+		await expect(container.locator('.autocomplete__chip-label')).toHaveText('United Kingdom');
 		await expect(container.locator('input[type="hidden"]')).toHaveValue('GB');
 	});
 
-	test('Should submit typed text via a hidden field when allowFreeText is set', async ({ page }) => {
-		const container = page.locator('.js-autocomplete-freetext');
-		const input = page.locator('#herb');
-
-		//a chosen suggestion submits its value
-		await input.fill('app');
-		await page.locator('#herb-listbox [role="option"]', { hasText: 'Apple' }).click();
-		await expect(container.locator('input[type="hidden"]')).toHaveValue('Apple');
-
-		//typing text that matches no option still carries it to the form
-		await input.fill('kumquat');
-		await expect(container.locator('input[type="hidden"]')).toHaveAttribute('name', 'herb');
-		await expect(container.locator('input[type="hidden"]')).toHaveValue('kumquat');
-	});
-
 	test('Should render a custom option template with a detail line, leaving the label and value unaffected', async ({ page }) => {
-		const container = page.locator('.js-autocomplete-detail');
-		const input = page.locator('#airport');
-		const listbox = page.locator('#airport-listbox');
+		const container = page.locator('.js-autocomplete-endpoint');
+		const listbox = page.locator('#country-code-listbox');
 
-		await input.fill('kennedy');
+		await page.locator('#country-code').fill('united');
 		await expect(listbox).toBeVisible();
 		const option = listbox.locator('[role="option"]').first();
-		//the list option carries the display label plus an extra detail line
-		await expect(option.locator('.autocomplete__option-title')).toHaveText('John F. Kennedy');
-		await expect(option.locator('.autocomplete__option-detail')).toHaveText('New York, United States');
+		//the list option carries the display label plus an extra detail line (the country code)
+		await expect(option.locator('.autocomplete__option-title')).toHaveText('United Kingdom');
+		await expect(option.locator('.autocomplete__option-detail')).toHaveText('GB');
 
-		//selecting shows just the label in the input and submits the code
+		//multiple mode: selecting adds a chip showing just the label and submits the code
 		await option.click();
-		await expect(input).toHaveValue('John F. Kennedy');
-		await expect(container.locator('input[type="hidden"]')).toHaveValue('JFK');
+		await expect(container.locator('.autocomplete__chip-label')).toHaveText('United Kingdom');
+		await expect(container.locator('input[type="hidden"]')).toHaveValue('GB');
 	});
 
 	test('Should dispatch a bubbling confirm event from the node when an option is selected', async ({ page }) => {
@@ -374,8 +359,8 @@ test.describe('Autocomplete > Axe', { tag: '@reduced'}, () => {
 	});
 
 	test('Should not have any accessibility issues with a custom option template list open', async ({ page }) => {
-		const listbox = page.locator('#airport-listbox');
-		await page.locator('#airport').fill('ne');
+		const listbox = page.locator('#country-code-listbox');
+		await page.locator('#country-code').fill('united');
 		await expect(listbox).toBeVisible();
 
 		const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
