@@ -71,10 +71,14 @@ export const createStatus = node => {
     return status;
 };
 
-export const createOutput = ({ node }) => {
+/*
+ * The chip container (multiple mode). Created detached and only added to the DOM
+ * once it has a chip to hold — see syncOutput — so an empty, invalid <ul> is never
+ * rendered while the field awaits its first selection.
+ */
+export const createOutput = () => {
     const output = document.createElement('ul');
     output.classList.add('autocomplete__output');
-    node.appendChild(output);
 
     return output;
 };
@@ -231,4 +235,14 @@ export const renderChips = state => state.selected.map(option => {
     return chip;
 });
 
-export const syncOutput = state => state.dom.output.replaceChildren(...renderChips(state));
+/*
+ * Reconcile the chips with the current selection. The output list stays out of the
+ * DOM until there's at least one chip to show, and is removed again once the
+ * selection empties — so the page never carries an empty output list.
+ */
+export const syncOutput = state => {
+    const { output, node } = state.dom;
+    if (state.selected.length === 0) return output.remove();
+    output.replaceChildren(...renderChips(state));
+    if (!output.parentNode) node.appendChild(output);
+};

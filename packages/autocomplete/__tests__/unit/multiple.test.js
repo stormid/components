@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import autocomplete from '../../src/index.js';
+import { host, mount, type, clickOption } from './helpers.js';
 
 const values = [
     { value: 'Apple', label: 'Apple' },
@@ -10,28 +10,31 @@ const values = [
 
 const search = query => values.filter(item => item.value.toLowerCase().includes(query.toLowerCase()));
 
-const init = (options = {}) => {
-    document.body.innerHTML = '<label for="fruits">Fruits</label><div class="js-autocomplete" id="fruits"></div>';
-    const [instance] = autocomplete('.js-autocomplete', { name: 'fruits', multiple: true, minlength: 1, search, ...options });
-    return instance;
-};
-
-const type = (input, value) => {
-    input.value = value;
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-};
-
-const clickOption = (node, index) => node.querySelectorAll('[role="option"]')[index].dispatchEvent(new Event('click', { bubbles: true }));
+const init = (options = {}) => mount(host('fruits', 'Fruits'), { name: 'fruits', multiple: true, minlength: 1, search, ...options });
 
 describe('Autocomplete > Multiple', () => {
     beforeEach(() => {
         document.body.innerHTML = '';
     });
 
-    it('should not put a name on the visible input and should create an output list', () => {
+    it('should not put a name on the visible input', () => {
         const { node } = init();
         assert.strictEqual(node.querySelector('input').hasAttribute('name'), false);
+    });
+
+    it('should not render the output list while the selection is empty', () => {
+        const { node } = init();
+        assert.strictEqual(node.querySelector('.autocomplete__output'), null);
+    });
+
+    it('should render the output list once a selection is added and remove it again when emptied', () => {
+        const { node } = init();
+        type(node.querySelector('input'), 'ap');
+        clickOption(node, 0);
         assert.notStrictEqual(node.querySelector('.autocomplete__output'), null);
+
+        node.querySelector('.autocomplete__chip-remove').dispatchEvent(new Event('click', { bubbles: true }));
+        assert.strictEqual(node.querySelector('.autocomplete__output'), null);
     });
 
     it('should start with an empty selection array', () => {

@@ -91,7 +91,8 @@ export default ({ node, settings }) => {
             //minlength requirement, announced on focus via aria-describedby
             ...(usesHint ? { hint: createHint({ node, id: hintId, settings }) } : {}),
             //chips + hidden fields live in the output list, multiple mode only
-            ...(settings.multiple ? { output: createOutput({ node }) } : {}),
+            //(added to the DOM by syncOutput only once there's a chip to show)
+            ...(settings.multiple ? { output: createOutput() } : {}),
             //single mode: a hidden field carries the submit value under the name
             ...(usesHiddenValue ? { hidden: createHiddenValue({ node, name: settings.name }) } : {})
         },
