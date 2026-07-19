@@ -28,6 +28,16 @@ export const debounce = (func, delay = 200) => {
  */
 export const resolveMsg = (msg, ...args) => (typeof msg === 'function' ? msg(...args) : msg);
 
+/*
+ * Cap the number of search results shown, keeping the list short and scannable
+ * (mirrors the ~6 suggestion limit used by the Scottish Government Design System).
+ * A non-positive or non-finite maxResults (0, false, Infinity) disables the cap.
+ */
+export const capResults = (options, maxResults) => {
+    const max = Number(maxResults);
+    return Number.isFinite(max) && max > 0 ? options.slice(0, max) : options;
+};
+
 export const defaultSearch = values => query => values.filter(item => item.toLowerCase().includes(query.toLowerCase()));
 
 /*

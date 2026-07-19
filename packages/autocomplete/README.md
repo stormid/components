@@ -150,6 +150,7 @@ or use a `<select multiple>` with pre-selected options.
 | --- | --- | --- | --- |
 | `search` | `function` | derived from `values` | `(query, signal) => options`, or `Promise<options>` when `async`. The `signal` (async only) aborts a superseded request. |
 | `minlength` | `number` | `2` | Characters required before a search runs. Below it the list stays closed; the requirement is carried by `hintMsg` (see below). |
+| `maxResults` | `number` | `6` | Maximum search results shown at once, keeping the list short and scannable. `search` may return more; the extras are trimmed. Set to `0` (or `Infinity`) to show every result. Does not cap the full `list` opened with an empty query. |
 | `multiple` | `boolean` | `false` | Allow multiple selections, rendered as removable chips, each with its own hidden field. |
 | `async` | `boolean` | `false` | Treat `search` as returning a Promise; requests are debounced and `loadingMsg` is announced while in flight. |
 | `name` | `string` | — | Form field name. Single mode adds one hidden field; multiple mode repeats it per selection. |

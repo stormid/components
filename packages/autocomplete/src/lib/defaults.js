@@ -2,6 +2,7 @@
 
 export default {
     minlength: 2,
+    maxResults: 6,
     multiple: false,
     async: false,
     noResultsMsg: 'No results found',

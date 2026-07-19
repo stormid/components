@@ -1,5 +1,5 @@
 import { emptyList, renderList, renderStatus, clearStatus, showList, hideList, showLoading, setValue, clearInput, focusInput, syncOutput, syncHiddenValue, broadcast } from './dom.js';
-import { areEqual, debounce, isPrintableKeyCode } from './utils.js';
+import { areEqual, capResults, debounce, isPrintableKeyCode } from './utils.js';
 import { KEYCODES } from './constants.js';
 
 //resolve the option an event fired from via its aria-posinset. closest() finds
@@ -42,7 +42,7 @@ const commitSelection = (store, option, refocus = false) => {
 const resolveAsyncResults = (store, value, results) => {
     const state = store.getState();
     if (state.dom.input.value !== value) return;
-    store.update({ ...state, options: results, open: true }, [ renderList, renderStatus ]);
+    store.update({ ...state, options: capResults(results, state.settings.maxResults), open: true }, [ renderList, renderStatus ]);
 };
 
 export const keydown = store => event => {
@@ -217,7 +217,7 @@ export const inputChange = store => {
             return;
         }
         if (settings.async) return runAsyncSearch(value);
-        const results = settings.search(value);
+        const results = capResults(settings.search(value), settings.maxResults);
         if (areEqual(options, results)) {
             if (!open) store.update({ ...store.getState(), open: true }, [ renderList, renderStatus ]);
             return;
