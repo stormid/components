@@ -105,6 +105,7 @@ Each package's `example/` app shares a common look: reuse boilerplate's example 
 - **Cross-component communication**: dispatch `CustomEvent`s from the node with `{ bubbles: true, detail: { getState } }` so other components/consumers can react. Event names live in `constants.js`.
 - **Async / remote option sources**: debounce the query; pass an `AbortController` **signal as the second argument** to the consumer's search function and abort the superseded request on the next keystroke (swallow the resulting `AbortError` rather than treating it as a failure); and drop stale responses by re-checking the current input value before rendering, so the latest keystroke always wins.
 - **Naming conventions**: `js-` prefixed classes are JS hooks (never style them); `is--` / `on--` classes are state; `data-*` attributes carry config. Keep these consistent across components.
+- **DOM-element factories are `create`-prefixed**: in `dom.js`, a function that builds and returns a DOM element is named `createInput`, `createList`, `createStatus`, etc. — never the bare noun, which collides with the element it returns and its `state.dom` key. Reserve verb names for effects/lifecycle (`render*`, `show*`, `hide*`, `sync*`). Only applies to components that construct their own DOM (`autocomplete`); augment-only components (`toggle`) have no such factories.
 
 ## Accessibility (a hard requirement, not an enhancement)
 
