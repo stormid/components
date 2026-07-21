@@ -28,6 +28,10 @@ autocomplete('.js-autocomplete', {
 });
 ```
 
+Pass at least a `name` so the selection is submitted, and either a `search` function or a
+`values`/`list` array so there are options to choose from. Everything else has a sensible
+default — see [Options](#options).
+
 The visible input is display/search only; the submitted value is carried by a hidden
 field (single mode) or one hidden field per chip (multiple mode), so `displayTemplate` can
 show a label while the form receives the `submissionTemplate`.
@@ -145,31 +149,78 @@ For multiple mode, pass arrays via init (`value: ['GB','FR']`, `label: ['United 
 or use a `<select multiple>` with pre-selected options.
 
 ## Options
+Options can be set during initialisation in an Object passed as the second argument, or as `data-*` attributes on the node. Precedence is `defaults → options → data-*`.
+```
+{
+    name: null, //form field name; from options, data-name, or a wrapped <select>. Single mode adds one hidden field, multiple mode one per selection
+    search: null, //(query, signal) => options, or a Promise when async; derived from `values` when omitted
+    values: [], //source strings for the built-in search when no `search` is given
+    list: false, //full option set shown when opened with no query (e.g. via Space)
+    minlength: 2, //characters required before a search runs
+    maxResults: 6, //max results shown at once; extras are trimmed. 0 or Infinity shows all. Does not cap `list`
+    multiple: false, //accumulate selections as removable chips, each with its own hidden field
+    async: false, //treat `search` as returning a Promise; requests are debounced
+    value: null, //initial selection value(s) restored on load (e.g. from data-value); array for multiple mode
+    label: null, //display label(s) for the initial value(s); falls back to the value
+    displayTemplate: option => option.value, //maps an option to the text shown in the input and chips
+    optionTemplate: false, //renders each list option (falls back to displayTemplate); returns a string or DOM node
+    submissionTemplate: option => option.value, //maps an option to its submitted value; also identifies a selection
+    allowFreeText: false, //single mode: submit whatever is typed when no option is selected
+    confirmOnBlur: true, //commit the focused option when focus leaves the component
+    clearOnBlur: false, //clear the input (and, single mode, the selection) when focus leaves uncommitted
+    placeholder: '', //placeholder text for the generated input
+    inputClassName: 'autocomplete__input', //class applied to the generated input
+    id: null, //id for the input/listbox wiring; taken from the node or <select>, else generated
+    noResultsMsg: 'No results found', //shown and announced when a search matches nothing
+    loadingMsg: 'Loading…', //announced while an async search is in flight
+    hintMsg(minlength){ //visually-hidden minlength hint, linked via aria-describedby; string or fn, added only when minlength > 1
+        return `Type ${minlength} or more characters for results`;
+    }
+}
+```
 
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
-| `search` | `function` | derived from `values` | `(query, signal) => options`, or `Promise<options>` when `async`. The `signal` (async only) aborts a superseded request. |
-| `minlength` | `number` | `2` | Characters required before a search runs. Below it the list stays closed; the requirement is carried by `hintMsg` (see below). |
-| `maxResults` | `number` | `6` | Maximum search results shown at once, keeping the list short and scannable. `search` may return more; the extras are trimmed. Set to `0` (or `Infinity`) to show every result. Does not cap the full `list` opened with an empty query. |
-| `multiple` | `boolean` | `false` | Allow multiple selections, rendered as removable chips, each with its own hidden field. |
-| `async` | `boolean` | `false` | Treat `search` as returning a Promise; requests are debounced and `loadingMsg` is announced while in flight. |
-| `name` | `string` | — | Form field name. Single mode adds one hidden field; multiple mode repeats it per selection. |
-| `list` | `array` | `false` | The full option set shown when the input is opened with no query (e.g. via Space). |
-| `values` | `string[]` | `[]` | Source strings for the built-in search when no `search` is supplied. |
-| `displayTemplate` | `function` | `option => option.value` | Maps an option to the text shown wherever it appears as text — the input value and the chips/aria-labels in multiple mode. Returns a string. |
-| `optionTemplate` | `function` | `false` | Renders each option in the list only (falls back to `displayTemplate`). May return a string (shown as text) or a DOM node for richer markup — e.g. a second detail line — beyond the display label. |
-| `submissionTemplate` | `function` | `option => option.value` | Maps an option to the value submitted via the hidden field, and used to identify a selection. The "value" half of the label/value split. |
-| `value` | `string` \| `string[]` | — | Initial selection value(s) restored on load (e.g. from `data-value`) and submitted via the hidden field. Array for multiple mode. |
-| `label` | `string` \| `string[]` | — | Display label(s) for the initial `value`(s) (e.g. from `data-label`); falls back to the value when omitted. |
-| `placeholder` | `string` | `''` | Placeholder text for the generated input. |
-| `allowFreeText` | `boolean` | `false` | Single mode: submit whatever is typed when no option is selected, rather than acting as a strict picker. |
-| `confirmOnBlur` | `boolean` | `true` | Commit the focused option when focus leaves the component. |
-| `clearOnBlur` | `boolean` | `false` | Clear the input (and, in single mode, the selection) when focus leaves without a committed selection. |
-| `noResultsMsg` | `string` | `'No results found'` | Shown in the open list, and announced, when a search matches nothing. |
-| `loadingMsg` | `string` | `'Loading…'` | Announced while an async search is in flight. |
-| `hintMsg` | `string` \| `function` | `` `Type ${minlength} or more characters for results` `` | The minlength requirement. Rendered in a visually-hidden hint linked to the input via `aria-describedby`, so it's announced on focus rather than while typing. A function receives `minlength`. Only added when `minlength` is above 1. |
-| `inputClassName` | `string` | `'autocomplete__input'` | Class applied to the generated input. |
-| `id` | `string` | derived | Id for the input/listbox wiring; otherwise taken from the node or `<select>`, or generated. |
+## Styling
+
+The component ships no CSS — it augments the DOM and leaves presentation to you. Initialising
+against your node builds this structure, whose classes are the styling hooks:
+
+```html
+<!-- the node you initialise against -->
+<div class="js-autocomplete">
+    <input class="autocomplete__input" role="combobox">
+    <ul class="autocomplete__list" role="listbox" hidden>
+        <li class="autocomplete__option" role="option">…</li>
+        <li class="autocomplete__option autocomplete__option--empty">No results found</li>
+    </ul>
+    <div class="autocomplete__status" role="status"></div>
+    <span class="autocomplete__hint"></span>              <!-- only when minlength > 1 -->
+    <input type="hidden" name="…">                        <!-- single mode, when name is set -->
+    <!-- multiple mode: the chip list, added once there is a selection -->
+    <ul class="autocomplete__output">
+        <li class="autocomplete__chip">
+            <span class="autocomplete__chip-label">…</span>
+            <button class="autocomplete__chip-remove"></button>
+            <input type="hidden" name="…">
+        </li>
+    </ul>
+</div>
+```
+
+| Class | Element |
+| --- | --- |
+| `autocomplete__input` | The combobox input (override via the `inputClassName` option). |
+| `autocomplete__list` | The `role="listbox"` popup; carries `hidden` while closed. |
+| `autocomplete__option` | Each option in the list. |
+| `autocomplete__option--empty` | The non-selectable no-results item. |
+| `autocomplete__status` | Visually-hidden `role="status"` live region for announcements. |
+| `autocomplete__hint` | Visually-hidden minlength hint linked via `aria-describedby`. |
+| `autocomplete__output` | The chip container (multiple mode). |
+| `autocomplete__chip` | A single selection chip. |
+| `autocomplete__chip-label` | The chip's display label. |
+| `autocomplete__chip-remove` | The chip's remove button. |
+
+The `autocomplete__status` and `autocomplete__hint` elements must stay visually hidden but
+readable by assistive tech — style them with a visually-hidden (not `display: none`) utility.
 
 ## API
 
@@ -199,6 +250,12 @@ holding the instance reference. Each carries `detail: { action, option, selected
 ```
 npm t
 ```
+
+## Browser support
+Rendering uses [`Element.replaceChildren()`](https://caniuse.com/mdn-api_element_replacechildren), which sets the floor (Chrome 86, Firefox 78, Safari 14 — late 2020). Async mode additionally uses the [AbortController API](https://caniuse.com/abortcontroller), supported well before that.
+
+## Dependencies
+None — vanilla JS with no runtime dependencies.
 
 ## License
 MIT
