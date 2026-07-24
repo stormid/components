@@ -164,7 +164,9 @@ const handleSpace = (store, event) => {
 const handleEscape = store => {
     const { open, dom } = store.getState();
     if (!open) return;
-    document.activeElement.setAttribute('aria-selected', 'false');
+    //only an option carries aria-selected; don't stamp it onto the combobox input
+    //(invalid ARIA) when the list was opened by typing with focus still on the input
+    if (document.activeElement !== dom.input) document.activeElement.setAttribute('aria-selected', 'false');
     dom.input.focus();
     store.update({ ...store.getState(), open: false }, [ hideList, clearStatus ]);
 };
