@@ -52,6 +52,13 @@ describe('Autocomplete > Initialisation', () => {
         assert.strictEqual(instance.node.querySelector('input').hasAttribute('placeholder'), false);
     });
 
+    it('should label the listbox with the field label', () => {
+        const [instance] = autocomplete('.js-autocomplete', { values });
+        const list = instance.node.querySelector('ul[role="listbox"]');
+        const label = document.querySelector('label[for="fruit"]');
+        assert.strictEqual(list.getAttribute('aria-labelledby'), label.getAttribute('id'));
+    });
+
     it('should render an accessible combobox/listbox structure', () => {
         const [instance] = autocomplete('.js-autocomplete', { values });
         const input = instance.node.querySelector('input');

@@ -43,6 +43,12 @@ export default ({ node, settings }) => {
     // <label for> keeps its association after enhancement.
     const id = (select && select.getAttribute('id')) || node.getAttribute('id') || settings.id || uid('autocomplete');
     const listId = `${id}-listbox`;
+    // The listbox takes its accessible name from the field's <label>; pointing it at the
+    // input would resolve the name to the typed value instead. Give the label an id if it
+    // has none, and fall back to the input only when there's no associated label.
+    const label = document.querySelector(`label[for="${id}"]`);
+    if (label && !label.id) label.setAttribute('id', `${id}-label`);
+    const listLabelledby = label ? label.id : id;
     // A minlength above one carries a "type N or more characters" requirement, so
     // expose it as a visually-hidden hint linked to the input via aria-describedby.
     const usesHint = Number(settings.minlength) > 1;
@@ -93,7 +99,7 @@ export default ({ node, settings }) => {
         dom: {
             node,
             input: createInput({ node, settings, id, listId, describedby: usesHint ? hintId : null }),
-            list: createList({ node, id: listId, labelledby: id }),
+            list: createList({ node, id: listId, labelledby: listLabelledby }),
             status: createStatus(node),
             //minlength requirement, announced on focus via aria-describedby
             ...(usesHint ? { hint: createHint({ node, id: hintId, settings }) } : {}),
