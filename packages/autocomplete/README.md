@@ -198,6 +198,10 @@ field and behaves like a user-picked selection:
 For multiple mode, pass arrays via init (`value: ['GB','FR']`, `label: ['United Kingdom','France']`)
 or use a `<select multiple>` with pre-selected options.
 
+Resetting the enclosing `<form>` restores this initial selection — the seeded value(s), a
+pre-selected `<select>`'s option(s), or empty if there was none — so the enhanced control
+behaves like the native `<select>` it replaces rather than leaving stale chips/values.
+
 ## Options
 Options can be set during initialisation in an Object passed as the second argument, or as `data-*` attributes on the node. Precedence is `defaults → options → data-*`.
 ```

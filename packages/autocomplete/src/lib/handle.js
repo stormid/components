@@ -296,6 +296,22 @@ export const clear = store => () => {
     broadcast(store, 'clear');
 };
 
+/*
+ * Restore the initial selection when the enclosing form is reset, so an enhanced
+ * control returns to its default like a native <select> — rather than leaving stale
+ * chips/values on screen while the browser blanks the generated fields. The reset
+ * event fires *before* the browser resets the controls, so the restore is deferred to
+ * a microtask that runs afterwards and reasserts the visible input / hidden field(s).
+ */
+export const resetForm = store => () => queueMicrotask(() => {
+    const state = store.getState();
+    const selected = state.settings.multiple ? [ ...state.selectedInitial ] : state.selectedInitial;
+    const effects = state.settings.multiple
+        ? [ clearInput, syncOutput, hideList, emptyList, clearStatus ]
+        : [ setValue, hideList, emptyList, clearStatus ];
+    store.update({ ...state, selected, options: [], open: false }, effects);
+});
+
 export const chipRemove = store => event => {
     const button = event.target.closest('.autocomplete__chip-remove');
     //ignore clicks anywhere on the output that aren't a remove button

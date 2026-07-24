@@ -14,7 +14,7 @@ import {
 import {
     inputFocus, inputBlur, inputChange,
     optionClick, optionBlur, optionMouseDown,
-    chipRemove, keydown, clear
+    chipRemove, keydown, clear, resetForm
 } from './handle.js';
 import { fromValues, filterOptions, fromSelect, uid } from './utils.js';
 
@@ -84,6 +84,10 @@ export default ({ node, settings }) => {
     if (!settings.multiple && selected) seed.push(setValue);
     if (settings.multiple && selected.length) seed.push(syncOutput);
 
+    // Snapshot the initial selection so a form reset can restore it (like a native
+    // <select> returning to its default) — see resetForm.
+    const selectedInitial = settings.multiple ? [ ...selected ] : selected;
+
     store.update({
         settings,
         dom: {
@@ -100,10 +104,12 @@ export default ({ node, settings }) => {
             ...(usesHiddenValue ? { hidden: createHiddenValue({ node, name: settings.name }) } : {})
         },
         selected,
+        selectedInitial,
         open: false,
         options: settings.list || [],
         handle: {
             container: { keydown: keydown(store) },
+            form: { reset: resetForm(store) },
             input: {
                 focus: inputFocus(store),
                 blur: inputBlur(store),

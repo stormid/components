@@ -107,6 +107,8 @@ export const setupListeners = state => {
     //chips (multiple mode only): remove buttons are delegated on the output list,
     //the handler ignores any click that isn't on a remove button
     if (state.dom.output) state.dom.output.addEventListener('click', state.handle.chip.remove);
+    //restore the initial selection when the enclosing form is reset (see resetForm)
+    if (state.dom.input.form) state.dom.input.form.addEventListener('reset', state.handle.form.reset);
 };
 
 export const emptyList = state => state.dom.list.replaceChildren();
