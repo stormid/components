@@ -160,13 +160,13 @@ optionTemplate(option){
 Only a string returned by `optionTemplate` is treated as HTML; the `displayTemplate`
 fallback is always rendered as plain text.
 
-### Submitting on Enter (search box)
+### Submitting on confirm (search box)
 
-By default, pressing Enter on a highlighted option commits it and keeps the user on the
-page. For a search-style autocomplete — where choosing a suggestion should *go* somewhere —
-set `submitOnConfirm: true`. Enter then commits the highlighted option (if any) and submits
-the enclosing `<form>`, so the chosen value is posted / navigated to. With nothing
-highlighted, the raw typed query is submitted, exactly like a plain search box:
+By default, choosing a suggestion commits it and keeps the user on the page. For a
+search-style autocomplete — where choosing a suggestion should *go* somewhere — set
+`submitOnConfirm: true`. Confirming an option (by click, Space or Enter) then commits it and
+submits the enclosing `<form>`, so the chosen value is posted / navigated to. Pressing Enter
+with nothing highlighted submits the raw typed query, exactly like a plain search box:
 
 ```html
 <form action="/search" method="get">
@@ -180,9 +180,10 @@ autocomplete('.js-autocomplete', { name: 'q', submitOnConfirm: true, search });
 ```
 
 The component submits the form via `requestSubmit()`, so any native validation and your
-`submit` handler still run. Pair it with `allowFreeText` if the raw query should be
-submitted as the field value when no option is picked. If the component isn't inside a
-form, `submitOnConfirm` simply commits the selection as usual.
+`submit` handler still run. A Tab or blur commit never submits — only an explicit
+confirmation navigates. Pair it with `allowFreeText` if the raw query should be submitted
+as the field value when no option is picked. If the component isn't inside a form,
+`submitOnConfirm` simply commits the selection as usual.
 
 ### Restoring a server-rendered value
 
@@ -215,7 +216,7 @@ Options can be set during initialisation in an Object passed as the second argum
     optionTemplate: false, //renders each list option (falls back to displayTemplate); a returned string is set as HTML (build it with the exported `html` tag so values are escaped), a DOM node is appended as-is
     submissionTemplate: option => option.value, //maps an option to its submitted value; also identifies a selection
     allowFreeText: false, //single mode: submit whatever is typed when no option is selected
-    submitOnConfirm: false, //Enter commits the highlighted option (or the raw query) and submits the enclosing form — for search boxes
+    submitOnConfirm: false, //confirming an option (click/Space/Enter) — or Enter on the raw query — submits the enclosing form; for search boxes
     confirmOnBlur: true, //commit the focused option when focus leaves the component
     clearOnBlur: false, //clear the input (and, single mode, the selection) when focus leaves uncommitted
     placeholder: '', //placeholder text for the generated input

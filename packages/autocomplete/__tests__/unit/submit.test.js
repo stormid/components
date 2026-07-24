@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { host, mount, type } from './helpers.js';
+import { host, mount, type, clickOption } from './helpers.js';
 
 const values = [
     { value: 'Apple', label: 'Apple' },
@@ -48,6 +48,27 @@ describe('Autocomplete > submitOnConfirm', () => {
 
         assert.strictEqual(submits.length, 1);
         assert.strictEqual(instance.getState().selected, null);
+    });
+
+    it('should commit the option and submit the form when an option is clicked', () => {
+        const { node, submits } = initInForm({ submitOnConfirm: true });
+        const input = node.querySelector('input');
+        type(input, 'ap');
+        clickOption(node, 0); // click the first option
+
+        assert.strictEqual(input.value, 'Apple');
+        assert.strictEqual(submits.length, 1);
+    });
+
+    it('should not submit on a Tab/blur commit even when submitOnConfirm is set', () => {
+        const { instance, node, submits } = initInForm({ submitOnConfirm: true });
+        type(node.querySelector('input'), 'ap');
+        //Tab commits the focused option via confirmOnBlur, but tabbing past the field
+        //must not navigate
+        node.querySelector('[role="option"]').dispatchEvent(new KeyboardEvent('keydown', { keyCode: 9, bubbles: true }));
+
+        assert.strictEqual(instance.getState().selected.value, 'Apple');
+        assert.strictEqual(submits.length, 0);
     });
 
     it('should not submit the form on Enter when submitOnConfirm is off', () => {

@@ -27,6 +27,14 @@ const withoutSelected = ({ settings, selected }, options) => {
     return options.filter(option => !chosen.has(String(settings.submissionTemplate(option))));
 };
 
+//submitOnConfirm: submit the enclosing form. requestSubmit fires the submit event
+//and runs native validation (Safari 16+); fall back to submit() on older browsers,
+//which submits without either. A no-op when the component isn't inside a form.
+const submitForm = input => {
+    const form = input.form;
+    if (form) (form.requestSubmit ? form.requestSubmit() : form.submit());
+};
+
 /*
  * Commit a selection and close the list. Single mode replaces the selection and
  * writes it to the input; multiple mode toggles it into the chip list and clears
@@ -49,6 +57,10 @@ const commitSelection = (store, option, refocus = false) => {
         store.update({ ...state, selected: option, open: false }, effects);
     }
     broadcast(store, 'confirm', option);
+    //an active confirmation (click / Space / Enter, i.e. refocus) submits the form
+    //when submitOnConfirm is set; a passive Tab/blur commit (refocus false) does not,
+    //so tabbing past the field never navigates
+    if (refocus && state.settings.submitOnConfirm) submitForm(state.dom.input);
 };
 
 // ignore async requests whose query no longer matches current user input 
@@ -115,16 +127,13 @@ const handleBlur = (store, event) => {
 const handleEnter = (store, event) => {
     const { open, dom, options, settings } = store.getState();
     const option = optionAt(options, event.target);
-    //submitOnConfirm (search-style): commit the highlighted option, then submit the
-    //enclosing form so Enter after arrowing to a suggestion navigates. With nothing
+    //submitOnConfirm (search-style): a highlighted option is committed — which submits
+    //the form itself (see commitSelection), matching a click or Space — and with nothing
     //highlighted the raw typed query is submitted, like a plain search box.
     if (settings.submitOnConfirm) {
-        if (option) commitSelection(store, option, true);
         event.preventDefault();
-        //requestSubmit fires the submit event and runs native validation (Safari 16+);
-        //fall back to submit() on older browsers, which submits without either
-        const form = dom.input.form;
-        if (form) (form.requestSubmit ? form.requestSubmit() : form.submit());
+        if (option) commitSelection(store, option, true);
+        else submitForm(dom.input);
         return;
     }
     //no selectable options (e.g. the list is showing the no-results message) —
