@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { host, mount, type } from './helpers.js';
+import { host, mount, type, clickOption } from './helpers.js';
 
 const values = [
     { value: 'Apple', label: 'Apple' },
@@ -63,6 +63,16 @@ describe('Autocomplete > Status', () => {
         type(input, 'ap');     // matches -> results shown
         type(input, 'apzz');   // extended past any match -> transitions to empty
         assert.strictEqual(node.querySelector('.autocomplete__status').textContent, 'Nothing here');
+    });
+
+    it('should clear the live region after a single-mode selection is committed', () => {
+        const { node } = init({ minlength: 1 });
+        const input = node.querySelector('input');
+        type(input, 'apple');
+        assert.strictEqual(node.querySelector('.autocomplete__status').textContent, '1 result is available');
+
+        clickOption(node, 0); // commit Apple; the list closes
+        assert.strictEqual(node.querySelector('.autocomplete__status').textContent, '');
     });
 
     it('should keep the status silent when the field is empty', () => {

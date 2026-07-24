@@ -52,9 +52,11 @@ const commitSelection = (store, option, refocus = false) => {
         if (refocus) effects.push(focusInput);
         store.update({ ...state, selected: addSelection(state, option), options: [], open: false }, effects);
     } else {
-        const effects = [ setValue, hideList, emptyList, renderStatus ];
+        //clear the results and the live region: the list is closing, so a stale
+        //"N results available" must not linger (matches the multiple-mode branch)
+        const effects = [ setValue, hideList, emptyList, clearStatus ];
         if (refocus) effects.push(focusInput);
-        store.update({ ...state, selected: option, open: false }, effects);
+        store.update({ ...state, selected: option, options: [], open: false }, effects);
     }
     broadcast(store, 'confirm', option);
     //an active confirmation (click / Space / Enter, i.e. refocus) submits the form
