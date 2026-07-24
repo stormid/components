@@ -25,8 +25,8 @@ describe('Autocomplete > Initialisation', () => {
         assert.strictEqual(typeof instance.clear, 'function');
     });
 
-    it('should return without throwing when no nodes match', () => {
-        assert.strictEqual(autocomplete('.js-not-here'), undefined);
+    it('should return an empty array (not undefined) when no nodes match', () => {
+        assert.deepStrictEqual(autocomplete('.js-not-here'), []);
     });
 
     it('should let data attributes override options', () => {

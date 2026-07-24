@@ -18,8 +18,12 @@ export { html, escapeHtml } from './lib/utils.js';
 export default (selector, options) => {
     let nodes = getSelection(selector);
 
-    if (nodes.length === 0) return console.warn(`Autocomplete not initialised, no elements found for selector '${selector}'`);
-   
+    if (nodes.length === 0) {
+        //keep the array contract so `const [first] = autocomplete(...)` never throws
+        console.warn(`Autocomplete not initialised, no elements found for selector '${selector}'`);
+        return [];
+    }
+
     //return array of Objects, one for each DOM node found
     //each Object has a prototype consisting of the node (HTMLElement),
     //and a settings property composed from defaults, data-attributes on the node, and options passed to init
