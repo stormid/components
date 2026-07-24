@@ -37,7 +37,7 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		await expect(output.locator('.autocomplete__chip-label')).toHaveText(['Apple', 'Banana']);
 	});
 
-	test('Should remove an already-selected option when it is picked again', async ({ page }) => {
+	test('Should hide an already-selected option from the list so it cannot be picked again', async ({ page }) => {
 		const input = page.locator('#fruits');
 		const output = page.locator('.js-autocomplete-multiple .autocomplete__output');
 
@@ -45,10 +45,11 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		await page.locator('#fruits-listbox [role="option"]', { hasText: 'Apple' }).click();
 		await expect(output.locator('.autocomplete__chip')).toHaveCount(1);
 
-		//picking the same option again toggles it back off
+		//re-searching the same term no longer offers the chosen option
 		await input.fill('app');
-		await page.locator('#fruits-listbox [role="option"]', { hasText: 'Apple' }).click();
-		await expect(output.locator('.autocomplete__chip')).toHaveCount(0);
+		await expect(page.locator('#fruits-listbox [role="option"]', { hasText: 'Apple' })).toHaveCount(0);
+		//the chip stays put — re-searching never removes the existing selection
+		await expect(output.locator('.autocomplete__chip')).toHaveCount(1);
 	});
 
 	test('Should remove a chip when its remove button is clicked', async ({ page }) => {

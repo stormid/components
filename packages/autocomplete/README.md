@@ -82,6 +82,10 @@ under a repeated `name`:
 autocomplete('.js-autocomplete', { name: 'fruits', multiple: true, search });
 ```
 
+Once an option is chosen it is hidden from the list, so it can't be selected twice and
+the dropdown only ever offers what's still available. Removing its chip (or `clear()`)
+brings it back.
+
 Each selection is submitted under the same `name`, so a form post serialises them as
 repeated pairs (`fruits=apple&fruits=banana`) — every value is sent, none is overwritten.
 Whether your server exposes them as an array depends on how it parses the body:

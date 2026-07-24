@@ -69,24 +69,25 @@ describe('Autocomplete > Multiple', () => {
         const input = node.querySelector('input');
         type(input, 'ap');
         clickOption(node, 0); // Apple
-        type(input, 'ap');
-        clickOption(node, 1); // Apricot
+        type(input, 'ap');    // Apple is now hidden, so Apricot is first
+        clickOption(node, 0); // Apricot
 
         const hidden = [...node.querySelectorAll('input[type="hidden"][name="fruits"]')].map(i => i.value);
         assert.deepStrictEqual(hidden, ['Apple', 'Apricot']);
     });
 
-    it('should toggle a selected option off when it is chosen again', () => {
+    it('should hide an already-selected option from the list so it cannot be picked twice', () => {
         const instance = init();
         const { node } = instance;
         const input = node.querySelector('input');
         type(input, 'ap');
         clickOption(node, 0); // select Apple
-        type(input, 'ap');
-        clickOption(node, 0); // Apple again -> remove
+        type(input, 'ap');    // re-search: Apple is now hidden, only Apricot remains
 
-        assert.deepStrictEqual(instance.getState().selected, []);
-        assert.strictEqual(node.querySelectorAll('.autocomplete__chip').length, 0);
+        const labels = [...node.querySelectorAll('.autocomplete__option')].map(option => option.textContent);
+        assert.deepStrictEqual(labels, ['Apricot']);
+        //the selection is untouched — re-searching never removes the existing chip
+        assert.strictEqual(instance.getState().selected.length, 1);
     });
 
     it('should remove a chip when its remove button is clicked', () => {

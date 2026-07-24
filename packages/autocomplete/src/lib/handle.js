@@ -10,12 +10,21 @@ const optionAt = (options, target) => {
     return option && options[Number(option.getAttribute('aria-posinset')) - 1];
 };
 
-//multiple: add the option, or remove it if already selected (toggle-select)
-const toggleSelection = ({ selected, settings }, option) => {
+//multiple: append the option. Already-selected options are hidden from the list
+//(see withoutSelected) so they can't be picked twice.
+const addSelection = ({ selected, settings }, option) => {
     const value = settings.submissionTemplate(option);
     return selected.some(item => settings.submissionTemplate(item) === value)
-        ? selected.filter(item => settings.submissionTemplate(item) !== value)
+        ? selected
         : [ ...selected, option ];
+};
+
+//multiple: drop options already chosen so they don't reappear in the list and
+//can't be selected again. A no-op in single mode, which shows every result.
+const withoutSelected = ({ settings, selected }, options) => {
+    if (!settings.multiple) return options;
+    const chosen = new Set(selected.map(item => String(settings.submissionTemplate(item))));
+    return options.filter(option => !chosen.has(String(settings.submissionTemplate(option))));
 };
 
 /*
@@ -33,7 +42,7 @@ const commitSelection = (store, option, refocus = false) => {
         //clear the results so retyping the same query re-renders the (now emptied) list
         const effects = [ clearInput, syncOutput, hideList, emptyList, clearStatus ];
         if (refocus) effects.push(focusInput);
-        store.update({ ...state, selected: toggleSelection(state, option), options: [], open: false }, effects);
+        store.update({ ...state, selected: addSelection(state, option), options: [], open: false }, effects);
     } else {
         const effects = [ setValue, hideList, emptyList, renderStatus ];
         if (refocus) effects.push(focusInput);
@@ -47,7 +56,7 @@ const commitSelection = (store, option, refocus = false) => {
 const resolveAsyncResults = (store, value, results) => {
     const state = store.getState();
     if (state.dom.input.value !== value) return;
-    store.update({ ...state, options: capResults(results, state.settings.maxResults), open: true }, [ renderList, renderStatus ]);
+    store.update({ ...state, options: capResults(withoutSelected(state, results), state.settings.maxResults), open: true }, [ renderList, renderStatus ]);
 };
 
 export const keydown = store => event => {
@@ -132,7 +141,8 @@ const handleSpace = (store, event) => {
     //if settings.list is empty then the options are being loaded dynamically, so do nothing
     if (event.target === dom.input && !open && !!settings.list && dom.input.value === '') {
         event.preventDefault();
-        store.update({ ...store.getState(), options: settings.list, open: true }, [ renderList, clearStatus ]);
+        const state = store.getState();
+        store.update({ ...state, options: withoutSelected(state, settings.list), open: true }, [ renderList, clearStatus ]);
         return;
     }
     //if event is fired from an option, select it
@@ -235,7 +245,7 @@ export const inputChange = store => {
             return;
         }
         if (settings.async) return runAsyncSearch(value);
-        const results = capResults(settings.search(value), settings.maxResults);
+        const results = capResults(withoutSelected(store.getState(), settings.search(value)), settings.maxResults);
         if (areEqual(options, results)) {
             if (!open) store.update({ ...store.getState(), open: true }, [ renderList, renderStatus ]);
             return;

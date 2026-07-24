@@ -37,8 +37,8 @@ describe('Autocomplete > Events', () => {
         const input = node.querySelector('input');
         type(input, 'ap');
         clickOption(node, 0); // Apple
-        type(input, 'ap');
-        clickOption(node, 1); // Apricot
+        type(input, 'ap');    // Apple is now hidden, so Apricot is first
+        clickOption(node, 0); // Apricot
 
         assert.strictEqual(events.length, 2);
         assert.deepStrictEqual(events[1].detail.selected, [
