@@ -104,13 +104,26 @@ const handleBlur = (store, event) => {
 };
 
 const handleEnter = (store, event) => {
-    const { open, dom, options } = store.getState();
+    const { open, dom, options, settings } = store.getState();
+    const option = optionAt(options, event.target);
+    //submitOnConfirm (search-style): commit the highlighted option, then submit the
+    //enclosing form so Enter after arrowing to a suggestion navigates. With nothing
+    //highlighted the raw typed query is submitted, like a plain search box.
+    if (settings.submitOnConfirm) {
+        if (option) commitSelection(store, option, true);
+        event.preventDefault();
+        //requestSubmit fires the submit event and runs native validation (Safari 16+);
+        //fall back to submit() on older browsers, which submits without either
+        const form = dom.input.form;
+        if (form) (form.requestSubmit ? form.requestSubmit() : form.submit());
+        return;
+    }
     //no selectable options (e.g. the list is showing the no-results message) —
     //leave Enter alone so a normal form submit isn't swallowed
     if (options.length === 0) return;
     if (!open && event.target.parentElement !== dom.list) return;
     event.preventDefault();
-    commitSelection(store, optionAt(options, event.target), true);
+    commitSelection(store, option, true);
 };
 
 const handleSpace = (store, event) => {

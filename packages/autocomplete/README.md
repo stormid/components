@@ -135,6 +135,30 @@ autocomplete('.js-autocomplete', {
 Return a DOM node (not an HTML string) for untrusted values — the node's `textContent`
 is set safely, so option data from an API can't inject markup.
 
+### Submitting on Enter (search box)
+
+By default, pressing Enter on a highlighted option commits it and keeps the user on the
+page. For a search-style autocomplete — where choosing a suggestion should *go* somewhere —
+set `submitOnConfirm: true`. Enter then commits the highlighted option (if any) and submits
+the enclosing `<form>`, so the chosen value is posted / navigated to. With nothing
+highlighted, the raw typed query is submitted, exactly like a plain search box:
+
+```html
+<form action="/search" method="get">
+    <label for="q">Search</label>
+    <div class="js-autocomplete" id="q"></div>
+</form>
+```
+
+```js
+autocomplete('.js-autocomplete', { name: 'q', submitOnConfirm: true, search });
+```
+
+The component submits the form via `requestSubmit()`, so any native validation and your
+`submit` handler still run. Pair it with `allowFreeText` if the raw query should be
+submitted as the field value when no option is picked. If the component isn't inside a
+form, `submitOnConfirm` simply commits the selection as usual.
+
 ### Restoring a server-rendered value
 
 To restore a previously submitted / prefilled value on load, render `data-value` (and
@@ -166,6 +190,7 @@ Options can be set during initialisation in an Object passed as the second argum
     optionTemplate: false, //renders each list option (falls back to displayTemplate); returns a string or DOM node
     submissionTemplate: option => option.value, //maps an option to its submitted value; also identifies a selection
     allowFreeText: false, //single mode: submit whatever is typed when no option is selected
+    submitOnConfirm: false, //Enter commits the highlighted option (or the raw query) and submits the enclosing form — for search boxes
     confirmOnBlur: true, //commit the focused option when focus leaves the component
     clearOnBlur: false, //clear the input (and, single mode, the selection) when focus leaves uncommitted
     placeholder: '', //placeholder text for the generated input
@@ -253,6 +278,8 @@ npm t
 
 ## Browser support
 Rendering uses [`Element.replaceChildren()`](https://caniuse.com/mdn-api_element_replacechildren), which sets the floor (Chrome 86, Firefox 78, Safari 14 — late 2020). Async mode additionally uses the [AbortController API](https://caniuse.com/abortcontroller), supported well before that.
+
+`submitOnConfirm` submits via [`HTMLFormElement.requestSubmit()`](https://caniuse.com/mdn-api_htmlformelement_requestsubmit) so the `submit` event and native validation run — that raises the floor to **Safari 16** (Sept 2022) for this option only. On older Safari it falls back to `form.submit()`, which still submits the form but skips the `submit` event and validation.
 
 ## Dependencies
 None — vanilla JS with no runtime dependencies.

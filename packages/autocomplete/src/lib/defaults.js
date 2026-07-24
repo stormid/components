@@ -19,6 +19,7 @@ export default {
         return option.value;
     },
     allowFreeText: false,
+    submitOnConfirm: false,
     confirmOnBlur: true,
     clearOnBlur: false,
     placeholder: '',
