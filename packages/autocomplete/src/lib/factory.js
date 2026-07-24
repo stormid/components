@@ -16,7 +16,7 @@ import {
     optionClick, optionBlur, optionMouseDown,
     chipRemove, keydown, clear
 } from './handle.js';
-import { defaultSearch, filterOptions, fromSelect, uid } from './utils.js';
+import { fromValues, filterOptions, fromSelect, uid } from './utils.js';
 
 export default ({ node, settings }) => {
     const store = createStore();
@@ -56,7 +56,10 @@ export default ({ node, settings }) => {
     const usesHiddenValue = !settings.multiple && !!settings.name;
 
     // Normalise the search function up front so handlers can always call settings.search.
-    settings.search = settings.search || defaultSearch(settings.values);
+    // With no explicit search, build one from `values`: normalise the entries (strings
+    // or { value, label } objects) to the option shape and match with the object-aware
+    // filterOptions, so the default option.value templates render and submit correctly.
+    settings.search = settings.search || filterOptions(fromValues(settings.values), settings.displayTemplate);
 
     // Seed an initial selection from a server-rendered value/label pair (e.g. a
     // restored or pre-filled form): data-value/data-label on the node, or value/

@@ -38,7 +38,14 @@ export const capResults = (options, maxResults) => {
     return Number.isFinite(max) && max > 0 ? options.slice(0, max) : options;
 };
 
-export const defaultSearch = values => query => values.filter(item => item.toLowerCase().includes(query.toLowerCase()));
+/*
+ * Normalise a `values` array to the component's { value, label } option shape:
+ * a plain string becomes { value, label } (both the string), an option object is
+ * used as-is. So the built-in search and the default option.value templates work
+ * whether values are supplied as strings or as objects — matching the <select> and
+ * object-list paths.
+ */
+export const fromValues = values => values.map(value => (typeof value === 'string' ? { value, label: value } : value));
 
 /*
  * Default search over an array of option objects, matching the query against

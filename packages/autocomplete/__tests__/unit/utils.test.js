@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { capResults, filterOptions, fromSelect, areEqual, isPrintableKeyCode, uid, defaultSearch, resolveMsg, escapeHtml, html } from '../../src/lib/utils.js';
+import { capResults, filterOptions, fromSelect, areEqual, isPrintableKeyCode, uid, fromValues, resolveMsg, escapeHtml, html } from '../../src/lib/utils.js';
 
 const makeSelect = html => {
     const select = document.createElement('select');
@@ -114,11 +114,18 @@ describe('Autocomplete > Utils > uid', () => {
     });
 });
 
-describe('Autocomplete > Utils > defaultSearch', () => {
+describe('Autocomplete > Utils > fromValues', () => {
 
-    it('should filter a list of strings case-insensitively', () => {
-        const search = defaultSearch(['Apple', 'Apricot', 'Banana']);
-        assert.deepStrictEqual(search('AP'), ['Apple', 'Apricot']);
+    it('should wrap plain strings into { value, label } options', () => {
+        assert.deepStrictEqual(fromValues(['Apple', 'Banana']), [
+            { value: 'Apple', label: 'Apple' },
+            { value: 'Banana', label: 'Banana' }
+        ]);
+    });
+
+    it('should pass option objects through unchanged', () => {
+        const options = [{ value: 'a', label: 'Apple' }];
+        assert.deepStrictEqual(fromValues(options), [{ value: 'a', label: 'Apple' }]);
     });
 });
 

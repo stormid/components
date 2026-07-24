@@ -204,7 +204,7 @@ Options can be set during initialisation in an Object passed as the second argum
 {
     name: null, //form field name; from options, data-name, or a wrapped <select>. Single mode adds one hidden field, multiple mode one per selection
     search: null, //(query, signal) => options, or a Promise when async; derived from `values` when omitted
-    values: [], //source strings for the built-in search when no `search` is given
+    values: [], //option source for the built-in search when no `search` is given; strings or { value, label } objects
     list: false, //full option set shown when opened with no query (e.g. via Space)
     minlength: 2, //characters required before a search runs
     maxResults: 6, //max results shown at once; extras are trimmed. 0 or Infinity shows all. Does not cap `list`
