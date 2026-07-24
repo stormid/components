@@ -80,6 +80,31 @@ export const uid = (() => {
     return prefix => `${prefix}-${++count}`;
 })();
 
+/*
+ * Escapes a string for safe interpolation into an HTML template literal, so an
+ * optionTemplate that returns HTML (rendered via innerHTML) can't let untrusted 
+ * values inject markup. 
+ *
+ * @param value [String]
+ *
+ * @returns [String]
+ */
+export const escapeHtml = value => String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+/*
+ * Tagged template for building an optionTemplate's HTML string: the static markup
+ * (the template's own tags) is left untouched, while every interpolated ${value} is
+ * run through escapeHtml. The author writes html`<span>${option.label}</span>` and any
+ * untrusted values can't inject markup.
+ */
+export const html = (strings, ...values) =>
+    strings.reduce((out, string, i) => `${out}${string}${i < values.length ? escapeHtml(values[i]) : ''}`, '');
+
 export const isPrintableKeyCode = keyCode => (
     (keyCode > 47 && keyCode < 58) || // number keys
     keyCode === 32 || keyCode === 8 || // spacebar or backspace

@@ -31,6 +31,17 @@ describe('Autocomplete > Option template', () => {
         assert.strictEqual(node.querySelector('.autocomplete__option').textContent, 'Heathrow — London, United Kingdom');
     });
 
+    it('should render an HTML string returned by optionTemplate as markup', () => {
+        const { node } = init({
+            displayTemplate: option => option.label,
+            optionTemplate: option => `<span class="title">${option.label}</span><small class="detail">${option.detail}</small>`
+        });
+        type(node.querySelector('input'), 'hea');
+        const option = node.querySelector('.autocomplete__option');
+        assert.strictEqual(option.querySelector('.title').textContent, 'Heathrow');
+        assert.strictEqual(option.querySelector('.detail').textContent, 'London, United Kingdom');
+    });
+
     it('should append a DOM node returned by optionTemplate for richer markup', () => {
         const { node } = init({
             displayTemplate: option => option.label,

@@ -117,10 +117,13 @@ export const renderOptions = state => state.options.map((option, index) => {
     el.classList.add('autocomplete__option');
     el.tabIndex = -1;
     //optionTemplate (falling back to displayTemplate) renders the option's content:
-    //a string is set as text (safe), a DOM node is appended as-is so an option can
-    //show richer markup — e.g. a detail line — beyond the plain display label
+    //a DOM node is appended as-is, and a string returned by optionTemplate is rich
+    //HTML set via innerHTML - authored as a template literal, sanitising
+    //untrusted values with the exported escapeHtml. The displayTemplate fallback is
+    //always plain text, set safely as textContent.
     const content = (state.settings.optionTemplate || state.settings.displayTemplate)(option);
     if (content && content.nodeType) el.appendChild(content);
+    else if (state.settings.optionTemplate) el.innerHTML = content;
     else el.textContent = content;
     el.setAttribute('aria-posinset', index + 1);
     el.setAttribute('aria-setsize', state.options.length);

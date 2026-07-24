@@ -1,4 +1,4 @@
-import autocomplete from '../../../src';
+import autocomplete, { html } from '../../../src';
 import { fruits, countries } from './data.js';
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -51,20 +51,14 @@ window.addEventListener('DOMContentLoaded', () => {
         multiple: true,
         //display the country name in the input/chips, submit the country code
         displayTemplate: option => option.label,
-        //custom option template: each list row shows the country name plus its code
-        //on a second line. optionTemplate builds a DOM node — no HTML string, so the
-        //untrusted API values are set as text and can't inject markup.
-        optionTemplate(option){
-            const title = document.createElement('span');
-            title.classList.add('autocomplete__option-title');
-            title.textContent = option.label;
-            const detail = document.createElement('small');
-            detail.classList.add('autocomplete__option-detail');
-            detail.textContent = option.value;
-            const wrap = document.createElement('span');
-            wrap.append(title, detail);
-            return wrap;
-        },
+        //custom option template as a template literal: each list row shows the
+        //country name plus its code on a second line. The `html` tag escapes each
+        //interpolated (untrusted) API value automatically, so the string is safe to
+        //set as the option's innerHTML.
+        optionTemplate: option => html`
+            <span class="autocomplete__option-title">${option.label}</span>
+            <small class="autocomplete__option-detail">${option.value}</small>
+        `,
         //signal aborts this request if a newer keystroke supersedes it
         search(query, signal){
             return fetch(`/api/countries?q=${encodeURIComponent(query)}`, { signal })

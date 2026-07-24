@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { capResults, filterOptions, fromSelect, areEqual, isPrintableKeyCode, uid, defaultSearch, resolveMsg } from '../../src/lib/utils.js';
+import { capResults, filterOptions, fromSelect, areEqual, isPrintableKeyCode, uid, defaultSearch, resolveMsg, escapeHtml, html } from '../../src/lib/utils.js';
 
 const makeSelect = html => {
     const select = document.createElement('select');
@@ -130,5 +130,45 @@ describe('Autocomplete > Utils > resolveMsg', () => {
 
     it('should call a function message with the passed arguments', () => {
         assert.strictEqual(resolveMsg(n => `Type ${n} or more`, 3), 'Type 3 or more');
+    });
+});
+
+describe('Autocomplete > Utils > escapeHtml', () => {
+
+    it('should escape the HTML-significant characters', () => {
+        assert.strictEqual(escapeHtml(`<a href="x">Tom & Jerry's</a>`), '&lt;a href=&quot;x&quot;&gt;Tom &amp; Jerry&#39;s&lt;/a&gt;');
+    });
+
+    it('should coerce null/undefined to an empty string', () => {
+        assert.strictEqual(escapeHtml(null), '');
+        assert.strictEqual(escapeHtml(undefined), '');
+    });
+
+    it('should neutralise a script tag so it renders as text, not markup', () => {
+        const el = document.createElement('div');
+        el.innerHTML = `<b>${escapeHtml('<script>alert(1)</script>')}</b>`;
+        assert.strictEqual(el.querySelector('script'), null);
+        assert.strictEqual(el.querySelector('b').textContent, '<script>alert(1)</script>');
+    });
+});
+
+describe('Autocomplete > Utils > html', () => {
+
+    it('should leave the static markup untouched and escape interpolated values', () => {
+        assert.strictEqual(
+            html`<span>${'Tom & Jerry'}</span>`,
+            '<span>Tom &amp; Jerry</span>'
+        );
+    });
+
+    it('should escape an interpolated value that carries markup so it renders as text', () => {
+        const el = document.createElement('div');
+        el.innerHTML = html`<b>${'<img src=x onerror=alert(1)>'}</b>`;
+        assert.strictEqual(el.querySelector('img'), null);
+        assert.strictEqual(el.querySelector('b').textContent, '<img src=x onerror=alert(1)>');
+    });
+
+    it('should handle a template with no interpolations', () => {
+        assert.strictEqual(html`<hr>`, '<hr>');
     });
 });

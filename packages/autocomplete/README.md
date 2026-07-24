@@ -114,30 +114,51 @@ Wrap a `<select>` and its options, `name` and `multiple` are adopted, pre-select
 `displayTemplate` maps an option to the single line of text shown in the input, chips and
 list. To show richer content in the **list only** — for example a second detail line —
 supply an `optionTemplate`. It renders each list option (falling back to `displayTemplate`
-when omitted) and may return either a string (set as text) or a DOM node you build, so the
-list can carry markup the display label and submitted value don't:
+when omitted) and may return either an HTML string or a DOM node, so the list can carry
+markup the display label and submitted value don't.
+
+The string is set as the option's `innerHTML`, so interpolated values must be escaped —
+otherwise option data from an API could inject markup. The escaping happens at the
+interpolation points, not on the whole string (the string's own tags are intentional
+markup), so use the exported **`html`** tagged template: it leaves your tags untouched and
+escapes every `${…}` value automatically — no manual escaping in the template:
 
 ```js
+import autocomplete, { html } from '@stormid/autocomplete';
+
 autocomplete('.js-autocomplete', {
     name: 'airport',
     displayTemplate: option => option.label,      // input / chips show the name
     submissionTemplate: option => option.value,   // form submits the code
-    //list shows the name plus a second detail line
-    optionTemplate(option){
-        const title = document.createElement('span');
-        title.textContent = option.label;
-        const detail = document.createElement('small');
-        detail.textContent = option.detail;
-        const wrap = document.createElement('span');
-        wrap.append(title, detail);
-        return wrap;
-    },
+    //list shows the name plus a second detail line; option.label/detail are escaped
+    optionTemplate: option => html`
+        <span class="title">${option.label}</span>
+        <small class="detail">${option.detail}</small>
+    `,
     search
 });
 ```
 
-Return a DOM node (not an HTML string) for untrusted values — the node's `textContent`
-is set safely, so option data from an API can't inject markup.
+If you build the HTML string some other way, the lower-level `escapeHtml` is also exported
+so you can escape values by hand (``` `<span>${escapeHtml(option.label)}</span>` ```).
+
+Alternatively return a DOM node you build — its `textContent` is set safely, so it needs
+no escaping and is a good fit when the markup is dynamic or the values are wholly untrusted:
+
+```js
+optionTemplate(option){
+    const title = document.createElement('span');
+    title.textContent = option.label;
+    const detail = document.createElement('small');
+    detail.textContent = option.detail;
+    const wrap = document.createElement('span');
+    wrap.append(title, detail);
+    return wrap;
+}
+```
+
+Only a string returned by `optionTemplate` is treated as HTML; the `displayTemplate`
+fallback is always rendered as plain text.
 
 ### Submitting on Enter (search box)
 
@@ -191,7 +212,7 @@ Options can be set during initialisation in an Object passed as the second argum
     value: null, //initial selection value(s) restored on load (e.g. from data-value); array for multiple mode
     label: null, //display label(s) for the initial value(s); falls back to the value
     displayTemplate: option => option.value, //maps an option to the text shown in the input and chips
-    optionTemplate: false, //renders each list option (falls back to displayTemplate); returns a string or DOM node
+    optionTemplate: false, //renders each list option (falls back to displayTemplate); a returned string is set as HTML (build it with the exported `html` tag so values are escaped), a DOM node is appended as-is
     submissionTemplate: option => option.value, //maps an option to its submitted value; also identifies a selection
     allowFreeText: false, //single mode: submit whatever is typed when no option is selected
     submitOnConfirm: false, //Enter commits the highlighted option (or the raw query) and submits the enclosing form — for search boxes
@@ -252,6 +273,10 @@ The `autocomplete__status` and `autocomplete__hint` elements must stay visually 
 readable by assistive tech — style them with a visually-hidden (not `display: none`) utility.
 
 ## API
+
+The package also exports `html` (a tagged template that escapes its interpolations) and
+`escapeHtml` (the underlying escaper), for building an `optionTemplate` that returns an
+HTML string — see [Custom option template](#custom-option-template).
 
 `autocomplete()` returns an array of instances, one per matched node. Each instance exposes:
 
