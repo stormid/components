@@ -62,10 +62,15 @@ const toOption = option => ({ value: option.value, label: option.textContent.tri
  * Pre-selected options seed initial selection, name/multiple carry over to the enhanced combobox
  */
 export const fromSelect = select => {
-    const selectableOptions = [...select.options].filter(option => option.value !== '');
+    //skip the placeholder (empty value) and disabled options — a disabled option must
+    //not become a selectable suggestion
+    const selectableOptions = [...select.options].filter(option => option.value !== '' && !option.disabled);
     return {
         options: selectableOptions.map(toOption),
-        selected: selectableOptions.filter(option => option.hasAttribute('selected')).map(toOption),
+        //an option counts as selected if it's live-selected (.selected — catches a
+        //selection set by JS, restored from history, or autofilled before enhancement)
+        //or carries the server-rendered `selected` attribute
+        selected: selectableOptions.filter(option => option.selected || option.hasAttribute('selected')).map(toOption),
         name: select.getAttribute('name'),
         multiple: select.multiple
     };

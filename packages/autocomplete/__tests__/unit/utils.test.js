@@ -76,6 +76,17 @@ describe('Autocomplete > Utils > fromSelect', () => {
         select.setAttribute('multiple', 'multiple');
         assert.strictEqual(fromSelect(select).multiple, true);
     });
+
+    it('should skip disabled options so they are not offered as suggestions', () => {
+        const select = makeSelect('<option value="a">Apple</option><option value="b" disabled>Banana</option>');
+        assert.deepStrictEqual(fromSelect(select).options, [{ value: 'a', label: 'Apple' }]);
+    });
+
+    it('should read the live selected property, not just the attribute', () => {
+        const select = makeSelect('<option value="a">Apple</option><option value="b">Banana</option>');
+        select.options[1].selected = true; // set via property, no `selected` attribute
+        assert.deepStrictEqual(fromSelect(select).selected, [{ value: 'b', label: 'Banana' }]);
+    });
 });
 
 describe('Autocomplete > Utils > areEqual', () => {
