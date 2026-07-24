@@ -89,3 +89,50 @@ describe('Autocomplete > submitOnConfirm', () => {
         assert.doesNotThrow(() => enter(input));
     });
 });
+
+//A synthetic keydown can't drive the browser's implicit form submit, so we assert
+//the handler's proxy for it: whether Enter is preventDefault-ed. Left un-prevented,
+//the browser submits the form as normal.
+describe('Autocomplete > Enter (submitOnConfirm off)', () => {
+    beforeEach(() => {
+        document.body.innerHTML = '';
+    });
+
+    it('should not swallow the form submit when focus is in the input with nothing highlighted', () => {
+        const instance = init();
+        const input = instance.node.querySelector('input');
+        type(input, 'ap'); // list open with matches, but no option highlighted
+        const event = new KeyboardEvent('keydown', { keyCode: 13, bubbles: true, cancelable: true });
+        input.dispatchEvent(event);
+
+        assert.strictEqual(event.defaultPrevented, false); // native submit not blocked
+        assert.strictEqual(instance.getState().selected, null); // nothing committed
+        assert.strictEqual(input.value, 'ap'); // the typed query stays put
+    });
+
+    it('should commit and prevent submit when Enter fires on a highlighted option', () => {
+        const instance = init();
+        const input = instance.node.querySelector('input');
+        type(input, 'ap');
+        const event = new KeyboardEvent('keydown', { keyCode: 13, bubbles: true, cancelable: true });
+        instance.node.querySelector('[role="option"]').dispatchEvent(event);
+
+        assert.strictEqual(event.defaultPrevented, true);
+        assert.strictEqual(instance.getState().selected.value, 'Apple');
+    });
+
+    it('should allow native submit once an option is committed and focus is back in the input', () => {
+        const { instance, node } = initInForm();
+        const input = node.querySelector('input');
+        type(input, 'ap');
+        clickOption(node, 0); // commit Apple; focus returns to the input
+
+        const event = new KeyboardEvent('keydown', { keyCode: 13, bubbles: true, cancelable: true });
+        input.dispatchEvent(event);
+
+        assert.strictEqual(event.defaultPrevented, false); // native submit not blocked
+        assert.strictEqual(instance.getState().selected.value, 'Apple');
+        //the committed value is what the form would carry
+        assert.strictEqual(node.querySelector('input[type="hidden"][name="q"]').value, 'Apple');
+    });
+});

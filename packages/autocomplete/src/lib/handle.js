@@ -125,7 +125,7 @@ const handleBlur = (store, event) => {
 };
 
 const handleEnter = (store, event) => {
-    const { open, dom, options, settings } = store.getState();
+    const { dom, options, settings } = store.getState();
     const option = optionAt(options, event.target);
     //submitOnConfirm (search-style): a highlighted option is committed — which submits
     //the form itself (see commitSelection), matching a click or Space — and with nothing
@@ -136,10 +136,9 @@ const handleEnter = (store, event) => {
         else submitForm(dom.input);
         return;
     }
-    //no selectable options (e.g. the list is showing the no-results message) —
-    //leave Enter alone so a normal form submit isn't swallowed
-    if (options.length === 0) return;
-    if (!open && event.target.parentElement !== dom.list) return;
+    //nothing to commit (no results, or focus still in the input with nothing
+    //highlighted) — leave Enter alone so a normal form submit isn't swallowed
+    if (!option) return;
     event.preventDefault();
     commitSelection(store, option, true);
 };
