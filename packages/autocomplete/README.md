@@ -3,7 +3,7 @@
 An accessible, framework-agnostic autocomplete/combobox. Enhances an element into a
 WAI-ARIA combobox with a listbox popup, supporting single or multiple selection, a
 synchronous or asynchronous (remote) option source, and progressive enhancement of a
-native `<select>`.
+native `<select>` or a server-rendered `<input>`.
 
 ---
 
@@ -108,6 +108,39 @@ Wrap a `<select>` and its options, `name` and `multiple` are adopted, pre-select
     </select>
 </div>
 ```
+
+### Progressive enhancement from an `<input>`
+
+For a **search / free-text** field, ship a real `<input>` and the component enhances that
+element in place rather than generating one — so the field works and submits before (and
+without) JavaScript:
+
+```html
+<form action="/search" method="get">
+    <label for="q">Search</label>
+    <div class="js-autocomplete">
+        <input type="search" id="q" name="q">
+    </div>
+</form>
+```
+
+```js
+autocomplete('.js-autocomplete', { submitOnConfirm: true, search });
+```
+
+The input's `id` (so an existing `<label for>` stays associated), its `name` and any current
+`value` are adopted: the name moves onto the hidden value field so the field isn't submitted
+twice, and the value is restored as the initial selection (exactly like `data-value`). An
+explicit `name`/`value` option still wins. Pair with `submitOnConfirm` (and usually
+`allowFreeText`) for a search box, so the typed query submits with or without JS.
+
+This is the graceful-degradation path for **single-value, search-style** fields. A field that
+must be constrained to a fixed list has no meaningful no-JS control other than a `<select>`,
+so use the [`<select>` enhancement](#progressive-enhancement-from-select) above for those; an
+`async`/remote source can't degrade (its options only exist once the script has fetched them).
+In **multiple** mode a single `<input>` can't carry several values without JS, so it degrades
+to a plain search field — any server value is left as typed text, not turned into a chip.
+Restore multiple selections with `<select multiple>` or the `value` array option instead.
 
 ### Custom option template
 

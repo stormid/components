@@ -40,9 +40,24 @@ export default ({ node, settings }) => {
         selected = settings.multiple ? selectSource.selected : (selectSource.selected[selectSource.selected.length - 1] || null);
     }
 
-    // The id moves onto the input; prefer the <select>'s so an existing
-    // <label for> keeps its association after enhancement.
-    const id = (select && select.getAttribute('id')) || node.getAttribute('id') || settings.id || uid('autocomplete');
+    //progressive enhancement: when the node already contains a server-rendered <input>
+    //(a real, submittable field that works with JS off — the no-JS fallback for a
+    //search/free-text control), enhance that element in place rather than build a fresh
+    //one. Adopt its name (moved onto the hidden value field by createInput) and any
+    //restored value, then let the value seed below treat it like a data-value selection.
+    const preInput = !select && node.querySelector('input');
+    if (preInput) {
+        settings.name = settings.name || preInput.getAttribute('name');
+        //single mode restores the input's value as the initial selection (like data-value).
+        //Multiple mode can't carry several values in one field, so it degrades to a plain
+        //search input — its server value is left as ordinary typed text rather than being
+        //turned into a lone chip; multi-value restore is <select multiple> / the value option.
+        if (!settings.multiple && preInput.value && (settings.value === undefined || settings.value === null)) settings.value = preInput.value;
+    }
+
+    // The id moves onto the input; prefer the <select>'s (or an enhanced input's own id)
+    // so an existing <label for> keeps its association after enhancement.
+    const id = (select && select.getAttribute('id')) || (preInput && preInput.getAttribute('id')) || node.getAttribute('id') || settings.id || uid('autocomplete');
     const listId = `${id}-listbox`;
     // The listbox takes its accessible name from the field's <label>; pointing it at the
     // input would resolve the name to the typed value instead. Give the label an id if it
@@ -104,7 +119,7 @@ export default ({ node, settings }) => {
         settings,
         dom: {
             node,
-            input: createInput({ node, settings, id, listId, describedby }),
+            input: createInput({ node, settings, id, listId, describedby, input: preInput || undefined }),
             list: createList({ node, id: listId, labelledby: listLabelledby }),
             status: createStatus(node),
             //minlength requirement, announced on focus via aria-describedby

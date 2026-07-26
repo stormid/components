@@ -2,21 +2,21 @@ import autocomplete, { html } from '../../../src';
 import { fruits, countries } from './data.js';
 
 window.addEventListener('DOMContentLoaded', () => {
-    // Default: the minimal setup — a single-select combobox backed by a local
-    // list. `search` (required) returns the matches for the current query.
+    // Default: a single-select combobox that enhances a real, server-rendered
+    // <input> in place — so the field submits typed text even with JS off. Its id,
+    // name and placeholder are read from the markup; `search` (required) returns the
+    // matches for the current query.
     autocomplete('.js-autocomplete', {
-        name: 'default',
-        placeholder: 'e.g. Apple',
         search(query){
             return fruits.filter(item => item.value.toLowerCase().includes(query.toLowerCase()));
         }
     });
 
     // Multiple selection: each committed option becomes a removable chip and the
-    // input clears, ready for the next search.
+    // input clears, ready for the next search. It enhances a server-rendered
+    // <input>, so with JS off it degrades to a single search field (one input can't
+    // carry several values) submitting under the adopted name.
     autocomplete('.js-autocomplete-multiple', {
-        name: 'fruits',
-        placeholder: 'e.g. Apple',
         multiple: true,
         search(query){
             return fruits.filter(item => item.value.toLowerCase().includes(query.toLowerCase()));
@@ -26,10 +26,10 @@ window.addEventListener('DOMContentLoaded', () => {
     // Async source: `search` may return a Promise, so results can come from any
     // asynchronous source — async isn't only fetch. Here a setTimeout over the
     // local list stands in for network latency; the component shows the loading
-    // state while it resolves and discards responses whose query is now stale.
+    // state while it resolves and discards responses whose query is now stale. The
+    // field is a server-rendered <input> that submits without JS; only the
+    // suggestions need it.
     autocomplete('.js-autocomplete-async', {
-        name: 'fruits-async',
-        placeholder: 'e.g. Apple',
         async: true,
         search(query){
             return new Promise(resolve => {
@@ -45,8 +45,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // Showcases: async + multiple, displayTemplate (value/label split),
     // optionTemplate (rich two-line rows), request cancellation via signal.
     autocomplete('.js-autocomplete-endpoint', {
-        name: 'country-code',
-        placeholder: 'e.g. United Kingdom',
         async: true,
         multiple: true,
         //display the country name in the input/chips, submit the country code
@@ -71,30 +69,39 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Search box: enhances a server-rendered <input type="search"> and, with
+    // submitOnConfirm, submits the enclosing form when a suggestion is confirmed (or
+    // the raw query on Enter). allowFreeText carries the typed value when nothing is
+    // picked — so with JS off it degrades to exactly the plain search field it was.
+    autocomplete('.js-autocomplete-input', {
+        submitOnConfirm: true,
+        allowFreeText: true,
+        search(query){
+            return fruits.filter(item => item.value.toLowerCase().includes(query.toLowerCase()));
+        }
+    });
+
     // Progressive enhancement: wrap a native <select> and the component sources
     // its options, name and (for <select multiple>) the multiple flag from the
     // markup. Placeholders here come from data-placeholder on the wrapper, demonstrating dataset config.
     autocomplete('.js-autocomplete-select');
     autocomplete('.js-autocomplete-select-multiple');
 
-    // Prefilled (single): a server-rendered value/label pair restored on load from
-    // data-value/data-label on the node — the label shows in the combobox, the
-    // value submits via the hidden field, so a restored value behaves like a
-    // user-picked one.
+    // Prefilled (single): the row ships an empty server-rendered <input> (so it
+    // degrades to a plain search field with JS off), plus data-value/data-label on the
+    // wrapper. With JS, that pair is restored into the combobox — the label shows, the
+    // value submits via the hidden field — so a restored value behaves like a picked
+    // one. The empty input never overrides the data-value, so the split still holds.
     autocomplete('.js-autocomplete-prefilled', {
-        name: 'prefilled',
-        placeholder: 'e.g. United Kingdom',
         displayTemplate: option => option.label,
         search(query){
             return countries.filter(country => country.label.toLowerCase().includes(query.toLowerCase()));
         }
     });
 
-    // Prefilled (multiple): initial selections restored as chips from value/label
-    // arrays passed as options (rather than from the DOM).
+    // Prefilled (multiple): likewise enhances an empty <input> (an empty search field
+    // without JS); with JS the value/label arrays are restored as chips.
     autocomplete('.js-autocomplete-prefilled-multiple', {
-        name: 'prefilled-multiple',
-        placeholder: 'e.g. United Kingdom',
         multiple: true,
         value: ['GB', 'FR'],
         label: ['United Kingdom', 'France'],

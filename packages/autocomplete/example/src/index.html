@@ -475,9 +475,13 @@
             opacity: .7;
         }
 
+        /* No-JS fallback: the native <select>/<select multiple> the component enhances,
+           styled full-width and consistent with the autocomplete inputs so the page reads
+           the same before (or without) JS rather than showing a bare browser control. */
         .select {
             width: 100%;
             display: block;
+            margin-top: 8px;
             padding: 0 12px;
             background-color: #ffffff;
             border: 1px solid hsl(0, 0%, 70%);
@@ -489,7 +493,21 @@
             background-repeat: no-repeat, repeat;
             background-position: right 6px top 50%, 0 0;
         }
-        
+        /* a multiple select is a list, not a dropdown: let it grow to show its options
+           and drop the single-select chevron, keeping the full width and border */
+        .select[multiple] {
+            height: auto;
+            min-height: 40px;
+            padding: 4px 0;
+            background-image: none;
+        }
+        .select[multiple] option {
+            padding: 4px 12px;
+        }
+        .select:focus {
+            outline: 4px solid #1d70b8;
+        }
+
 
         .error-message {
             font-size: 0.85rem;
@@ -705,30 +723,45 @@
             <h1>Autocomplete examples</h1>
 
             <div class="form-row">
-                <label for="default" class="label">Default (single selection)</label>
+                <label for="default" class="label">Default (single selection) <span class="label__hint">Enhances a server-rendered &lt;input&gt; — submits typed text with JS off</span></label>
                 <span class="error-message" data-valmsg-for="default"></span>
-                <div class="autocomplete js-autocomplete" id="default"></div>
+                <div class="autocomplete js-autocomplete">
+                    <input class="autocomplete__input" id="default" name="default" placeholder="e.g. Apple">
+                </div>
             </div>
             <div class="form-row">
-                <label for="fruits" class="label">Multiple <span class="label__hint">Pick as many as you like</span></label>
+                <label for="fruits" class="label">Multiple <span class="label__hint">Pick as many as you like; degrades to a single search field with JS off</span></label>
                 <span class="error-message" data-valmsg-for="fruits"></span>
-                <div class="autocomplete autocomplete--multiple js-autocomplete-multiple" id="fruits"></div>
+                <div class="autocomplete autocomplete--multiple js-autocomplete-multiple">
+                    <input class="autocomplete__input" id="fruits" name="fruits" placeholder="e.g. Apple">
+                </div>
             </div>
             <div class="form-row">
-                <label for="country" class="label">Async source (single selection)<span class="label__hint">Returns a Promise, no network — async isn't only fetch</span></label>
+                <label for="country" class="label">Async source (single selection)<span class="label__hint">Returns a Promise, no network — async isn't only fetch. Suggestions need JS; the field still submits without it</span></label>
                 <span class="error-message" data-valmsg-for="country"></span>
-                <div class="autocomplete js-autocomplete-async" id="country"></div>
+                <div class="autocomplete js-autocomplete-async">
+                    <input class="autocomplete__input" id="country" name="fruits-async" placeholder="e.g. Apple">
+                </div>
             </div>
             <div class="form-row">
                 <label for="country-code" class="label">Remote fetch (multiple) <span class="label__hint">Mocked API endpoint, aborts stale requests, shows custom option template</span></label>
                 <span class="error-message" data-valmsg-for="country-code"></span>
-                <div class="autocomplete autocomplete--multiple js-autocomplete-endpoint" id="country-code"></div>
+                <div class="autocomplete autocomplete--multiple js-autocomplete-endpoint">
+                    <input class="autocomplete__input" id="country-code" name="country-code" placeholder="e.g. United Kingdom">
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="search" class="label">Search box <span class="label__hint">Enhances an &lt;input&gt; and submits the query on confirm — works with JS off</span></label>
+                <span class="error-message" data-valmsg-for="search"></span>
+                <div class="autocomplete js-autocomplete-input">
+                    <input class="autocomplete__input" type="search" id="search" name="search" placeholder="e.g. Apple">
+                </div>
             </div>
             <div class="form-row">
                 <label for="flavour" class="label">From select <span class="label__hint">Enhances a native &lt;select&gt;</span></label>
                 <span class="error-message" data-valmsg-for="flavour"></span>
                 <div class="autocomplete js-autocomplete-select" data-placeholder="e.g. Apple">
-                    <select id="flavour" name="flavour">
+                    <select class="select" id="flavour" name="flavour">
                         <option value="">Choose a fruit</option>
                         <option value="apple">Apple</option>
                         <option value="banana">Banana</option>
@@ -742,7 +775,7 @@
                 <label for="toppings" class="label">Multiple from select <span class="label__hint">Enhances &lt;select multiple&gt;</span></label>
                 <span class="error-message" data-valmsg-for="toppings"></span>
                 <div class="autocomplete autocomplete--multiple js-autocomplete-select-multiple" data-placeholder="e.g. Apple">
-                    <select id="toppings" name="toppings" multiple>
+                    <select class="select" id="toppings" name="toppings" multiple>
                         <option value="apple">Apple</option>
                         <option value="banana" selected>Banana</option>
                         <option value="cherry">Cherry</option>
@@ -752,14 +785,21 @@
                 </div>
             </div>
             <div class="form-row">
-                <label for="prefilled" class="label">Prefilled <span class="label__hint">Server-rendered value/label restored on load</span></label>
+                <label for="prefilled" class="label">Prefilled <span class="label__hint">Restored on load: the raw value ("GB") is server-rendered so it survives without JS; data-label upgrades the display to "United Kingdom" once enhanced</span></label>
                 <span class="error-message" data-valmsg-for="prefilled"></span>
-                <div class="autocomplete js-autocomplete-prefilled" id="prefilled" data-value="GB" data-label="United Kingdom"></div>
+                <div class="autocomplete js-autocomplete-prefilled" data-value="GB" data-label="United Kingdom">
+                    <input class="autocomplete__input" id="prefilled" name="prefilled" value="GB" placeholder="e.g. United Kingdom">
+                </div>
             </div>
             <div class="form-row">
-                <label for="prefilled-multiple" class="label">Prefilled multiple <span class="label__hint">Server-rendered selections restored as chips</span></label>
+                <label for="prefilled-multiple" class="label">Prefilled multiple <span class="label__hint">Server-rendered selections restored as chips; an empty search field without JS</span></label>
                 <span class="error-message" data-valmsg-for="prefilled-multiple"></span>
-                <div class="autocomplete autocomplete--multiple js-autocomplete-prefilled-multiple" id="prefilled-multiple"></div>
+                <div class="autocomplete autocomplete--multiple js-autocomplete-prefilled-multiple">
+                    <input class="autocomplete__input" id="prefilled-multiple" name="prefilled-multiple" placeholder="e.g. United Kingdom">
+                </div>
+            </div>
+            <div class="form-row">
+                <button type="submit" class="btn">Submit</button>
             </div>
         </form>
     </main>

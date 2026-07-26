@@ -13,8 +13,12 @@ export const broadcast = (store, action, option = null) => {
     }));
 };
 
-export const createInput = ({ node, settings, id, listId, describedby }) => {
-    const input = document.createElement('input');
+export const createInput = ({ node, settings, id, listId, describedby, input }) => {
+    //progressive enhancement: when a server-rendered <input> is passed (the no-JS
+    //fallback — a real, submittable field before this runs), decorate it in place;
+    //otherwise build the combobox input from scratch. Either way the combobox ARIA
+    //wiring below is applied identically.
+    input = input || document.createElement('input');
     input.setAttribute('id', id);
     node.removeAttribute('id');
     input.setAttribute('role', 'combobox');
@@ -27,8 +31,13 @@ export const createInput = ({ node, settings, id, listId, describedby }) => {
     if (settings.placeholder) input.setAttribute('placeholder', settings.placeholder);
     input.classList.add(settings.inputClassName);
     //the visible input is display/search only in every mode; the form value is
-    //carried by a hidden field (single mode) or the chips' hidden inputs (multiple)
-    node.appendChild(input);
+    //carried by a hidden field (single mode) or the chips' hidden inputs (multiple).
+    //An enhanced fallback input carried the value under `name` pre-JS, so drop that
+    //name (adopted onto settings.name in the factory) to leave the hidden field as the
+    //single submission source — otherwise the visible input would submit alongside it.
+    input.removeAttribute('name');
+    //a freshly built input still needs adding; an enhanced one is already in place
+    if (!input.parentNode) node.appendChild(input);
 
     return input;
 };
