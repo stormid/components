@@ -197,7 +197,7 @@ fallback is always rendered as plain text.
 
 By default, choosing a suggestion commits it and keeps the user on the page. For a
 search-style autocomplete — where choosing a suggestion should *go* somewhere — set
-`submitOnConfirm: true`. Confirming an option (by click, Space or Enter) then commits it and
+`submitOnConfirm: true`. Confirming an option (by click or Enter) then commits it and
 submits the enclosing `<form>`, so the chosen value is posted / navigated to. Pressing Enter
 with nothing highlighted submits the raw typed query, exactly like a plain search box:
 
@@ -251,9 +251,8 @@ Options can be set during initialisation in an Object passed as the second argum
     name: null, //form field name; from options, data-name, or a wrapped <select>. Single mode adds one hidden field, multiple mode one per selection
     search: null, //(query, signal) => options, or a Promise when async; derived from `values` when omitted
     values: [], //option source for the built-in search when no `search` is given; strings or { value, label } objects
-    list: false, //full option set shown when opened with no query (e.g. via Space)
     minlength: 2, //characters required before a search runs
-    maxResults: 6, //max results shown at once; extras are trimmed. 0 or Infinity shows all. Does not cap `list`
+    maxResults: 6, //max results shown at once; extras are trimmed. 0 or Infinity shows all
     multiple: false, //accumulate selections as removable chips, each with its own hidden field
     async: false, //treat `search` as returning a Promise; requests are debounced
     value: null, //initial selection value(s) restored on load (e.g. from data-value); array for multiple mode
@@ -262,7 +261,7 @@ Options can be set during initialisation in an Object passed as the second argum
     optionTemplate: false, //renders each list option (falls back to displayTemplate); a returned string is set as HTML (build it with the exported `html` tag so values are escaped), a DOM node is appended as-is
     submissionTemplate: option => option.value, //maps an option to its submitted value; also identifies a selection
     allowFreeText: false, //single mode: submit whatever is typed when no option is selected
-    submitOnConfirm: false, //confirming an option (click/Space/Enter) — or Enter on the raw query — submits the enclosing form; for search boxes
+    submitOnConfirm: false, //confirming an option (click/Enter) — or Enter on the raw query — submits the enclosing form; for search boxes
     confirmOnBlur: true, //commit the highlighted option when focus leaves the component
     clearOnBlur: false, //clear the input (and, single mode, the selection) when focus leaves uncommitted
     placeholder: '', //placeholder text for the generated input
@@ -296,7 +295,7 @@ Keyboard interaction:
 | `↓` / `↑` | Move the highlight through the options; `↑` from the first option returns to the input. |
 | `Enter` | Commit the highlighted option (with nothing highlighted, a normal form submit is left to proceed — or, with `submitOnConfirm`, the raw query is submitted). |
 | `Escape` | Close the list and clear the highlight; focus stays in the input. |
-| `Space` | Ordinary space in the query. Only when the input is empty and closed (and a browse list is available, e.g. an enhanced `<select>`) does it open the full list. It never commits — the caret is in a textbox. |
+| `Space` | Ordinary space in the query; it never commits — the caret is in a textbox. |
 | `Tab` | Move focus out of the component, committing the highlighted option first when `confirmOnBlur` is set. |
 | `Backspace` | Ordinary edit; in multiple mode, on an empty input it removes the last chip. |
 

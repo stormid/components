@@ -14,7 +14,6 @@ describe('Autocomplete > Value', () => {
         const list = [{ id: 42, label: 'Apple' }, { id: 7, label: 'Banana' }];
         const [instance] = autocomplete('.js-autocomplete', {
             name: 'fruit',
-            list,
             displayTemplate: option => option.label,
             submissionTemplate: option => option.id,
             search: query => list.filter(option => option.label.toLowerCase().includes(query.toLowerCase()))

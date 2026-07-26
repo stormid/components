@@ -33,7 +33,6 @@ export default ({ node, settings }) => {
         const selectSource = fromSelect(select);
         settings.multiple = settings.multiple || selectSource.multiple;
         settings.name = settings.name || selectSource.name;
-        settings.list = selectSource.options;
         //<option> display text is the label, its value the submit value
         if (settings.displayTemplate === defaults.displayTemplate) settings.displayTemplate = option => option.label;
         settings.search = settings.search || filterOptions(selectSource.options, settings.displayTemplate);
@@ -141,7 +140,7 @@ export default ({ node, settings }) => {
         //index of the highlighted option (-1 = caret in the input, nothing highlighted);
         //reflected onto the DOM as aria-activedescendant / aria-selected by renderActive
         active: -1,
-        options: settings.list || [],
+        options: [],
         handle: {
             container: { keydown: keydown(store) },
             form: { reset: resetForm(store) },

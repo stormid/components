@@ -4,7 +4,6 @@ export default {
     name: null,
     search: null,
     values: [],
-    list: false,
     minlength: 2,
     maxResults: 6,
     multiple: false,

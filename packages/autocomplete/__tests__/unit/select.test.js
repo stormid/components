@@ -33,14 +33,16 @@ describe('Autocomplete > Select', () => {
         assert.strictEqual(node.querySelector('select'), null);
     });
 
-    it('should source its options from the select options, skipping the empty placeholder', () => {
-        const instance = mount(single);
-        const options = instance.getState().options;
-        assert.deepStrictEqual(options, [
-            { value: 'apple', label: 'Apple' },
-            { value: 'banana', label: 'Banana' },
-            { value: 'cherry', label: 'Cherry' }
-        ]);
+    it('should source its search options from the select options, skipping the empty placeholder', () => {
+        //minlength 0 lets an empty query run, which matches every real option; the
+        //value="" placeholder is not sourced, so it never appears among them
+        const { node } = mount(single, { minlength: 0 });
+        const input = node.querySelector('input');
+        input.value = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+
+        const options = [...node.querySelectorAll('[role="option"]')].map(el => el.textContent);
+        assert.deepStrictEqual(options, [ 'Apple', 'Banana', 'Cherry' ]);
     });
 
     it('should carry the select name on a hidden value field and move its id onto the combobox input for the label', () => {

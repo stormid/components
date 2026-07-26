@@ -58,7 +58,7 @@ const commitSelection = (store, option, refocus = false) => {
         store.update({ ...state, selected: option, options: [], open: false, active: -1 }, effects);
     }
     broadcast(store, 'confirm', option);
-    //an active confirmation (click / Space / Enter, i.e. refocus) submits the form
+    //an active confirmation (click / Enter, i.e. refocus) submits the form
     //when submitOnConfirm is set; a passive Tab/blur commit (refocus false) does not,
     //so tabbing past the field never navigates
     if (refocus && state.settings.submitOnConfirm) submitForm(state.dom.input);
@@ -79,9 +79,6 @@ export const keydown = store => event => {
         break;
     case 'down':
         handleDownArrow(store, event);
-        break;
-    case 'space':
-        handleSpace(store, event);
         break;
     case 'enter':
         handleEnter(store, event);
@@ -137,19 +134,6 @@ const handleEnter = (store, event) => {
     if (!option) return;
     event.preventDefault();
     commitSelection(store, option, true);
-};
-
-//Space opens the full browse list when the input is empty and closed (list mode);
-//otherwise it's an ordinary space in the query. Unlike the old roving-focus model
-//it never commits — the caret is always in the textbox, so Space must type.
-const handleSpace = (store, event) => {
-    const { open, dom, settings } = store.getState();
-    //an empty settings.list means options load dynamically, so there's nothing to browse
-    if (event.target === dom.input && !open && !!settings.list && dom.input.value === '') {
-        event.preventDefault();
-        const state = store.getState();
-        store.update({ ...state, options: withoutSelected(state, settings.list), open: true, active: -1 }, [ renderList, clearStatus ]);
-    }
 };
 
 const handleEscape = store => {

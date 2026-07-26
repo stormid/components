@@ -39,27 +39,10 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 
 });
 
-test.describe('Autocomplete > Keyboard', { tag: '@all'}, () => {
-
-	test('Should open the full option list when Space is pressed on the empty input', async ({ page }) => {
-		const input = page.locator('#flavour');
-		const listbox = page.locator('#flavour-listbox');
-
-		//an enhanced <select> seeds settings.list, so Space opens the full set with no query
-		await input.focus();
-		await page.keyboard.press('Space');
-		await expect(listbox).toBeVisible();
-		await expect(listbox.locator('[role="option"]')).toHaveCount(5);
-		await expect(input).toHaveValue('');
-	});
-
-});
-
 test.describe('Autocomplete > Axe', { tag: '@reduced'}, () => {
 
 	test('Should not have any accessibility issues with the enhanced select list open', async ({ page }) => {
-		await page.locator('#flavour').focus();
-		await page.keyboard.press('Space');
+		await page.locator('#flavour').fill('app');
 		await expect(page.locator('#flavour-listbox')).toBeVisible();
 
 		const accessibilityScanResults = await new AxeBuilder({ page }).include('.js-autocomplete-select').analyze();
