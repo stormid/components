@@ -49,6 +49,21 @@ export const createHint = ({ node, id, settings }) => {
     return hint;
 };
 
+/*
+ * Multiple mode: a visually-hidden summary of the current selection, linked to the
+ * combobox via aria-describedby. The chips live in a separate list that the input
+ * isn't associated with, so without this a screen reader announces only the (empty)
+ * input on focus — never what's already selected. Kept in sync by syncSelectionSummary.
+ */
+export const createSelectionSummary = ({ node, id }) => {
+    const summary = document.createElement('span');
+    summary.setAttribute('id', id);
+    summary.classList.add('autocomplete__selection');
+    node.appendChild(summary);
+
+    return summary;
+};
+
 export const createList = ({ node, id, labelledby }) => {
     const list = document.createElement('ul');
     list.setAttribute('role', 'listbox');
@@ -271,12 +286,25 @@ export const renderChips = state => state.selected.map(option => {
 });
 
 /*
+ * Keep the visually-hidden selection summary (see createSelectionSummary) in step
+ * with the chips, so the combobox's aria-describedby announces the current
+ * selection on focus. Empty when nothing is selected, so nothing is read out.
+ */
+export const syncSelectionSummary = state => {
+    const { selectionSummary } = state.dom;
+    if (!selectionSummary) return;
+    const labels = state.selected.map(state.settings.displayTemplate);
+    selectionSummary.textContent = resolveMsg(state.settings.selectionMsg, labels);
+};
+
+/*
  * Reconcile the chips with the current selection. The output list stays out of the
  * DOM until there's at least one chip to show, and is removed again once the
  * selection empties — so the page never carries an empty output list.
  */
 export const syncOutput = state => {
     const { output, node } = state.dom;
+    syncSelectionSummary(state);
     if (state.selected.length === 0) return output.remove();
     output.replaceChildren(...renderChips(state));
     if (!output.parentNode) node.appendChild(output);

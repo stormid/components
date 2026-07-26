@@ -24,6 +24,21 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		await expect(input).toHaveValue('');
 	});
 
+	test('Should announce the current selection to the input via aria-describedby', async ({ page }) => {
+		const input = page.locator('#fruits');
+
+		await input.fill('app');
+		await page.locator('#fruits-listbox [role="option"]', { hasText: 'Apple' }).click();
+		await input.fill('ban');
+		await page.locator('#fruits-listbox [role="option"]', { hasText: 'Banana' }).click();
+
+		//the input's description (announced on focus) resolves to the selection summary,
+		//so a screen reader hears what's chosen rather than just an empty input
+		const describedby = await input.getAttribute('aria-describedby');
+		const summary = page.locator(`#${describedby.split(' ').find(id => id.endsWith('-selection'))}`);
+		await expect(summary).toHaveText('Apple, Banana selected');
+	});
+
 	test('Should accumulate a chip per selection in multiple mode', async ({ page }) => {
 		const input = page.locator('#fruits');
 		const output = page.locator('.js-autocomplete-multiple .autocomplete__output');

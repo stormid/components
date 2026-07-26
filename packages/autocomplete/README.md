@@ -236,6 +236,9 @@ Options can be set during initialisation in an Object passed as the second argum
     },
     removeMsg(label){ //aria-label for a selected chip's remove button (multiple mode); string or fn of the option's display label
         return `Remove ${label}`;
+    },
+    selectionMsg(labels){ //visually-hidden summary of the current selection (multiple mode), linked via aria-describedby so it's announced when the input is refocused; string or fn of the display labels
+        return labels.length ? `${labels.join(', ')} selected` : '';
     }
 }
 ```
@@ -271,6 +274,7 @@ against your node builds this structure, whose classes are the styling hooks:
     </ul>
     <div class="autocomplete__status" role="status"></div>
     <span class="autocomplete__hint"></span>              <!-- only when minlength > 1 -->
+    <span class="autocomplete__selection"></span>         <!-- multiple mode: selection summary for aria-describedby -->
     <input type="hidden" name="…">                        <!-- single mode, when name is set -->
     <!-- multiple mode: the chip list, added once there is a selection -->
     <ul class="autocomplete__output">
@@ -292,13 +296,15 @@ against your node builds this structure, whose classes are the styling hooks:
 | `autocomplete__option--empty` | The non-selectable no-results item. |
 | `autocomplete__status` | Visually-hidden `role="status"` live region for announcements. |
 | `autocomplete__hint` | Visually-hidden minlength hint linked via `aria-describedby`. |
+| `autocomplete__selection` | Visually-hidden selection summary (multiple mode) linked via `aria-describedby`, announced when the input is refocused. |
 | `autocomplete__output` | The chip container (multiple mode). |
 | `autocomplete__chip` | A single selection chip. |
 | `autocomplete__chip-label` | The chip's display label. |
 | `autocomplete__chip-remove` | The chip's remove button. |
 
-The `autocomplete__status` and `autocomplete__hint` elements must stay visually hidden but
-readable by assistive tech — style them with a visually-hidden (not `display: none`) utility.
+The `autocomplete__status`, `autocomplete__hint` and `autocomplete__selection` elements must
+stay visually hidden but readable by assistive tech — style them with a visually-hidden (not
+`display: none`) utility.
 
 ## API
 

@@ -6,6 +6,7 @@ import {
     createList,
     createStatus,
     createHint,
+    createSelectionSummary,
     setupListeners,
     setValue,
     syncOutput,
@@ -53,6 +54,11 @@ export default ({ node, settings }) => {
     // expose it as a visually-hidden hint linked to the input via aria-describedby.
     const usesHint = Number(settings.minlength) > 1;
     const hintId = `${id}-hint`;
+    // Multiple mode: a visually-hidden summary of the current selection, also linked
+    // via aria-describedby, so refocusing the input announces what's already chosen.
+    const selectionId = `${id}-selection`;
+    // aria-describedby may carry both ids (space-separated), whichever apply.
+    const describedby = [ usesHint ? hintId : null, settings.multiple ? selectionId : null ].filter(Boolean).join(' ') || null;
 
     if (select) select.remove();
 
@@ -98,7 +104,7 @@ export default ({ node, settings }) => {
         settings,
         dom: {
             node,
-            input: createInput({ node, settings, id, listId, describedby: usesHint ? hintId : null }),
+            input: createInput({ node, settings, id, listId, describedby }),
             list: createList({ node, id: listId, labelledby: listLabelledby }),
             status: createStatus(node),
             //minlength requirement, announced on focus via aria-describedby
@@ -106,6 +112,9 @@ export default ({ node, settings }) => {
             //chips + hidden fields live in the output list, multiple mode only
             //(added to the DOM by syncOutput only once there's a chip to show)
             ...(settings.multiple ? { output: createOutput() } : {}),
+            //visually-hidden selection summary, linked via aria-describedby, so the
+            //current chips are announced when the input is (re)focused (multiple mode)
+            ...(settings.multiple ? { selectionSummary: createSelectionSummary({ node, id: selectionId }) } : {}),
             //single mode: a hidden field carries the submit value under the name
             ...(usesHiddenValue ? { hidden: createHiddenValue({ node, name: settings.name }) } : {})
         },

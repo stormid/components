@@ -68,6 +68,48 @@ describe('Autocomplete > Multiple', () => {
         assert.strictEqual(node.querySelector('.autocomplete__chip-remove').getAttribute('aria-label'), 'Dileu Apple');
     });
 
+    it('should link a visually-hidden selection summary to the input via aria-describedby', () => {
+        const { node } = init();
+        const input = node.querySelector('input');
+        const summary = node.querySelector('.autocomplete__selection');
+        assert.notStrictEqual(summary, null);
+        assert.strictEqual(input.getAttribute('aria-describedby').split(' ').includes(summary.id), true);
+    });
+
+    it('should keep the selection summary in step with the chips so it is announced on refocus', () => {
+        const { node } = init();
+        const input = node.querySelector('input');
+        const summary = node.querySelector('.autocomplete__selection');
+
+        //nothing selected yet: empty, so a refocus announces no stale selection
+        assert.strictEqual(summary.textContent, '');
+
+        type(input, 'ap');
+        clickOption(node, 0); // Apple
+        assert.strictEqual(summary.textContent, 'Apple selected');
+
+        type(input, 'ap');
+        clickOption(node, 0); // Apricot (Apple already chosen, hidden from the list)
+        assert.strictEqual(summary.textContent, 'Apple, Apricot selected');
+
+        //removing a chip updates the summary too
+        node.querySelector('.autocomplete__chip-remove').dispatchEvent(new Event('click', { bubbles: true }));
+        assert.strictEqual(summary.textContent, 'Apricot selected');
+    });
+
+    it('should let selectionMsg override the selection summary', () => {
+        const { node } = init({ selectionMsg: labels => `${labels.length} dewiswyd` });
+        const input = node.querySelector('input');
+        type(input, 'ap');
+        clickOption(node, 0);
+        assert.strictEqual(node.querySelector('.autocomplete__selection').textContent, '1 dewiswyd');
+    });
+
+    it('should seed the selection summary from an initial value', () => {
+        const { node } = init({ value: [ 'Apple', 'Banana' ] });
+        assert.strictEqual(node.querySelector('.autocomplete__selection').textContent, 'Apple, Banana selected');
+    });
+
     it('should clear the search input and keep the list closed after a selection', () => {
         const { node } = init();
         const input = node.querySelector('input');

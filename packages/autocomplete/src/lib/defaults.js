@@ -35,5 +35,8 @@ export default {
     },
     removeMsg(label) {
         return `Remove ${label}`;
+    },
+    selectionMsg(labels) {
+        return labels.length ? `${labels.join(', ')} selected` : '';
     }
 };
