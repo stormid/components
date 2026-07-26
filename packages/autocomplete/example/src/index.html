@@ -792,9 +792,10 @@
                 </div>
             </div>
             <div class="form-row">
-                <label for="prefilled-multiple" class="label">Prefilled multiple <span class="label__hint">Server-rendered selections restored as chips; an empty search field without JS</span></label>
+                <label for="prefilled-multiple" class="label">Prefilled multiple <span class="label__hint">Selections server-rendered as JSON arrays in data-value/data-label, restored as chips; an empty search field without JS</span></label>
                 <span class="error-message" data-valmsg-for="prefilled-multiple"></span>
-                <div class="autocomplete autocomplete--multiple js-autocomplete-prefilled-multiple">
+                <div class="autocomplete autocomplete--multiple js-autocomplete-prefilled-multiple"
+                    data-value='["GB","FR"]' data-label='["United Kingdom","France"]'>
                     <input class="autocomplete__input" id="prefilled-multiple" name="prefilled-multiple" placeholder="e.g. United Kingdom">
                 </div>
             </div>

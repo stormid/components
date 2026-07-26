@@ -17,7 +17,7 @@ import {
     optionClick, optionMouseDown,
     chipRemove, keydown, clear, resetForm
 } from './handle.js';
-import { fromValues, filterOptions, fromSelect, uid } from './utils.js';
+import { fromValues, filterOptions, fromSelect, toValueArray, uid } from './utils.js';
 
 export default ({ node, settings }) => {
     const store = createStore();
@@ -90,7 +90,9 @@ export default ({ node, settings }) => {
 
     // Seed an initial selection from a server-rendered value/label pair (e.g. a
     // restored or pre-filled form): data-value/data-label on the node, or value/
-    // label options. Multiple mode accepts arrays (one chip per pair). The setValue
+    // label options. Multiple mode accepts arrays (one chip per pair) — as an init
+    // option array, or a JSON-array string in data-value/data-label so several
+    // selections can be server-rendered declaratively (see toValueArray). The setValue
     // (single) / syncOutput (multiple) seed below then shows the label(s) via the
     // displayTemplate and submits the value(s) via the hidden field(s), so a restored
     // value behaves exactly like a user-picked one. Uses the { value, label } option
@@ -98,8 +100,8 @@ export default ({ node, settings }) => {
     // label falls back to the value for display.
     if (settings.value !== undefined && settings.value !== null && settings.value !== '') {
         if (settings.multiple && !selected.length) {
-            const values = [].concat(settings.value);
-            const labels = [].concat(settings.label ?? []);
+            const values = toValueArray(settings.value);
+            const labels = toValueArray(settings.label);
             selected = values.map((value, i) => ({ value, label: labels[i] ?? value }));
         } else if (!settings.multiple && !selected) {
             selected = { value: settings.value, label: settings.label ?? settings.value };

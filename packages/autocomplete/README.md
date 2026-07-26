@@ -228,8 +228,17 @@ field and behaves like a user-picked selection:
 <div class="js-autocomplete" data-value="GB" data-label="United Kingdom"></div>
 ```
 
-For multiple mode, pass arrays via init (`value: ['GB','FR']`, `label: ['United Kingdom','France']`)
-or use a `<select multiple>` with pre-selected options.
+For multiple mode, render several values by making `data-value`/`data-label` **JSON arrays**,
+so the selections are server-rendered declaratively (no init options needed):
+
+```html
+<div class="js-autocomplete autocomplete--multiple"
+    data-value='["GB","FR"]' data-label='["United Kingdom","France"]'></div>
+```
+
+Equivalently, pass arrays via init (`value: ['GB','FR']`, `label: ['United Kingdom','France']`),
+or use a `<select multiple>` with pre-selected options. (A single `<input>` can't carry several
+values without JS, so a `<select multiple>` is the only one of these that also degrades.)
 
 Resetting the enclosing `<form>` restores this initial selection — the seeded value(s), a
 pre-selected `<select>`'s option(s), or empty if there was none — so the enhanced control

@@ -48,6 +48,23 @@ export const capResults = (options, maxResults) => {
 export const fromValues = values => values.map(value => (typeof value === 'string' ? { value, label: value } : value));
 
 /*
+ * Normalise a multiple-mode value/label source to an array. Init options can pass a
+ * real array; a data-* attribute always arrives as a string, so a JSON-array string
+ * (e.g. data-value='["GB","FR"]') is parsed to carry several server-rendered values,
+ * while a plain string is treated as a single value.
+ */
+export const toValueArray = source => {
+    if (Array.isArray(source)) return source;
+    if (typeof source === 'string' && source.trim().startsWith('[')) {
+        try {
+            const parsed = JSON.parse(source);
+            if (Array.isArray(parsed)) return parsed;
+        } catch { /* not valid JSON — fall through to a single-value array */ }
+    }
+    return [].concat(source ?? []);
+};
+
+/*
  * Default search over an array of option objects, matching the query against
  * each option's display text (template). Used when the source is a <select> or
  * an object list and the consumer hasn't supplied their own search.

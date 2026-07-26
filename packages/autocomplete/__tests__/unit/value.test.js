@@ -138,4 +138,20 @@ describe('Autocomplete > Value', () => {
         assert.deepStrictEqual(hidden, ['GB', 'FR']);
         assert.strictEqual(instance.getState().selected.length, 2);
     });
+
+    it('should seed multiple selections from JSON-array data-value/data-label attributes', () => {
+        //multiple values server-rendered declaratively (not passed to init) — data-*
+        //arrives as a string, so a JSON array carries several values (see toValueArray)
+        document.body.innerHTML = `<div class="js-autocomplete autocomplete--multiple" data-value='["GB","FR"]' data-label='["United Kingdom","France"]'></div>`;
+        const [instance] = autocomplete('.js-autocomplete', { name: 'countries', multiple: true, displayTemplate: option => option.label, search: () => [] });
+        const { node } = instance;
+
+        const chips = node.querySelectorAll('.autocomplete__chip');
+        assert.strictEqual(chips.length, 2);
+        assert.strictEqual(chips[0].querySelector('.autocomplete__chip-label').textContent, 'United Kingdom');
+        //each parsed value submits under the repeated name
+        const hidden = [...node.querySelectorAll('input[type="hidden"][name="countries"]')].map(i => i.value);
+        assert.deepStrictEqual(hidden, ['GB', 'FR']);
+        assert.strictEqual(instance.getState().selected.length, 2);
+    });
 });

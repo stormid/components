@@ -99,12 +99,12 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Prefilled (multiple): likewise enhances an empty <input> (an empty search field
-    // without JS); with JS the value/label arrays are restored as chips.
+    // Prefilled (multiple): the selections are server-rendered declaratively as
+    // JSON arrays in data-value/data-label on the node (not passed to init), and the
+    // component restores them as chips. It enhances an empty <input>, so without JS
+    // it's an empty search field — multi-value restore is inherently a JS feature.
     autocomplete('.js-autocomplete-prefilled-multiple', {
         multiple: true,
-        value: ['GB', 'FR'],
-        label: ['United Kingdom', 'France'],
         displayTemplate: option => option.label,
         search(query){
             return countries.filter(country => country.label.toLowerCase().includes(query.toLowerCase()));

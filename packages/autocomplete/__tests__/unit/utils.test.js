@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { capResults, filterOptions, fromSelect, areEqual, isPrintableKeyCode, uid, fromValues, resolveMsg, escapeHtml, html } from '../../src/lib/utils.js';
+import { capResults, filterOptions, fromSelect, areEqual, isPrintableKeyCode, uid, fromValues, toValueArray, resolveMsg, escapeHtml, html } from '../../src/lib/utils.js';
 
 const makeSelect = html => {
     const select = document.createElement('select');
@@ -137,6 +137,31 @@ describe('Autocomplete > Utils > fromValues', () => {
     it('should pass option objects through unchanged', () => {
         const options = [{ value: 'a', label: 'Apple' }];
         assert.deepStrictEqual(fromValues(options), [{ value: 'a', label: 'Apple' }]);
+    });
+});
+
+describe('Autocomplete > Utils > toValueArray', () => {
+
+    it('should return an array source unchanged (init option arrays)', () => {
+        const arr = ['GB', 'FR'];
+        assert.strictEqual(toValueArray(arr), arr);
+    });
+
+    it('should parse a JSON-array string (server-rendered data-* attribute)', () => {
+        assert.deepStrictEqual(toValueArray('["GB","FR"]'), ['GB', 'FR']);
+    });
+
+    it('should treat a plain string as a single value', () => {
+        assert.deepStrictEqual(toValueArray('GB'), ['GB']);
+    });
+
+    it('should fall back to a single value when a bracketed string is not valid JSON', () => {
+        assert.deepStrictEqual(toValueArray('[not json'), ['[not json']);
+    });
+
+    it('should coerce null/undefined to an empty array', () => {
+        assert.deepStrictEqual(toValueArray(null), []);
+        assert.deepStrictEqual(toValueArray(undefined), []);
     });
 });
 
