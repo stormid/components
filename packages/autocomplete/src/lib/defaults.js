@@ -29,5 +29,11 @@ export default {
     loadingMsg: 'Loading…',
     hintMsg(minlength) {
         return `Type ${minlength} or more characters for results`;
+    },
+    resultsMsg(count) {
+        return `${count} ${count === 1 ? 'result is' : 'results are'} available`;
+    },
+    removeMsg(label) {
+        return `Remove ${label}`;
     }
 };

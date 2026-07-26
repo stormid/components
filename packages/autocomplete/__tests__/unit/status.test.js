@@ -57,6 +57,12 @@ describe('Autocomplete > Status', () => {
         assert.strictEqual(node.querySelector('.autocomplete__status').textContent, '2 results are available');
     });
 
+    it('should let resultsMsg override the default result-count message', () => {
+        const { node } = init({ minlength: 1, resultsMsg: n => `${n} canlyniad ar gael` });
+        type(node.querySelector('input'), 'ap');
+        assert.strictEqual(node.querySelector('.autocomplete__status').textContent, '2 canlyniad ar gael');
+    });
+
     it('should announce the no-results message when a search returns nothing', () => {
         const { node } = init({ minlength: 1, noResultsMsg: 'Nothing here' });
         const input = node.querySelector('input');

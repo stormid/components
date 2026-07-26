@@ -230,6 +230,12 @@ Options can be set during initialisation in an Object passed as the second argum
     loadingMsg: 'Loading…', //announced while an async search is in flight
     hintMsg(minlength){ //visually-hidden minlength hint, linked via aria-describedby; string or fn, added only when minlength > 1
         return `Type ${minlength} or more characters for results`;
+    },
+    resultsMsg(count){ //announced when a search returns matches; string or fn of the match count (handles its own pluralisation)
+        return `${count} ${count === 1 ? 'result is' : 'results are'} available`;
+    },
+    removeMsg(label){ //aria-label for a selected chip's remove button (multiple mode); string or fn of the option's display label
+        return `Remove ${label}`;
     }
 }
 ```

@@ -172,7 +172,7 @@ export const renderStatus = state => {
     const query = dom.input.value;
     if (query.length === 0 || query.length < Number(settings.minlength)) dom.status.textContent = '';
     else if (options.length === 0) dom.status.textContent = settings.noResultsMsg;
-    else dom.status.textContent = `${options.length} ${options.length === 1 ? 'result is' : 'results are'} available`;
+    else dom.status.textContent = resolveMsg(settings.resultsMsg, options.length);
 };
 
 export const clearStatus = state => state.dom.status.textContent = '';
@@ -224,7 +224,7 @@ export const renderChips = state => state.selected.map(option => {
     const remove = document.createElement('button');
     remove.setAttribute('type', 'button');
     remove.classList.add('autocomplete__chip-remove');
-    remove.setAttribute('aria-label', `Remove ${displayTemplate(option)}`);
+    remove.setAttribute('aria-label', resolveMsg(state.settings.removeMsg, displayTemplate(option)));
     remove.dataset.value = submissionTemplate(option);
     chip.appendChild(remove);
 

@@ -54,6 +54,20 @@ describe('Autocomplete > Multiple', () => {
         assert.strictEqual(hidden[0].value, 'Apple');
     });
 
+    it('should label a chip remove button with the default remove message', () => {
+        const { node } = init();
+        type(node.querySelector('input'), 'ap');
+        clickOption(node, 0);
+        assert.strictEqual(node.querySelector('.autocomplete__chip-remove').getAttribute('aria-label'), 'Remove Apple');
+    });
+
+    it('should let removeMsg override the chip remove button label', () => {
+        const { node } = init({ removeMsg: label => `Dileu ${label}` });
+        type(node.querySelector('input'), 'ap');
+        clickOption(node, 0);
+        assert.strictEqual(node.querySelector('.autocomplete__chip-remove').getAttribute('aria-label'), 'Dileu Apple');
+    });
+
     it('should clear the search input and keep the list closed after a selection', () => {
         const { node } = init();
         const input = node.querySelector('input');
