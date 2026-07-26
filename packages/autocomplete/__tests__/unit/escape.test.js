@@ -31,20 +31,22 @@ describe('Autocomplete > Escape', () => {
         assert.strictEqual(node.querySelector('.autocomplete__list').hasAttribute('hidden'), true);
     });
 
-    it('should clear aria-selected from a focused option and return focus to the input on Escape', () => {
+    it('should clear the active option and keep focus in the input on Escape', () => {
         const { node } = init();
         const input = node.querySelector('input');
         input.focus();
         type(input, 'ap');
-        key(input, 40); // ArrowDown moves focus to the first option
+        key(input, 40); // ArrowDown highlights the first option; focus stays in the input
 
         const option = node.querySelector('[role="option"]');
-        assert.strictEqual(document.activeElement, option);
+        assert.strictEqual(document.activeElement, input);
         assert.strictEqual(option.getAttribute('aria-selected'), 'true');
+        assert.strictEqual(input.getAttribute('aria-activedescendant'), option.id);
 
-        key(option, 27);
+        key(input, 27);
         assert.strictEqual(option.getAttribute('aria-selected'), 'false');
         assert.strictEqual(document.activeElement, input);
+        assert.strictEqual(input.hasAttribute('aria-activedescendant'), false);
         assert.strictEqual(input.hasAttribute('aria-selected'), false);
     });
 });

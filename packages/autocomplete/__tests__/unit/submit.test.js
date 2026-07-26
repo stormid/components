@@ -24,6 +24,9 @@ const initInForm = (options = {}) => {
 };
 
 const enter = target => target.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 13, bubbles: true }));
+//highlight the next option (activedescendant model: focus stays in the input, so the
+//arrow fires on the input rather than moving focus onto an <li>)
+const arrowDown = input => input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 40, bubbles: true }));
 
 describe('Autocomplete > submitOnConfirm', () => {
     beforeEach(() => {
@@ -34,7 +37,8 @@ describe('Autocomplete > submitOnConfirm', () => {
         const { node, submits } = initInForm({ submitOnConfirm: true });
         const input = node.querySelector('input');
         type(input, 'ap');
-        enter(node.querySelector('[role="option"]')); // Enter on the first option
+        arrowDown(input); // highlight the first option
+        enter(input);
 
         assert.strictEqual(input.value, 'Apple');
         assert.strictEqual(node.querySelector('input[type="hidden"][name="q"]').value, 'Apple');
@@ -62,10 +66,12 @@ describe('Autocomplete > submitOnConfirm', () => {
 
     it('should not submit on a Tab/blur commit even when submitOnConfirm is set', () => {
         const { instance, node, submits } = initInForm({ submitOnConfirm: true });
-        type(node.querySelector('input'), 'ap');
-        //Tab commits the focused option via confirmOnBlur, but tabbing past the field
-        //must not navigate
-        node.querySelector('[role="option"]').dispatchEvent(new KeyboardEvent('keydown', { keyCode: 9, bubbles: true }));
+        const input = node.querySelector('input');
+        type(input, 'ap');
+        arrowDown(input); // highlight the first option
+        //Tab commits the highlighted option via confirmOnBlur, but tabbing past the
+        //field must not navigate
+        input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 9, bubbles: true }));
 
         assert.strictEqual(instance.getState().selected.value, 'Apple');
         assert.strictEqual(submits.length, 0);
@@ -75,7 +81,8 @@ describe('Autocomplete > submitOnConfirm', () => {
         const { node, submits } = initInForm();
         const input = node.querySelector('input');
         type(input, 'ap');
-        enter(node.querySelector('[role="option"]'));
+        arrowDown(input); // highlight the first option
+        enter(input);
 
         //the option is still committed, just without a form submit
         assert.strictEqual(input.value, 'Apple');
@@ -114,8 +121,9 @@ describe('Autocomplete > Enter (submitOnConfirm off)', () => {
         const instance = init();
         const input = instance.node.querySelector('input');
         type(input, 'ap');
+        arrowDown(input); // highlight the first option
         const event = new KeyboardEvent('keydown', { keyCode: 13, bubbles: true, cancelable: true });
-        instance.node.querySelector('[role="option"]').dispatchEvent(event);
+        input.dispatchEvent(event);
 
         assert.strictEqual(event.defaultPrevented, true);
         assert.strictEqual(instance.getState().selected.value, 'Apple');

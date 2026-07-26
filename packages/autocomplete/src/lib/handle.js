@@ -1,5 +1,5 @@
-import { emptyList, renderList, renderStatus, clearStatus, showList, hideList, showLoading, setValue, clearInput, focusInput, syncOutput, syncHiddenValue, broadcast } from './dom.js';
-import { areEqual, capResults, debounce, isPrintableKeyCode } from './utils.js';
+import { emptyList, renderList, renderStatus, renderActive, clearStatus, showList, hideList, showLoading, setValue, clearInput, focusInput, syncOutput, syncHiddenValue, broadcast } from './dom.js';
+import { areEqual, capResults, debounce } from './utils.js';
 import { KEYCODES } from './constants.js';
 
 //resolve the option an event fired from via its aria-posinset. closest() finds
@@ -38,10 +38,9 @@ const submitForm = input => {
 /*
  * Commit a selection and close the list. Single mode replaces the selection and
  * writes it to the input; multiple mode toggles it into the chip list and clears
- * the search input. In both modes a refocus commit (keyboard select or click,
- * but not a Tab/blur commit) returns focus to the input — otherwise a keyboard
- * select leaves focus on the option element that emptyList then removes, dropping
- * focus to document.body.
+ * the search input. Focus stays in the input throughout (activedescendant model),
+ * so refocus is only a safety net for the click path — a mousedown that slipped
+ * through preventDefault — keeping the tested "focus back on the input" guarantee.
  */
 const commitSelection = (store, option, refocus = false) => {
     if (!option) return;
@@ -50,13 +49,13 @@ const commitSelection = (store, option, refocus = false) => {
         //clear the results so retyping the same query re-renders the (now emptied) list
         const effects = [ clearInput, syncOutput, hideList, emptyList, clearStatus ];
         if (refocus) effects.push(focusInput);
-        store.update({ ...state, selected: addSelection(state, option), options: [], open: false }, effects);
+        store.update({ ...state, selected: addSelection(state, option), options: [], open: false, active: -1 }, effects);
     } else {
         //clear the results and the live region: the list is closing, so a stale
         //"N results available" must not linger (matches the multiple-mode branch)
         const effects = [ setValue, hideList, emptyList, clearStatus ];
         if (refocus) effects.push(focusInput);
-        store.update({ ...state, selected: option, options: [], open: false }, effects);
+        store.update({ ...state, selected: option, options: [], open: false, active: -1 }, effects);
     }
     broadcast(store, 'confirm', option);
     //an active confirmation (click / Space / Enter, i.e. refocus) submits the form
@@ -70,7 +69,7 @@ const commitSelection = (store, option, refocus = false) => {
 const resolveAsyncResults = (store, value, results) => {
     const state = store.getState();
     if (state.dom.input.value !== value) return;
-    store.update({ ...state, options: capResults(withoutSelected(state, results), state.settings.maxResults), open: true }, [ renderList, renderStatus ]);
+    store.update({ ...state, options: capResults(withoutSelected(state, results), state.settings.maxResults), open: true, active: -1 }, [ renderList, renderStatus ]);
 };
 
 export const keydown = store => event => {
@@ -91,46 +90,41 @@ export const keydown = store => event => {
         handleEscape(store);
         break;
     case 'tab':
-        handleBlur(store, event);
+        handleBlur(store);
         break;
     case 'backspace':
         handleBackspace(store, event);
         break;
-    default:
-        if (isPrintableKeyCode(event.keyCode)) handlePrintableKey(store, event);
-        break;
     }
 };
 
-const handlePrintableKey = (store, event) => {
-    const { dom } = store.getState();
-    if (event.target !== dom.input) dom.input.focus();
-};
-
-//multiple: Backspace on an empty input removes the last chip; otherwise it
-//behaves like any editing key (bring focus back to the input from an option)
+//multiple: Backspace on an empty input removes the last chip. Otherwise it's an
+//ordinary edit in the input (focus never leaves it in the activedescendant model).
 const handleBackspace = (store, event) => {
     const { dom, settings, selected } = store.getState();
     if (settings.multiple && event.target === dom.input && dom.input.value === '' && selected.length) {
         const removed = selected[selected.length - 1];
         store.update({ ...store.getState(), selected: selected.slice(0, -1) }, [ syncOutput ]);
         broadcast(store, 'remove', removed);
-        return;
     }
-    if (event.target !== dom.input) dom.input.focus();
 };
 
-const handleBlur = (store, event) => {
-    const { dom, open, settings, options  } = store.getState();
-    if (!open && event.target.parentElement !== dom.list) return;
-    if (settings.confirmOnBlur) commitSelection(store, optionAt(options, event.target));
+const handleBlur = store => {
+    const { open, settings, options, active } = store.getState();
+    //Tab out: commit the highlighted option (confirmOnBlur) before focus leaves.
+    //Nothing highlighted, or the list already closed, means nothing to commit — the
+    //blur event handler (inputBlur) closes the list either way.
+    if (!open || active < 0) return;
+    if (settings.confirmOnBlur) commitSelection(store, options[active]);
 };
 
 const handleEnter = (store, event) => {
-    const { dom, options, settings } = store.getState();
-    const option = optionAt(options, event.target);
+    const { dom, options, settings, active } = store.getState();
+    //the highlighted option, if any — focus stays in the input, so the active index
+    //(not document focus) says what Enter commits
+    const option = active >= 0 ? options[active] : null;
     //submitOnConfirm (search-style): a highlighted option is committed — which submits
-    //the form itself (see commitSelection), matching a click or Space — and with nothing
+    //the form itself (see commitSelection), matching a click — and with nothing
     //highlighted the raw typed query is submitted, like a plain search box.
     if (settings.submitOnConfirm) {
         event.preventDefault();
@@ -138,63 +132,50 @@ const handleEnter = (store, event) => {
         else submitForm(dom.input);
         return;
     }
-    //nothing to commit (no results, or focus still in the input with nothing
-    //highlighted) — leave Enter alone so a normal form submit isn't swallowed
+    //nothing highlighted (no results, or the caret is in the input with nothing
+    //arrowed to) — leave Enter alone so a normal form submit isn't swallowed
     if (!option) return;
     event.preventDefault();
     commitSelection(store, option, true);
 };
 
+//Space opens the full browse list when the input is empty and closed (list mode);
+//otherwise it's an ordinary space in the query. Unlike the old roving-focus model
+//it never commits — the caret is always in the textbox, so Space must type.
 const handleSpace = (store, event) => {
-    const { open, dom, settings, options } = store.getState();
-    //if event is fired from input, and the list is closed and there's no query, open it
-    //if settings.list is empty then the options are being loaded dynamically, so do nothing
+    const { open, dom, settings } = store.getState();
+    //an empty settings.list means options load dynamically, so there's nothing to browse
     if (event.target === dom.input && !open && !!settings.list && dom.input.value === '') {
         event.preventDefault();
         const state = store.getState();
-        store.update({ ...state, options: withoutSelected(state, settings.list), open: true }, [ renderList, clearStatus ]);
-        return;
-    }
-    //if event is fired from an option, select it
-    if (event.target.parentElement === dom.list) {
-        event.preventDefault();
-        commitSelection(store, optionAt(options, event.target), true);
+        store.update({ ...state, options: withoutSelected(state, settings.list), open: true, active: -1 }, [ renderList, clearStatus ]);
     }
 };
 
-
 const handleEscape = store => {
-    const { open, dom } = store.getState();
-    if (!open) return;
-    //only an option carries aria-selected; don't stamp it onto the combobox input
-    //(invalid ARIA) when the list was opened by typing with focus still on the input
-    if (document.activeElement !== dom.input) document.activeElement.setAttribute('aria-selected', 'false');
-    dom.input.focus();
-    store.update({ ...store.getState(), open: false }, [ hideList, clearStatus ]);
+    const state = store.getState();
+    if (!state.open) return;
+    //close and clear the highlight; focus is already in the input (it never left),
+    //and renderActive drops aria-selected + the input's aria-activedescendant
+    store.update({ ...state, open: false, active: -1 }, [ renderActive, hideList, clearStatus ]);
 };
 
 const handleUpArrow = (store, event) => {
     event.preventDefault();
-    const { dom, open } = store.getState();
-    if (document.activeElement === dom.input || !open) return;
-    document.activeElement.setAttribute('aria-selected', 'false');
-    if (document.activeElement.previousElementSibling) {
-        document.activeElement.previousElementSibling.focus();
-        document.activeElement.setAttribute('aria-selected', 'true');
-    } else dom.input.focus();
+    const state = store.getState();
+    //at the top of the list (active 0) Up returns to the input (active -1); with the
+    //caret already in the input, or the list closed, there's nowhere further up to go
+    if (!state.open || state.active < 0) return;
+    store.update({ ...state, active: state.active - 1 }, [ renderActive ]);
 };
 
 const handleDownArrow = (store, event) => {
     event.preventDefault();
-    const { dom, open, options } = store.getState();
-    if (!open || options.length === 0 || !document.activeElement.nextElementSibling) return;
-    if (document.activeElement === dom.input && open) {
-        dom.list.firstElementChild.focus();
-    } else {
-        document.activeElement.setAttribute('aria-selected', 'false');
-        document.activeElement.nextElementSibling.focus();
-    }
-    document.activeElement.setAttribute('aria-selected', 'true');
+    const state = store.getState();
+    const { open, options, active } = state;
+    //from the input (active -1) Down highlights the first option; stop at the last one
+    if (!open || options.length === 0 || active >= options.length - 1) return;
+    store.update({ ...state, active: active + 1 }, [ renderActive ]);
 };
 
 export const inputFocus = store => event => {
@@ -207,16 +188,22 @@ export const inputFocus = store => event => {
 };
 
 export const inputBlur = store => event => {
-    const { dom, open, settings  } = store.getState();
+    const { dom, open, settings, options, active } = store.getState();
+    //a mousedown on the list is prevented from stealing focus (optionMouseDown), so
+    //a blur into the list is never a real exit — leave the click handler to commit
     if (dom.list.contains(document.activeElement) || dom.list.contains(event.relatedTarget)) return;
-    if (open) {
-        if (settings.clearOnBlur) dom.input.value = '';
-        const dropSelection = settings.clearOnBlur && !settings.multiple;
-        store.update(
-            { ...store.getState(), open: false, ...(settings.clearOnBlur ? { options: [] } : {}), ...(dropSelection ? { selected: null } : {}) },
-            dropSelection ? [ renderList, clearStatus, syncHiddenValue ] : [ renderList, clearStatus ]
-        );
-    }
+    if (!open) return;
+    //confirmOnBlur: an arrowed-to option is committed as focus leaves the field (a
+    //click elsewhere or programmatic blur; Tab is committed up-front by handleBlur,
+    //which closes first so this sees open=false and skips). Focus never sat on the
+    //option — the active index is what carries the highlight in this model.
+    if (settings.confirmOnBlur && active >= 0) return commitSelection(store, options[active]);
+    if (settings.clearOnBlur) dom.input.value = '';
+    const dropSelection = settings.clearOnBlur && !settings.multiple;
+    store.update(
+        { ...store.getState(), open: false, active: -1, ...(settings.clearOnBlur ? { options: [] } : {}), ...(dropSelection ? { selected: null } : {}) },
+        dropSelection ? [ renderList, clearStatus, syncHiddenValue ] : [ renderList, clearStatus ]
+    );
 };
 
 export const inputChange = store => {
@@ -253,16 +240,17 @@ export const inputChange = store => {
         else if (!settings.multiple && settings.allowFreeText && !selected) syncHiddenValue(store.getState());
         if (value.length < settings.minlength) {
             if (open) store.update({ ...store.getState(), open: false }, [ hideList ]);
-            store.update({ ...store.getState(), options: [] }, [ emptyList, renderStatus ]);
+            store.update({ ...store.getState(), options: [], active: -1 }, [ emptyList, renderStatus ]);
             return;
         }
         if (settings.async) return runAsyncSearch(value);
         const results = capResults(withoutSelected(store.getState(), settings.search(value)), settings.maxResults);
         if (areEqual(options, results)) {
-            if (!open) store.update({ ...store.getState(), open: true }, [ renderList, renderStatus ]);
+            if (!open) store.update({ ...store.getState(), open: true, active: -1 }, [ renderList, renderStatus ]);
             return;
         }
-        store.update({ ...store.getState(), options: results, open: true }, [ renderList, renderStatus ]);
+        //typing narrows the list, so the previous highlight no longer applies
+        store.update({ ...store.getState(), options: results, open: true, active: -1 }, [ renderList, renderStatus ]);
     };
 };
 
@@ -271,28 +259,19 @@ export const optionClick = store => event => {
     commitSelection(store, optionAt(options, event.target), true);
 };
 
-export const optionBlur = store => event => {
-    const { dom, open, settings, options } = store.getState();
-    if (dom.node.contains(event.relatedTarget)) return;
-    if (!open) return;
-    if (settings.confirmOnBlur) commitSelection(store, optionAt(options, event.target));
-    else store.update({ ...store.getState(), open: false }, [ hideList, clearStatus ]);
-};
-
 export const optionMouseDown = event => {
-    // Safari triggers focusOut before click, but if you
-    // preventDefault on mouseDown, you can stop that from happening.
-    // If this is removed, clicking on an option in Safari will trigger
-    // `handleOptionBlur`, which closes the menu, and the click will
-    // trigger on the element underneath instead.
+    // Keep focus in the input when an option is clicked: preventing the mousedown
+    // default stops the input blurring before the click lands. Without this the blur
+    // (inputBlur) would close the list and the click would fall through to whatever
+    // is underneath. Safari is the strict case — it fires focusout before click.
     // See: http://stackoverflow.com/questions/7621711/how-to-prevent-blur-running-when-clicking-a-link-in-jquery
     event.preventDefault();
 };
 
 export const clear = store => () => {
     const state = store.getState();
-    if (state.settings.multiple) store.update({ ...state, selected: [], options: [], open: false }, [ clearInput, syncOutput, hideList, emptyList, clearStatus ]);
-    else store.update({ ...state, selected: null, options: [], open: false }, [ setValue, hideList, emptyList, clearStatus ]);
+    if (state.settings.multiple) store.update({ ...state, selected: [], options: [], open: false, active: -1 }, [ clearInput, syncOutput, hideList, emptyList, clearStatus ]);
+    else store.update({ ...state, selected: null, options: [], open: false, active: -1 }, [ setValue, hideList, emptyList, clearStatus ]);
     broadcast(store, 'clear');
 };
 
@@ -309,7 +288,7 @@ export const resetForm = store => () => queueMicrotask(() => {
     const effects = state.settings.multiple
         ? [ clearInput, syncOutput, hideList, emptyList, clearStatus ]
         : [ setValue, hideList, emptyList, clearStatus ];
-    store.update({ ...state, selected, options: [], open: false }, effects);
+    store.update({ ...state, selected, options: [], open: false, active: -1 }, effects);
 });
 
 export const chipRemove = store => event => {

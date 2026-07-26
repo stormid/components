@@ -221,7 +221,7 @@ Options can be set during initialisation in an Object passed as the second argum
     submissionTemplate: option => option.value, //maps an option to its submitted value; also identifies a selection
     allowFreeText: false, //single mode: submit whatever is typed when no option is selected
     submitOnConfirm: false, //confirming an option (click/Space/Enter) — or Enter on the raw query — submits the enclosing form; for search boxes
-    confirmOnBlur: true, //commit the focused option when focus leaves the component
+    confirmOnBlur: true, //commit the highlighted option when focus leaves the component
     clearOnBlur: false, //clear the input (and, single mode, the selection) when focus leaves uncommitted
     placeholder: '', //placeholder text for the generated input
     inputClassName: 'autocomplete__input', //class applied to the generated input
@@ -239,6 +239,21 @@ Options can be set during initialisation in an Object passed as the second argum
     }
 }
 ```
+
+## Accessibility
+
+The component follows the [WAI-ARIA APG combobox with listbox popup](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) pattern. Keyboard focus stays in the `role="combobox"` input at all times; the highlighted option is tracked with `aria-activedescendant` on the input (and `aria-selected` on the option itself) rather than by moving DOM focus into the listbox. Options carry `aria-posinset`/`aria-setsize`, and result counts / status changes are announced via the visually-hidden `role="status"` live region.
+
+Keyboard interaction:
+
+| Key | Behaviour |
+| --- | --- |
+| `↓` / `↑` | Move the highlight through the options; `↑` from the first option returns to the input. |
+| `Enter` | Commit the highlighted option (with nothing highlighted, a normal form submit is left to proceed — or, with `submitOnConfirm`, the raw query is submitted). |
+| `Escape` | Close the list and clear the highlight; focus stays in the input. |
+| `Space` | Ordinary space in the query. Only when the input is empty and closed (and a browse list is available, e.g. an enhanced `<select>`) does it open the full list. It never commits — the caret is in a textbox. |
+| `Tab` | Move focus out of the component, committing the highlighted option first when `confirmOnBlur` is set. |
+| `Backspace` | Ordinary edit; in multiple mode, on an empty input it removes the last chip. |
 
 ## Styling
 

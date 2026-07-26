@@ -53,14 +53,16 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 		await expect(listbox.locator('.autocomplete__option--empty')).toHaveText('No results found');
 	});
 
-	test('Should commit the focused option on blur when confirmOnBlur is set', async ({ page }) => {
+	test('Should commit the highlighted option on blur when confirmOnBlur is set', async ({ page }) => {
 		const input = page.locator('#default');
 
 		await input.fill('app');
 		await page.keyboard.press('ArrowDown');
-		await expect(page.locator(':focus')).toHaveText('Apple');
+		//focus never leaves the input; the highlight is carried by aria-selected
+		await expect(input).toBeFocused();
+		await expect(page.locator('#default-listbox [aria-selected="true"]')).toHaveText('Apple');
 
-		//Tab out of the component: confirmOnBlur (default) commits the focused option
+		//Tab out of the component: confirmOnBlur (default) commits the highlighted option
 		await page.keyboard.press('Tab');
 		await expect(input).toHaveValue('Apple');
 	});
@@ -86,40 +88,47 @@ test.describe('Autocomplete > Functionality', { tag: '@all'}, () => {
 
 test.describe('Autocomplete > Keyboard', { tag: '@all'}, () => {
 
-	test('Should move focus into the options with the down arrow and back to the input with the up arrow', async ({ page }) => {
+	test('Should highlight options with the down arrow and return to the input with the up arrow', async ({ page }) => {
 		const input = page.locator('#default');
+		const active = page.locator('#default-listbox [aria-selected="true"]');
 
 		await input.fill('app');
 		await page.keyboard.press('ArrowDown');
-		await expect(page.locator(':focus')).toHaveRole('option');
-		await expect(page.locator(':focus')).toHaveText('Apple');
+		//focus stays in the input throughout; the highlight moves via aria-selected
+		await expect(input).toBeFocused();
+		await expect(active).toHaveText('Apple');
 
 		await page.keyboard.press('ArrowUp');
-		await expect(page.locator(':focus')).toHaveAttribute('id', 'default');
+		//back at the input: nothing highlighted, no active descendant
+		await expect(input).toBeFocused();
+		await expect(active).toHaveCount(0);
+		await expect(input).not.toHaveAttribute('aria-activedescendant');
 	});
 
 	test('Should navigate a multi-option list and stop at each end', async ({ page }) => {
 		const input = page.locator('#default');
+		const active = page.locator('#default-listbox [aria-selected="true"]');
 
 		//'to' matches Potato and Sweet potato
 		await input.fill('to');
 		await page.keyboard.press('ArrowDown');
-		await expect(page.locator(':focus')).toHaveText('Potato');
+		await expect(active).toHaveText('Potato');
 		await page.keyboard.press('ArrowDown');
-		await expect(page.locator(':focus')).toHaveText('Sweet potato');
+		await expect(active).toHaveText('Sweet potato');
 
 		//at the last option the down arrow holds position
 		await page.keyboard.press('ArrowDown');
-		await expect(page.locator(':focus')).toHaveText('Sweet potato');
+		await expect(active).toHaveText('Sweet potato');
 
 		//the up arrow walks back up and past the first option returns to the input
 		await page.keyboard.press('ArrowUp');
-		await expect(page.locator(':focus')).toHaveText('Potato');
+		await expect(active).toHaveText('Potato');
 		await page.keyboard.press('ArrowUp');
-		await expect(page.locator(':focus')).toHaveAttribute('id', 'default');
+		await expect(input).toBeFocused();
+		await expect(active).toHaveCount(0);
 	});
 
-	test('Should select the focused option when Enter is pressed', async ({ page }) => {
+	test('Should select the highlighted option when Enter is pressed', async ({ page }) => {
 		const input = page.locator('#default');
 		const listbox = page.locator('#default-listbox');
 
@@ -129,22 +138,20 @@ test.describe('Autocomplete > Keyboard', { tag: '@all'}, () => {
 
 		await expect(input).toHaveValue('Apple');
 		await expect(listbox).not.toBeVisible();
-		//committing from the option returns focus to the input, not document.body
-		await expect(page.locator(':focus')).toHaveAttribute('id', 'default');
+		//focus stays in the input, not dropped to document.body
+		await expect(input).toBeFocused();
 	});
 
-	test('Should select the focused option when Space is pressed', async ({ page }) => {
+	test('Should type a space rather than commit when Space is pressed (APG combobox)', async ({ page }) => {
 		const input = page.locator('#default');
-		const listbox = page.locator('#default-listbox');
 
 		await input.fill('app');
 		await page.keyboard.press('ArrowDown');
+		//the caret is in the textbox, so Space is text — it must not commit the option
 		await page.keyboard.press('Space');
 
-		await expect(input).toHaveValue('Apple');
-		await expect(listbox).not.toBeVisible();
-		//committing from the option returns focus to the input, not document.body
-		await expect(page.locator(':focus')).toHaveAttribute('id', 'default');
+		await expect(input).toHaveValue('app ');
+		await expect(input).not.toHaveValue('Apple');
 	});
 
 	test('Should close the list and return focus to the input when Escape is pressed', async ({ page }) => {
@@ -209,12 +216,31 @@ test.describe('Autocomplete > Aria', { tag: '@all'}, () => {
 		await expect(option).toHaveAttribute('aria-selected', 'false');
 	});
 
-	test('Should mark the focused option as selected during keyboard navigation', async ({ page }) => {
+	test('Should mark the highlighted option as selected during keyboard navigation', async ({ page }) => {
 		const input = page.locator('#default');
 
 		await input.fill('app');
 		await page.keyboard.press('ArrowDown');
-		await expect(page.locator(':focus')).toHaveAttribute('aria-selected', 'true');
+		//focus stays in the input; the highlighted option carries aria-selected
+		await expect(input).toBeFocused();
+		await expect(page.locator('#default-listbox [aria-selected="true"]')).toHaveText('Apple');
+	});
+
+	test('Should point the combobox aria-activedescendant at the highlighted option', async ({ page }) => {
+		const input = page.locator('#default');
+		const option = page.locator('#default-listbox [role="option"]').first();
+
+		await input.fill('app');
+		//nothing highlighted yet
+		await expect(input).not.toHaveAttribute('aria-activedescendant');
+
+		await page.keyboard.press('ArrowDown');
+		const optionId = await option.getAttribute('id');
+		await expect(input).toHaveAttribute('aria-activedescendant', optionId);
+
+		//Escape clears the highlight and the pointer to it
+		await page.keyboard.press('Escape');
+		await expect(input).not.toHaveAttribute('aria-activedescendant');
 	});
 
 	test('Should set the placeholder on the input when the option is given', async ({ page }) => {

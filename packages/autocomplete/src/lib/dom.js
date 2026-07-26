@@ -111,13 +111,19 @@ export const setupListeners = state => {
     if (state.dom.input.form) state.dom.input.form.addEventListener('reset', state.handle.form.reset);
 };
 
-export const emptyList = state => state.dom.list.replaceChildren();
+//emptying the list also drops the input's pointer to the (now gone) active option
+export const emptyList = state => {
+    state.dom.list.replaceChildren();
+    state.dom.input.removeAttribute('aria-activedescendant');
+};
 
 export const renderOptions = state => state.options.map((option, index) => {
     const el = document.createElement('li');
     el.setAttribute('role', 'option');
     el.classList.add('autocomplete__option');
-    el.tabIndex = -1;
+    //stable id so the combobox can point aria-activedescendant at the highlighted
+    //option — focus stays in the input (APG combobox pattern), see renderActive
+    el.id = `${state.dom.list.id}-option-${index}`;
     //optionTemplate (falling back to displayTemplate) renders the option's content:
     //a DOM node is appended as-is, and a string returned by optionTemplate is rich
     //HTML set via innerHTML - authored as a template literal, sanitising
@@ -130,7 +136,6 @@ export const renderOptions = state => state.options.map((option, index) => {
     el.setAttribute('aria-posinset', index + 1);
     el.setAttribute('aria-setsize', state.options.length);
     el.setAttribute('aria-selected', 'false');
-    el.addEventListener('blur', state.handle.option.blur);
 
     return el;
 });
@@ -153,8 +158,28 @@ export const renderNoResults = state => {
 export const renderList = state => {
     const { open, options, dom } = state;
     dom.list.replaceChildren(...(options.length > 0 ? renderOptions(state) : [ renderNoResults(state) ]));
+    //a freshly rendered list starts with nothing highlighted (state.active is reset
+    //to -1 alongside any options change), so drop any stale active pointer
+    dom.input.removeAttribute('aria-activedescendant');
     if (open) showList(state);
     else hideList(state);
+};
+
+/*
+ * Reflect state.active (an index into options, -1 for "nothing highlighted, caret
+ * in the input") onto the DOM the APG combobox way: focus never leaves the input,
+ * so the active option is pointed to by aria-activedescendant and marked
+ * aria-selected, and scrolled into view since focus no longer does that for us.
+ */
+export const renderActive = state => {
+    const { dom, active, options } = state;
+    Array.from(dom.list.children).forEach(el => el.setAttribute('aria-selected', 'false'));
+    const el = active >= 0 && active < options.length ? dom.list.children[active] : null;
+    if (!el) return dom.input.removeAttribute('aria-activedescendant');
+    el.setAttribute('aria-selected', 'true');
+    dom.input.setAttribute('aria-activedescendant', el.id);
+    //jsdom/linkedom test doubles don't implement scrollIntoView
+    if (el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
 };
 
 export const hideList = state => {

@@ -13,7 +13,7 @@ import {
 } from './dom.js';
 import {
     inputFocus, inputBlur, inputChange,
-    optionClick, optionBlur, optionMouseDown,
+    optionClick, optionMouseDown,
     chipRemove, keydown, clear, resetForm
 } from './handle.js';
 import { fromValues, filterOptions, fromSelect, uid } from './utils.js';
@@ -112,6 +112,9 @@ export default ({ node, settings }) => {
         selected,
         selectedInitial,
         open: false,
+        //index of the highlighted option (-1 = caret in the input, nothing highlighted);
+        //reflected onto the DOM as aria-activedescendant / aria-selected by renderActive
+        active: -1,
         options: settings.list || [],
         handle: {
             container: { keydown: keydown(store) },
@@ -123,7 +126,6 @@ export default ({ node, settings }) => {
             },
             option: {
                 click: optionClick(store),
-                blur: optionBlur(store),
                 mousedown: optionMouseDown
             },
             chip: { remove: chipRemove(store) }
