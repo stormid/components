@@ -576,9 +576,10 @@
             line-height: 36px;
             color: currentColor
         }
-        .autocomplete__option:focus,
-        .autocomplete__option:focus-visible,
-        .autocomplete__option:hover {
+        /* keyboard highlight rides on the --active class (focus stays in the input,
+           APG combobox pattern); :hover covers the mouse */
+        .autocomplete__option:hover,
+        .autocomplete__option--active {
             background-color: #1d70b8;
             border-color: #1d70b8;
             color: white;
@@ -612,7 +613,7 @@
             color: hsl(0, 0%, 45%);
         }
         .autocomplete__option:hover .autocomplete__option-detail,
-        .autocomplete__option:focus .autocomplete__option-detail {
+        .autocomplete__option--active .autocomplete__option-detail {
             color: hsl(0, 0%, 90%);
         }
         .autocomplete__output {

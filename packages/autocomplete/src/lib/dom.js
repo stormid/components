@@ -173,10 +173,15 @@ export const renderList = state => {
  */
 export const renderActive = state => {
     const { dom, active, options } = state;
-    Array.from(dom.list.children).forEach(el => el.setAttribute('aria-selected', 'false'));
+    Array.from(dom.list.children).forEach(el => {
+        el.setAttribute('aria-selected', 'false');
+        el.classList.remove('autocomplete__option--active');
+    });
     const el = active >= 0 && active < options.length ? dom.list.children[active] : null;
     if (!el) return dom.input.removeAttribute('aria-activedescendant');
     el.setAttribute('aria-selected', 'true');
+    //a styling hook mirroring aria-selected, so CSS can target the highlight by class
+    el.classList.add('autocomplete__option--active');
     dom.input.setAttribute('aria-activedescendant', el.id);
     //jsdom/linkedom test doubles don't implement scrollIntoView
     if (el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });

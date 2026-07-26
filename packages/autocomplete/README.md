@@ -266,6 +266,7 @@ against your node builds this structure, whose classes are the styling hooks:
     <input class="autocomplete__input" role="combobox">
     <ul class="autocomplete__list" role="listbox" hidden>
         <li class="autocomplete__option" role="option">…</li>
+        <li class="autocomplete__option autocomplete__option--active" role="option" aria-selected="true">…</li>
         <li class="autocomplete__option autocomplete__option--empty">No results found</li>
     </ul>
     <div class="autocomplete__status" role="status"></div>
@@ -287,6 +288,7 @@ against your node builds this structure, whose classes are the styling hooks:
 | `autocomplete__input` | The combobox input (override via the `inputClassName` option). |
 | `autocomplete__list` | The `role="listbox"` popup; carries `hidden` while closed. |
 | `autocomplete__option` | Each option in the list. |
+| `autocomplete__option--active` | The highlighted option during keyboard navigation — the styling hook for the highlight (mirrors `aria-selected="true"`). Focus stays in the input, so `:focus` never lands on an option; target this class instead. |
 | `autocomplete__option--empty` | The non-selectable no-results item. |
 | `autocomplete__status` | Visually-hidden `role="status"` live region for announcements. |
 | `autocomplete__hint` | Visually-hidden minlength hint linked via `aria-describedby`. |

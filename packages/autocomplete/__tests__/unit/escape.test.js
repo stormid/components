@@ -41,10 +41,12 @@ describe('Autocomplete > Escape', () => {
         const option = node.querySelector('[role="option"]');
         assert.strictEqual(document.activeElement, input);
         assert.strictEqual(option.getAttribute('aria-selected'), 'true');
+        assert.strictEqual(option.classList.contains('autocomplete__option--active'), true);
         assert.strictEqual(input.getAttribute('aria-activedescendant'), option.id);
 
         key(input, 27);
         assert.strictEqual(option.getAttribute('aria-selected'), 'false');
+        assert.strictEqual(option.classList.contains('autocomplete__option--active'), false);
         assert.strictEqual(document.activeElement, input);
         assert.strictEqual(input.hasAttribute('aria-activedescendant'), false);
         assert.strictEqual(input.hasAttribute('aria-selected'), false);

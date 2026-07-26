@@ -221,9 +221,11 @@ test.describe('Autocomplete > Aria', { tag: '@all'}, () => {
 
 		await input.fill('app');
 		await page.keyboard.press('ArrowDown');
-		//focus stays in the input; the highlighted option carries aria-selected
+		//focus stays in the input; the highlighted option carries aria-selected and the
+		//--active styling-hook class
 		await expect(input).toBeFocused();
 		await expect(page.locator('#default-listbox [aria-selected="true"]')).toHaveText('Apple');
+		await expect(page.locator('#default-listbox .autocomplete__option--active')).toHaveText('Apple');
 	});
 
 	test('Should point the combobox aria-activedescendant at the highlighted option', async ({ page }) => {
