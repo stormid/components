@@ -29,7 +29,7 @@ autocomplete('.js-autocomplete', {
 ```
 
 Pass at least a `name` so the selection is submitted, and either a `search` function or a
-`values`/`list` array so there are options to choose from. Everything else has a sensible
+`values` array so there are options to choose from. Everything else has a sensible
 default — see [Options](#options).
 
 The visible input is display/search only; the submitted value is carried by a hidden
