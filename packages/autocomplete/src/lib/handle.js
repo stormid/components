@@ -190,10 +190,11 @@ export const inputBlur = store => event => {
     );
 };
 
-export const inputChange = store => {
+export const inputChange = (store, debounceDelay) => {
     //async mode: debounce the remote search so a request fires once the user
     //pauses, not on every keystroke. The timer lives in this closure across the
-    //instance's lifetime (inputChange runs once per instance at build time).
+    //instance's lifetime (inputChange runs once per instance at build time), so the
+    //delay is passed in rather than read from state — the store isn't populated yet.
     //controller aborts the in-flight request when a newer query supersedes it —
     //search receives the signal as a second argument to pass to fetch.
     let controller = null;
@@ -212,7 +213,7 @@ export const inputChange = store => {
                 console.warn(`Autocomplete search failed for query '${value}': ${error}`);
                 resolveAsyncResults(store, value, []);
             });
-    });
+    }, debounceDelay);
 
     return event => {
         const { settings, open, options, selected } = store.getState();

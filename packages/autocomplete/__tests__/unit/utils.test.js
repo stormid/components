@@ -1,12 +1,62 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { capResults, filterOptions, fromSelect, areEqual, isPrintableKeyCode, uid, fromValues, toValueArray, resolveMsg, escapeHtml, html } from '../../src/lib/utils.js';
+import { capResults, debounce, filterOptions, fromSelect, areEqual, isPrintableKeyCode, uid, fromValues, toValueArray, resolveMsg, escapeHtml, html } from '../../src/lib/utils.js';
 
 const makeSelect = html => {
     const select = document.createElement('select');
     select.innerHTML = html;
     return select;
 };
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+describe('Autocomplete > Utils > debounce', () => {
+
+    it('should collapse rapid calls into a single call after the delay', async () => {
+        let calls = 0;
+        const debounced = debounce(() => calls++, 20);
+        debounced();
+        debounced();
+        debounced();
+        await sleep(50);
+        assert.strictEqual(calls, 1);
+    });
+
+    it('should pass the latest arguments through to the debounced function', async () => {
+        let received = null;
+        const debounced = debounce(value => { received = value; }, 20);
+        debounced('ap');
+        debounced('apr');
+        await sleep(50);
+        assert.strictEqual(received, 'apr');
+    });
+
+    it('should wait the configured delay rather than the default', async () => {
+        let calls = 0;
+        const debounced = debounce(() => calls++, 20);
+        debounced();
+        await sleep(50);
+        //the 200ms default would not have fired yet
+        assert.strictEqual(calls, 1);
+    });
+
+    it('should coerce a string delay, as a data-* attribute supplies it', async () => {
+        let calls = 0;
+        const debounced = debounce(() => calls++, '20');
+        debounced();
+        await sleep(50);
+        assert.strictEqual(calls, 1);
+    });
+
+    it('should fall back to the default delay when given a non-numeric one', async () => {
+        let calls = 0;
+        const debounced = debounce(() => calls++, 'soon');
+        debounced();
+        //NaN would make setTimeout fire immediately; the 200ms fallback has not elapsed
+        await sleep(50);
+        assert.strictEqual(calls, 0);
+    });
+});
 
 describe('Autocomplete > Utils > capResults', () => {
 

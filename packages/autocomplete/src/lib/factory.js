@@ -157,7 +157,7 @@ export default ({ node, settings }) => {
             input: {
                 focus: inputFocus(store),
                 blur: inputBlur(store),
-                input: inputChange(store)
+                input: inputChange(store, settings.debounceDelay)
             },
             option: {
                 click: optionClick(store),

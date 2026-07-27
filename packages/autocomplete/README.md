@@ -46,6 +46,10 @@ from `search`. Requests are debounced (so the API is hit once the user pauses, n
 keystroke), a loading message is announced while a request is in flight, and stale
 responses from superseded queries are discarded.
 
+`debounceDelay` sets how long that pause is, in milliseconds (200 by default). Raise it for
+an expensive or rate-limited endpoint, lower it for a fast one. It applies to `async` mode
+only — a synchronous `search` runs on every keystroke.
+
 `search` receives the query and an `AbortSignal` as its second argument — pass it to
 `fetch` so an in-flight request is cancelled when a newer keystroke supersedes it. Map the
 API's response shape to the options your `displayTemplate`/`submissionTemplate` expect:
@@ -255,6 +259,7 @@ Options can be set during initialisation in an Object passed as the second argum
     maxResults: 6, //max results shown at once; extras are trimmed. 0 or Infinity shows all
     multiple: false, //accumulate selections as removable chips, each with its own hidden field
     async: false, //treat `search` as returning a Promise; requests are debounced
+    debounceDelay: 200, //ms an async search waits for a pause in typing before firing
     value: null, //initial selection value(s) restored on load (e.g. from data-value); array for multiple mode
     label: null, //display label(s) for the initial value(s); falls back to the value
     displayTemplate: option => option.value, //maps an option to the text shown in the input and chips

@@ -11,13 +11,20 @@ export const getSelection = selector => {
     return [];
 };
 
-export const debounce = (func, delay = 200) => {
+/*
+ * Debounce a function by a configurable delay (settings.debounceDelay, in ms).
+ * The delay is coerced because a data-* attribute always arrives as a string, and
+ * anything that isn't a usable number of milliseconds falls back to the default.
+ */
+export const debounce = (func, delay) => {
+    const num = Number(delay);
+    const delayTime = Number.isFinite(num) && num >= 0 ? num : 200;
     let debounceTimer;
     return function () {
         const context = this;
         const args = arguments;
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+        debounceTimer = setTimeout(() => func.apply(context, args), delayTime);
     };
 };
 

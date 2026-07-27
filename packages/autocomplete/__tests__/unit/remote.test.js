@@ -58,6 +58,18 @@ describe('Autocomplete > Remote', () => {
         assert.strictEqual(calls, 1);
     });
 
+    it('should honour a custom debounceDelay', async () => {
+        let calls = 0;
+        const { node } = init({ debounceDelay: 20, search: query => { calls++; return Promise.resolve(filter(query)); } });
+        const input = node.querySelector('input');
+        input.value = 'ap';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        //past the shortened delay but inside the 200ms default, which would not have fired
+        await wait(50);
+
+        assert.strictEqual(calls, 1);
+    });
+
     it('should not fire the search below minlength', async () => {
         let calls = 0;
         const { node } = init({ minlength: 3, search: () => { calls++; return Promise.resolve([]); } });

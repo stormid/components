@@ -8,6 +8,7 @@ export default {
     maxResults: 6,
     multiple: false,
     async: false,
+    debounceDelay: 200,
     value: null,
     label: null,
     displayTemplate(option) {
