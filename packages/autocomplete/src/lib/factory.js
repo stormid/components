@@ -1,6 +1,7 @@
 import { createStore } from './store.js';
 import defaults from './defaults.js';
 import {
+    broadcast,
     createInput,
     createOutput,
     createList,
@@ -20,7 +21,16 @@ import {
 import { fromValues, filterOptions, fromSelect, toValueArray, uid } from './utils.js';
 
 export default ({ node, settings }) => {
-    const store = createStore();
+    // Announce the list opening and closing from one place. Every path that opens or
+    // closes goes through store.update, so diffing `open` across the update catches
+    // them all — and only announces a real transition, unlike a broadcast at each
+    // site (clear/resetForm set open: false whether or not anything was open).
+    // Coerced to booleans so the first update, from the empty pre-init state, reads
+    // as false -> false and doesn't announce a close for a list that never opened.
+    const store = createStore((previous, next) => {
+        if (!!previous.open === !!next.open) return;
+        broadcast(store, next.open ? 'open' : 'close');
+    });
 
     //single mode carries one selection (or null); multiple accumulates an array
     let selected = settings.multiple ? [] : null;

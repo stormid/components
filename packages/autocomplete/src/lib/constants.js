@@ -1,11 +1,14 @@
 /* node:coverage disable */
 //dispatched from the component node (bubbling) so consumers can react to
-//selection changes without holding the instance — one event name per action
-//(confirm/remove/clear), which is also echoed on the event's detail.action
+//selection changes and list visibility without holding the instance — one event
+//name per action (confirm/remove/clear/open/close), which is also echoed on the
+//event's detail.action
 export const EVENTS = {
     confirm: 'autocomplete:confirm',
     remove: 'autocomplete:remove',
-    clear: 'autocomplete:clear'
+    clear: 'autocomplete:clear',
+    open: 'autocomplete:open',
+    close: 'autocomplete:close'
 };
 
 export const KEYCODES = {

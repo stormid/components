@@ -38,4 +38,29 @@ describe('Autocomplete > Store', () => {
         assert.strictEqual(effect, true);
         assert.deepStrictEqual(received, { open: false });
     });
+
+    it('should call the update hook with the previous and the new state', () => {
+        const seen = [];
+        const hooked = createStore((previous, next) => seen.push([ previous, next ]));
+        hooked.update({ open: true });
+        hooked.update({ open: false });
+        assert.deepStrictEqual(seen, [
+            [ {}, { open: true } ],
+            [ { open: true }, { open: false } ]
+        ]);
+    });
+
+    it('should call the update hook after the effects, so it observes a settled state', () => {
+        const order = [];
+        const hooked = createStore(() => order.push('hook'));
+        hooked.update({ open: true }, [ () => order.push('effect') ]);
+        assert.deepStrictEqual(order, [ 'effect', 'hook' ]);
+    });
+
+    it('should call the update hook even when no effects are supplied', () => {
+        let calls = 0;
+        const hooked = createStore(() => calls++);
+        hooked.update({ open: true });
+        assert.strictEqual(calls, 1);
+    });
 });

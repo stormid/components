@@ -373,6 +373,16 @@ holding the instance reference. Each carries `detail: { action, option, selected
 | `autocomplete:confirm` | An option is selected. |
 | `autocomplete:remove` | A selection is removed (multiple mode). |
 | `autocomplete:clear` | `clear()` is called. |
+| `autocomplete:open` | The suggestion list opens. |
+| `autocomplete:close` | The suggestion list closes. |
+
+`open` and `close` fire only on a real change of visibility — never twice for a list that
+is already showing, and never for a close that closed nothing (`clear()` on an untouched
+field, say). `detail.option` is `null` for both, since no option is involved; read
+`detail.getState()` for the current `options`.
+
+Confirming an option closes the list as part of the commit, so `autocomplete:close` fires
+before `autocomplete:confirm`. Both run after the DOM has settled.
 
 ## Tests
 
