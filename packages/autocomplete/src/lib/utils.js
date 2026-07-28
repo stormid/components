@@ -117,9 +117,8 @@ export const uid = (() => {
 })();
 
 /*
- * Escapes a string for safe interpolation into an HTML template literal, so an
- * optionTemplate that returns HTML (rendered via innerHTML) can't let untrusted 
- * values inject markup. 
+ * Escapes a string for safe interpolation into an HTML template literal, so untrusted
+ * values can't inject markup. Applied by the html tag below to every interpolation.
  *
  * @param value [String]
  *
@@ -132,14 +131,22 @@ export const escapeHtml = value => String(value ?? '')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
+class Html {
+    constructor(value) {
+        this.value = value;
+    }
+}
+
+export const isHtml = value => value instanceof Html;
+
 /*
- * Tagged template for building an optionTemplate's HTML string: the static markup
- * (the template's own tags) is left untouched, while every interpolated ${value} is
- * run through escapeHtml. The author writes html`<span>${option.label}</span>` and any
- * untrusted values can't inject markup.
+ * Tagged template for an optionTemplate's markup: the template's own tags are left
+ * alone, every interpolated ${value} is escaped. Returns branded Html rather than a
+ * string, and only this tag mints one — so a hand-built string can't reach innerHTML
+ * by mistake (see renderOptions), it renders as text instead.
  */
 export const html = (strings, ...values) =>
-    strings.reduce((out, string, i) => `${out}${string}${i < values.length ? escapeHtml(values[i]) : ''}`, '');
+    new Html(strings.reduce((out, string, i) => `${out}${string}${i < values.length ? escapeHtml(values[i]) : ''}`, ''));
 
 export const isPrintableKeyCode = keyCode => (
     (keyCode > 47 && keyCode < 58) || // number keys

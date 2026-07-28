@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { capResults, debounce, filterOptions, fromSelect, areEqual, isPrintableKeyCode, uid, fromValues, toValueArray, resolveMsg, escapeHtml, html } from '../../src/lib/utils.js';
+import { capResults, debounce, filterOptions, fromSelect, areEqual, isPrintableKeyCode, uid, fromValues, toValueArray, resolveMsg, escapeHtml, html, isHtml } from '../../src/lib/utils.js';
 
 const makeSelect = html => {
     const select = document.createElement('select');
@@ -249,19 +249,42 @@ describe('Autocomplete > Utils > html', () => {
 
     it('should leave the static markup untouched and escape interpolated values', () => {
         assert.strictEqual(
-            html`<span>${'Tom & Jerry'}</span>`,
+            html`<span>${'Tom & Jerry'}</span>`.value,
             '<span>Tom &amp; Jerry</span>'
         );
     });
 
     it('should escape an interpolated value that carries markup so it renders as text', () => {
         const el = document.createElement('div');
-        el.innerHTML = html`<b>${'<img src=x onerror=alert(1)>'}</b>`;
+        el.innerHTML = html`<b>${'<img src=x onerror=alert(1)>'}</b>`.value;
         assert.strictEqual(el.querySelector('img'), null);
         assert.strictEqual(el.querySelector('b').textContent, '<img src=x onerror=alert(1)>');
     });
 
     it('should handle a template with no interpolations', () => {
-        assert.strictEqual(html`<hr>`, '<hr>');
+        assert.strictEqual(html`<hr>`.value, '<hr>');
+    });
+
+    it('should brand its result so it can be told apart from an ordinary string', () => {
+        assert.strictEqual(isHtml(html`<hr>`), true);
+    });
+});
+
+describe('Autocomplete > Utils > isHtml', () => {
+
+    it('should reject a plain string, however it was built', () => {
+        assert.strictEqual(isHtml('<hr>'), false);
+        //escaping by hand doesn't mint trusted markup — only the html tag does
+        assert.strictEqual(isHtml(`<b>${escapeHtml('&')}</b>`), false);
+    });
+
+    it('should reject a look-alike object carrying a value property', () => {
+        assert.strictEqual(isHtml({ value: '<img src=x onerror=alert(1)>' }), false);
+    });
+
+    it('should reject the empty cases', () => {
+        assert.strictEqual(isHtml(null), false);
+        assert.strictEqual(isHtml(undefined), false);
+        assert.strictEqual(isHtml(''), false);
     });
 });

@@ -1,6 +1,7 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { host, mount, type } from './helpers.js';
+import { html } from '../../src/lib/utils.js';
 
 const values = [
     { value: 'LHR', label: 'Heathrow', detail: 'London, United Kingdom' },
@@ -31,15 +32,52 @@ describe('Autocomplete > Option template', () => {
         assert.strictEqual(node.querySelector('.autocomplete__option').textContent, 'Heathrow — London, United Kingdom');
     });
 
-    it('should render an HTML string returned by optionTemplate as markup', () => {
+    it('should render markup built with the html tag returned by optionTemplate', () => {
         const { node } = init({
             displayTemplate: option => option.label,
-            optionTemplate: option => `<span class="title">${option.label}</span><small class="detail">${option.detail}</small>`
+            optionTemplate: option => html`<span class="title">${option.label}</span><small class="detail">${option.detail}</small>`
         });
         type(node.querySelector('input'), 'hea');
         const option = node.querySelector('.autocomplete__option');
         assert.strictEqual(option.querySelector('.title').textContent, 'Heathrow');
         assert.strictEqual(option.querySelector('.detail').textContent, 'London, United Kingdom');
+    });
+
+    it('should escape an interpolated value carrying markup in an html template', () => {
+        const hostile = [ { value: 'x', label: '<img src=x onerror=alert(1)>', detail: 'Nowhere' } ];
+        const { node } = init({
+            search: () => hostile,
+            displayTemplate: option => option.label,
+            optionTemplate: option => html`<span class="title">${option.label}</span>`
+        });
+        type(node.querySelector('input'), 'a');
+        const option = node.querySelector('.autocomplete__option');
+        assert.strictEqual(option.querySelector('img'), null);
+        assert.strictEqual(option.querySelector('.title').textContent, '<img src=x onerror=alert(1)>');
+    });
+
+    it('should render a hand-built markup string as text rather than markup', () => {
+        const { node } = init({
+            displayTemplate: option => option.label,
+            //not built with the html tag, so it is not trusted as markup — an unescaped
+            //interpolation here would otherwise be an XSS surface on the option data
+            optionTemplate: option => `<span class="title">${option.label}</span>`
+        });
+        type(node.querySelector('input'), 'hea');
+        const option = node.querySelector('.autocomplete__option');
+        assert.strictEqual(option.querySelector('.title'), null);
+        assert.strictEqual(option.textContent, '<span class="title">Heathrow</span>');
+    });
+
+    it('should not execute markup smuggled through an unescaped hand-built string', () => {
+        const hostile = [ { value: 'x', label: '<img src=x onerror=alert(1)>', detail: 'Nowhere' } ];
+        const { node } = init({
+            search: () => hostile,
+            displayTemplate: option => option.label,
+            optionTemplate: option => `<span>${option.label}</span>`
+        });
+        type(node.querySelector('input'), 'a');
+        assert.strictEqual(node.querySelector('.autocomplete__option img'), null);
     });
 
     it('should append a DOM node returned by optionTemplate for richer markup', () => {

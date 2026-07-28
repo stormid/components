@@ -2,9 +2,10 @@ import defaults from './lib/defaults.js';
 import factory from './lib/factory.js';
 import { getSelection } from './lib/utils.js';
 
-//re-exported for building an optionTemplate that returns an HTML string (see
-//renderOptions): `html` is a tagged template that escapes its interpolations
-//automatically; `escapeHtml` is the underlying escaper for hand-built strings
+//re-exported for building an optionTemplate that renders markup (see renderOptions):
+//`html` is a tagged template that escapes its interpolations automatically, and is the
+//only way to produce something the renderer treats as markup rather than as text.
+//`escapeHtml` is the underlying escaper, exported for escaping values by hand.
 export { html, escapeHtml } from './lib/utils.js';
 
 /*

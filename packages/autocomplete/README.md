@@ -157,14 +157,13 @@ Restore multiple selections with `<select multiple>` or the `value` array option
 `displayTemplate` maps an option to the single line of text shown in the input, chips and
 list. To show richer content in the **list only** — for example a second detail line —
 supply an `optionTemplate`. It renders each list option (falling back to `displayTemplate`
-when omitted) and may return either an HTML string or a DOM node, so the list can carry
-markup the display label and submitted value don't.
+when omitted) and may return markup built with the exported **`html`** tag or a DOM node,
+so the list can carry markup the display label and submitted value don't.
 
-The string is set as the option's `innerHTML`, so interpolated values must be escaped —
-otherwise option data from an API could inject markup. The escaping happens at the
-interpolation points, not on the whole string (the string's own tags are intentional
-markup), so use the exported **`html`** tagged template: it leaves your tags untouched and
-escapes every `${…}` value automatically — no manual escaping in the template:
+`html` is a tagged template that leaves your own tags untouched and escapes every `${…}`
+value — the escaping happens at the interpolation points, not on the whole string, since
+the string's own tags are intentional markup. Option data from an API therefore can't
+inject markup, with no manual escaping in the template:
 
 ```js
 import autocomplete, { html } from '@stormid/autocomplete';
@@ -182,8 +181,17 @@ autocomplete('.js-autocomplete', {
 });
 ```
 
-If you build the HTML string some other way, the lower-level `escapeHtml` is also exported
-so you can escape values by hand (``` `<span>${escapeHtml(option.label)}</span>` ```).
+Only what the `html` tag returns is treated as markup. It hands back a branded value
+rather than a plain string, and that brand is what the renderer checks — so an ordinary
+string is always set as `textContent`, however it was built. A template that assembles
+tags by hand renders them as visible text:
+
+```js
+optionTemplate: option => `<span>${option.label}</span>`
+//                       ^ shows the literal text "<span>Heathrow</span>"
+```
+
+Forgetting to escape is then a rendering bug that can be seen immediately, rather than an XSS hole on whatever the option data contains. Wrap it in `html` and it renders as markup, escaped.
 
 Alternatively return a DOM node you build — its `textContent` is set safely, so it needs
 no escaping and is a good fit when the markup is dynamic or the values are wholly untrusted:
@@ -200,8 +208,12 @@ optionTemplate(option){
 }
 ```
 
-Only a string returned by `optionTemplate` is treated as HTML; the `displayTemplate`
-fallback is always rendered as plain text.
+So an option's content becomes markup in exactly two cases: a DOM node, or `html` output.
+Everything else — including the `displayTemplate` fallback — is rendered as plain text.
+
+The lower-level `escapeHtml` is still exported for escaping values by hand, but it isn't
+needed inside an `html` template (which escapes for you) and it can't make a plain string
+render as markup.
 
 ### Submitting on confirm (search box)
 
@@ -297,7 +309,7 @@ Options can be set during initialisation in an Object passed as the second argum
     value: null, //initial selection value(s) restored on load (e.g. from data-value); array for multiple mode
     label: null, //display label(s) for the initial value(s); falls back to the value
     displayTemplate: option => option.value, //maps an option to the text shown in the input and chips
-    optionTemplate: false, //renders each list option (falls back to displayTemplate); a returned string is set as HTML (build it with the exported `html` tag so values are escaped), a DOM node is appended as-is
+    optionTemplate: false, //renders each list option (falls back to displayTemplate); markup from the exported `html` tag is set as HTML and a DOM node appended as-is, any other string is rendered as text
     submissionTemplate: option => option.value, //maps an option to its submitted value; also identifies a selection
     allowFreeText: false, //single mode: submit whatever is typed when no option is selected
     submitOnConfirm: false, //confirming an option (click/Enter) — or Enter on the raw query — submits the enclosing form; for search boxes

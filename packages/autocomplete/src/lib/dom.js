@@ -1,4 +1,4 @@
-import { resolveMsg } from './utils.js';
+import { isHtml, resolveMsg } from './utils.js';
 import { EVENTS } from './constants.js';
 
 /*
@@ -169,14 +169,12 @@ export const renderOptions = state => state.options.map((option, index) => {
     //stable id so the combobox can point aria-activedescendant at the highlighted
     //option — focus stays in the input (APG combobox pattern), see renderActive
     el.id = `${state.dom.list.id}-option-${index}`;
-    //optionTemplate (falling back to displayTemplate) renders the option's content:
-    //a DOM node is appended as-is, and a string returned by optionTemplate is rich
-    //HTML set via innerHTML - authored as a template literal, sanitising
-    //untrusted values with the exported escapeHtml. The displayTemplate fallback is
-    //always plain text, set safely as textContent.
+    //optionTemplate (falling back to displayTemplate) renders the option's content.
+    //Only a DOM node or `html` output becomes markup; any other string is set as text,
+    //so a hand-built template renders visibly rather than opening an XSS hole.
     const content = (state.settings.optionTemplate || state.settings.displayTemplate)(option);
     if (content && content.nodeType) el.appendChild(content);
-    else if (state.settings.optionTemplate) el.innerHTML = content;
+    else if (isHtml(content)) el.innerHTML = content.value;
     else el.textContent = content;
     el.setAttribute('aria-posinset', index + 1);
     el.setAttribute('aria-setsize', state.options.length);

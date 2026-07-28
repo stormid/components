@@ -51,8 +51,8 @@ window.addEventListener('DOMContentLoaded', () => {
         displayTemplate: option => option.label,
         //custom option template as a template literal: each list row shows the
         //country name plus its code on a second line. The `html` tag escapes each
-        //interpolated (untrusted) API value automatically, so the string is safe to
-        //set as the option's innerHTML.
+        //interpolated (untrusted) API value automatically and brands the result as
+        //markup — without it the tags would render as visible text, not innerHTML.
         optionTemplate: option => html`
             <span class="autocomplete__option-title">${option.label}</span>
             <small class="autocomplete__option-detail">${option.value}</small>
