@@ -13,31 +13,29 @@ export const broadcast = (store, action, option = null) => {
     }));
 };
 
-//pass-through attributes for the generated input, each written only when set. Named
-//rather than an open attribute bag so the combobox's own role/aria wiring can't be
-//clobbered, and left off by default so enhancing a server-rendered input keeps
-//whatever it was authored with.
+//pass-through attributes for the generated input, named rather than an open bag so the
+//combobox's own role/aria wiring can't be overwritten. Written only when set, so
+//enhancing a server-rendered input keeps whatever it was authored with.
 const OPTIONAL_INPUT_ATTRIBUTES = [ 'inputmode', 'autocorrect', 'autocapitalize' ];
+
+//a data-* attribute arrives as a string, so "false" must not be read as the truthy
+//string it technically is
+const isFalse = value => value === false || value === 'false';
 
 const applyInputAttributes = (input, settings) => {
     OPTIONAL_INPUT_ATTRIBUTES.forEach(attribute => {
         const value = settings[attribute];
         if (value !== null && value !== undefined && value !== '') input.setAttribute(attribute, value);
     });
-    //spellcheck is always written, and defaults to off: the value is normally chosen
-    //from the list rather than typed as prose, so there's little to check — and
-    //Chrome/Edge enhanced spellchecking sends the contents of text fields to a remote
-    //service, which an autocomplete carrying a name or account reference shouldn't do.
-    //It's an enumerated attribute, not a boolean, so it has to carry the string
-    //"false"; a data-* attribute arrives as a string, so "false" can't be left truthy.
-    input.setAttribute('spellcheck', String(settings.spellcheck !== false && settings.spellcheck !== 'false'));
+    //always written (defaulting to off — see the README on why), and enumerated rather
+    //than boolean, so it has to carry the string "false" to switch checking off
+    input.setAttribute('spellcheck', String(!isFalse(settings.spellcheck)));
 };
 
 export const createInput = ({ node, settings, id, listId, describedby, input }) => {
-    //progressive enhancement: when a server-rendered <input> is passed (the no-JS
-    //fallback — a real, submittable field before this runs), decorate it in place;
-    //otherwise build the combobox input from scratch. Either way the combobox ARIA
-    //wiring below is applied identically.
+    //progressive enhancement: a server-rendered <input> (the no-JS fallback) is
+    //decorated in place, otherwise the combobox input is built from scratch. The ARIA
+    //wiring below applies identically either way.
     input = input || document.createElement('input');
     input.setAttribute('id', id);
     node.removeAttribute('id');
@@ -51,11 +49,10 @@ export const createInput = ({ node, settings, id, listId, describedby, input }) 
     if (settings.placeholder) input.setAttribute('placeholder', settings.placeholder);
     applyInputAttributes(input, settings);
     input.classList.add(settings.inputClassName);
-    //the visible input is display/search only in every mode; the form value is
-    //carried by a hidden field (single mode) or the chips' hidden inputs (multiple).
-    //An enhanced fallback input carried the value under `name` pre-JS, so drop that
-    //name (adopted onto settings.name in the factory) to leave the hidden field as the
-    //single submission source — otherwise the visible input would submit alongside it.
+    //the visible input is display/search only; the form value is carried by a hidden
+    //field (single mode) or the chips' hidden inputs (multiple). An enhanced fallback
+    //input submitted under `name` pre-JS, so drop that name (the factory has adopted it
+    //onto settings.name) or the visible input would submit alongside the hidden one.
     input.removeAttribute('name');
     //a freshly built input still needs adding; an enhanced one is already in place
     if (!input.parentNode) node.appendChild(input);
@@ -64,10 +61,9 @@ export const createInput = ({ node, settings, id, listId, describedby, input }) 
 };
 
 /*
- * Visually-hidden hint linked to the combobox via aria-describedby, so the
- * minlength requirement (hintMsg) is announced when the input gains focus —
- * before typing — rather than reactively from the live region. Only created
- * when minlength makes the requirement meaningful (see factory).
+ * Visually-hidden hint linked via aria-describedby, so the minlength requirement
+ * (hintMsg) is announced when the input gains focus — before typing — rather than
+ * reactively from the live region. Only created when minlength makes it meaningful.
  */
 export const createHint = ({ node, id, settings }) => {
     const hint = document.createElement('span');
@@ -80,10 +76,10 @@ export const createHint = ({ node, id, settings }) => {
 };
 
 /*
- * Multiple mode: a visually-hidden summary of the current selection, linked to the
- * combobox via aria-describedby. The chips live in a separate list that the input
- * isn't associated with, so without this a screen reader announces only the (empty)
- * input on focus — never what's already selected. Kept in sync by syncSelectionSummary.
+ * Multiple mode: a visually-hidden summary of the current selection, linked via
+ * aria-describedby. The chips live in a separate list the input isn't associated with,
+ * so without this refocusing announces only the (empty) input, never what's chosen.
+ * Kept in sync by syncSelectionSummary.
  */
 export const createSelectionSummary = ({ node, id }) => {
     const summary = document.createElement('span');
@@ -209,10 +205,10 @@ export const renderList = state => {
 };
 
 /*
- * Reflect state.active (an index into options, -1 for "nothing highlighted, caret
- * in the input") onto the DOM the APG combobox way: focus never leaves the input,
- * so the active option is pointed to by aria-activedescendant and marked
- * aria-selected, and scrolled into view since focus no longer does that for us.
+ * Reflect state.active (an index into options, -1 for "caret in the input, nothing
+ * highlighted") onto the DOM the APG combobox way: focus never leaves the input, so the
+ * active option is pointed at by aria-activedescendant, marked aria-selected, and
+ * scrolled into view since focus no longer does that for us.
  */
 export const renderActive = state => {
     const { dom, active, options } = state;
@@ -251,12 +247,10 @@ export const renderStatus = state => {
 export const clearStatus = state => state.dom.status.textContent = '';
 
 /*
- * Announce a selection being added or removed (multiple mode) in the live region.
- * An effect factory rather than a plain effect, since it needs the option involved —
- * a removed one is already out of state by the time the effects run. Without this a
- * screen reader user gets no feedback for the change: the only visible cue is a chip
- * appearing or disappearing, the list has closed, and the selection summary is a
- * description, announced on focus rather than when the selection changes.
+ * Announce a selection being added or removed (multiple mode), whose only other cue is
+ * a chip appearing or disappearing. An effect factory rather than a plain effect,
+ * since it needs the option involved — a removed one is already out of state by the
+ * time the effects run.
  */
 export const announceSelectionChange = (msg, option) => state => {
     state.dom.status.textContent = resolveMsg(msg, state.settings.displayTemplate(option));
@@ -265,10 +259,9 @@ export const announceSelectionChange = (msg, option) => state => {
 export const showLoading = state => state.dom.status.textContent = state.settings.loadingMsg;
 
 /*
- * Keep the hidden field's form value in step with the current state: the
- * selection's submissionTemplate when something is selected, otherwise the raw typed
- * text if free text is allowed (else empty). A no-op in multiple mode and in
- * single mode with no name (where no hidden field exists).
+ * Keep the hidden field's form value in step with state: the selection's
+ * submissionTemplate when something is selected, otherwise the typed text if free text
+ * is allowed (else empty). A no-op wherever no hidden field exists.
  */
 export const syncHiddenValue = state => {
     if (!state.dom.hidden) return;
@@ -326,9 +319,9 @@ export const renderChips = state => state.selected.map(option => {
 });
 
 /*
- * Keep the visually-hidden selection summary (see createSelectionSummary) in step
- * with the chips, so the combobox's aria-describedby announces the current
- * selection on focus. Empty when nothing is selected, so nothing is read out.
+ * Keep the visually-hidden selection summary (see createSelectionSummary) in step with
+ * the chips, so aria-describedby announces the current selection on focus. Empty when
+ * nothing is selected, so nothing is read out.
  */
 export const syncSelectionSummary = state => {
     const { selectionSummary } = state.dom;

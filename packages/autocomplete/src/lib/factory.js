@@ -21,12 +21,10 @@ import {
 import { fromValues, filterOptions, fromSelect, toValueArray, uid } from './utils.js';
 
 export default ({ node, settings }) => {
-    // Announce the list opening and closing from one place. Every path that opens or
-    // closes goes through store.update, so diffing `open` across the update catches
-    // them all — and only announces a real transition, unlike a broadcast at each
-    // site (clear/resetForm set open: false whether or not anything was open).
-    // Coerced to booleans so the first update, from the empty pre-init state, reads
-    // as false -> false and doesn't announce a close for a list that never opened.
+    // Announce open/close from one place: every path that opens or closes goes through
+    // store.update, and diffing catches only real transitions (clear/resetForm set
+    // open: false whether or not anything was open). Coerced so the first update, from
+    // the empty pre-init state, reads as false -> false, not a close.
     const store = createStore((previous, next) => {
         if (!!previous.open === !!next.open) return;
         broadcast(store, next.open ? 'open' : 'close');
@@ -49,18 +47,15 @@ export default ({ node, settings }) => {
         selected = settings.multiple ? selectSource.selected : (selectSource.selected[selectSource.selected.length - 1] || null);
     }
 
-    //progressive enhancement: when the node already contains a server-rendered <input>
-    //(a real, submittable field that works with JS off — the no-JS fallback for a
-    //search/free-text control), enhance that element in place rather than build a fresh
-    //one. Adopt its name (moved onto the hidden value field by createInput) and any
-    //restored value, then let the value seed below treat it like a data-value selection.
+    //progressive enhancement: a server-rendered <input> (the no-JS fallback for a
+    //search/free-text control) is enhanced in place rather than replaced. Its name moves
+    //onto the hidden value field, and its value seeds the selection below.
     const preInput = !select && node.querySelector('input');
     if (preInput) {
         settings.name = settings.name || preInput.getAttribute('name');
-        //single mode restores the input's value as the initial selection (like data-value).
-        //Multiple mode can't carry several values in one field, so it degrades to a plain
-        //search input — its server value is left as ordinary typed text rather than being
-        //turned into a lone chip; multi-value restore is <select multiple> / the value option.
+        //single mode restores the value as the initial selection, like data-value. One
+        //field can't carry several values, so multiple mode leaves it as typed text —
+        //multi-value restore is <select multiple> or the value option.
         if (!settings.multiple && preInput.value && (settings.value === undefined || settings.value === null)) settings.value = preInput.value;
     }
 
@@ -69,19 +64,18 @@ export default ({ node, settings }) => {
     const id = (select && select.getAttribute('id')) || (preInput && preInput.getAttribute('id')) || node.getAttribute('id') || settings.id || uid('autocomplete');
     const listId = `${id}-listbox`;
     // The listbox takes its accessible name from the field's <label>; pointing it at the
-    // input would resolve the name to the typed value instead. Give the label an id if it
-    // has none, and fall back to the input only when there's no associated label.
+    // input would resolve the name to the typed value instead. Falls back to the input
+    // only when there's no associated label.
     const label = document.querySelector(`label[for="${id}"]`);
     if (label && !label.id) label.setAttribute('id', `${id}-label`);
     const listLabelledby = label ? label.id : id;
-    // A minlength above one carries a "type N or more characters" requirement, so
-    // expose it as a visually-hidden hint linked to the input via aria-describedby.
+    // A minlength above one carries a "type N or more characters" requirement, so expose
+    // it as a visually-hidden hint.
     const usesHint = Number(settings.minlength) > 1;
     const hintId = `${id}-hint`;
-    // Multiple mode: a visually-hidden summary of the current selection, also linked
-    // via aria-describedby, so refocusing the input announces what's already chosen.
+    // Multiple mode: a visually-hidden summary, so refocusing announces what's chosen.
     const selectionId = `${id}-selection`;
-    // aria-describedby may carry both ids (space-separated), whichever apply.
+    // aria-describedby carries whichever of the two apply, space-separated.
     const describedby = [ usesHint ? hintId : null, settings.multiple ? selectionId : null ].filter(Boolean).join(' ') || null;
 
     if (select) select.remove();
@@ -92,21 +86,17 @@ export default ({ node, settings }) => {
     const usesHiddenValue = !settings.multiple && !!settings.name;
 
     // Normalise the search function up front so handlers can always call settings.search.
-    // With no explicit search, build one from `values`: normalise the entries (strings
-    // or { value, label } objects) to the option shape and match with the object-aware
-    // filterOptions, so the default option.value templates render and submit correctly.
+    // With no explicit search, build one from `values` — entries normalised to the
+    // { value, label } option shape so the default templates render and submit correctly.
     settings.search = settings.search || filterOptions(fromValues(settings.values), settings.displayTemplate);
 
-    // Seed an initial selection from a server-rendered value/label pair (e.g. a
-    // restored or pre-filled form): data-value/data-label on the node, or value/
-    // label options. Multiple mode accepts arrays (one chip per pair) — as an init
-    // option array, or a JSON-array string in data-value/data-label so several
-    // selections can be server-rendered declaratively (see toValueArray). The setValue
-    // (single) / syncOutput (multiple) seed below then shows the label(s) via the
-    // displayTemplate and submits the value(s) via the hidden field(s), so a restored
-    // value behaves exactly like a user-picked one. Uses the { value, label } option
-    // shape; a <select>'s own pre-selected options take precedence, and a missing
-    // label falls back to the value for display.
+    // Seed an initial selection from a server-rendered value/label pair: data-value /
+    // data-label on the node, or the value/label options. Multiple mode accepts arrays
+    // (one chip per pair), including a JSON-array string so several selections can be
+    // server-rendered declaratively (see toValueArray). The seed below then displays and
+    // submits them, so a restored value behaves exactly like a user-picked one. A
+    // <select>'s own pre-selected options take precedence; a missing label falls back
+    // to the value.
     if (settings.value !== undefined && settings.value !== null && settings.value !== '') {
         if (settings.multiple && !selected.length) {
             const values = toValueArray(settings.value);

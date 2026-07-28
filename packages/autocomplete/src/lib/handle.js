@@ -36,11 +36,10 @@ const submitForm = input => {
 };
 
 /*
- * Commit a selection and close the list. Single mode replaces the selection and
- * writes it to the input; multiple mode toggles it into the chip list and clears
- * the search input. Focus stays in the input throughout (activedescendant model),
- * so refocus is only a safety net for the click path — a mousedown that slipped
- * through preventDefault — keeping the tested "focus back on the input" guarantee.
+ * Commit a selection and close the list. Single mode replaces the selection and writes
+ * it to the input; multiple mode toggles it into the chip list and clears the search
+ * input. Focus stays in the input throughout (activedescendant model), so refocus is
+ * only a safety net for a mousedown that slipped through preventDefault.
  */
 const commitSelection = (store, option, refocus = false) => {
     if (!option) return;
@@ -59,9 +58,8 @@ const commitSelection = (store, option, refocus = false) => {
         store.update({ ...state, selected: option, options: [], open: false, active: -1 }, effects);
     }
     broadcast(store, 'confirm', option);
-    //an active confirmation (click / Enter, i.e. refocus) submits the form
-    //when submitOnConfirm is set; a passive Tab/blur commit (refocus false) does not,
-    //so tabbing past the field never navigates
+    //only an active confirmation (click / Enter, i.e. refocus) submits; a passive
+    //Tab/blur commit doesn't, so tabbing past the field never navigates
     if (refocus && state.settings.submitOnConfirm) submitForm(state.dom.input);
 };
 
@@ -178,10 +176,9 @@ export const inputBlur = store => event => {
     //a blur into the list is never a real exit — leave the click handler to commit
     if (dom.list.contains(document.activeElement) || dom.list.contains(event.relatedTarget)) return;
     if (!open) return;
-    //confirmOnBlur: an arrowed-to option is committed as focus leaves the field (a
-    //click elsewhere or programmatic blur; Tab is committed up-front by handleBlur,
-    //which closes first so this sees open=false and skips). Focus never sat on the
-    //option — the active index is what carries the highlight in this model.
+    //confirmOnBlur: an arrowed-to option is committed as focus leaves the field. Tab is
+    //committed up-front by handleBlur, which closes first, so this sees open=false and
+    //skips — leaving a click elsewhere or a programmatic blur.
     if (settings.confirmOnBlur && active >= 0) return commitSelection(store, options[active]);
     if (settings.clearOnBlur) dom.input.value = '';
     const dropSelection = settings.clearOnBlur && !settings.multiple;
@@ -192,12 +189,11 @@ export const inputBlur = store => event => {
 };
 
 export const inputChange = (store, debounceDelay) => {
-    //async mode: debounce the remote search so a request fires once the user
-    //pauses, not on every keystroke. The timer lives in this closure across the
-    //instance's lifetime (inputChange runs once per instance at build time), so the
-    //delay is passed in rather than read from state — the store isn't populated yet.
-    //controller aborts the in-flight request when a newer query supersedes it —
-    //search receives the signal as a second argument to pass to fetch.
+    //async mode: debounce the remote search so a request fires once the user pauses,
+    //not on every keystroke. The timer lives in this closure for the instance's
+    //lifetime (inputChange runs once, at build time) — hence the delay being passed in
+    //rather than read from a store that isn't populated yet. controller aborts the
+    //in-flight request when a newer query supersedes it.
     let controller = null;
     const runAsyncSearch = debounce(value => {
         const state = store.getState();
@@ -263,10 +259,9 @@ export const clear = store => () => {
 
 /*
  * Restore the initial selection when the enclosing form is reset, so an enhanced
- * control returns to its default like a native <select> — rather than leaving stale
- * chips/values on screen while the browser blanks the generated fields. The reset
- * event fires *before* the browser resets the controls, so the restore is deferred to
- * a microtask that runs afterwards and reasserts the visible input / hidden field(s).
+ * control returns to its default like the native <select> it replaces. The reset event
+ * fires *before* the browser blanks the controls, so the restore is deferred to a
+ * microtask that runs afterwards and reasserts the input / hidden field(s).
  */
 export const resetForm = store => () => queueMicrotask(() => {
     const state = store.getState();
