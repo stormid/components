@@ -44,5 +44,11 @@ export default {
     },
     selectionMsg(labels) {
         return labels.length ? `${labels.join(', ')} selected` : '';
+    },
+    selectionAddedMsg(label) {
+        return `${label} added`;
+    },
+    selectionRemovedMsg(label) {
+        return `${label} removed`;
     }
 };

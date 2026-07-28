@@ -1,4 +1,4 @@
-import { emptyList, renderList, renderStatus, renderActive, clearStatus, showList, hideList, showLoading, setValue, clearInput, focusInput, syncOutput, syncHiddenValue, broadcast } from './dom.js';
+import { emptyList, renderList, renderStatus, renderActive, clearStatus, announceSelectionChange, showList, hideList, showLoading, setValue, clearInput, focusInput, syncOutput, syncHiddenValue, broadcast } from './dom.js';
 import { areEqual, capResults, debounce } from './utils.js';
 import { KEYCODES } from './constants.js';
 
@@ -46,8 +46,9 @@ const commitSelection = (store, option, refocus = false) => {
     if (!option) return;
     const state = store.getState();
     if (state.settings.multiple) {
-        //clear the results so retyping the same query re-renders the (now emptied) list
-        const effects = [ clearInput, syncOutput, hideList, emptyList, clearStatus ];
+        //clear the results so retyping the same query re-renders the (now emptied) list,
+        //and announce the new chip in place of the stale result count
+        const effects = [ clearInput, syncOutput, hideList, emptyList, announceSelectionChange(state.settings.selectionAddedMsg, option) ];
         if (refocus) effects.push(focusInput);
         store.update({ ...state, selected: addSelection(state, option), options: [], open: false, active: -1 }, effects);
     } else {
@@ -101,7 +102,7 @@ const handleBackspace = (store, event) => {
     const { dom, settings, selected } = store.getState();
     if (settings.multiple && event.target === dom.input && dom.input.value === '' && selected.length) {
         const removed = selected[selected.length - 1];
-        store.update({ ...store.getState(), selected: selected.slice(0, -1) }, [ syncOutput ]);
+        store.update({ ...store.getState(), selected: selected.slice(0, -1) }, [ syncOutput, announceSelectionChange(settings.selectionRemovedMsg, removed) ]);
         broadcast(store, 'remove', removed);
     }
 };
@@ -283,6 +284,9 @@ export const chipRemove = store => event => {
     const state = store.getState();
     const value = button.dataset.value;
     const removed = state.selected.find(item => String(state.settings.submissionTemplate(item)) === value);
-    store.update({ ...state, selected: state.selected.filter(item => String(state.settings.submissionTemplate(item)) !== value) }, [ syncOutput, focusInput ]);
+    store.update(
+        { ...state, selected: state.selected.filter(item => String(state.settings.submissionTemplate(item)) !== value) },
+        [ syncOutput, focusInput, announceSelectionChange(state.settings.selectionRemovedMsg, removed) ]
+    );
     broadcast(store, 'remove', removed);
 };

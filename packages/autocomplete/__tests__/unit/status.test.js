@@ -81,6 +81,59 @@ describe('Autocomplete > Status', () => {
         assert.strictEqual(node.querySelector('.autocomplete__status').textContent, '');
     });
 
+    it('should announce a selection being added in multiple mode', () => {
+        const { node } = init({ minlength: 1, multiple: true });
+        type(node.querySelector('input'), 'apple');
+        clickOption(node, 0);
+
+        //replaces the result count rather than falling silent, so the new chip is heard
+        assert.strictEqual(node.querySelector('.autocomplete__status').textContent, 'Apple added');
+    });
+
+    it('should announce a selection being removed when a chip is dismissed', () => {
+        const { node } = init({ minlength: 1, multiple: true });
+        type(node.querySelector('input'), 'apple');
+        clickOption(node, 0);
+        node.querySelector('.autocomplete__chip-remove').dispatchEvent(new Event('click', { bubbles: true }));
+
+        assert.strictEqual(node.querySelector('.autocomplete__status').textContent, 'Apple removed');
+    });
+
+    it('should announce a selection being removed with Backspace', () => {
+        const { node } = init({ minlength: 1, multiple: true });
+        const input = node.querySelector('input');
+        type(input, 'apple');
+        clickOption(node, 0);
+        input.value = '';
+        input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 8, bubbles: true }));
+
+        assert.strictEqual(node.querySelector('.autocomplete__status').textContent, 'Apple removed');
+    });
+
+    it('should let selectionAddedMsg and selectionRemovedMsg override the announcements', () => {
+        const { node } = init({
+            minlength: 1,
+            multiple: true,
+            selectionAddedMsg: label => `${label} ychwanegwyd`,
+            selectionRemovedMsg: label => `${label} tynnwyd`
+        });
+        type(node.querySelector('input'), 'apple');
+        clickOption(node, 0);
+        assert.strictEqual(node.querySelector('.autocomplete__status').textContent, 'Apple ychwanegwyd');
+
+        node.querySelector('.autocomplete__chip-remove').dispatchEvent(new Event('click', { bubbles: true }));
+        assert.strictEqual(node.querySelector('.autocomplete__status').textContent, 'Apple tynnwyd');
+    });
+
+    it('should announce the display label rather than the submitted value', () => {
+        const countries = [ { value: 'GB', label: 'United Kingdom' } ];
+        const { node } = init({ minlength: 1, multiple: true, displayTemplate: option => option.label, search: () => countries });
+        type(node.querySelector('input'), 'un');
+        clickOption(node, 0);
+
+        assert.strictEqual(node.querySelector('.autocomplete__status').textContent, 'United Kingdom added');
+    });
+
     it('should keep the status silent when the field is empty', () => {
         const { node } = init({ minlength: 1 });
         const input = node.querySelector('input');

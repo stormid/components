@@ -90,6 +90,12 @@ Once an option is chosen it is hidden from the list, so it can't be selected twi
 the dropdown only ever offers what's still available. Removing its chip (or `clear()`)
 brings it back.
 
+Adding or removing a selection is announced in the live region (`selectionAddedMsg` /
+`selectionRemovedMsg`), so the change is heard as well as seen — a chip appearing or
+disappearing is otherwise a purely visual cue. That's distinct from `selectionMsg`, the
+visually-hidden summary linked via `aria-describedby`, which reports the whole selection
+when the input is refocused.
+
 Each selection is submitted under the same `name`, so a form post serialises them as
 repeated pairs (`fruits=apple&fruits=banana`) — every value is sent, none is overwritten.
 Whether your server exposes them as an array depends on how it parses the body:
@@ -317,6 +323,12 @@ Options can be set during initialisation in an Object passed as the second argum
     },
     selectionMsg(labels){ //visually-hidden summary of the current selection (multiple mode), linked via aria-describedby so it's announced when the input is refocused; string or fn of the display labels
         return labels.length ? `${labels.join(', ')} selected` : '';
+    },
+    selectionAddedMsg(label){ //announced in the live region when a selection is added (multiple mode); string or fn of the display label
+        return `${label} added`;
+    },
+    selectionRemovedMsg(label){ //announced in the live region when a selection is removed (multiple mode); string or fn of the display label
+        return `${label} removed`;
     }
 }
 ```

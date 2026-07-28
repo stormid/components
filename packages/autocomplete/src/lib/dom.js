@@ -252,6 +252,18 @@ export const renderStatus = state => {
 
 export const clearStatus = state => state.dom.status.textContent = '';
 
+/*
+ * Announce a selection being added or removed (multiple mode) in the live region.
+ * An effect factory rather than a plain effect, since it needs the option involved —
+ * a removed one is already out of state by the time the effects run. Without this a
+ * screen reader user gets no feedback for the change: the only visible cue is a chip
+ * appearing or disappearing, the list has closed, and the selection summary is a
+ * description, announced on focus rather than when the selection changes.
+ */
+export const announceSelectionChange = (msg, option) => state => {
+    state.dom.status.textContent = resolveMsg(msg, state.settings.displayTemplate(option));
+};
+
 export const showLoading = state => state.dom.status.textContent = state.settings.loadingMsg;
 
 /*
