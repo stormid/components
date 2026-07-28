@@ -52,6 +52,45 @@ describe('Autocomplete > Initialisation', () => {
         assert.strictEqual(instance.node.querySelector('input').hasAttribute('placeholder'), false);
     });
 
+    it('should disable spellcheck on the input by default', () => {
+        const [instance] = autocomplete('.js-autocomplete', { values });
+        //written as the string "false" — spellcheck is enumerated, not boolean
+        assert.strictEqual(instance.node.querySelector('input').getAttribute('spellcheck'), 'false');
+    });
+
+    it('should allow spellcheck to be switched back on', () => {
+        const [instance] = autocomplete('.js-autocomplete', { values, spellcheck: true });
+        assert.strictEqual(instance.node.querySelector('input').getAttribute('spellcheck'), 'true');
+    });
+
+    it('should read a string data-spellcheck as the value it names, not as a truthy string', () => {
+        document.body.innerHTML = '<div class="js-autocomplete" data-spellcheck="false"></div>';
+        const [instance] = autocomplete('.js-autocomplete', { values, spellcheck: true });
+        assert.strictEqual(instance.node.querySelector('input').getAttribute('spellcheck'), 'false');
+    });
+
+    it('should set inputmode, autocorrect and autocapitalize on the input when given', () => {
+        const [instance] = autocomplete('.js-autocomplete', { values, inputmode: 'search', autocorrect: 'off', autocapitalize: 'none' });
+        const input = instance.node.querySelector('input');
+        assert.strictEqual(input.getAttribute('inputmode'), 'search');
+        assert.strictEqual(input.getAttribute('autocorrect'), 'off');
+        assert.strictEqual(input.getAttribute('autocapitalize'), 'none');
+    });
+
+    it('should leave inputmode, autocorrect and autocapitalize off the input when not given', () => {
+        const [instance] = autocomplete('.js-autocomplete', { values });
+        const input = instance.node.querySelector('input');
+        assert.strictEqual(input.hasAttribute('inputmode'), false);
+        assert.strictEqual(input.hasAttribute('autocorrect'), false);
+        assert.strictEqual(input.hasAttribute('autocapitalize'), false);
+    });
+
+    it('should keep an enhanced input\'s own inputmode when the option is not set', () => {
+        document.body.innerHTML = '<div class="js-autocomplete"><input name="fruit" inputmode="numeric"></div>';
+        const [instance] = autocomplete('.js-autocomplete', { values });
+        assert.strictEqual(instance.node.querySelector('input').getAttribute('inputmode'), 'numeric');
+    });
+
     it('should label the listbox with the field label', () => {
         const [instance] = autocomplete('.js-autocomplete', { values });
         const list = instance.node.querySelector('ul[role="listbox"]');

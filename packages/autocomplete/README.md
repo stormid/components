@@ -222,6 +222,34 @@ confirmation navigates. Pair it with `allowFreeText` if the raw query should be 
 as the field value when no option is picked. If the component isn't inside a form,
 `submitOnConfirm` simply commits the selection as usual.
 
+### Input attributes
+
+Four attributes on the generated input are exposed as settings, so a field can be tuned to
+what it's actually searching:
+
+| Setting | Effect |
+| --- | --- |
+| `spellcheck` | Spellchecking. **Off by default** — see below. |
+| `inputmode` | Virtual keyboard on touch devices: `search` gives a "Search" action key, `numeric` a digit pad for a postcode or reference lookup, and `email`/`tel`/`url` their respective layouts. Doesn't affect the value or validation. |
+| `autocorrect` | `off` stops iOS "correcting" a deliberately typed surname or code mid-search. Safari only. |
+| `autocapitalize` | `none` stops mobile keyboards capitalising the first letter — worth setting when searching lowercase usernames, emails or codes. |
+
+```js
+autocomplete('.js-autocomplete', { name: 'postcode', inputmode: 'numeric', autocapitalize: 'characters', search });
+```
+
+`spellcheck` is **`false` by default**, unlike the other three. An autocomplete's value is
+normally chosen from the list rather than typed as prose, so the proper nouns it holds —
+surnames, place names, product codes — would otherwise sit under a red squiggle despite
+being valid. There's also a privacy reason: Chrome's Enhanced Spell Check and Edge's
+Microsoft Editor send the contents of text inputs to a remote service to check them, and
+neither exempts a field carrying a name, address or account reference. Pass
+`spellcheck: true` for a free-text search box where correction is genuinely wanted.
+
+Because it always writes, `spellcheck` overrides the attribute on a server-rendered
+`<input>` being enhanced. The other three are omitted entirely when unset, so an enhanced
+input keeps whatever it was authored with.
+
 ### Restoring a server-rendered value
 
 To restore a previously submitted / prefilled value on load, render `data-value` (and
@@ -270,6 +298,10 @@ Options can be set during initialisation in an Object passed as the second argum
     confirmOnBlur: true, //commit the highlighted option when focus leaves the component
     clearOnBlur: false, //clear the input (and, single mode, the selection) when focus leaves uncommitted
     placeholder: '', //placeholder text for the generated input
+    spellcheck: false, //spellchecking on the input; off by default (see Input attributes)
+    inputmode: null, //virtual keyboard hint, e.g. 'search', 'numeric', 'email'; omitted when null
+    autocorrect: null, //'on'/'off'; iOS autocorrection. Omitted when null
+    autocapitalize: null, //'none'/'sentences'/'words'/'characters'; omitted when null
     inputClassName: 'autocomplete__input', //class applied to the generated input
     id: null, //id for the input/listbox wiring; taken from the node or <select>, else generated
     noResultsMsg: 'No results found', //shown and announced when a search matches nothing

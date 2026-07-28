@@ -13,6 +13,26 @@ export const broadcast = (store, action, option = null) => {
     }));
 };
 
+//pass-through attributes for the generated input, each written only when set. Named
+//rather than an open attribute bag so the combobox's own role/aria wiring can't be
+//clobbered, and left off by default so enhancing a server-rendered input keeps
+//whatever it was authored with.
+const OPTIONAL_INPUT_ATTRIBUTES = [ 'inputmode', 'autocorrect', 'autocapitalize' ];
+
+const applyInputAttributes = (input, settings) => {
+    OPTIONAL_INPUT_ATTRIBUTES.forEach(attribute => {
+        const value = settings[attribute];
+        if (value !== null && value !== undefined && value !== '') input.setAttribute(attribute, value);
+    });
+    //spellcheck is always written, and defaults to off: the value is normally chosen
+    //from the list rather than typed as prose, so there's little to check — and
+    //Chrome/Edge enhanced spellchecking sends the contents of text fields to a remote
+    //service, which an autocomplete carrying a name or account reference shouldn't do.
+    //It's an enumerated attribute, not a boolean, so it has to carry the string
+    //"false"; a data-* attribute arrives as a string, so "false" can't be left truthy.
+    input.setAttribute('spellcheck', String(settings.spellcheck !== false && settings.spellcheck !== 'false'));
+};
+
 export const createInput = ({ node, settings, id, listId, describedby, input }) => {
     //progressive enhancement: when a server-rendered <input> is passed (the no-JS
     //fallback — a real, submittable field before this runs), decorate it in place;
@@ -29,6 +49,7 @@ export const createInput = ({ node, settings, id, listId, describedby, input }) 
     //link the minlength hint so it's announced on focus (see hint below)
     if (describedby) input.setAttribute('aria-describedby', describedby);
     if (settings.placeholder) input.setAttribute('placeholder', settings.placeholder);
+    applyInputAttributes(input, settings);
     input.classList.add(settings.inputClassName);
     //the visible input is display/search only in every mode; the form value is
     //carried by a hidden field (single mode) or the chips' hidden inputs (multiple).

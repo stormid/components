@@ -23,6 +23,12 @@ export default {
     confirmOnBlur: true,
     clearOnBlur: false,
     placeholder: '',
+    spellcheck: false,
+    //written onto the generated input only when set; null leaves the attribute off
+    //(and leaves an enhanced server-rendered input's own attribute untouched)
+    inputmode: null,
+    autocorrect: null,
+    autocapitalize: null,
     inputClassName: 'autocomplete__input',
     id: null,
     noResultsMsg: 'No results found',
