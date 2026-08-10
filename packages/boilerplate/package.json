@@ -8,7 +8,7 @@
     "access": "public"
   },
   "repository": "https://github.com/stormid/components/tree/master/packages/boilerplate",
-  "private": false,
+  "private": true,
   "main": "dist/index.js",
   "source": "src/index.js",
   "module": "dist/index.modern.js",
