@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StormID</title>
+    <style>
+        *,
+        *:before,
+        *:after {
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        html,
+        body,
+        div,
+        span,
+        applet object,
+        iframe,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        blockquote,
+        pre,
+        a,
+        abbr,
+        acronym,
+        address,
+        big,
+        cite,
+        code,
+        del,
+        dfn,
+        em,
+        font,
+        img,
+        ins,
+        kbd,
+        q,
+        s,
+        samp,
+        small,
+        strike,
+        strong,
+        sub,
+        sup,
+        tt,
+        var,
+        b,
+        u,
+        i,
+        center,
+        dl,
+        dt,
+        dd,
+        ol,
+        ul,
+        li,
+        fieldset,
+        form,
+        label,
+        legend,
+        table,
+        caption,
+        tbody,
+        tfoot,
+        thead,
+        tr,
+        th,
+        td,
+        article,
+        aside,
+        canvas,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        hgroup,
+        menu,
+        nav,
+        section,
+        summary,
+        time,
+        mark,
+        audio,
+        video,
+        main {
+            background: transparent;
+            border: 0;
+            font-size: 100%;
+            margin: 0;
+            padding: 0;
+            vertical-align: baseline;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+
+        html,
+        body {
+            background-color: hsl(0, 0%, 96%);
+            min-height: 100%;
+        }
+
+        html {
+            color-scheme: light dark;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-rendering: optimizeSpeed;
+            height: 100%;
+
+            &:focus-within {
+                scroll-behavior: smooth;
+            }
+        }
+
+        body {
+            min-height: 100%;
+            min-width: 100%;
+            font-size: 100%;
+            line-height: 1.5;
+            color: hsl(0, 0%, 30%);
+        }
+
+        article,
+        aside,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        hgroup,
+        menu,
+        nav,
+        section,
+        main {
+            display: block;
+        }
+
+        ol,
+        ul {
+            list-style: none;
+        }
+
+        ins {
+            text-decoration: none;
+        }
+
+        mark {
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        del {
+            text-decoration: line-through;
+        }
+
+        dfn {
+            font-style: italic;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        td {
+            vertical-align: top;
+        }
+
+        hr {
+            border: 0;
+            display: block;
+            height: 1px;
+            margin: 0;
+            padding: 0;
+        }
+
+        legend {
+            border: 0;
+            padding: 0;
+            white-space: normal;
+        }
+
+        figure {
+            margin: 0;
+        }
+
+        [hidden] {
+            display: none;
+        }
+
+        :focus {
+            outline: none;
+        }
+
+        :focus-visible {
+            outline: 4px solid transparent;
+            box-shadow: 0px 0px 0px 4px hsl(49, 98%, 56%);
+        }
+
+        img {
+            display: block;
+            border: 0;
+            max-width: 100%;
+            height: auto;
+        }
+
+        a {
+            color: black
+        }
+        a:hover,
+        a:focus,
+        a:active {
+            text-decoration: none;
+            text-decoration-skip-ink: auto;
+        }
+
+
+        strong,
+        b {
+            font-weight: 700;
+        }
+
+        em,
+        i {
+            font-style: italic;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-weight: 400;
+        }
+
+        blockquote,
+        q {
+            quotes: none;
+        }
+
+        blockquote:before,
+        blockquote:after,
+        q:before,
+        q:after {
+            content: '';
+            content: none;
+        }
+
+        address {
+            font-style: 400;
+        }
+
+        legend {
+            border: 0;
+            padding: 0;
+            white-space: normal;
+        }
+
+        figure {
+            margin: 0;
+        }
+
+
+        sub,
+        sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative;
+            vertical-align: baseline;
+        }
+
+        sup {
+            top: -0.5em;
+        }
+
+        sub {
+            bottom: -0.25em;
+        }
+
+        input,
+        button,
+        select {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            color: black;
+        }
+
+        input,
+        button,
+        select {
+            border: 0 none;
+            border-radius: 0;
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        select::-ms-expand {
+            display: none;
+        }
+
+        input[type="search"] {
+            border-radius: 0;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="search"]::-webkit-search-decoration,
+        input[type="search"]::-webkit-search-cancel-button,
+        input[type="search"]::-webkit-search-results-button,
+        input[type="search"]::-webkit-search-results-decoration {
+            display: none;
+        }
+
+        input[type="checkbox"] {
+            -moz-appearance: checkbox;
+            -webkit-appearance: checkbox;
+        }
+
+        input[type="radio"] {
+            -moz-appearance: radio;
+            -webkit-appearance: radio;
+        }
+
+        input[type="range"] {
+            -moz-appearance: slider-horizontal;
+            -webkit-appearance: slider-horizontal;
+        }
+
+        select {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+        }
+
+        button::-moz-focus-inner,
+        input::-moz-focus-inner {
+            border: 0;
+            padding: 0;
+        }
+
+
+        input,
+        button,
+        textarea,
+        select {
+            font: inherit;
+            letter-spacing: inherit;
+            word-spacing: inherit;
+        }
+
+        button,
+        input[type="button"],
+        input[type="reset"],
+        input[type="submit"] {
+            border: 0 none;
+            cursor: pointer;
+            -webkit-appearance: button;
+        }
+
+        a[disabled],
+        button[disabled],
+        input[disabled] {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        textarea {
+            overflow: auto;
+            vertical-align: top;
+            resize: vertical;
+            width: 100%;
+        }
+
+        .container {
+            margin: 0 auto;
+            width: 80%;
+            max-width: 1200px;
+        }
+
+        h1 {
+            margin-bottom: 48px;
+        }
+
+        .form {
+            margin: 0 auto 24px auto;
+            padding: 24px 24px;
+            max-width: 500px;
+            background-color: hsl(0, 0%, 96%);
+        }
+
+        .form-row {
+            margin-bottom: 18px;
+        }
+
+        .form-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .fieldset {
+            margin-bottom: 48px;
+        }
+
+        .fieldset--secondary {
+            border-bottom: 0 none;
+        }
+
+        .legend {
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+        }
+
+        .legend__hint {
+            display: block;
+            font-size: 1rem;
+        }
+
+        .legend--secondary {
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        .label {
+            display: block;
+            font-weight: 600;
+        }
+
+        .label__hint {
+            display: block;
+            color: hsl(0, 0%, 30%);
+            font-size: 0.875rem;
+            font-weight: 300;
+        }
+
+        .input,
+        .autocomplete__input {
+            width: 100%;
+            display: block;
+            padding: 0 calc(24px/2);
+            background-color: #ffffff;
+            border: 1px solid hsl(0, 0%, 70%);
+            appearance: none;
+            -moz-appearance: textfield;
+            height: 40px;
+            line-height: 36px;
+            margin-top: 8px;
+        }
+
+        .input::-webkit-outer-spin-button,
+        .input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        .input:focus {
+            outline: 4px solid hsl(49, 98%, 56%);
+        }
+
+        .autocomplete__input:focus {
+            outline: 4px solid #1d70b8;
+            box-shadow: none;
+        }
+
+        .input:disabled,
+        .input[readonly] {
+            background-color: hsl(0, 0%, 96%);
+            pointer-events: none;
+            opacity: .7;
+        }
+
+        /* No-JS fallback: the native <select>/<select multiple> the component enhances,
+           styled full-width and consistent with the autocomplete inputs so the page reads
+           the same before (or without) JS rather than showing a bare browser control. */
+        .select {
+            width: 100%;
+            display: block;
+            margin-top: 8px;
+            padding: 0 12px;
+            background-color: #ffffff;
+            border: 1px solid hsl(0, 0%, 70%);
+            height: 40px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0Ij48cGF0aCBkPSJNMjQgMjRIMFYwaDI0djI0eiIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iLjg3Ii8+PHBhdGggZD0iTTE2LjU5IDguNTlMMTIgMTMuMTcgNy40MSA4LjU5IDYgMTBsNiA2IDYtNi0xLjQxLTEuNDF6Ii8+PC9zdmc+');
+            background-repeat: no-repeat, repeat;
+            background-position: right 6px top 50%, 0 0;
+        }
+        /* a multiple select is a list, not a dropdown: let it grow to show its options
+           and drop the single-select chevron, keeping the full width and border */
+        .select[multiple] {
+            height: auto;
+            min-height: 40px;
+            padding: 4px 0;
+            background-image: none;
+        }
+        .select[multiple] option {
+            padding: 4px 12px;
+        }
+        .select:focus {
+            outline: 4px solid #1d70b8;
+        }
+
+
+        .error-message {
+            font-size: 0.85rem;
+            display: block;
+            font-weight: 700;
+        }
+
+        .btn {
+            line-height: 1;
+            background-color: transparent;
+            border: 1px solid hsl(0, 0%, 30%);
+            display: inline-block;
+            font-weight: 600;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.15s ease;
+            color: black;
+        }
+
+        .btn:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: .6;
+            cursor: default;
+        }
+
+        .btn:focus {
+            outline: 4px solid hsl(49, 98%, 56%);
+        }
+
+        .btn--text {
+            padding: 0;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .btn--text:hover {
+            background-color: transparent;
+            text-decoration: underline;
+        }
+        .push-bottom {
+            margin-bottom: 24px;
+        }
+        .push-bottom--half {
+            margin-bottom: 12px;
+        }
+
+        .autocomplete__status,
+        .autocomplete__hint,
+        .autocomplete__selection {
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            border: 0;
+        }
+        .autocomplete__list {
+            position: relative;
+            background-color: #fff;
+            border: 1px solid hsl(0, 0%, 70%);
+            border-top: 0;
+            color: currentColor;
+            margin: 0;
+            max-height: 342px;
+            overflow-x: hidden;
+            padding: 0;
+            width: 100%
+        }
+        .autocomplete__option {
+            border-top: 1px solid hsl(0, 0%, 70%);
+            padding: 0 calc(24px/2);
+            cursor: pointer;
+            display: block;
+            position: relative;
+            height: 40px;
+            line-height: 36px;
+            color: currentColor
+        }
+        /* keyboard highlight rides on the --active class (focus stays in the input,
+           APG combobox pattern); :hover covers the mouse */
+        .autocomplete__option:hover,
+        .autocomplete__option--active {
+            background-color: #1d70b8;
+            border-color: #1d70b8;
+            color: white;
+            outline: none;
+            box-shadow: none;
+        }
+        .autocomplete__option:first-child {
+            border-top: 0 none;
+        }
+        .autocomplete__option--empty,
+        .autocomplete__option--empty:hover {
+            color: hsl(0, 0%, 40%);
+            background-color: #fff;
+            cursor: default;
+            font-style: italic;
+        }
+        /* a custom optionTemplate can render a taller, multi-line option: relax the
+           fixed single-line height for options in the custom-template demo */
+        .js-autocomplete-endpoint .autocomplete__option {
+            height: auto;
+            line-height: 1.3;
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+        .autocomplete__option-title {
+            display: block;
+        }
+        .autocomplete__option-detail {
+            display: block;
+            font-size: 0.8rem;
+            color: hsl(0, 0%, 45%);
+        }
+        .autocomplete__option:hover .autocomplete__option-detail,
+        .autocomplete__option--active .autocomplete__option-detail {
+            color: hsl(0, 0%, 90%);
+        }
+        .autocomplete__output {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 8px 0 0 0;
+            padding: 0;
+        }
+        .autocomplete__chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #1d70b8;
+            color: white;
+            padding: 4px 4px 4px 10px;
+            border-radius: 2px;
+            line-height: 1.4;
+        }
+        .autocomplete__chip-remove {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background-color: transparent;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .autocomplete__chip-remove::before {
+            content: '\00d7';
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+        .autocomplete__chip-remove:focus {
+            outline: 3px solid hsl(49, 98%, 56%);
+        }
+        .autocomplete--multiple {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 4px 8px;
+            min-height: 40px;
+            background-color: #ffffff;
+            border: 1px solid hsl(0, 0%, 70%);
+        }
+        .autocomplete--multiple:has(.autocomplete__input:focus) {
+            outline: 4px solid #1d70b8;
+        }
+
+        .autocomplete--multiple .autocomplete__input {
+            order: 2;
+            flex: 1 1 80px;
+            width: auto;
+            min-width: 80px;
+            height: 30px;
+            line-height: 28px;
+            margin-top: 0;
+            padding: 0;
+            border: 0;
+        }
+        .autocomplete--multiple .autocomplete__input:focus {
+            outline: none;
+        }
+        .autocomplete--multiple .autocomplete__output {
+            display: contents;
+        }
+        .autocomplete--multiple .autocomplete__chip {
+            order: 1;
+        }
+        .autocomplete--multiple .autocomplete__list {
+            position: absolute;
+            top: 100%;
+            left: -1px;
+            right: -1px;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+    <main id="main" class="container">
+        <form class="form" action="#">
+            <h1>Autocomplete examples</h1>
+
+            <div class="form-row">
+                <label for="default" class="label">Default (single selection) <span class="label__hint">Enhances a server-rendered &lt;input&gt; — submits typed text with JS off</span></label>
+                <span class="error-message" data-valmsg-for="default"></span>
+                <div class="autocomplete js-autocomplete">
+                    <input class="autocomplete__input" id="default" name="default" placeholder="e.g. Apple">
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="fruits" class="label">Multiple <span class="label__hint">Pick as many as you like; degrades to a single search field with JS off</span></label>
+                <span class="error-message" data-valmsg-for="fruits"></span>
+                <div class="autocomplete autocomplete--multiple js-autocomplete-multiple">
+                    <input class="autocomplete__input" id="fruits" name="fruits" placeholder="e.g. Apple">
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="country" class="label">Async source (single selection)<span class="label__hint">Returns a Promise, no network — async isn't only fetch. Suggestions need JS; the field still submits without it</span></label>
+                <span class="error-message" data-valmsg-for="country"></span>
+                <div class="autocomplete js-autocomplete-async">
+                    <input class="autocomplete__input" id="country" name="fruits-async" placeholder="e.g. Apple">
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="country-code" class="label">Remote fetch (multiple) <span class="label__hint">Mocked API endpoint, aborts stale requests, shows custom option template</span></label>
+                <span class="error-message" data-valmsg-for="country-code"></span>
+                <div class="autocomplete autocomplete--multiple js-autocomplete-endpoint">
+                    <input class="autocomplete__input" id="country-code" name="country-code" placeholder="e.g. United Kingdom">
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="search" class="label">Search box <span class="label__hint">Enhances an &lt;input&gt; and submits the query on confirm — works with JS off</span></label>
+                <span class="error-message" data-valmsg-for="search"></span>
+                <div class="autocomplete js-autocomplete-input">
+                    <input class="autocomplete__input" type="search" id="search" name="search" placeholder="e.g. Apple">
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="flavour" class="label">From select <span class="label__hint">Enhances a native &lt;select&gt;</span></label>
+                <span class="error-message" data-valmsg-for="flavour"></span>
+                <div class="autocomplete js-autocomplete-select" data-placeholder="e.g. Apple">
+                    <select class="select" id="flavour" name="flavour">
+                        <option value="">Choose a fruit</option>
+                        <option value="apple">Apple</option>
+                        <option value="banana">Banana</option>
+                        <option value="cherry">Cherry</option>
+                        <option value="potato">Potato</option>
+                        <option value="sweet-potato">Sweet potato</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="toppings" class="label">Multiple from select <span class="label__hint">Enhances &lt;select multiple&gt;</span></label>
+                <span class="error-message" data-valmsg-for="toppings"></span>
+                <div class="autocomplete autocomplete--multiple js-autocomplete-select-multiple" data-placeholder="e.g. Apple">
+                    <select class="select" id="toppings" name="toppings" multiple>
+                        <option value="apple">Apple</option>
+                        <option value="banana" selected>Banana</option>
+                        <option value="cherry">Cherry</option>
+                        <option value="potato">Potato</option>
+                        <option value="sweet-potato">Sweet potato</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="prefilled" class="label">Prefilled <span class="label__hint">Restored on load: the raw value ("GB") is server-rendered so it survives without JS; data-label upgrades the display to "United Kingdom" once enhanced</span></label>
+                <span class="error-message" data-valmsg-for="prefilled"></span>
+                <div class="autocomplete js-autocomplete-prefilled" data-value="GB" data-label="United Kingdom">
+                    <input class="autocomplete__input" id="prefilled" name="prefilled" value="GB" placeholder="e.g. United Kingdom">
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="prefilled-multiple" class="label">Prefilled multiple <span class="label__hint">Selections server-rendered as JSON arrays in data-value/data-label, restored as chips; an empty search field without JS</span></label>
+                <span class="error-message" data-valmsg-for="prefilled-multiple"></span>
+                <div class="autocomplete autocomplete--multiple js-autocomplete-prefilled-multiple"
+                    data-value='["GB","FR"]' data-label='["United Kingdom","France"]'>
+                    <input class="autocomplete__input" id="prefilled-multiple" name="prefilled-multiple" placeholder="e.g. United Kingdom">
+                </div>
+            </div>
+            <div class="form-row">
+                <button type="submit" class="btn">Submit</button>
+            </div>
+        </form>
+    </main>
+</body>
+
+</html>

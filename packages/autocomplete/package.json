@@ -1,0 +1,31 @@
+{
+  "name": "@stormid/autocomplete",
+  "version": "1.0.0",
+  "description": "Accessible autocomplete component",
+  "author": "stormid",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "https://github.com/stormid/components/tree/master/packages/autocomplete",
+  "private": false,
+  "main": "dist/index.js",
+  "source": "src/index.js",
+  "module": "dist/index.modern.js",
+  "unpkg": "dist/index.umd.js",
+  "browser": "dist/index.umd.js",
+  "keywords": [
+    "stormid",
+    "component",
+    "ui",
+    "autocomplete",
+    "typeahead"
+  ],
+  "scripts": {
+    "build": "microbundle --name Autocomplete",
+    "dev": "rspack serve --config tools/rspack.config.js",
+    "prod": "rspack build --config tools/rspack.config.js --mode production",
+    "prepare": "npm run -s build",
+    "test": "node --test --experimental-test-coverage --test-coverage-include=\"src/**\" --import ../../tools/test-setup.mjs \"__tests__/unit/*.test.js\" && npx playwright test"
+  }
+}
