@@ -13,7 +13,7 @@ module.exports = {
     mode: 'development',
     devtool: 'source-map',
     devServer: {
-        port: 8095,
+        port: 'auto',
         //mock remote endpoint for async fetch example - same dev server
         //backs both `npm run dev` and the Playwright run, so this one route
         //serves the example page and e2e test
