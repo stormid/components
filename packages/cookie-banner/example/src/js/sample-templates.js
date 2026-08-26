@@ -31,7 +31,7 @@ export default {
                     <input
                         class="${model.settings.classNames.field}"
                         type="radio"
-                        name="privacy-${type.split(' ')[0].replace(' ', '-')}"
+                        name="privacy-${type}"
                         value="1"
                         ${model.consent[type] === 1 ? `checked` : ''}>
                     <span class="privacy-banner__label-text">I am OK with this</span>
@@ -45,7 +45,7 @@ export default {
                     <input
                         class="${model.settings.classNames.field}"
                         type="radio"
-                        name="privacy-${type.split(' ')[0].replace(' ', '-')}"
+                        name="privacy-${type}"
                         value="0"
                         ${model.consent[type] === 0 ? `checked` : ''}>
                     <span class="privacy-banner__label-text">No thank you</span>

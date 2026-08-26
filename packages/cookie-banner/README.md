@@ -97,7 +97,7 @@ const cookieBanner = banner({
                             <input
                                 class="${model.settings.classNames.field}"
                                 type="radio"
-                                name="privacy-${type.split(' ')[0].replace(' ', '-')}"
+                                name="privacy-${type}"
                                 value="1"
                                 ${model.consent[type] === 1 ? `checked` : ''}>
                             <span class="privacy-banner__label-text">I am OK with this</span>
@@ -111,7 +111,7 @@ const cookieBanner = banner({
                             <input
                                 class="${model.settings.classNames.field}"
                                 type="radio"
-                                name="privacy-${type.split(' ')[0].replace(' ', '-')}"
+                                name="privacy-${type}"
                                 value="0"
                                 ${model.consent[type] === 0 ? `checked` : ''}>
                             <span class="privacy-banner__label-text">No thank you</span>
@@ -139,15 +139,20 @@ euConsentTypes: {
 }
 ```
 
+## Clearing cookies
+The banner has no map of which cookies belong to which consent category, so it cannot selectively remove cookies for a single withdrawn category. Cookie clearing therefore happens only on **Reject all**, where withdrawing every category makes a full wipe correct.
+
+Setting an individual category to "No" via the preferences form records that preference (and stops that category's functions running on the next page load), but does **not** delete cookies that category may already have set in the current session. If you need those removed immediately, reload the page after saving, or listen for the `banner.consent` event and clear the specific cookies yourself.
+
 ## Options
 Full options that can be passed during initialisation:
 ```
 {
     name: '.CookiePreferences', //name of the cookie set to record user consent
     path: '/', //path of the preferences cookie
-    domain: window.location.hostname === 'localhost' ? '' : `.${removeSubdomain(window.location.hostname)}`, //domain of the preferences cookie, defaults to .<root-domain>
+    domain: '.<registrable-domain>', //auto-derived so consent is shared across subdomains ('' host-only on localhost/IP); override to scope it yourself
     secure: true, //preferences cookie secure
-    samesite: 'lax', //preferences cookie samesite
+    samesite: 'strict', //preferences cookie samesite
     expiry: 365, //preferences cookie expiry in days
     types: {}, //types of cookie-dependent functionality
     euConsentTypes: {}, //map Google EU consent categories to types of cookie defined in 'types'
@@ -183,6 +188,8 @@ Full options that can be passed during initialisation:
 When using the cookie banner, you **must** provide suitable HTML templates for both the banner and the preferences form.  These should set via the config as the bannerTemplate and formTemplate options respectively.
 
 The templates should take the form of a function which returns a valid HTML string.  The functions will be passed a 'model' which will expose the state of the cookie banner to help with rendering.  See the example config above as a startring point.
+
+All three templates (`bannerTemplate`, `formTemplate`, `messageTemplate`) receive the same model shape: the settings spread at the top level plus `settings` and `consent`. So both `model.classNames.banner` and `model.settings.classNames.banner` resolve, and `model.consent` is available in every template.
 
 If these functions are not provided, the cookie banner will fail to initialise.
 

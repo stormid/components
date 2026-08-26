@@ -1,39 +1,65 @@
 import { describe, it, mock } from 'node:test';
 import assert from 'node:assert/strict';
-import { groupValueReducer, removeSubdomain, extractFromCookie, broadcast, renderIframe, gtmSnippet } from '../../src/lib/utils.js';
+import { groupValueReducer, getRegistrableDomain, readCookie, extractFromCookie, broadcast, renderIframe, gtmSnippet } from '../../src/lib/utils.js';
 import defaults from '../../src/lib/defaults.js';
 import { EVENTS } from '../../src/lib/constants.js';
 import { createStore } from '../../src/lib/store.js';
 
-describe('Cookie > Utils > removeSubdomain', () => {
-    it('should return the same vaule for a root domain', async () => {
-        assert.deepStrictEqual(removeSubdomain('stormid.com'), 'stormid.com');
+describe('Cookie > Utils > getRegistrableDomain', () => {
+    // Simulate the browser's cookie public-suffix rule: it refuses cookies on ICANN public
+    // suffixes but ACCEPTS them on PSL private-section hosts (azurewebsites.net, netlify.app).
+    const PUBLIC_SUFFIXES = new Set(['com', 'net', 'org', 'app', 'io', 'dev', 'uk', 'co.uk']);
+    const fakeCanSet = candidate => !PUBLIC_SUFFIXES.has(candidate);
+
+    it('should return the same value for a root domain', async () => {
+        assert.deepStrictEqual(getRegistrableDomain('stormid.com', fakeCanSet), 'stormid.com');
     });
 
     it('should remove www from a url', async () => {
-        assert.deepStrictEqual(removeSubdomain('www.stormid.com'), 'stormid.com');
+        assert.deepStrictEqual(getRegistrableDomain('www.stormid.com', fakeCanSet), 'stormid.com');
     });
 
     it('should remove sub sub domains from a domain', async () => {
-        assert.deepStrictEqual(removeSubdomain('test.demo.stormid.com'), 'stormid.com');
+        assert.deepStrictEqual(getRegistrableDomain('test.demo.stormid.com', fakeCanSet), 'stormid.com');
     });
 
     it('should remove subsub sub domains from a domain', async () => {
-        assert.deepStrictEqual(removeSubdomain('cookie.test.demo.stormid.com'), 'stormid.com');
+        assert.deepStrictEqual(getRegistrableDomain('cookie.test.demo.stormid.com', fakeCanSet), 'stormid.com');
     });
 
-    it('should handle URLs with multi dot tdls', async () => {
-        assert.deepStrictEqual(removeSubdomain('cookie.test.demo.stormid.co.uk'), 'stormid.co.uk');
+    it('should handle URLs with multi dot tlds', async () => {
+        assert.deepStrictEqual(getRegistrableDomain('cookie.test.demo.stormid.co.uk', fakeCanSet), 'stormid.co.uk');
     });
 
-    it('should handle azurewebsites.net as a multi dot tdl', async () => {
-        assert.deepStrictEqual(removeSubdomain('cookie-test-wip.azurewebsites.net'), 'cookie-test-wip.azurewebsites.net');
+    it('should narrow back to the app host for azurewebsites.net (private suffix)', async () => {
+        assert.deepStrictEqual(getRegistrableDomain('cookie-test-wip.azurewebsites.net', fakeCanSet), 'cookie-test-wip.azurewebsites.net');
     });
 
-    it('should handle netlify.app as a multi dot tdl', async () => {
-        assert.deepStrictEqual(removeSubdomain('cookie-test-wip.netlify.app'), 'cookie-test-wip.netlify.app');
+    it('should narrow back to the app host for netlify.app (private suffix)', async () => {
+        assert.deepStrictEqual(getRegistrableDomain('cookie-test-wip.netlify.app', fakeCanSet), 'cookie-test-wip.netlify.app');
     });
 
+    it('should keep the app host for a subdomain of a private suffix', async () => {
+        assert.deepStrictEqual(getRegistrableDomain('sub.myapp.azurewebsites.net', fakeCanSet), 'myapp.azurewebsites.net');
+    });
+
+    it('should return an empty string (host-only) for localhost', async () => {
+        assert.deepStrictEqual(getRegistrableDomain('localhost', fakeCanSet), '');
+    });
+
+    it('should return an empty string (host-only) for an IP address', async () => {
+        assert.deepStrictEqual(getRegistrableDomain('192.168.0.1', fakeCanSet), '');
+    });
+});
+
+describe('Cookie > Utils > readCookie', () => {
+    it('should preserve base64 "=" padding in the cookie value', async () => {
+        const value = btoa(JSON.stringify({ consent: { performance: 1, ads: 0 } }));
+        assert.ok(value.endsWith('='), 'test fixture should carry base64 padding');
+        document.cookie = `${defaults.name}=${value}`;
+        // round-trips to the original JSON despite the '=' padding chars in the value
+        assert.deepStrictEqual(readCookie(defaults), JSON.stringify({ consent: { performance: 1, ads: 0 } }));
+    });
 });
 
 describe('Cookie > Utils > groupValueReducer', () => {

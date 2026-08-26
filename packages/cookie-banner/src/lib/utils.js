@@ -15,7 +15,7 @@ export const cookiesEnabled = () => {
 export const writeCookie = state => {
     document.cookie = [
         `${state.settings.name}=${btoa(JSON.stringify({ consent: state.consent }))};`,
-        `expires=${(new Date(new Date().getTime() + (state.settings.expiry*24*60*60*1000))).toGMTString()};`,
+        `expires=${(new Date(new Date().getTime() + (state.settings.expiry*24*60*60*1000))).toUTCString()};`,
         state.settings.path ? `path=${state.settings.path};` : '',
         state.settings.domain ? `domain=${state.settings.domain};` : '',
         state.settings.samesite ? `SameSite=${state.settings.samesite};` : '',
@@ -24,13 +24,10 @@ export const writeCookie = state => {
 };
 
 export const readCookie = settings => {
-    const cookies = document.cookie.split('; ');
-    for (let n = 0; n <= cookies.length; n++) {
-        if (!cookies[n]) return false;
-        const [ name, value ] = cookies[n].split('=');
-        if (name === settings.name) return window.atob(value);
-    }
-    return false;
+    const match = document.cookie.split('; ').find(cookie => cookie.split('=')[0] === settings.name);
+    if (!match) return false;
+    // slice from the first '=' rather than split('=')[1]: the base64 value can contain '=' padding.
+    return window.atob(match.slice(match.indexOf('=') + 1));
 };
 
 const updateCookie = (state, cookie) => document.cookie = [
@@ -87,22 +84,64 @@ export const groupValueReducer = (acc, input) => {
     return acc;
 };
 
-const firstTLDs  = 'ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|be|bf|bg|bh|bi|bj|bm|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|cl|cm|cn|co|cr|cu|cv|cw|cx|cz|de|dj|dk|dm|do|dz|ec|ee|eg|es|et|eu|fi|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|im|in|io|iq|ir|is|it|je|jo|jp|kg|ki|km|kn|kp|kr|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|na|nc|ne|nf|ng|nl|no|nr|nu|nz|om|pa|pe|pf|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|yt'.split('|');
-const secondTLDs = 'netlify|azurewebsites|com|edu|gov|net|mil|org|nom|sch|caa|res|off|gob|int|tur|ip6|uri|urn|asn|act|nsw|qld|tas|vic|pro|biz|adm|adv|agr|arq|art|ato|bio|bmd|cim|cng|cnt|ecn|eco|emp|eng|esp|etc|eti|far|fnd|fot|fst|g12|ggf|imb|ind|inf|jor|jus|leg|lel|mat|med|mus|not|ntr|odo|ppg|psc|psi|qsl|rec|slg|srv|teo|tmp|trd|vet|zlg|web|ltd|sld|pol|fin|k12|lib|pri|aip|fie|eun|sci|prd|cci|pvt|mod|idv|rel|sex|gen|nic|abr|bas|cal|cam|emr|fvg|laz|lig|lom|mar|mol|pmn|pug|sar|sic|taa|tos|umb|vao|vda|ven|mie|北海道|和歌山|神奈川|鹿児島|ass|rep|tra|per|ngo|soc|grp|plc|its|air|and|bus|can|ddr|jfk|mad|nrw|nyc|ski|spy|tcm|ulm|usa|war|fhs|vgs|dep|eid|fet|fla|flå|gol|hof|hol|sel|vik|cri|iwi|ing|abo|fam|gok|gon|gop|gos|aid|atm|gsm|sos|elk|waw|est|aca|bar|cpa|jur|law|sec|plo|www|bir|cbg|jar|khv|msk|nov|nsk|ptz|rnd|spb|stv|tom|tsk|udm|vrn|cmw|kms|nkz|snz|pub|fhv|red|ens|nat|rns|rnu|bbs|tel|bel|kep|nhs|dni|fed|isa|nsn|gub|e12|tec|орг|обр|упр|alt|nis|jpn|mex|ath|iki|nid|gda|inc'.split('|');
+// PSL private-section suffixes: shared hosting domains where each subdomain is a separate site.
+// Browsers do NOT block cookies on these (the cookie public-suffix rule uses the PSL's ICANN
+// section only), so the domain probe below would over-broaden to the shared suffix and leak the
+// consent cookie across every tenant. Narrowing back to the app host prevents that. Intentionally
+// short — add hosting suffixes as needed.
+export const PRIVATE_SUFFIXES = [
+    'azurewebsites.net', 'netlify.app', 'netlify.com', 'github.io', 'gitlab.io',
+    'herokuapp.com', 'pages.dev', 'vercel.app', 'web.app', 'firebaseapp.com', 'appspot.com'
+];
 
-export const removeSubdomain = s => {
-    s = s.replace(/^www\./, '');
-    let parts = s.split('.');
-    
-    while (parts.length > 3) {
-        parts.shift();
+// Probe whether the browser will set a cookie scoped to `.candidate`. The browser refuses cookies
+// on ICANN public suffixes (e.g. co.uk), so the broadest candidate that "sticks" is the
+// registrable domain — no maintained TLD list required.
+const canSetCookieOnDomain = candidate => {
+    const probe = '__cb_tld_probe';
+    document.cookie = `${probe}=1; domain=.${candidate}; path=/; SameSite=Lax`;
+    const ok = document.cookie.indexOf(`${probe}=`) !== -1;
+    document.cookie = `${probe}=; domain=.${candidate}; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+    return ok;
+};
+
+/**
+ * Registrable domain for the preferences cookie, so consent is shared across subdomains.
+ *
+ * @param hostname [String] host to derive from (defaults to the current location)
+ * @param canSet [Function] predicate testing whether the browser accepts a cookie on `.candidate`
+ *                          (injectable so the resolution logic is unit-testable without the PSL)
+ *
+ * @returns [String] registrable domain, or '' for localhost/IP/failure (a safe host-only default)
+ */
+export const getRegistrableDomain = (hostname = window.location.hostname, canSet = canSetCookieOnDomain) => {
+    try {
+        if (hostname === 'localhost' || /^\d+(\.\d+){3}$/.test(hostname)) return '';
+        const labels = hostname.replace(/^www\./, '').split('.');
+        if (labels.length < 2) return '';
+
+        let registrable = '';
+        // Broadest (2 labels) → narrowest; first candidate the browser accepts wins.
+        for (let k = 2; k <= labels.length; k++) {
+            const candidate = labels.slice(-k).join('.');
+            if (canSet(candidate)) {
+                registrable = candidate;
+                break;
+            }
+        }
+        if (!registrable) return '';
+
+        // If the browser accepted a known shared-hosting suffix, narrow to the app host so consent
+        // is not shared across tenants.
+        if (PRIVATE_SUFFIXES.indexOf(registrable) !== -1) {
+            const extra = labels.length - registrable.split('.').length - 1;
+            return extra < 0 ? '' : labels.slice(extra).join('.');
+        }
+
+        return registrable;
+    } catch {
+        return '';
     }
-
-    if (parts.length === 3 && ((secondTLDs.indexOf(parts[1]) === -1) && firstTLDs.indexOf(parts[2]) === -1)) {
-        parts.shift();
-    }
-
-    return parts.join('.');
 };
 
 export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(','))).filter(el => el.offsetWidth > 0 || el.offsetHeight > 0);

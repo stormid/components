@@ -1,12 +1,25 @@
 import { writeCookie, groupValueReducer, deleteCookies, getFocusableChildren, broadcast, setGoogleConsent } from './utils.js';
-import { ACCEPTED_TRIGGERS, EVENTS } from './constants.js';
+import { ACCEPTED_TRIGGERS, EVENTS, KEYS } from './constants.js';
 import { apply } from './consent.js';
 import { updateConsent, updateBannerOpen, updateBanner } from './reducers.js';
+
+// Every template (banner, form, message) receives the same model: the full state, with the
+// settings object also spread at the top level. So `model.classNames`/`model.policyURL` resolve
+// (settings spread), `model.settings.*`/`model.consent` resolve, and any top-level state field the
+// form/message templates previously received (they were passed raw state) is still present.
+const templateModel = state => Object.assign({}, state, state.settings, {
+    settings: state.settings,
+    consent: state.consent
+});
 
 export const initBanner = store => () => {
     const state = store.getState();
     if (state.bannerOpen || (state.settings.hideBannerOnFormPage && document.querySelector(`.${state.settings.classNames.formContainer}`))) return;
-    document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
+    const markup = state.settings.bannerTemplate(templateModel(state));
+    // firstElementChild is null on a page whose body has no element children — fall back to
+    // inserting the banner as the body's first child rather than throwing.
+    if (document.body.firstElementChild) document.body.firstElementChild.insertAdjacentHTML('beforebegin', markup);
+    else document.body.insertAdjacentHTML('afterbegin', markup);
     
     store.update(
         updateBanner(state, {
@@ -63,7 +76,6 @@ export const initBannerListeners = store => () => {
             store.update(
                 updateConsent(state, consentObject),
                 [
-                    deleteCookies,
                     writeCookie,
                     apply(store),
                     removeBanner(store),
@@ -86,6 +98,9 @@ export const initBannerListeners = store => () => {
             store.update(
                 updateConsent(state, consentObject),
                 [
+                    // Reject-all is the only path that clears cookies: withdrawing ALL consent is the
+                    // one case where a blunt wipe is correct and no consent fns re-run to recreate them.
+                    deleteCookies,
                     writeCookie,
                     removeBanner(store),
                     initForm(store),
@@ -115,7 +130,7 @@ const trapTab = state => event => {
 };
 
 export const keyListener = store => event => {
-    if (store.getState().banner && event.keyCode === 9) trapTab(store.getState())(event);
+    if (store.getState().banner && event.key === KEYS.TAB) trapTab(store.getState())(event);
 };
 
 const removeBanner = store => () => {
@@ -142,12 +157,12 @@ export const initForm = store => () => {
     const formContainer = document.querySelector(`.${state.settings.classNames.formContainer}`);
     if (!formContainer) return;
 
-    formContainer.innerHTML = state.settings.formTemplate(suggestedConsent(state));
+    formContainer.innerHTML = state.settings.formTemplate(templateModel(suggestedConsent(state)));
 
     const form = document.querySelector(`.${state.settings.classNames.form}`);
     const button = document.querySelector(`.${state.settings.classNames.submitBtn}`);
     const groups = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.field}`)).reduce((groups, field) => {
-        const groupName = field.getAttribute('name').replace('privacy-', '');
+        const groupName = field.getAttribute('name').replace(/^privacy-/, '');
         if (groups[groupName]) groups[groupName].push(field);
         else groups[groupName] = [field];
         return groups;
@@ -188,7 +203,6 @@ export const initForm = store => () => {
         store.update(
             updateConsent(state, consentObject),
             [
-                deleteCookies,
                 writeCookie,
                 apply(store),
                 removeBanner(store),
@@ -210,7 +224,7 @@ export const initForm = store => () => {
 };
 
 export const renderMessage = button => state => {
-    button.insertAdjacentHTML('afterend', state.settings.messageTemplate(state));
+    button.insertAdjacentHTML('afterend', state.settings.messageTemplate(templateModel(state)));
     button.setAttribute('disabled', 'disabled');
     /* node:coverage ignore next */
     window.setTimeout(() => {

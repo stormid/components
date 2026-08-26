@@ -8,3 +8,7 @@ export const EVENTS = {
     HIDE: 'banner.hide',
     CONSENT: 'banner.consent'
 };
+
+export const KEYS = {
+    TAB: 'Tab'
+};
