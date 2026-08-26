@@ -90,9 +90,9 @@ describe(`Modal > Initialisation`, () => {
         assert.notStrictEqual(ModalSet[0].getState, null);
     });
 
-    it('should return without throwing and a console warning if no DOM nodes are found', () => {
+    it('should return an empty array without throwing, and a console warning, if no DOM nodes are found', () => {
         const warn = mock.method(console, 'warn', () => {});
-        assert.strictEqual(modal('.js-not-found'), undefined);
+        assert.deepStrictEqual(modal('.js-not-found'), []);
         assert.ok(warn.mock.calls.some(call => {
             try {
                 assert.deepStrictEqual(call.arguments, [`Modal not initialised, no elements found for selector '.js-not-found'`]);
@@ -120,10 +120,10 @@ describe(`Modal > Initialisation`, () => {
 
     it('should console.warn if an alertdialog does not have a description linked with an aria-describedby attribute', () => {
         const warn = mock.method(console, 'warn', () => {});
-        assert.strictEqual(modal('.js-not-found'), undefined);
+        modal('.js-modal__undescribed');
         assert.ok(warn.mock.calls.some(call => {
             try {
-                assert.deepStrictEqual(call.arguments, [`Modal not initialised, no elements found for selector '.js-not-found'`]);
+                assert.deepStrictEqual(call.arguments, ['The alertdialog should have an aria-describedby attribute that matches the id of an element that contains text']);
                 return true;
             } catch {
                 return false;
@@ -238,6 +238,90 @@ describe('Modal > Initialisation > Start open', () => {
 
         const [ instance ] = modal('.js-modal');
         assert.strictEqual(instance.getState().isOpen, true);
+    });
+
+    it('should NOT start open when data-start-open is the string "false"', () => {
+        document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle" data-start-open="false">
+            <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label"><h1 id="modal-label">Modal</h1><button>Focusable element</button></div>
+        </div>`;
+
+        const [ instance ] = modal('.js-modal');
+        assert.strictEqual(instance.getState().isOpen, false);
+    });
+
+    it('should coerce a data-delay string into a number', () => {
+        document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle" data-delay="20">
+            <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label"><h1 id="modal-label">Modal</h1><button>Focusable element</button></div>
+        </div>`;
+
+        const [ instance ] = modal('.js-modal');
+        assert.strictEqual(instance.getState().settings.delay, 20);
+    });
+
+});
+
+
+describe('Modal > Initialisation > Dialog attributes', () => {
+
+    it('should set aria-modal and a fallback tabindex on the dialog', () => {
+        document.body.innerHTML = `<div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle">
+            <div class="modal__inner" role="dialog" aria-labelledby="modal-label"><h1 id="modal-label">Modal</h1><button>Focusable element</button></div>
+        </div>`;
+
+        modal('.js-modal');
+        const dialog = document.querySelector('.modal__inner');
+        assert.strictEqual(dialog.getAttribute('aria-modal'), 'true');
+        assert.strictEqual(dialog.getAttribute('tabindex'), '-1');
+    });
+
+});
+
+
+describe('Modal > Behaviour > DOM position', () => {
+
+    it('should move the node to the top of the body on open and restore its original position on close', () => {
+        document.body.innerHTML = `<div class="wrapper">
+            <button class="js-modal-toggle">Open modal</button>
+            <div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle">
+                <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label"><h1 id="modal-label">Modal</h1><button>Focusable element</button></div>
+            </div>
+            <p id="after">after</p>
+        </div>`;
+
+        const node = document.querySelector('#modal-1');
+        const originalParent = node.parentNode;
+        const [ instance ] = modal('.js-modal');
+
+        instance.open();
+        assert.strictEqual(document.body.firstElementChild, node);
+
+        instance.close();
+        assert.strictEqual(node.parentNode, originalParent);
+        assert.strictEqual(node.nextElementSibling.id, 'after');
+    });
+
+});
+
+
+describe('Modal > API > destroy', () => {
+
+    it('should close the modal and detach toggles so they no longer open it', () => {
+        document.body.innerHTML = `<button class="js-modal-toggle">Open modal</button>
+            <div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle">
+                <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label"><h1 id="modal-label">Modal</h1><button>Focusable element</button></div>
+            </div>`;
+
+        const [ instance ] = modal('.js-modal');
+        const toggle = document.querySelector('.js-modal-toggle');
+
+        toggle.click();
+        assert.strictEqual(instance.getState().isOpen, true);
+
+        instance.destroy();
+        assert.strictEqual(instance.getState().isOpen, false);
+
+        toggle.click();
+        assert.strictEqual(instance.getState().isOpen, false);
     });
 
 });

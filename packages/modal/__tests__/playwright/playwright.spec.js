@@ -98,11 +98,12 @@ test.describe('Modal > Aria', { tag: '@all'}, () => {
 		await expect(page.locator('#modal-confirmation')).toHaveAttribute('hidden');
 	});
 
-	test('Should have appropriate aria attributes on the node', async ({ page }) => {	
-		const node = page.locator('#modal-confirmation');
-		await expect(node).toHaveAttribute('aria-labelledby');
+	test('Should have appropriate aria attributes on the dialog', async ({ page }) => {
+		const dialog = page.locator('#modal-confirmation [role=dialog]');
+		await expect(dialog).toHaveAttribute('aria-modal', 'true');
+		await expect(dialog).toHaveAttribute('aria-labelledby');
 
-		const ariaLabelID = await node.getAttribute('aria-labelledby');
+		const ariaLabelID = await dialog.getAttribute('aria-labelledby');
 		await expect(page.locator('#'+ariaLabelID)).toHaveCount(1)
 	});
 
