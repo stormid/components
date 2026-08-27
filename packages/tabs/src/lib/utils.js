@@ -8,11 +8,43 @@ export const getActiveIndexByHash = panels => {
     }, undefined);
 };
 
-export const getActiveIndexOnLoad = (panels, node) => (location.hash)
-    ? getActiveIndexByHash(panels)
-    : (node.getAttribute('data-active-index'))
-        ? parseInt(node.getAttribute('data-active-index'), 10)
-        : undefined;
+export const getActiveIndexOnLoad = (panels, node) => {
+    const byHash = location.hash ? getActiveIndexByHash(panels) : undefined;
+    if (byHash !== undefined) return byHash;
+
+    const attr = node.getAttribute('data-active-index');
+    return attr !== null ? parseInt(attr, 10) : undefined;
+};
+
+/*
+ * Clamps a candidate index into a valid tab index, falling back to 0
+ *
+ * @param index, Number, candidate index (may be NaN or out of range)
+ * @param length, Number, number of tabs
+ * @return Number, a valid index in the range [0, length - 1]
+ */
+export const clampIndex = (index, length) => {
+    if (!Number.isInteger(index) || index < 0 || index > length - 1) {
+        if (index !== undefined && !Number.isNaN(index)) console.warn(`Tabs: activeIndex ${index} is out of range, defaulting to 0`);
+        return 0;
+    }
+    return index;
+};
+
+/*
+ * Coerces the string values of a DOMStringMap (node.dataset) so boolean
+ * options set via data-attributes behave like their JS counterparts.
+ * Only the literal tokens 'true'/'false' are converted - no string option
+ * legitimately equals those values.
+ *
+ * @param dataset, DOMStringMap, node.dataset
+ * @return Object, dataset with 'true'/'false' strings coerced to booleans
+ */
+export const coerceDataset = dataset => Object.keys(dataset).reduce((acc, key) => {
+    const value = dataset[key];
+    acc[key] = value === 'true' ? true : value === 'false' ? false : value;
+    return acc;
+}, {});
 
 /*
  * Converts a passed selector which can be of varying types into an array of DOM Objects

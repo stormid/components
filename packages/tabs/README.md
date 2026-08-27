@@ -53,17 +53,26 @@ const elements = [].slice.call(document.querySelectorAll('.js-tabs'));
 const [ instance ] = tabs(elements);
 ```
 
+Tabs may be either anchors (`href="#panel-id"`) or buttons (`aria-controls="panel-id"`).
+
 ## Options
 ```
 {
-    tabSelector: '[role=tab]', // selector for a tab link  
+    tabSelector: '[role=tab]', // selector for a tab link
     activeClass: 'is--active', //className added to active tab
-    updateURL: true, //push tab fragment identifier to window location hash
+    updateUrl: true, //replace the location hash with the active tab's fragment identifier
     activation: 'auto', //'auto' or 'manual' describes tab activation method
     activeIndex: 0, //index of initially active tab
-    focusOnLoad: true //a boolean to set whether the page should focus on the first tab after loading
+    focusOnLoad: false, //a boolean to set whether the page should focus on the active tab after loading
+    onChange: null //Function called with { activeIndex, tab, panel } whenever a tab is activated (not on initial load)
 }
 ```
+
+Options may also be set via `data-*` attributes on the tabs node, e.g. `data-activation="manual"`, `data-update-url="false"`, `data-active-index="1"`. Boolean options accept the strings `"true"`/`"false"`. `onChange` is a function and can only be set via JS options.
+
+## Keyboard
+
+Tabs follow the [WAI-ARIA tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/): `Left`/`Right` move between tabs, `Home`/`End` jump to the first/last tab, and `Enter`/`Space` activate a tab. In `auto` activation navigating also activates; in `manual` activation navigation only moves focus until `Enter`/`Space` is pressed.
 
 ## Setting the active tab
 ```
@@ -78,7 +87,9 @@ On page load the active tab will be set by (in order of precedence):
 Initialisation returns an array of instances. Each instance exposes the interface
 ```
 {
-    getState, a Function that returns the current state Object
+    getState, //a Function that returns the current state Object
+    goTo,     //a Function (index) => void that programmatically activates the tab at index
+    destroy   //a Function that removes all event listeners added by the instance
 }
 ```
 

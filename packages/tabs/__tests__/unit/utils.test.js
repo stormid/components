@@ -1,6 +1,6 @@
 import { describe, it, before } from 'node:test';
 import assert from 'node:assert/strict';
-import { getActiveIndexByHash, getActiveIndexOnLoad } from '../../src/lib/utils.js';
+import { getActiveIndexByHash, getActiveIndexOnLoad, clampIndex, coerceDataset } from '../../src/lib/utils.js';
 
 const init = () => {
     document.body.innerHTML = `<div role="tablist" data-active-index="1">
@@ -132,6 +132,59 @@ describe(`Tabs > utils > getActiveIndexOnLoad`, () => {
 
         const panels = [].slice.call(document.querySelectorAll('[role=tabpanel]'));
         assert.deepStrictEqual(getActiveIndexOnLoad(panels, node), 2);
+    });
+
+    it('should fall back to the data attribute when the hash matches no panel', async () => {
+        const node = document.querySelector('[role="tablist"]');
+        node.setAttribute('data-active-index', "2");
+
+        delete global.window.location;
+        global.window = Object.create(window);
+        global.window.location = {
+            port: '123',
+            protocol: 'http:',
+            hostname: 'localhost',
+            hash: '#does-not-exist'
+        };
+        global.location = global.window.location;
+
+        const panels = [].slice.call(document.querySelectorAll('[role=tabpanel]'));
+        assert.deepStrictEqual(getActiveIndexOnLoad(panels, node), 2);
+    });
+
+});
+
+describe(`Tabs > utils > clampIndex`, () => {
+
+    it('should return the index unchanged when it is a valid in-range integer', () => {
+        assert.strictEqual(clampIndex(2, 3), 2);
+        assert.strictEqual(clampIndex(0, 3), 0);
+    });
+
+    it('should default to 0 when the index is out of range', () => {
+        assert.strictEqual(clampIndex(99, 3), 0);
+        assert.strictEqual(clampIndex(-1, 3), 0);
+    });
+
+    it('should default to 0 when the index is NaN or not an integer', () => {
+        assert.strictEqual(clampIndex(NaN, 3), 0);
+        assert.strictEqual(clampIndex(1.5, 3), 0);
+    });
+
+});
+
+describe(`Tabs > utils > coerceDataset`, () => {
+
+    it('should coerce the strings "true" and "false" to booleans', () => {
+        const result = coerceDataset({ updateUrl: 'false', focusOnLoad: 'true' });
+        assert.strictEqual(result.updateUrl, false);
+        assert.strictEqual(result.focusOnLoad, true);
+    });
+
+    it('should leave other string values untouched', () => {
+        const result = coerceDataset({ activation: 'manual', activeIndex: '2' });
+        assert.strictEqual(result.activation, 'manual');
+        assert.strictEqual(result.activeIndex, '2');
     });
 
 });

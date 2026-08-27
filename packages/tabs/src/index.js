@@ -1,6 +1,6 @@
 import defaults from './lib/defaults.js';
 import factory from './lib/factory.js';
-import { getSelection } from './lib/utils.js';
+import { getSelection, coerceDataset } from './lib/utils.js';
 
 /*
  * Returns an array of objects augmenting DOM elements that match a selector
@@ -18,7 +18,7 @@ export default (selector, options) => {
     //and a settings property composed from defaults, data-attributes on the node, and options passed to init
     return nodes.map(node => {
         const instance = factory({
-            settings: { ...defaults, ...node.dataset, ...options },
+            settings: { ...defaults, ...coerceDataset(node.dataset), ...options },
             node
         });
         return instance ? Object.create(instance) : void console.warn('Tab not initialised, required markup not found');

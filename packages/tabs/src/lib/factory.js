@@ -1,31 +1,43 @@
 import { createStore } from './store.js';
-import { findTabsAndPanels, initUI, open } from './dom.js';
-import { getActiveIndexOnLoad } from './utils.js';
+import { findTabsAndPanels, initUI, open, changePanel } from './dom.js';
+import { getActiveIndexOnLoad, clampIndex } from './utils.js';
 
-/* 
+/*
  * @param settings, Object, merged defaults + options passed in as instantiation config to module default
  * @param node, HTMLElement, DOM node to be toggled
  *
- * @returns Object, Toggle API
+ * @returns Object, Tabs API
  */
 export default ({ node, settings }) => {
     const store = createStore();
     const { tabs, panels } = findTabsAndPanels(node, settings);
-   
+
     if (!tabs.length || !panels.length || panels.includes(undefined)) return false;
 
-    const activeIndex = getActiveIndexOnLoad(panels, node);
+    const resolvedIndex = getActiveIndexOnLoad(panels, node);
+    const activeIndex = clampIndex(resolvedIndex !== undefined ? +resolvedIndex : +settings.activeIndex, tabs.length);
+    const controller = new AbortController();
+
     store.update({
         settings,
         node,
-        activeIndex: activeIndex !== undefined  ? +activeIndex : +settings.activeIndex,
-        activeTabIndex: activeIndex !== undefined ? +activeIndex : +settings.activeIndex,
+        activeIndex,
+        activeTabIndex: activeIndex,
         tabs,
         panels,
-        loaded: false
+        loaded: false,
+        controller
     }, [ initUI(store), open(store) ]);
 
     return {
-        getState: store.getState
+        getState: store.getState,
+        goTo: index => {
+            const state = store.getState();
+            const target = clampIndex(+index, state.tabs.length);
+            if (target === state.activeIndex) return;
+            const previousIndex = state.activeIndex;
+            store.update({ ...state, activeIndex: target, activeTabIndex: target }, [() => changePanel(store, previousIndex)]);
+        },
+        destroy: () => store.getState().controller.abort()
     };
 };
