@@ -1,9 +1,9 @@
 /* node:coverage disable */
-export const KEY_CODES = {
-    TAB: 9,
-    ESC: 27,
-    LEFT: 37,
-    RIGHT: 39
+export const KEYS = {
+    TAB: 'Tab',
+    ESC: 'Escape',
+    LEFT: 'ArrowLeft',
+    RIGHT: 'ArrowRight'
 };
 
 export const ACCEPTED_TRIGGERS = ['button', 'a'];

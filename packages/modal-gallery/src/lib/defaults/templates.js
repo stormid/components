@@ -1,5 +1,5 @@
 /* node:coverage disable */
-import { sanitize } from '../utils.js';
+import { sanitize, escapeAttr } from '../utils.js';
 
 export const overlay = () => {
     const overlay = document.createElement('div');
@@ -15,7 +15,7 @@ export const overlay = () => {
 };
 
 export const overlayInner = (buttons, items) =>  `<div class="modal-gallery__inner js-modal-gallery__inner" role="group" aria-roledescription="carousel">
-                                    <div class="modal-gallery__content js-modal-gallery__content" aria-atomic="false" aria-live="polite">
+                                    <div class="modal-gallery__content js-modal-gallery__content">
                                         ${items}
                                     </div>
                                 </div>
@@ -28,27 +28,31 @@ export const overlayInner = (buttons, items) =>  `<div class="modal-gallery__inn
                                         </g>
                                     </svg>
                                 </button>
-                                <div class="modal-gallery__total js-gallery-totals"></div>`;
+                                <div class="modal-gallery__total js-gallery-totals" aria-hidden="true"></div>
+                                <div class="js-modal-gallery__status" role="status" aria-live="polite" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0"></div>`;
 
-export const buttons = () => `<button class="js-modal-gallery__next modal-gallery__next" aria-label="Next">
-    <svg focusable="false" aria-hidden="true" width="44" height="60" stroke="#fff">
-        <polyline points="14 10 34 30 14 50" stroke-width="4" stroke-linecap="butt" fill="none" stroke-linejoin="round"/>
-    </svg>
-    </button>
-    <button class="js-modal-gallery__previous modal-gallery__previous" aria-label="Previous">
+export const buttons = () => `<button class="js-modal-gallery__previous modal-gallery__previous" aria-label="Previous">
     <svg focusable="false" aria-hidden="true" width="44" height="60" stroke="#fff">
         <polyline points="30 10 10 30 30 50" stroke-width="4" stroke-linecap="butt" fill="none" stroke-linejoin="round"/>
     </svg>
+    </button>
+    <button class="js-modal-gallery__next modal-gallery__next" aria-label="Next">
+    <svg focusable="false" aria-hidden="true" width="44" height="60" stroke="#fff">
+        <polyline points="14 10 34 30 14 50" stroke-width="4" stroke-linecap="butt" fill="none" stroke-linejoin="round"/>
+    </svg>
 </button>`;
 
-export const item = items => (details, i) => `<div class="modal-gallery__item js-modal-gallery__item" role="group" aria-roledescription="slide" aria-label="Image ${i + 1} of ${items.length}${items[i].title ? `, ${items[i].title}` : ''}">
+export const item = items => (details, i) => `<div class="modal-gallery__item js-modal-gallery__item" role="group" aria-roledescription="slide" aria-label="Image ${i + 1} of ${items.length}${items[i].title ? `, ${escapeAttr(items[i].title)}` : ''}">
                                     <div class="modal-gallery__img-container js-modal-gallery__img-container"></div>
                                     ${details}
                                 </div>`;
 
-export const details = item => item.title || item.description
-    ? `<div class="modal-gallery__details">
-                                    ${item.title ? `<h1 class="modal-gallery__title">${sanitize(item.title)}</h1>` : ``}
+export const details = (item, headingLevel = 'h2') => {
+    const tag = /^h[1-6]$/.test(headingLevel) ? headingLevel : 'h2';
+    return item.title || item.description
+        ? `<div class="modal-gallery__details">
+                                    ${item.title ? `<${tag} class="modal-gallery__title">${sanitize(item.title)}</${tag}>` : ``}
                                     ${item.description ? `<div class="modal-gallery__description">${sanitize(item.description)}</div>` : ``}
                                 </div>`
-    : '';
+        : '';
+};

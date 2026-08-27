@@ -1,5 +1,5 @@
-import { KEY_CODES, ACCEPTED_TRIGGERS } from './constants.js';
-import { getFocusableChildren } from './utils.js';
+import { KEYS, ACCEPTED_TRIGGERS } from './constants.js';
+import { getFocusableChildren, escapeAttr } from './utils.js';
 
 export const initTriggers = store => state => {
     const { items, settings } = state;
@@ -25,6 +25,8 @@ const loadImage = store => (item, i) => {
             writeImage(state, i);
         };
         img.onload = loaded;
+        if (item.srcset) img.srcset = item.srcset;
+        if (item.sizes) img.sizes = item.sizes;
         img.src = item.src;
         if (img.complete) loaded();
     } catch (e) {
@@ -42,6 +44,10 @@ const loadImages = store => i => {
         if (imageCache[idx] === undefined) {
             dom.items[idx].classList.add('loading');
             loadImage(store)(items[idx], idx);
+        } else {
+            /* Already cached (e.g. a reopened gallery, or a preload that completed
+               before this DOM existed) — the fresh DOM has no <img> yet, so paint it. */
+            writeImage(store.getState(), idx);
         }
     });
 
@@ -51,25 +57,59 @@ export const initUI = store => state => {
     const { settings, items, keyListener } = store.getState();
     const container = document.body.appendChild(settings.templates.overlay());
     const buttons = items.length > 1 ? settings.templates.buttons() : '';
-    container.insertAdjacentHTML('beforeend', settings.templates.overlayInner(buttons, items.map(settings.templates.details).map(settings.templates.item(items)).join('')));
+    container.insertAdjacentHTML('beforeend', settings.templates.overlayInner(buttons, items.map(item => settings.templates.details(item, settings.headingLevel)).map(settings.templates.item(items)).join('')));
     const domItems = [].slice.call(container.querySelectorAll('.js-modal-gallery__item'));
     const domTotals = container.querySelector('.js-gallery-totals');
+    const domStatus = container.querySelector('.js-modal-gallery__status');
     store.update({
         ...store.getState(),
         dom: {
             overlay: container,
             items: domItems,
             totals: domTotals,
+            status: domStatus,
             focusableChildren: getFocusableChildren(container),
-            lastFocused: document.activeElement
+            lastFocused: document.activeElement,
+            bodyOverflow: document.body.style.overflow
         }
     }, [
         load(store),
         initUIButtons(store),
         () => document.addEventListener('keydown', keyListener),
+        lockBackground(store),
         toggle(store),
-        writeTotals
+        writeTotals,
+        writeStatus
     ]);
+};
+
+/*
+ * Turns the page behind the open modal into a true modal context: stops the body scrolling
+ * and marks every sibling of the overlay inert (removing it from the tab order and the
+ * accessibility tree). Only elements this component marks are un-set on close, so pre-existing
+ * inert/overflow state is left untouched. Both behaviours are opt-out via settings.
+ */
+const lockBackground = store => () => {
+    const { settings, dom } = store.getState();
+    if (settings.lockScroll) document.body.style.overflow = 'hidden';
+    if (settings.inertBackground) {
+        [].slice.call(document.body.children).forEach(child => {
+            if (child === dom.overlay || child.hasAttribute('inert')) return;
+            child.setAttribute('inert', '');
+            child.setAttribute('data-modal-gallery-inert', '');
+        });
+    }
+};
+
+const unlockBackground = store => () => {
+    const { settings, dom } = store.getState();
+    if (settings.lockScroll) document.body.style.overflow = dom.bodyOverflow || '';
+    if (settings.inertBackground) {
+        [].slice.call(document.querySelectorAll('[data-modal-gallery-inert]')).forEach(el => {
+            el.removeAttribute('inert');
+            el.removeAttribute('data-modal-gallery-inert');
+        });
+    }
 };
 
 const load = store => state => {
@@ -85,10 +125,10 @@ const writeImage = (state, i) => {
     const img = imageContainer.querySelector('.modal-gallery__img');
     if (img) return;
     const imageClassName = settings.scrollable ? 'modal-gallery__img modal-gallery__img--scrollable' : 'modal-gallery__img';
-    const srcsetAttribute = dom.items[i].srcset ? ` srcset="${dom.items[i].srcset}"` : '';
-    const sizesAttribute = dom.items[i].sizes ? ` sizes="${dom.items[i].sizes}"` : '';
-    
-    imageContainer.innerHTML = `<img class="${imageClassName}" src="${items[i].src}" alt="${items[i].title}"${srcsetAttribute}${sizesAttribute}>`;
+    const srcsetAttribute = items[i].srcset ? ` srcset="${escapeAttr(items[i].srcset)}"` : '';
+    const sizesAttribute = items[i].sizes ? ` sizes="${escapeAttr(items[i].sizes)}"` : '';
+
+    imageContainer.innerHTML = `<img class="${imageClassName}" src="${escapeAttr(items[i].src)}" alt="${escapeAttr(items[i].title)}"${srcsetAttribute}${sizesAttribute}>`;
     dom.items[i].classList.remove('loading');
 };
 
@@ -124,17 +164,17 @@ const initUIButtons = store => state => {
 export const keyListener = store => e => {
     const { isOpen } = store.getState();
     if (!isOpen) return;
-    switch (e.keyCode) {
-    case KEY_CODES.ESC:
+    switch (e.key) {
+    case KEYS.ESC:
         close(store);
         break;
-    case KEY_CODES.TAB:
+    case KEYS.TAB:
         trapTab(store, e);
         break;
-    case KEY_CODES.LEFT:
+    case KEYS.LEFT:
         previous(store);
         break;
-    case KEY_CODES.RIGHT:
+    case KEYS.RIGHT:
         next(store);
         break;
     default:
@@ -144,7 +184,14 @@ export const keyListener = store => e => {
 
 const trapTab = (store, e) => {
     const { dom } = store.getState();
+    if (!dom.focusableChildren || dom.focusableChildren.length === 0) return;
     const focusedIndex = dom.focusableChildren.indexOf(document.activeElement);
+    if (focusedIndex === -1) {
+        /* Focus escaped the tracked set (e.g. it was on the overlay itself) — pull it back in. */
+        e.preventDefault();
+        dom.focusableChildren[0].focus();
+        return;
+    }
     if (e.shiftKey && focusedIndex === 0) {
         /* node:coverage ignore next */
         e.preventDefault();
@@ -162,14 +209,27 @@ const toggle = store => state => {
     dom.overlay.classList.toggle('is--active');
     dom.overlay.setAttribute('aria-hidden', !isOpen);
     dom.overlay.setAttribute('tabindex', isOpen ? '0' : '-1');
-    isOpen !== null && dom.items[current].classList.add('is--active');
-    if (dom.focusableChildren && dom.focusableChildren.length > 0) window.setTimeout(() => { dom.focusableChildren[0].focus(); }, 0);
+    current !== null && dom.items[current].classList.add('is--active');
+    window.setTimeout(() => {
+        const target = dom.overlay.querySelector('.js-modal-gallery__close')
+            || (dom.focusableChildren && dom.focusableChildren[0])
+            || dom.overlay;
+        if (target) target.focus();
+    }, 0);
 
     settings.fullscreen && toggleFullScreen(state);
 };
 
 const writeTotals = ({ dom, current, items, settings }) => {
     if (settings.totals) dom.totals.innerHTML = `${current + 1}/${items.length}`;
+};
+
+/* Announces the current position (and title) to assistive tech via a dedicated live region;
+   textContent is used so titles can never inject markup. */
+const writeStatus = ({ dom, current, items }) => {
+    if (!dom.status || current === null) return;
+    const title = items[current] && items[current].title ? `, ${items[current].title}` : '';
+    dom.status.textContent = `Image ${current + 1} of ${items.length}${title}`;
 };
 
 const toggleFullScreen = ({ isOpen, dom }) => {
@@ -199,7 +259,8 @@ export const previous = store => {
         () => dom.items[current].classList.remove('is--active'),
         () => dom.items[next].classList.add('is--active'),
         load(store),
-        writeTotals
+        writeTotals,
+        writeStatus
     ]);
 };
 
@@ -213,21 +274,22 @@ export const next = store => {
         () => dom.items[current].classList.remove('is--active'),
         () => dom.items[next].classList.add('is--active'),
         load(store),
-        writeTotals
+        writeTotals,
+        writeStatus
     ]);
 };
 
 export const close = store => {
-    const { keyListener, lastFocused, dom } = store.getState();
+    const { keyListener, lastFocused, dom, settings } = store.getState();
     store.update({
         ...store.getState(),
         current: null,
         isOpen: false
     }, [
         () => document.removeEventListener('keydown', keyListener),
+        () => { if (settings.fullscreen) toggleFullScreen(store.getState()); },
+        unlockBackground(store),
         () => { if (lastFocused) lastFocused.focus(); },
-        // () => dom.items[current].classList.remove('is--active'),
-        // toggle(store),
         () => dom.overlay.parentNode.removeChild(dom.overlay)
     ]);
 };

@@ -19,32 +19,29 @@ export const getSelection = selector => {
     return [];
 };
 
+/*
+ * Normalises a selection entry into an item model. DOM elements are read from their
+ * href/data-* attributes; plain objects (programmatic init) are passed through unchanged.
+ */
+const toItem = el => (el instanceof HTMLElement) ? {
+    trigger: el,
+    src: el.getAttribute('href'),
+    srcset: el.getAttribute('data-srcset') || null,
+    sizes: el.getAttribute('data-sizes') || null,
+    title: el.getAttribute('data-title') || '',
+    description: el.getAttribute('data-description') || ''
+} : el;
+
 export const singles = (src, opts) => {
     let els = getSelection(src);
     if (!els.length) return void console.warn('Modal Gallery cannot be initialised, no images found');
 
-    return els.map(el => create([{
-        trigger: el,
-        src: el.getAttribute('href'),
-        srcset: el.getAttribute('data-srcset') || null,
-        sizes: el.getAttribute('data-sizes') || null,
-        title: el.getAttribute('data-title') || '',
-        description: el.getAttribute('data-description') || ''
-    }], opts));
+    return els.map(el => create([toItem(el)], opts));
 };
 
 export const galleries = (src, opts) => {
     let els = getSelection(src);
     if (!els.length) return void console.warn('Modal Gallery cannot be initialised, no images found');
-		
-    let items = els.map(el => (el instanceof HTMLElement) ? {
-        trigger: el,
-        src: el.getAttribute('href'),
-        srcset: el.getAttribute('data-srcset') || null,
-        sizes: el.getAttribute('data-sizes') || null,
-        title: el.getAttribute('data-title') || '',
-        description: el.getAttribute('data-description') || ''
-    } : el);
 
-    return create(items, opts);
+    return create(els.map(toItem), opts);
 };

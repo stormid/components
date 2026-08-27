@@ -74,6 +74,52 @@ test.describe('Modal gallery > Aria', { tag: '@all' }, () => {
     });
 });
 
+test.describe('Modal gallery > Images', { tag: '@all' }, () => {
+    test('should render the current image with the srcset from its data-srcset', async ({ page }) => {
+        await openGallery(page);
+        const img = page.locator('.js-modal-gallery__item.is--active .modal-gallery__img');
+        await expect(img).toHaveAttribute('srcset', /placehold\.co/);
+    });
+
+    test('should re-render the image after closing and reopening', async ({ page }) => {
+        await openGallery(page);
+        await expect(page.locator('.js-modal-gallery__item.is--active .modal-gallery__img')).toHaveAttribute('src', /placehold\.co/);
+        await page.locator('.js-modal-gallery__close').click();
+        await expect(page.locator('.js-modal-gallery__outer')).toHaveCount(0);
+        await openGallery(page);
+        await expect(page.locator('.js-modal-gallery__item.is--active .modal-gallery__img')).toHaveAttribute('src', /placehold\.co/);
+    });
+});
+
+test.describe('Modal gallery > Modal behaviour', { tag: '@all' }, () => {
+    test('should move focus to the close button when opened', async ({ page }) => {
+        await openGallery(page);
+        await expect(page.locator('.js-modal-gallery__close')).toBeFocused();
+    });
+
+    test('should make the page behind the modal inert while open and restore it on close', async ({ page }) => {
+        await openGallery(page);
+        await expect(page.locator('main')).toHaveAttribute('inert', '');
+        await page.locator('.js-modal-gallery__close').click();
+        await expect(page.locator('.js-modal-gallery__outer')).toHaveCount(0);
+        await expect(page.locator('main')).not.toHaveAttribute('inert', '');
+    });
+
+    test('should lock body scroll while open and restore it on close', async ({ page }) => {
+        await openGallery(page);
+        await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+        await page.locator('.js-modal-gallery__close').click();
+        await expect(page.locator('.js-modal-gallery__outer')).toHaveCount(0);
+        await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
+    });
+
+    test('should return focus to the trigger after closing', async ({ page }) => {
+        await openGallery(page);
+        await page.keyboard.press('Escape');
+        await expect(page.locator('.js-modal-gallery').first()).toBeFocused();
+    });
+});
+
 test.describe('Modal gallery > Axe', { tag: '@reduced' }, () => {
     test('Should not have any automatically detectable accessibility issues on load', async ({ page }) => {
         const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
