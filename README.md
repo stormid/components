@@ -14,7 +14,7 @@ Each package is available for use on npm. See [the docs](https://github.com/stor
 | [Cookie Banner](./packages/cookie-banner) | GDPR compliant cookie banner                                                                                                                        |
 | [Modal](./packages/modal)                 | Accessible modal dialog                                                                                                                             |
 | [Modal Gallery](./packages/modal-gallery) | Accessible modal gallery                                                                                                                            |
-| [Outliner](./packages/outliner)           | Hide CSS outline on mouse interactions, until [:focus-visible](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible) has broader support |
+| [Outliner](./packages/outliner)           | Legacy-browser fallback for hiding focus outlines on mouse interactions — prefer native [:focus-visible](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible) |
 | [Scroll Points](./packages/scroll-points) | Trigger events based on element intersecting the viewport                                                                                           |
 | [Scroll Spy](./packages/scroll-spy)       | Update elements based on target element intersecting the viewport                                                                                   |
 | [Skip](./packages/skip)                   | Ensure fragment identifier links focus on their target node                                                                                         |

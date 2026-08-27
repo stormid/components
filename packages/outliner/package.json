@@ -1,7 +1,7 @@
 {
   "name": "@stormid/outliner",
   "version": "1.0.2",
-  "description": "Hide CSS outline on mouse interactions, show on keyboard interactions",
+  "description": "Legacy-browser fallback for hiding focus outlines on mouse interactions — prefer native :focus-visible",
   "author": "stormid",
   "license": "MIT",
   "publishConfig": {
