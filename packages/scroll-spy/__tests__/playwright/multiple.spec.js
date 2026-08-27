@@ -6,9 +6,10 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('Scroll spy > functionality', { tag: '@all'}, () => {
-	test('Multiple links should be active when the page is loaded', async ({ page }) => {	
-		const matchingLinks = page.locator('.is--active');		
-		expect(await matchingLinks.count()).toBeGreaterThan(1);
+	test('Multiple links should be active when the page is loaded', async ({ page }) => {
+		await expect(async () => {
+			expect(await page.locator('.is--active').count()).toBeGreaterThan(1);
+		}).toPass();
 	});
 });
 
