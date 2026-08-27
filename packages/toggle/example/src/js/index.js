@@ -1,5 +1,5 @@
-import toggle from '../../../src';
-    
+import toggle from '../../../src/index.js';
+
 window.addEventListener('DOMContentLoaded', () => {
     toggle('.js-toggle-menu', {
         focus: false,
@@ -13,13 +13,8 @@ window.addEventListener('DOMContentLoaded', () => {
         trapTab: true
     });
 
-    toggle('.js-toggle-local', {
-        local: true
-    });
-
-    toggle('.js-toggle-data', {
+    //exposed so the Playwright suite can drive the instance API, e.g. destroy
+    window.instances = toggle('.js-toggle-local', {
         local: true
     });
 });
-    
-    
