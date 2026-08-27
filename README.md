@@ -19,7 +19,7 @@ Each package is available for use on npm. See [the docs](https://github.com/stor
 | [Scroll Spy](./packages/scroll-spy)       | Update elements based on target element intersecting the viewport                                                                                   |
 | [Skip](./packages/skip)                   | Move focus to fragment identifier link targets — for cases native focus and a static [tabindex="-1"](./packages/skip) don't cover                    |
 | [Tabs](./packages/tabs)                   | Accessible tabbed panelled content areas                                                                                                            |
-| [Textarea](./packages/textarea)           | Auto-resizing textarea                                                                                                                              |
+| [Textarea](./packages/textarea)           | Auto-resizing textarea — fallback for browsers without native [field-sizing: content](https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing) |
 | [Toggle](./packages/toggle)               | Accessible DOM element expand and collapse                                                                                                          |
 | [Validate](./packages/validate)           | Client-side form validation library                                                                                                                 |
 
