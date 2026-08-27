@@ -1,6 +1,6 @@
 import defaults from './lib/defaults.js';
 import factory from './lib/factory.js';
-import { getSelection, coerceSettings } from './lib/utils.js';
+import { getSelection, coerceSettings, BOOLEAN_SETTINGS, NUMBER_SETTINGS } from './lib/utils.js';
 
 /*
  * Returns an array of modal instances augmenting DOM elements that match a selector
@@ -19,10 +19,11 @@ export default (selector, options) => {
     }
 
     //return an Array of instances, one for each DOM node found
-    //each instance exposes getState/open/close/destroy, with settings composed from
-    //defaults, data-attributes on the node, and options passed to init (coerced to their intended types)
+    //each instance exposes getState/open/close/destroy, with settings composed from defaults,
+    //options passed to init, and data-attributes on the node (coerced to their intended types).
+    //data-attributes are applied last so a single init call can be tuned per node
     return nodes.map(node => factory({
-        settings: coerceSettings({ ...defaults, ...node.dataset, ...options }),
+        settings: coerceSettings({ ...defaults, ...options, ...node.dataset }, { booleans: BOOLEAN_SETTINGS, numbers: NUMBER_SETTINGS }),
         node
     }));
 };

@@ -1,6 +1,6 @@
 import { describe, it, before } from 'node:test';
 import assert from 'node:assert/strict';
-import { getActiveIndexByHash, getActiveIndexOnLoad, clampIndex, coerceDataset } from '../../src/lib/utils.js';
+import { getActiveIndexByHash, getActiveIndexOnLoad, clampIndex, coerceSettings, BOOLEAN_SETTINGS, NUMBER_SETTINGS } from '../../src/lib/utils.js';
 
 const init = () => {
     document.body.innerHTML = `<div role="tablist" data-active-index="1">
@@ -173,18 +173,28 @@ describe(`Tabs > utils > clampIndex`, () => {
 
 });
 
-describe(`Tabs > utils > coerceDataset`, () => {
+describe(`Tabs > utils > coerceSettings`, () => {
 
-    it('should coerce the strings "true" and "false" to booleans', () => {
-        const result = coerceDataset({ updateUrl: 'false', focusOnLoad: 'true' });
+    const opts = { booleans: BOOLEAN_SETTINGS, numbers: NUMBER_SETTINGS };
+
+    it('should coerce the string forms of Boolean settings', () => {
+        const result = coerceSettings({ updateUrl: 'false', focusOnLoad: 'true' }, opts);
         assert.strictEqual(result.updateUrl, false);
         assert.strictEqual(result.focusOnLoad, true);
     });
 
-    it('should leave other string values untouched', () => {
-        const result = coerceDataset({ activation: 'manual', activeIndex: '2' });
-        assert.strictEqual(result.activation, 'manual');
-        assert.strictEqual(result.activeIndex, '2');
+    it('should leave Boolean settings passed as Booleans untouched', () => {
+        const result = coerceSettings({ updateUrl: true, focusOnLoad: false }, opts);
+        assert.strictEqual(result.updateUrl, true);
+        assert.strictEqual(result.focusOnLoad, false);
+    });
+
+    it('should coerce numeric settings to Numbers', () => {
+        assert.strictEqual(coerceSettings({ activeIndex: '2' }, opts).activeIndex, 2);
+    });
+
+    it('should leave settings that are neither Boolean nor Number untouched', () => {
+        assert.strictEqual(coerceSettings({ activation: 'manual' }, opts).activation, 'manual');
     });
 
 });

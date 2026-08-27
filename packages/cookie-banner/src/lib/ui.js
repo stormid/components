@@ -64,8 +64,8 @@ export const initBannerListeners = store => () => {
         };
     };
 
-    const acceptBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
-    const rejectBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.rejectBtn)));
+    const acceptBtns = Array.from(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
+    const rejectBtns = Array.from(document.querySelectorAll(composeSelector(state.settings.classNames.rejectBtn)));
 
     if (state.settings.trapTab) document.addEventListener('keydown', state.keyListener);
 
@@ -161,7 +161,7 @@ export const initForm = store => () => {
 
     const form = document.querySelector(`.${state.settings.classNames.form}`);
     const button = document.querySelector(`.${state.settings.classNames.submitBtn}`);
-    const groups = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.field}`)).reduce((groups, field) => {
+    const groups = Array.from(document.querySelectorAll(`.${state.settings.classNames.field}`)).reduce((groups, field) => {
         const groupName = field.getAttribute('name').replace(/^privacy-/, '');
         if (groups[groupName]) groups[groupName].push(field);
         else groups[groupName] = [field];

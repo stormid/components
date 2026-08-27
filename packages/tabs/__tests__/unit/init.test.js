@@ -43,8 +43,8 @@ describe(`Tabs > init`, () => {
         assert.notStrictEqual(TabSet[0].node, null);
     });
 
-    it('should return without throwing if no DOM nodes are found', () => {
-        assert.strictEqual(tabs('.js-no-found'), undefined);
+    it('should return an empty array if no DOM nodes are found', () => {
+        assert.deepStrictEqual(tabs('.js-no-found'), []);
     });
 
     it('should set activeIndex based on options passed to init', () => {

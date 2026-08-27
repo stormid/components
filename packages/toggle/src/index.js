@@ -1,6 +1,6 @@
 import defaults from './lib/defaults.js';
 import factory from './lib/factory.js';
-import { getSelection, coerceSettings } from './lib/utils.js';
+import { getSelection, coerceSettings, BOOLEAN_SETTINGS, NUMBER_SETTINGS } from './lib/utils.js';
 
 /*
  * Returns an array of objects augmenting DOM elements that match a selector
@@ -22,8 +22,11 @@ export default (selector, options) => {
     //each instance exposes node/startToggle/toggle/getState/destroy, with settings composed from
     //defaults, options passed to init, and data-attributes on the node (coerced to their intended types).
     //data-attributes are applied last so a single init call can be tuned per node
-    return nodes.map(node => factory({
-        settings: coerceSettings({ ...defaults, ...options, ...node.dataset }),
-        node
-    }));
+    return nodes.map(node => {
+        const settings = coerceSettings({ ...defaults, ...options, ...node.dataset }, { booleans: BOOLEAN_SETTINGS, numbers: NUMBER_SETTINGS });
+        //data-toggle identifies the trigger elements, so it is structural markup rather than
+        //configuration and is dropped rather than carried into settings as `toggle`
+        delete settings.toggle;
+        return factory({ settings, node });
+    });
 };

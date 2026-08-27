@@ -1,4 +1,5 @@
 import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, KEYS, EVENTS } from './constants.js';
+import { uid } from './utils.js';
 
 /*
  * Renders a node as its opening tag so warnings can identify which element is misconfigured.
@@ -25,10 +26,10 @@ const describeNode = node => {
  */
 export const initUI = store => () => {
     const { toggles, node, settings, toggleHandler, keydownHandler } = store.getState();
-    const id = node.getAttribute('id');
 
-    //aria-controls needs an id to point at, so there is nothing accessible to wire up without one
-    if (!id) return void console.warn(`Toggle not initialised, ${describeNode(node)} requires an id for its triggers to reference with aria-controls`);
+    //aria-controls needs an id to point at; mint one when the node has none so the triggers can
+    //still reference it, rather than emitting aria-controls="null" or silently skipping the wiring
+    const id = node.getAttribute('id') || (node.setAttribute('id', uid('toggle-target')), node.getAttribute('id'));
     if (toggles.length === 0) return; //findToggles has already warned
 
     if (settings.useHidden) node.hidden = true;
@@ -123,7 +124,7 @@ export const findToggles = node => {
 
     let toggles;
     try {
-        toggles = [].slice.call(document.querySelectorAll(composeSelector(toggleSelector)));
+        toggles = Array.from(document.querySelectorAll(composeSelector(toggleSelector)));
     } catch {
         //querySelectorAll throws a SyntaxError on a data-toggle value that is not a valid CSS identifier
         console.warn(`Toggle cannot be initialised, the data-toggle value '${toggleSelector}' on ${describeNode(node)} is not a valid className`);
@@ -140,7 +141,7 @@ export const findToggles = node => {
  * @param node, HTMLElement, node to be toggled
  * @return Array of HTMLElements
  */
-export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
+export const getFocusableChildren = node => Array.from(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
 
 /*
  * Change toggle button attributes and node target classNames

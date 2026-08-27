@@ -18,18 +18,15 @@ export const broadcast = (store, action, option = null) => {
 //enhancing a server-rendered input keeps whatever it was authored with.
 const OPTIONAL_INPUT_ATTRIBUTES = [ 'inputmode', 'autocorrect', 'autocapitalize' ];
 
-//a data-* attribute arrives as a string, so "false" must not be read as the truthy
-//string it technically is
-const isFalse = value => value === false || value === 'false';
-
 const applyInputAttributes = (input, settings) => {
     OPTIONAL_INPUT_ATTRIBUTES.forEach(attribute => {
         const value = settings[attribute];
         if (value !== null && value !== undefined && value !== '') input.setAttribute(attribute, value);
     });
     //always written (defaulting to off — see the README on why), and enumerated rather
-    //than boolean, so it has to carry the string "false" to switch checking off
-    input.setAttribute('spellcheck', String(!isFalse(settings.spellcheck)));
+    //than boolean, so it has to carry the string "false" to switch checking off. settings.spellcheck
+    //is coerced to a real Boolean at init, so String() yields the "true"/"false" the attribute needs
+    input.setAttribute('spellcheck', String(settings.spellcheck));
 };
 
 export const createInput = ({ node, settings, id, listId, describedby, input }) => {

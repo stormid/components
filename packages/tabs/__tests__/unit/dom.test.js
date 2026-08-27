@@ -143,6 +143,29 @@ describe('Tabs > buttons', () => {
 
 });
 
+describe('Tabs > aria > tab id fallback', () => {
+
+    it('mints an id for a tab that has none so its panel can reference it, never aria-labelledby="null"', () => {
+        document.body.innerHTML = `<div role="tablist">
+            <div class="tabs__nav">
+                <button class="js-tabs__link" aria-controls="panel-1" role="tab" type="button">Tab 1</button>
+                <button class="js-tabs__link" aria-controls="panel-2" role="tab" type="button">Tab 2</button>
+            </div>
+            <section id="panel-1" role="tabpanel">Panel 1</section>
+            <section id="panel-2" role="tabpanel" hidden>Panel 2</section>
+        </div>`;
+
+        tabs('[role=tablist]', { updateUrl: false });
+
+        const [tab1, tab2] = document.querySelectorAll('[role=tab]');
+        assert.ok(tab1.getAttribute('id'));
+        assert.ok(tab2.getAttribute('id'));
+        assert.strictEqual(document.getElementById('panel-1').getAttribute('aria-labelledby'), tab1.getAttribute('id'));
+        assert.strictEqual(document.getElementById('panel-2').getAttribute('aria-labelledby'), tab2.getAttribute('id'));
+    });
+
+});
+
 describe('Tabs > options > updateUrl', () => {
 
     it('does not update the URL when data-update-url="false"', () => {

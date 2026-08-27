@@ -5,12 +5,9 @@
  * a NodeList or an HTMLCollection.
  */
 export const getSelection = selector => {
-    if (typeof selector === 'string') return [].slice.call(document.querySelectorAll(selector));
+    if (typeof selector === 'string') return Array.from(document.querySelectorAll(selector));
     if (Array.isArray(selector)) return selector;
-    // single DOM element (checked before array-likes so <form>/<select>, which expose a
-    // numeric length, aren't mistaken for a collection)
-    if (selector && selector.nodeType === 1) return [selector];
-    // NodeList, HTMLCollection or any array-like collection of nodes
-    if (selector && typeof selector.length === 'number') return [].slice.call(selector);
+    if (selector instanceof NodeList || selector instanceof HTMLCollection) return Array.from(selector);
+    if (selector && selector.nodeType === 1) return [selector]; // nodeType check is cross-realm safe, unlike instanceof HTMLElement
     return [];
 };

@@ -12,7 +12,7 @@ const search = query => values.filter(item => item.value.includes(query));
 
 const init = (options = {}) => mount(host('f', 'Fruit'), { name: 'f', minlength: 1, search, ...options });
 
-const key = (target, keyCode) => target.dispatchEvent(new KeyboardEvent('keydown', { keyCode, bubbles: true }));
+const key = (target, k) => target.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true }));
 
 describe('Autocomplete > Escape', () => {
     beforeEach(() => {
@@ -24,7 +24,7 @@ describe('Autocomplete > Escape', () => {
         const input = node.querySelector('input');
         input.focus();
         type(input, 'ap'); // list opens, focus stays on the input (nothing arrowed to)
-        key(input, 27);
+        key(input, 'Escape');
 
         //aria-selected is invalid on role="combobox" and must never be stamped there
         assert.strictEqual(input.hasAttribute('aria-selected'), false);
@@ -36,7 +36,7 @@ describe('Autocomplete > Escape', () => {
         const input = node.querySelector('input');
         input.focus();
         type(input, 'ap');
-        key(input, 40); // ArrowDown highlights the first option; focus stays in the input
+        key(input, 'ArrowDown'); // ArrowDown highlights the first option; focus stays in the input
 
         const option = node.querySelector('[role="option"]');
         assert.strictEqual(document.activeElement, input);
@@ -44,7 +44,7 @@ describe('Autocomplete > Escape', () => {
         assert.strictEqual(option.classList.contains('autocomplete__option--active'), true);
         assert.strictEqual(input.getAttribute('aria-activedescendant'), option.id);
 
-        key(input, 27);
+        key(input, 'Escape');
         assert.strictEqual(option.getAttribute('aria-selected'), 'false');
         assert.strictEqual(option.classList.contains('autocomplete__option--active'), false);
         assert.strictEqual(document.activeElement, input);

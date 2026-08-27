@@ -2,7 +2,7 @@ import { describe, it, beforeEach, mock } from 'node:test';
 import assert from 'node:assert/strict';
 import toggle from '../../src/index.js';
 import { findToggles, getFocusableChildren, getStateFromDOM, toggleAttributes } from '../../src/lib/dom.js';
-import { coerceSettings } from '../../src/lib/utils.js';
+import { coerceSettings, BOOLEAN_SETTINGS, NUMBER_SETTINGS } from '../../src/lib/utils.js';
 import defaults from '../../src/lib/defaults.js';
 
 describe('Toggle > dom > findToggles', () => {
@@ -70,22 +70,22 @@ describe('Toggle > dom > initUI', () => {
         warn.mock.restore();
     });
 
-    it('should warn and skip initialisation when the toggled element has no id', () => {
+    it('should mint an id for the toggled element when it has none, so triggers can still reference it', () => {
         document.body.innerHTML = `<div class="parent">
             <button class="js-no-id-btn">Test toggle</button>
             <div class="js-no-id" data-toggle="js-no-id-btn"></div>
         </div>`;
-        const warn = mock.method(console, 'warn', () => {});
         const button = document.querySelector('.js-no-id-btn');
+        const node = document.querySelector('.js-no-id');
 
         const [ instance ] = toggle('.js-no-id', { local: true });
 
-        assert.ok(warn.mock.calls.some(call => /requires an id/.test(call.arguments[0])));
-        assert.strictEqual(button.hasAttribute('aria-controls'), false);
-        //no listeners bound, so the trigger is inert
+        //a generated id lets aria-controls point at a real target rather than emitting "null"
+        assert.ok(node.getAttribute('id'));
+        assert.strictEqual(button.getAttribute('aria-controls'), node.getAttribute('id'));
+        //listeners are bound, so the trigger now works
         button.click();
-        assert.strictEqual(instance.getState().isOpen, false);
-        warn.mock.restore();
+        assert.strictEqual(instance.getState().isOpen, true);
     });
 
     it('should set aria attributes on every trigger and give non-button triggers a button role', () => {
@@ -244,28 +244,30 @@ describe('Toggle > dom > getFocusableChildren', () => {
 
 describe('Toggle > utils > coerceSettings', () => {
 
+    const opts = { booleans: BOOLEAN_SETTINGS, numbers: NUMBER_SETTINGS };
+
     it('should coerce the string forms of Boolean options', () => {
-        const settings = coerceSettings({ ...defaults, startOpen: 'true', local: 'false', useHidden: 'true' });
+        const settings = coerceSettings({ ...defaults, startOpen: 'true', local: 'false', useHidden: 'true' }, opts);
         assert.strictEqual(settings.startOpen, true);
         assert.strictEqual(settings.local, false);
         assert.strictEqual(settings.useHidden, true);
     });
 
     it('should leave Boolean options passed as Booleans untouched', () => {
-        const settings = coerceSettings({ ...defaults, trapTab: true, closeOnBlur: false });
+        const settings = coerceSettings({ ...defaults, trapTab: true, closeOnBlur: false }, opts);
         assert.strictEqual(settings.trapTab, true);
         assert.strictEqual(settings.closeOnBlur, false);
     });
 
     it('should coerce delay to a Number, defaulting to 0', () => {
-        assert.strictEqual(coerceSettings({ ...defaults, delay: '250' }).delay, 250);
-        assert.strictEqual(coerceSettings({ ...defaults, delay: 'not a number' }).delay, 0);
-        assert.strictEqual(coerceSettings({ ...defaults }).delay, 0);
+        assert.strictEqual(coerceSettings({ ...defaults, delay: '250' }, opts).delay, 250);
+        assert.strictEqual(coerceSettings({ ...defaults, delay: 'not a number' }, opts).delay, 0);
+        assert.strictEqual(coerceSettings({ ...defaults }, opts).delay, 0);
     });
 
     it('should not coerce function options', () => {
         const callback = () => {};
-        assert.strictEqual(coerceSettings({ ...defaults, callback }).callback, callback);
+        assert.strictEqual(coerceSettings({ ...defaults, callback }, opts).callback, callback);
     });
 
 });

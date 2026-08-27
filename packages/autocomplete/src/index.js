@@ -1,6 +1,6 @@
 import defaults from './lib/defaults.js';
 import factory from './lib/factory.js';
-import { getSelection } from './lib/utils.js';
+import { getSelection, coerceSettings, BOOLEAN_SETTINGS } from './lib/utils.js';
 
 //re-exported for building an optionTemplate that renders markup (see renderOptions):
 //`html` is a tagged template that escapes its interpolations automatically, and is the
@@ -26,10 +26,11 @@ export default (selector, options) => {
     }
 
     //return array of Objects, one for each DOM node found
-    //each Object has a prototype consisting of the node (HTMLElement),
-    //and a settings property composed from defaults, data-attributes on the node, and options passed to init
+    //each Object has a prototype consisting of the node (HTMLElement), and a settings property composed
+    //from defaults, options passed to init, and data-attributes on the node (coerced to their intended
+    //types). data-attributes are applied last so a single init call can be tuned per node
     return nodes.map(node => Object.create(factory({
-        settings: { ...defaults, ...options, ...node.dataset },
+        settings: coerceSettings({ ...defaults, ...options, ...node.dataset }, { booleans: BOOLEAN_SETTINGS }),
         node
     })));
 };

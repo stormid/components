@@ -23,10 +23,10 @@ const initInForm = (options = {}) => {
     return { instance, node: instance.node, submits };
 };
 
-const enter = target => target.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 13, bubbles: true }));
+const enter = target => target.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
 //highlight the next option (activedescendant model: focus stays in the input, so the
 //arrow fires on the input rather than moving focus onto an <li>)
-const arrowDown = input => input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 40, bubbles: true }));
+const arrowDown = input => input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
 
 describe('Autocomplete > submitOnConfirm', () => {
     beforeEach(() => {
@@ -71,7 +71,7 @@ describe('Autocomplete > submitOnConfirm', () => {
         arrowDown(input); // highlight the first option
         //Tab commits the highlighted option via confirmOnBlur, but tabbing past the
         //field must not navigate
-        input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 9, bubbles: true }));
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
 
         assert.strictEqual(instance.getState().selected.value, 'Apple');
         assert.strictEqual(submits.length, 0);
@@ -109,7 +109,7 @@ describe('Autocomplete > Enter (submitOnConfirm off)', () => {
         const instance = init();
         const input = instance.node.querySelector('input');
         type(input, 'ap'); // list open with matches, but no option highlighted
-        const event = new KeyboardEvent('keydown', { keyCode: 13, bubbles: true, cancelable: true });
+        const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
         input.dispatchEvent(event);
 
         assert.strictEqual(event.defaultPrevented, false); // native submit not blocked
@@ -122,7 +122,7 @@ describe('Autocomplete > Enter (submitOnConfirm off)', () => {
         const input = instance.node.querySelector('input');
         type(input, 'ap');
         arrowDown(input); // highlight the first option
-        const event = new KeyboardEvent('keydown', { keyCode: 13, bubbles: true, cancelable: true });
+        const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
         input.dispatchEvent(event);
 
         assert.strictEqual(event.defaultPrevented, true);
@@ -135,7 +135,7 @@ describe('Autocomplete > Enter (submitOnConfirm off)', () => {
         type(input, 'ap');
         clickOption(node, 0); // commit Apple; focus returns to the input
 
-        const event = new KeyboardEvent('keydown', { keyCode: 13, bubbles: true, cancelable: true });
+        const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
         input.dispatchEvent(event);
 
         assert.strictEqual(event.defaultPrevented, false); // native submit not blocked

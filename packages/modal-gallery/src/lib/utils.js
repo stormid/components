@@ -9,5 +9,5 @@ export const sanitize = item => item.replace(/&/g, '&amp;').replace(/</g, '&lt;'
  */
 export const escapeAttr = item => sanitize(`${item}`).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
-export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
+export const getFocusableChildren = node => Array.from(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
 

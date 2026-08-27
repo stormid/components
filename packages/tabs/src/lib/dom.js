@@ -1,4 +1,5 @@
 import { KEYS, MODES, FOCUSABLE_ELEMENTS } from './constants.js';
+import { uid } from './utils.js';
 
 /*
  * Resolves the id of the panel a tab controls.
@@ -23,7 +24,7 @@ const getPanelId = tab => {
  * @return Object, tabs (Array of HTMLElement tab triggers), panels (Array of HTMLElement panels)
  */
 export const findTabsAndPanels = (node, settings) => {
-    const tabs = [].slice.call(node.querySelectorAll(settings.tabSelector));
+    const tabs = Array.from(node.querySelectorAll(settings.tabSelector));
     const panels = tabs.map(tab => {
         const id = getPanelId(tab);
         return (id && document.getElementById(id)) || console.warn(`Tab panel not found for ${tab}`);
@@ -40,6 +41,9 @@ export const initUI = store => ({ tabs, panels }) => {
     const { controller } = store.getState();
     tabs[0].parentNode.setAttribute('role', 'tablist');
     tabs.forEach((tab, i) => {
+        //a tab needs an id for its panel to reference via aria-labelledby; mint one when it has
+        //none rather than writing aria-labelledby="null" (panels are located by id, so they always have one)
+        if (!tab.getAttribute('id')) tab.setAttribute('id', uid('tab'));
         tab.setAttribute('role', 'tab');
         tab.setAttribute('aria-selected', 'false');
         tab.setAttribute('aria-controls', panels[i].getAttribute('id'));

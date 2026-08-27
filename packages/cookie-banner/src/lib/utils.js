@@ -144,7 +144,7 @@ export const getRegistrableDomain = (hostname = window.location.hostname, canSet
     }
 };
 
-export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(','))).filter(el => el.offsetWidth > 0 || el.offsetHeight > 0);
+export const getFocusableChildren = node => Array.from(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(','))).filter(el => el.offsetWidth > 0 || el.offsetHeight > 0);
 
 export const broadcast = (type, store) => () => {
     const event = new CustomEvent(type, {
@@ -157,7 +157,7 @@ export const broadcast = (type, store) => () => {
 };
 
 export const renderIframe = () => {
-    [].slice.call(document.querySelectorAll('[data-iframe-src]')).forEach(node => {
+    Array.from(document.querySelectorAll('[data-iframe-src]')).forEach(node => {
         const iframe = document.createElement('iframe');
         iframe.src = node.getAttribute('data-iframe-src');
         if (node.hasAttribute('data-iframe-height')) iframe.style.height = node.getAttribute('data-iframe-height');

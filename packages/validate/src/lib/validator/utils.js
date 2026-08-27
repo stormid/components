@@ -38,7 +38,7 @@ export const groupValueReducer = (acc, input) => {
 export const resolveGetParams = nodeArrays => nodeArrays.map(nodes => `${encodeURIComponent(nodes[0].getAttribute('name'))}=${encodeURIComponent(extractValueFromGroup(nodes))}`).join('&');
 
 export const domNodesFromCommaList = list => list.split(',')
-    .map(item => [].slice.call(document.querySelectorAll(`[name=${escapeAttributeValue(item)}]`)));
+    .map(item => Array.from(document.querySelectorAll(`[name=${escapeAttributeValue(item)}]`)));
 
 export const escapeAttributeValue = value => value.replace(/([!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~])/g, '\\$1');
 
@@ -79,13 +79,12 @@ export const findErrors = groups => Object.keys(groups).reduce((errors, groupNam
 /*
  * Converts a passed selector which can be of varying types into an array of DOM Objects
  *
- * @param selector, Can be a string, Array of DOM nodes, a NodeList or a single DOM element.
+ * @param selector, Can be a string, Array of DOM nodes, a NodeList, an HTMLCollection or a single DOM element.
  */
 export const getSelection = selector => {
-
-    if (typeof selector === 'string') return [].slice.call(document.querySelectorAll(selector));
-    if (selector instanceof Array) return selector;
-    if (Object.prototype.isPrototypeOf.call(NodeList.prototype, selector)) return [].slice.call(selector);
-    if (selector instanceof HTMLElement) return [selector];
+    if (typeof selector === 'string') return Array.from(document.querySelectorAll(selector));
+    if (Array.isArray(selector)) return selector;
+    if (selector instanceof NodeList || selector instanceof HTMLCollection) return Array.from(selector);
+    if (selector && selector.nodeType === 1) return [selector]; // nodeType check is cross-realm safe, unlike instanceof HTMLElement
     return [];
 };

@@ -27,7 +27,7 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     const focusFragment = raw => {
         if (!raw) return;
         let id = raw;
-        try { id = decodeURIComponent(raw); } catch (e) { /* malformed escape sequence, fall back to the raw value */ }
+        try { id = decodeURIComponent(raw); } catch { /* malformed escape sequence, fall back to the raw value */ }
         const element = document.getElementById(id);
         if (!element) return;
         // Only make the target focusable when it is not already, and use

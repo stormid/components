@@ -11,7 +11,7 @@ const search = query => values.filter(item => item.value.toLowerCase().includes(
 
 const init = (options = {}) => mount(host(), { name: 'fruit', minlength: 1, search, ...options });
 
-const escape = input => input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 27, bubbles: true }));
+const escape = input => input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
 
 //capture several event types in one ordered list, so the sequence a consumer sees
 //can be asserted rather than each type in isolation
@@ -77,7 +77,7 @@ describe('Autocomplete > Events', () => {
         type(input, 'ap');
         clickOption(node, 0);
         input.value = '';
-        input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 8, bubbles: true }));
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true }));
 
         assert.strictEqual(events.length, 1);
         assert.deepStrictEqual(events[0].detail.option, { value: 'Apple', label: 'Apple' });

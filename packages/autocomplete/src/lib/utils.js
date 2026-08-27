@@ -4,11 +4,34 @@
  * @param selector, Can be a string, Array of DOM nodes, a NodeList or a single DOM element.
  */
 export const getSelection = selector => {
-    if (typeof selector === 'string') return [].slice.call(document.querySelectorAll(selector));
-    if (selector instanceof Array) return selector;
-    if (Object.prototype.isPrototypeOf.call(NodeList.prototype, selector)) return [].slice.call(selector);
-    if (selector instanceof HTMLElement) return [selector];
+    if (typeof selector === 'string') return Array.from(document.querySelectorAll(selector));
+    if (Array.isArray(selector)) return selector;
+    if (selector instanceof NodeList || selector instanceof HTMLCollection) return Array.from(selector);
+    if (selector && selector.nodeType === 1) return [selector]; // nodeType check is cross-realm safe, unlike instanceof HTMLElement
     return [];
+};
+
+/*
+ * Settings that are Booleans in defaults, and so need coercing when they arrive as data-attributes
+ * (a DOMStringMap value is always a String) - without this, data-async="false" is the truthy
+ * String 'false'.
+ */
+export const BOOLEAN_SETTINGS = ['multiple', 'async', 'allowFreeText', 'submitOnConfirm', 'confirmOnBlur', 'clearOnBlur', 'spellcheck'];
+
+/*
+ * Coerces the named settings into their intended types. Applied to the fully merged settings, so
+ * it holds whichever of options / data-attributes won the merge.
+ *
+ * @param settings, Object, merged defaults + options + data-attributes
+ * @param booleans, Array of String, keys to coerce to Boolean
+ * @param numbers, Array of String, keys to coerce to Number (an invalid value falls back to 0)
+ * @return Object, settings with the named keys coerced
+ */
+export const coerceSettings = (settings, { booleans = [], numbers = [] } = {}) => {
+    const coerced = { ...settings };
+    booleans.forEach(key => { coerced[key] = coerced[key] === true || coerced[key] === 'true'; });
+    numbers.forEach(key => { const n = Number(coerced[key]); coerced[key] = Number.isFinite(n) ? n : 0; });
+    return coerced;
 };
 
 /*
@@ -88,7 +111,7 @@ const toOption = option => ({ value: option.value, label: option.textContent.tri
 export const fromSelect = select => {
     //skip the placeholder (empty value) and disabled options — a disabled option must
     //not become a selectable suggestion
-    const selectableOptions = [...select.options].filter(option => option.value !== '' && !option.disabled);
+    const selectableOptions = Array.from(select.options).filter(option => option.value !== '' && !option.disabled);
     return {
         options: selectableOptions.map(toOption),
         //an option counts as selected if it's live-selected (.selected — catches a
@@ -147,12 +170,3 @@ export const isHtml = value => value instanceof Html;
  */
 export const html = (strings, ...values) =>
     new Html(strings.reduce((out, string, i) => `${out}${string}${i < values.length ? escapeHtml(values[i]) : ''}`, ''));
-
-export const isPrintableKeyCode = keyCode => (
-    (keyCode > 47 && keyCode < 58) || // number keys
-    keyCode === 32 || keyCode === 8 || // spacebar or backspace
-    (keyCode > 64 && keyCode < 91) || // letter keys
-    (keyCode > 95 && keyCode < 112) || // numpad keys
-    (keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
-    (keyCode > 218 && keyCode < 223) // [\]' (in order)
-);

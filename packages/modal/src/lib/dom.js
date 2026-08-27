@@ -1,4 +1,4 @@
-import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, EVENTS } from './constants.js';
+import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, KEYS, EVENTS } from './constants.js';
 import { broadcast } from './utils.js';
 
 /*
@@ -26,7 +26,7 @@ export const findToggles = (node, settings) => {
     const toggleSelector = node.getAttribute(settings.toggleSelectorAttribute);
     const composeSelector = classSelector => ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(', ');
 
-    const toggles = toggleSelector && [].slice.call(document.querySelectorAll(composeSelector(toggleSelector)));
+    const toggles = toggleSelector && Array.from(document.querySelectorAll(composeSelector(toggleSelector)));
     if (!toggles) return void console.warn(`Modal cannot be initialised, no modal toggle elements found. Does the modal have a ${settings.toggleSelectorAttribute} attribute that identifies toggle buttons or links?`);
     return toggles;
 };
@@ -35,7 +35,7 @@ export const findToggles = (node, settings) => {
   * @param node, HTMLElement
   * @return Array of focusable child HTMLElements
  */
-export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
+export const getFocusableChildren = node => Array.from(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
 
 /* 
  * Partially applied function that returns function
@@ -48,10 +48,10 @@ export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(
 export const keyListener = store => event => {
     const state = store.getState();
     if (!state.isOpen) return;
-    if (event.key === 'Escape') {
+    if (event.key === KEYS.ESC) {
         event.preventDefault();
         lifecycle(store); // route through lifecycle rather than duplicating the state transition
-    } else if (event.key === 'Tab') trapTab(state)(event);
+    } else if (event.key === KEYS.TAB) trapTab(state)(event);
 };
 
 /* 
@@ -106,7 +106,7 @@ const setVisibility = state => {
  */
 const setInert = store => () => {
     const state = store.getState();
-    const inerted = [].slice.call(document.querySelectorAll('body > *'))
+    const inerted = Array.from(document.querySelectorAll('body > *'))
         .filter(child => child !== state.node && !child.hasAttribute('inert'));
     inerted.forEach(child => child.setAttribute('inert', ''));
     store.update({ ...state, inerted });

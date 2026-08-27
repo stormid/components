@@ -174,7 +174,7 @@ describe('Autocomplete > Multiple', () => {
         type(input, 'ap');
         clickOption(node, 0);
         input.value = '';
-        input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 8, bubbles: true }));
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true }));
 
         assert.deepStrictEqual(instance.getState().selected, []);
     });
@@ -186,7 +186,7 @@ describe('Autocomplete > Multiple', () => {
         type(input, 'ap');
         clickOption(node, 0);
         input.value = 'a';
-        input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 8, bubbles: true }));
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true }));
 
         assert.strictEqual(instance.getState().selected.length, 1);
     });
