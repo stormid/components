@@ -85,6 +85,7 @@ Multiple validators can be used on a single field. Custom validators can be adde
     - [addGroup](#addgroup)
     - [validateGroup](#validategroup)
     - [removeGroup](#removegroup)
+    - [destroy](#destroy)
   - [Plugins](#plugins)
     - [isValidDate](#isvaliddate)
     - [isFutureDate](#isfuturedate)
@@ -144,13 +145,15 @@ Data attributes
 ---
 
 ### Pattern/Regex
-Value matches the supplied pattern or regular expression
+Value matches the supplied pattern or regular expression.
 
-HTML5
+An HTML5 `pattern` is matched against the **whole value** (implicitly anchored), matching native browser constraint validation — so `pattern="[a-z]+"` requires the entire value to be lowercase letters. The .NET `data-val-regex` is matched **unanchored** (as per jQuery validate), so use it (or add your own `^`/`$`) when you want a partial match such as a prefix.
+
+HTML5 (whole-value match)
 ```
-<input name="field" id="field" pattern="^http(s)?">
+<input name="field" id="field" pattern="https?://.*">
 ```
-Data attributes
+Data attributes (unanchored)
 ```
 <input name="field" id="field" data-val="true" data-val-regex="'field' must start with http or https" data-val-regex-pattern="^http(s)?">
 ```
@@ -338,33 +341,37 @@ If a validation group contains more than one field, the values of these will be 
 
 ```
 {
-    preSubmitHook: false, //function, called on validation pass, before submit
-    submit: form.submit, // function, to support async form submissions, pass your own submit function
-    messages: { //default HTML5 error messages
-        required() { return 'This field is required'; } ,
-        email() { return 'Please enter a valid email address'; },
+    preSubmitHook: undefined, // optional function, called on validation pass before the form is submitted
+    submit: undefined, // optional function; when provided it is called instead of form.submit() (e.g. for async submissions)
+    messages: { // default error messages, keyed by validator type
+        required() { return 'You must answer this question.'; },
+        email() { return 'Enter a valid email address, for example: example@example.com.'; },
+        digits() { return 'Enter only digits'; },
         pattern() { return 'The value must match the pattern'; },
-        url(){ return 'Please enter a valid URL'; },
-        number() { return 'Please enter a valid number'; },
-        digits() { return 'Please enter only digits'; },
-        maxlength(props) { return `Please enter no more than ${props.max} characters`; },
-        minlength(props) { return `Please enter at least ${props.min} characters`; },
-        max(props){ return `Please enter a value less than or equal to ${props.max}`; },
-        min(props){ return `Please enter a value greater than or equal to ${props.min}`}
+        url() { return 'Enter a valid URL'; },
+        number() { return 'Enter a valid number'; },
+        maxlength(props) { return `Enter no more than ${props.max} characters`; },
+        minlength(props) { return `Enter at least ${props.min} characters`; },
+        max(props) { return `Enter a number lower than or equal to ${props.max}`; },
+        min(props) { return `Enter a number higher than or equal to ${props.min}`; }
     }
 }
 ```
+
+Any options passed are merged over these defaults. `data-val` validators always carry their own message, so the defaults above apply to HTML5-attribute validators; a validator type with no default message and no `data-val` message falls back to a generic "This field is invalid." message.
 
 ## API
 
 validate() returns an array of instances. Each instance exposes the interface
 ```
 {
+    getState
     validate
     addMethod
     validateGroup
     addGroup
     removeGroup
+    destroy
 }
 ```
 
@@ -424,6 +431,15 @@ validator.addGroup(fieldsArray);
 
 //remove by passing the name of a group
 validator.removeGroup('new-fields');
+```
+
+### destroy
+Tear down the instance, removing every event listener it added (the form-level submit/reset listeners and all real-time validation listeners). Call this before removing a validated form from the DOM (e.g. in single-page apps) to avoid leaking listeners:
+```
+const [ validator ] = validate('.my-form');
+
+//...later, when the form is being removed
+validator.destroy();
 ```
 
 ## Plugins

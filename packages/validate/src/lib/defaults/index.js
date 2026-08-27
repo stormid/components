@@ -3,6 +3,7 @@ export default {
     messages: {
         required() { return 'You must answer this question.'; } ,
         email() { return 'Enter a valid email address, for example: example@example.com.'; },
+        digits() { return 'Enter only digits'; },
         pattern() { return 'The value must match the pattern'; },
         url(){ return 'Enter a valid URL'; },
         number() { return 'Enter a valid number'; },

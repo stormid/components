@@ -38,22 +38,9 @@ export const groupValueReducer = (acc, input) => {
 export const resolveGetParams = nodeArrays => nodeArrays.map(nodes => `${encodeURIComponent(nodes[0].getAttribute('name'))}=${encodeURIComponent(extractValueFromGroup(nodes))}`).join('&');
 
 export const domNodesFromCommaList = list => list.split(',')
-    .map(item => {
-        // const resolvedSelector = escapeAttributeValue(appendStatePrefix(item, getStatePrefix(input.getAttribute('name'))));
-        return [].slice.call(document.querySelectorAll(`[name=${escapeAttributeValue(item)}]`));
-    });
+    .map(item => [].slice.call(document.querySelectorAll(`[name=${escapeAttributeValue(item)}]`)));
 
 export const escapeAttributeValue = value => value.replace(/([!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~])/g, '\\$1');
-
-/*
- * Only require below functions and resolvedSelector in domNodesFromCommaList if supporting *. params
- */
-// const getStatePrefix = fieldName => fieldName.substr(0, fieldName.lastIndexOf('.') + 1);
-
-// const appendStatePrefix = (value, prefix) => {
-//     if (value.indexOf("*.") === 0) value = value.replace("*.", prefix);
-//     return value;
-// };
 
 export const extractValueFromGroup = group => Object.prototype.hasOwnProperty.call(group, 'fields')
     ? group.fields.reduce(groupValueReducer, '')

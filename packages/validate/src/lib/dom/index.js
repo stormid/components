@@ -40,46 +40,59 @@ export const createErrorTextNode = (group, msg) => {
 };
 
 /**
- * Removes the error message, updates .NET MVC error span classNames and deletes the 
- * error from local errors tracking object
- * 
+ * Removes a group's rendered error message and its invalidity attributes (a pure DOM effect).
+ * The `errors` state slice is maintained by the reducers, not here.
+ *
+ * Idempotent: a no-op when the group has no error currently rendered, so it is safe to call
+ * across every group (see clearErrors) or before a re-render (see renderError).
+ *
  * Signature () => groupName => state => {}
  * (groupName for ease of use as eventListener and in whole form iteration)
- * 
- * @param groupName [String, vaidation group] 
+ *
+ * @param groupName [String, vaidation group]
  * @param state [Object, validation state]
- * 
+ *
  */
 export const clearError = groupName => state => {
-    if (state.groups[groupName].serverErrorNode) {
-        state.groups[groupName].serverErrorNode.innerHTML = '';
-        state.groups[groupName].serverErrorNode.classList.remove(DOTNET_CLASSNAMES.ERROR);
-        state.groups[groupName].serverErrorNode.classList.add(DOTNET_CLASSNAMES.VALID);
+    const { serverErrorNode } = state.groups[groupName];
+    if (serverErrorNode) {
+        serverErrorNode.innerHTML = '';
+        serverErrorNode.classList.remove(DOTNET_CLASSNAMES.ERROR);
+        serverErrorNode.classList.add(DOTNET_CLASSNAMES.VALID);
     } else {
-        state.errors[groupName].parentNode.removeChild(state.errors[groupName]);
+        //the client-side span is rendered with a deterministic id, so it can be found and
+        //removed without holding a node reference in state
+        const errorNode = document.getElementById(`${groupName}-error-message`);
+        if (errorNode) errorNode.parentNode.removeChild(errorNode);
     }
+
+    const describedbyid = serverErrorNode ? serverErrorNode.id : `${groupName}-error-message`;
+
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.remove('is--invalid');
         field.removeAttribute('aria-invalid');
-        const describedbyid = ((state.groups[groupName].serverErrorNode || state.errors[groupName]).id);
 
-        //check whether the aria-describedby matches the id, if not another id must be present, only replace the removed error id
+        //remove only this error's id from aria-describedby, preserving any others.
+        //Token-based so it works whether the id is first, last, only, or amongst others.
         if (field.hasAttribute('aria-describedby')) {
-            if (field.getAttribute('aria-describedby') === describedbyid) field.removeAttribute('aria-describedby');
-            else field.setAttribute('aria-describedby', field.getAttribute('aria-describedby').replace(` ${describedbyid}`, ''));
+            const remaining = field.getAttribute('aria-describedby')
+                .split(/\s+/)
+                .filter(id => id && id !== describedbyid);
+            if (remaining.length) field.setAttribute('aria-describedby', remaining.join(' '));
+            else field.removeAttribute('aria-describedby');
         }
     });
-    delete state.errors[groupName];//shouldn't be doing this here...
 };
 
 /**
- * Iterates over all errors in local scope to remove each error prior to re-validation
- * 
+ * Clears the rendered error for every group prior to re-validation (a pure DOM effect).
+ * Iterates groups rather than the errors map so it does not depend on that map's contents.
+ *
  * @param state [Object, validation state]
- * 
+ *
  */
 export const clearErrors = state => {
-    state.errors && Object.keys(state.errors).forEach(name => {
+    Object.keys(state.groups).forEach(name => {
         clearError(name)(state);
     });
 };
@@ -130,29 +143,29 @@ export const updateMessageValues = (state, groupName) => {
  * 
  */
 export const renderError = groupName => state => {
-    if (state.errors[groupName]) clearError(groupName)(state);
+    //clear any error currently rendered for this group first (idempotent) so a re-render can't duplicate it
+    clearError(groupName)(state);
 
-    let msg = updateMessageValues(state, groupName);
+    const msg = updateMessageValues(state, groupName);
+    const { serverErrorNode } = state.groups[groupName];
+    let errorNode;
 
-    //shouldn't be updating state here...
-    //to do: refactor to update state as a side effect afterwards?
-    //would need to pass store instead of state
-    if (state.groups[groupName].serverErrorNode) {
-        state.errors[groupName] = createErrorTextNode(state.groups[groupName], msg);
+    if (serverErrorNode) {
+        createErrorTextNode(state.groups[groupName], msg);
     } else {
         //No server error node found, so attempt to render inside the label.  If no label found, log error to console.
         const label = document.querySelector(`[for="${state.groups[groupName].fields[state.groups[groupName].fields.length-1].getAttribute('id')}"]`);
 
-        if (label !== null) {
-            state.errors[groupName] = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: `${groupName}-error-message` }, msg), label.nextSibling);
-        } else {
+        if (label === null) {
             console.error(`No matching HTML label or server error node found for validation group: ${groupName}. Error message: '${msg}' cannot be displayed. Form will not be submitted.`);
             return;
         }
+        //role="alert" so the message is announced when inserted (e.g. during real-time validation, where focus doesn't move)
+        errorNode = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: `${groupName}-error-message`, role: 'alert' }, msg), label.nextSibling);
     }
 
-    const errorContainer = state.groups[groupName].serverErrorNode || state.errors[groupName];
-						
+    const errorContainer = serverErrorNode || errorNode;
+
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.add('is--invalid');
         field.setAttribute('aria-invalid', 'true');
@@ -243,8 +256,15 @@ export const addAriaRequired = fields => {
  */
 export const addAXAttributes = state => {
     Object.keys(state.groups).forEach(groupName => {
-        //ensure error message has an id for aria-describedby
-        if (state.groups[groupName].serverErrorNode && !state.groups[groupName].serverErrorNode.hasAttribute('id')) state.groups[groupName].serverErrorNode.setAttribute('id', `${groupName}-error-message`);
+        const serverErrorNode = state.groups[groupName].serverErrorNode;
+        if (serverErrorNode) {
+            //ensure error message has an id for aria-describedby
+            if (!serverErrorNode.hasAttribute('id')) serverErrorNode.setAttribute('id', `${groupName}-error-message`);
+            //make the (initially empty) server-rendered container a live region so errors
+            //inserted during real-time validation are announced, not only on submit.
+            //Respect an author-provided role/aria-live if one is already present.
+            if (!serverErrorNode.hasAttribute('aria-live') && !serverErrorNode.hasAttribute('role')) serverErrorNode.setAttribute('aria-live', 'polite');
+        }
 
         //Add aria-required to inputs that are not radios, nor checkbox groups (single checkbox gets the attribute added)
         addAriaRequired(state.groups[groupName].fields);

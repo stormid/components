@@ -41,7 +41,7 @@ describe('Validate > Unit > Reducers > Clear errors', () => {
                     valid: false
                 }
             },
-            errors: {},
+            errors: { group1: 'This field is required', group2: 'This field is required' },
             realTimeValidation: false
         };
         const output = Reducers[ACTIONS.CLEAR_ERRORS](state);
@@ -85,7 +85,7 @@ describe('Validate > Unit > Reducers > Clear error', () => {
                     valid: false
                 }
             },
-            errors: {},
+            errors: { group1: 'This field is required', group2: 'This field is required' },
             realTimeValidation: false
         };
         const output = Reducers[ACTIONS.CLEAR_ERROR](state, 'group1');
@@ -105,7 +105,7 @@ describe('Validate > Unit > Reducers > Clear error', () => {
                     valid: false
                 }
             },
-            errors: {},
+            errors: { group2: 'This field is required' },
             realTimeValidation: false
         });
     });
@@ -125,7 +125,8 @@ describe('Validate > Unit > Reducers > Add validation errors', () => {
                     validators: [],
                     valid: true
                 }
-            }
+            },
+            errors: {}
         };
         const nextState = {
             group1: {
@@ -144,6 +145,7 @@ describe('Validate > Unit > Reducers > Add validation errors', () => {
         const output = Reducers[ACTIONS.VALIDATION_ERRORS](state, nextState);
         assert.deepStrictEqual(output, {
             realTimeValidation: true,
+            errors: { group1: 'This field is required', group2: 'This field is required' },
             groups: {
                 group1: {
                     fields: [document.createElement('input')],
@@ -177,7 +179,8 @@ describe('Validate > Unit > Reducers > Add validation error', () => {
                     validators: [],
                     valid: true
                 }
-            }
+            },
+            errors: {}
         };
         const nextState = {
             group: 'group1',
@@ -186,6 +189,7 @@ describe('Validate > Unit > Reducers > Add validation error', () => {
         const output = Reducers[ACTIONS.VALIDATION_ERROR](state, nextState);
         assert.deepStrictEqual(output, {
             realTimeValidation: true,
+            errors: { group1: 'This field is required' },
             groups: {
                 group1: {
                     fields: [document.createElement('input')],

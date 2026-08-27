@@ -65,6 +65,8 @@ export const validateGroup = store => groupName => new Promise(resolve => {
  */
 export const removeGroup = store => groupName => {
     const state = store.getState();
+    //detach the group's real-time listeners before dropping it from state
+    if (state.groups[groupName] && state.groups[groupName].controller) state.groups[groupName].controller.abort();
     if (state.errors[groupName]) clearError(groupName)(state);
     store.update(reducers[ACTIONS.REMOVE_GROUP](store.getState(), groupName));
 };

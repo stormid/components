@@ -3,6 +3,7 @@ import { ACTIONS, DOTNET_ERROR_SPAN_DATA_ATTRIBUTE, GROUP_ATTRIBUTE } from '../c
 export default {
     [ACTIONS.SET_INITIAL_STATE]: (state, data) => Object.assign({}, state, data),
     [ACTIONS.CLEAR_ERRORS]: state => Object.assign({}, state, {
+        errors: {},
         groups: Object.keys(state.groups).reduce((acc, group) => {
             acc[group] = Object.assign({}, state.groups[group], {
                 errorMessages: [],
@@ -18,7 +19,11 @@ export default {
             valid: true
         });
         return Object.assign({}, state, {
-            groups: Object.assign({}, state.groups, nextGroup)
+            groups: Object.assign({}, state.groups, nextGroup),
+            errors: Object.keys(state.errors || {}).reduce((acc, error) => {
+                if (error !== data) acc[error] = state.errors[error];
+                return acc;
+            }, {})
         });
     },
     [ACTIONS.ADD_GROUP]: (state, groups, errors) => Object.assign({}, state, {
@@ -57,6 +62,11 @@ export default {
     },
     [ACTIONS.VALIDATION_ERRORS]: (state, data) => Object.assign({}, state, {
         realTimeValidation: true,
+        //errors reflects the currently displayed messages, keyed by group (reducer-owned).
+        errors: Object.keys(state.groups).reduce((acc, group) => {
+            if (data[group] && data[group].valid === false && data[group].errorMessages && data[group].errorMessages.length) acc[group] = data[group].errorMessages[0];
+            return acc;
+        }, {}),
         groups: Object.keys(state.groups).reduce((acc, group) => {
             acc[group] = Object.assign({}, state.groups[group], data[group]);
             return acc;
@@ -64,6 +74,7 @@ export default {
     }),
     [ACTIONS.VALIDATION_ERROR]: (state, data) => {
         return Object.assign({}, state, {
+            errors: Object.assign({}, state.errors, { [data.group]: data.errorMessages[0] }),
             groups: Object.assign({}, state.groups, {
                 [data.group]: Object.assign({}, state.groups[data.group], {
                     errorMessages: data.errorMessages,
