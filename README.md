@@ -17,7 +17,7 @@ Each package is available for use on npm. See [the docs](https://github.com/stor
 | [Outliner](./packages/outliner)           | Legacy-browser fallback for hiding focus outlines on mouse interactions — prefer native [:focus-visible](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible) |
 | [Scroll Points](./packages/scroll-points) | Trigger events based on element intersecting the viewport                                                                                           |
 | [Scroll Spy](./packages/scroll-spy)       | Update elements based on target element intersecting the viewport                                                                                   |
-| [Skip](./packages/skip)                   | Ensure fragment identifier links focus on their target node                                                                                         |
+| [Skip](./packages/skip)                   | Move focus to fragment identifier link targets — for cases native focus and a static [tabindex="-1"](./packages/skip) don't cover                    |
 | [Tabs](./packages/tabs)                   | Accessible tabbed panelled content areas                                                                                                            |
 | [Textarea](./packages/textarea)           | Auto-resizing textarea                                                                                                                              |
 | [Toggle](./packages/toggle)               | Accessible DOM element expand and collapse                                                                                                          |
