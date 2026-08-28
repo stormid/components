@@ -131,3 +131,26 @@ describe('Scroll spy > Initialisation > Get Selection', () => {
     });
 
 });
+
+describe(`Scroll Spy > malformed hash`, () => {
+
+    it('does not throw when a spy href has a malformed percent-escape', () => {
+        window.IntersectionObserver = mock.fn(function() {
+            this.observe = () => {};
+            this.disconnect = () => {};
+        });
+        globalThis.IntersectionObserver = window.IntersectionObserver;
+
+        document.body.innerHTML = `<nav>
+                <a class="js-malformed" href="#100%">Bad</a>
+                <a class="js-malformed" href="#good">Good</a>
+            </nav>
+            <section id="100%">Bad target</section>
+            <section id="good">Good target</section>`;
+
+        // decodeURIComponent('100%') throws a URIError; findSpies must fall back to the raw id
+        // rather than let the whole instance fail to initialise
+        assert.doesNotThrow(() => scrollSpy('.js-malformed'));
+    });
+
+});

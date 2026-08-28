@@ -27,10 +27,11 @@ const describeNode = node => {
 export const initUI = store => () => {
     const { toggles, node, settings, toggleHandler, keydownHandler } = store.getState();
 
+    if (toggles.length === 0) return; //findToggles has already warned; nothing to wire up, and no id to mint onto a node we won't manage
+
     //aria-controls needs an id to point at; mint one when the node has none so the triggers can
     //still reference it, rather than emitting aria-controls="null" or silently skipping the wiring
     const id = node.getAttribute('id') || (node.setAttribute('id', uid('toggle-target')), node.getAttribute('id'));
-    if (toggles.length === 0) return; //findToggles has already warned
 
     if (settings.useHidden) node.hidden = true;
 
@@ -55,13 +56,15 @@ export const initUI = store => () => {
  * @param store, Object, model or state of the current instance
  * @returns Function
  */
-export const toggle = store => () => {
+export const toggle = store => (silent = false) => {
+    //broadcast the open/close event, unless closing silently during destroy(): a teardown-driven
+    //toggle.close is indistinguishable from a genuine one to listeners
+    const effects = [ toggleAttributes, manageFocus(store), closeProxy(store) ];
+    if (!silent) effects.push(broadcast(store));
     store.update({
         ...store.getState(),
         isOpen: !store.getState().isOpen
-    },
-    [ toggleAttributes, manageFocus(store), closeProxy(store), broadcast(store) ]
-    );
+    }, effects);
 };
 
 /*

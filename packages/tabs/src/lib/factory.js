@@ -31,12 +31,13 @@ export default ({ node, settings }) => {
 
     return {
         getState: store.getState,
-        goTo: index => {
+        goTo: (index, { focus = false } = {}) => {
             const state = store.getState();
             const target = clampIndex(+index, state.tabs.length);
             if (target === state.activeIndex) return;
             const previousIndex = state.activeIndex;
-            store.update({ ...state, activeIndex: target, activeTabIndex: target }, [() => changePanel(store, previousIndex)]);
+            //programmatic selection leaves focus where it is by default (pass { focus: true } to move it)
+            store.update({ ...state, activeIndex: target, activeTabIndex: target }, [() => changePanel(store, previousIndex, focus)]);
         },
         destroy: () => store.getState().controller.abort()
     };

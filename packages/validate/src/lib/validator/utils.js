@@ -47,9 +47,17 @@ export const extractValueFromGroup = group => Object.prototype.hasOwnProperty.ca
     : group.reduce(groupValueReducer, '');
 
 
+const abortError = () => {
+    const error = new Error('Aborted');
+    error.name = 'AbortError';
+    return error;
+};
+
 /* node:coverage ignore next */
 export const fetch = (url, props) =>
     new Promise((resolve, reject) => {
+        //an already-aborted signal means the instance/group was torn down before the request started
+        if (props.signal && props.signal.aborted) return reject(abortError());
         let xhr = new XMLHttpRequest();
         xhr.open(props.method || 'GET', url);
         if (props.headers) {
@@ -57,11 +65,14 @@ export const fetch = (url, props) =>
                 xhr.setRequestHeader(key, props.headers[key]);
             });
         }
+        //abort the in-flight request when the group's controller fires (destroy/removeGroup)
+        if (props.signal) props.signal.addEventListener('abort', () => xhr.abort(), { once: true });
         xhr.onload = () => {
             if (xhr.status >= 200 && xhr.status < 300) resolve(xhr.response);
             else reject(xhr.statusText);
         };
         xhr.onerror = () => reject(xhr.statusText);
+        xhr.onabort = () => reject(abortError());
         xhr.send(props.body);
     });
 

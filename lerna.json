@@ -11,6 +11,5 @@
       "allowBranch": "master"
     }
   },
-  "conventionalCommits": true,
   "version": "independent"
 }

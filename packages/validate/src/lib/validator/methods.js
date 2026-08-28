@@ -72,7 +72,9 @@ export default {
             body: isGet ? undefined : body,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            }
+            },
+            //the group's real-time controller (if any) lets destroy()/removeGroup() abort this request
+            signal: group.controller && group.controller.signal
         })
             //propagate failures so validation can settle (fail-closed) rather than hang forever
             .then(resolve)

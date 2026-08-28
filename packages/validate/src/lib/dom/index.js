@@ -40,6 +40,22 @@ export const createErrorTextNode = (group, msg) => {
 };
 
 /**
+ * The id of the client-rendered error span for a group. It keys off the group's last field id
+ * (which is unique in a valid document) rather than the group name: two validate() instances on
+ * one page that share a group name - e.g. a sign-in and a register form both with an `email`
+ * field - would otherwise mint duplicate ids, and a document-wide lookup would find and remove
+ * (or describe) the first instance's node instead of the caller's own.
+ *
+ * @param group [Object, validation group]
+ * @returns String|null, the error span id, or null when the last field has no id to key off
+ */
+export const clientErrorId = group => {
+    const lastField = group.fields[group.fields.length - 1];
+    const id = lastField && lastField.getAttribute('id');
+    return id ? `${id}-error-message` : null;
+};
+
+/**
  * Removes a group's rendered error message and its invalidity attributes (a pure DOM effect).
  * The `errors` state slice is maintained by the reducers, not here.
  *
@@ -60,13 +76,14 @@ export const clearError = groupName => state => {
         serverErrorNode.classList.remove(DOTNET_CLASSNAMES.ERROR);
         serverErrorNode.classList.add(DOTNET_CLASSNAMES.VALID);
     } else {
-        //the client-side span is rendered with a deterministic id, so it can be found and
+        //the client-side span carries an id unique to this instance, so it can be found and
         //removed without holding a node reference in state
-        const errorNode = document.getElementById(`${groupName}-error-message`);
+        const errorId = clientErrorId(state.groups[groupName]);
+        const errorNode = errorId && document.getElementById(errorId);
         if (errorNode) errorNode.parentNode.removeChild(errorNode);
     }
 
-    const describedbyid = serverErrorNode ? serverErrorNode.id : `${groupName}-error-message`;
+    const describedbyid = serverErrorNode ? serverErrorNode.id : clientErrorId(state.groups[groupName]);
 
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.remove('is--invalid');
@@ -161,7 +178,7 @@ export const renderError = groupName => state => {
             return;
         }
         //role="alert" so the message is announced when inserted (e.g. during real-time validation, where focus doesn't move)
-        errorNode = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: `${groupName}-error-message`, role: 'alert' }, msg), label.nextSibling);
+        errorNode = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: clientErrorId(state.groups[groupName]), role: 'alert' }, msg), label.nextSibling);
     }
 
     const errorContainer = serverErrorNode || errorNode;

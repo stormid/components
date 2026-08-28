@@ -30,6 +30,11 @@ export const initRealTimeValidation = store => {
         }
         getGroupValidityState(groups[groupName])
             .then(res => {
+                //bail if the group was removed or the instance destroyed while a (possibly remote)
+                //check was in flight: the group may be gone from state (renderError would throw) or
+                //the whole form torn down (an error rendered into a dead form).
+                const current = store.getState();
+                if (!current.groups[groupName] || (current.controller && current.controller.signal.aborted)) return;
                 if (!res.reduce(reduceGroupValidityState, true)) {
                     store.update(
                         reducers[ACTIONS.VALIDATION_ERROR](store.getState(),

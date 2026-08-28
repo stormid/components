@@ -6,9 +6,15 @@ import { broadcast } from './utils.js';
  * Nodes with a missing hash or an unresolvable target are warned about and skipped, so
  * the returned array never contains holes.
  */
+//decodeURIComponent throws a URIError on a malformed escape (e.g. an anchor href="#100%"), which
+//would abort init for every spy; fall back to the raw id, mirroring the sibling skip package
+const decodeHash = raw => {
+    try { return decodeURIComponent(raw); } catch { return raw; }
+};
+
 export const findSpies = nodes => nodes.reduce((spies, node) => {
     //getElementById avoids the SyntaxError querySelector throws on ids that are valid HTML but not valid CSS selectors
-    const target = node.hash && document.getElementById(decodeURIComponent(node.hash.slice(1)));
+    const target = node.hash && document.getElementById(decodeHash(node.hash.slice(1)));
     if (!target) {
         console.warn('Scroll spy: node is missing an href hash or the hash target id does not exist');
         return spies;
@@ -29,11 +35,10 @@ export const setActive = store => state => {
     const shouldBeActive = spy => {
         const index = active.indexOf(spy);
         if (index === -1) return false;
-        //If the user has scrolled to the bottom we want the last active element to win,
-        //even if it hasn't passed the threshold
-        if (hasScrolledToBottom) return index === active.length - 1;
-        //Otherwise, if a single active element is required it's always the top-most in the active array
-        if (settings.single) return index === 0;
+        //Single-active mode: the top-most active element normally wins, but once scrolled to the
+        //bottom the last one wins so a short final section can still light up. Multi-active mode
+        //(single:false) keeps every intersecting element active - the bottom must not collapse it.
+        if (settings.single) return index === (hasScrolledToBottom ? active.length - 1 : 0);
         return true;
     };
 

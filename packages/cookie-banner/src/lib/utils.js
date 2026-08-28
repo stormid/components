@@ -40,14 +40,17 @@ const updateCookie = (state, cookie) => document.cookie = [
 ].join('');
 
 export const deleteCookies = state => {
+    //no cookies: ''.split('; ') yields [''], which would expire a nameless "=undefined" cookie
+    if (!document.cookie) return;
     document.cookie
         .split('; ')
+        .filter(part => part.split('=')[0]) //skip any malformed, nameless entry
         .map(part => ({
             name: part.split('=')[0],
             value: part.split('=')[1],
             expiry: 'Thu, 01 Jan 1970 00:00:01 GMT'
         }))
-        .map(cookie => updateCookie(state, cookie));
+        .forEach(cookie => updateCookie(state, cookie));
 };
 
 export const extractFromCookie = settings => {

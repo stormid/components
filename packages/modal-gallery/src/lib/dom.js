@@ -133,7 +133,9 @@ const writeImage = (state, i) => {
     const srcsetAttribute = items[i].srcset ? ` srcset="${escapeAttr(items[i].srcset)}"` : '';
     const sizesAttribute = items[i].sizes ? ` sizes="${escapeAttr(items[i].sizes)}"` : '';
 
-    imageContainer.innerHTML = `<img class="${imageClassName}" src="${escapeAttr(items[i].src)}" alt="${escapeAttr(items[i].title)}"${srcsetAttribute}${sizesAttribute}>`;
+    //a programmatic item may carry no title; fall back to an empty alt (correct for an image with
+    //no text alternative) rather than rendering the literal alt="undefined"
+    imageContainer.innerHTML = `<img class="${imageClassName}" src="${escapeAttr(items[i].src)}" alt="${escapeAttr(items[i].title || '')}"${srcsetAttribute}${sizesAttribute}>`;
     dom.items[i].classList.remove('loading');
 };
 

@@ -9,9 +9,10 @@ window.addEventListener('DOMContentLoaded', () => {
         activation: 'auto'
     });
 
+    const buttonStatus = document.getElementById('button-tabs-status');
     tabs('.js-tabs-buttons [role=tablist]', {
         activation: 'manual',
-        onChange: ({ activeIndex }) => console.log(`Button tabs changed to index ${activeIndex}`)
+        onChange: ({ activeIndex }) => { buttonStatus.textContent = `Showing panel ${activeIndex + 1}`; }
     });
 
     tabs('.js-tabs-focus [role=tablist]', {

@@ -104,22 +104,39 @@ const setVisibility = state => {
  *
  * @param store, Object, store of the current instance state
  */
+const INERT_COUNT_ATTR = 'data-modal-inert-count';
+
 const setInert = store => () => {
     const state = store.getState();
     const inerted = Array.from(document.querySelectorAll('body > *'))
-        .filter(child => child !== state.node && !child.hasAttribute('inert'));
-    inerted.forEach(child => child.setAttribute('inert', ''));
+        //leave the modal itself, and any element the author made inert (inert with no modal
+        //refcount), untouched - the latter must not be un-inerted when the modal closes
+        .filter(child => child !== state.node && !(child.hasAttribute('inert') && !child.hasAttribute(INERT_COUNT_ATTR)));
+    inerted.forEach(child => {
+        //refcount so two open modals sharing a sibling don't fight: only the first sets inert,
+        //and a non-LIFO close can't strip inert an element another open modal still needs
+        const count = Number(child.getAttribute(INERT_COUNT_ATTR)) || 0;
+        if (count === 0) child.setAttribute('inert', '');
+        child.setAttribute(INERT_COUNT_ATTR, String(count + 1));
+    });
     store.update({ ...state, inerted });
 };
 
 /*
- * Removes inert from the siblings this instance made inert, then clears the record.
+ * Drops this instance's inert refcount on the siblings it inerted, removing inert (and the marker)
+ * only when no other open modal still holds a reference, then clears the record.
  *
  * @param store, Object, store of the current instance state
  */
 const removeInert = store => () => {
     const state = store.getState();
-    (state.inerted || []).forEach(child => child.removeAttribute('inert'));
+    (state.inerted || []).forEach(child => {
+        const count = Number(child.getAttribute(INERT_COUNT_ATTR)) || 0;
+        if (count <= 1) {
+            child.removeAttribute(INERT_COUNT_ATTR);
+            child.removeAttribute('inert');
+        } else child.setAttribute(INERT_COUNT_ATTR, String(count - 1));
+    });
     store.update({ ...store.getState(), inerted: [] });
 };
 
@@ -136,7 +153,10 @@ const open = store => () => {
     store.update({
         ...state,
         focusableChildren: getFocusableChildren(state.node),
-        ...(moved ? { originalParent: state.node.parentNode, originalNextSibling: state.node.nextSibling } : {})
+        //always write both, so a later open that doesn't move the node clears any stale position
+        //from a previous cycle rather than letting close relocate the node to the wrong place
+        originalParent: moved ? state.node.parentNode : null,
+        originalNextSibling: moved ? state.node.nextSibling : null
     });
     if (moved) document.body.insertBefore(state.node, ref);
     document.addEventListener('keydown', state.keyListener);
@@ -157,10 +177,12 @@ const close = store => () => {
     document.removeEventListener('keydown', state.keyListener);
     setVisibility(state);
     removeInert(store)();
-    // restore the node to the position it was moved from on open
+    // restore the node to the position it was moved from on open, then clear the record so a
+    // later open that doesn't move the node can't be relocated to this now-stale position
     if (state.originalParent) {
         if (state.originalNextSibling && state.originalNextSibling.parentNode === state.originalParent) state.originalParent.insertBefore(state.node, state.originalNextSibling);
         else state.originalParent.appendChild(state.node);
+        store.update({ ...store.getState(), originalParent: null, originalNextSibling: null });
     }
     // return focus to whatever opened the modal; fall back to a toggle when there was no trigger (e.g. startOpen)
     const returnTarget = state.lastFocused && state.lastFocused !== document.body ? state.lastFocused : (state.toggles && state.toggles[0]);

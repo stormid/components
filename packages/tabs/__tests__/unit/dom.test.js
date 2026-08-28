@@ -50,17 +50,33 @@ describe('Tabs > interaction > click after manual arrow-nav (regression)', () =>
         assert.strictEqual(instance.getState().activeIndex, 0);
         assert.strictEqual(visiblePanels().length, 1);
 
-        // clicking must close the *activated* panel (0), not the *focused* one (1)
-        document.getElementById('tab-2').click();
-        assert.strictEqual(instance.getState().activeIndex, 1);
+        // click a *third* tab, not the one focus roved to: clicking must close the *activated*
+        // panel (0), not the *focused* one (1)
+        document.getElementById('tab-3').click();
+        assert.strictEqual(instance.getState().activeIndex, 2);
 
         const visible = visiblePanels();
         assert.strictEqual(visible.length, 1);
-        assert.strictEqual(visible[0].id, 'panel-2');
+        assert.strictEqual(visible[0].id, 'panel-3');
 
         const active = activeTabs();
         assert.strictEqual(active.length, 1);
-        assert.strictEqual(active[0].id, 'tab-2');
+        assert.strictEqual(active[0].id, 'tab-3');
+    });
+
+    it('leaves exactly one tab in the tab order after arrow-nav then activating a different tab', () => {
+        // arrow parks tabindex="0" on tab-2 (focus); selection stays on tab-1
+        keydown(document.getElementById('tab-1'), 'ArrowRight');
+        assert.strictEqual(document.getElementById('tab-2').getAttribute('tabindex'), '0');
+
+        // activating a third tab must reclaim the roved tabindex, not add a second tab stop
+        document.getElementById('tab-3').click();
+
+        const tabStops = Array.from(document.querySelectorAll('[role=tab]')).filter(t => t.getAttribute('tabindex') === '0');
+        assert.strictEqual(tabStops.length, 1);
+        assert.strictEqual(tabStops[0].id, 'tab-3');
+        assert.strictEqual(document.getElementById('tab-1').getAttribute('tabindex'), '-1');
+        assert.strictEqual(document.getElementById('tab-2').getAttribute('tabindex'), '-1');
     });
 
 });
@@ -98,6 +114,21 @@ describe('Tabs > keyboard > Home / End (auto)', () => {
         keydown(document.getElementById('tab-3'), 'Home');
         assert.strictEqual(instance.getState().activeIndex, 0);
         assert.strictEqual(visiblePanels()[0].id, 'panel-1');
+    });
+
+    it('does not re-fire onChange when Home/End target the already-active tab', () => {
+        document.body.innerHTML = anchorMarkup();
+        const changes = [];
+        tabs('[role=tablist]', { updateUrl: false, onChange: () => changes.push(1) });
+
+        keydown(document.getElementById('tab-1'), 'Home'); // already active at index 0
+        assert.strictEqual(changes.length, 0);
+
+        keydown(document.getElementById('tab-1'), 'End');  // moves 0 -> 2, fires once
+        assert.strictEqual(changes.length, 1);
+
+        keydown(document.getElementById('tab-3'), 'End');  // already active at index 2, no re-fire
+        assert.strictEqual(changes.length, 1);
     });
 
 });

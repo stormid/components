@@ -4,6 +4,7 @@ import {
     h,
     clearError,
     clearErrors,
+    renderError,
 } from '../../src/lib/dom/index.js';
 import validate from '../../src/index.js';
 import { DOTNET_CLASSNAMES } from '../../src/lib/constants/index.js';
@@ -91,6 +92,35 @@ describe('Validate > Unit > DOM > clearError', () => {
         assert.strictEqual(serverErrorNode.classList.contains(DOTNET_CLASSNAMES.VALID), true);
         assert.strictEqual(serverErrorNode.classList.contains(DOTNET_CLASSNAMES.ERROR), false);
     });
+});
+
+describe('Validate > Unit > DOM > cross-instance isolation', () => {
+
+    it('keys the client error id off the field id so two instances sharing a group name do not clobber each other', () => {
+        document.body.innerHTML = `<form>
+            <div><label for="email-a">Email</label><input id="email-a" name="email" /></div>
+        </form>
+        <form>
+            <div><label for="email-b">Email</label><input id="email-b" name="email" /></div>
+        </form>`;
+
+        const stateA = { groups: { email: { serverErrorNode: false, valid: false, errorMessages: ['A required'], fields: [document.getElementById('email-a')] } } };
+        const stateB = { groups: { email: { serverErrorNode: false, valid: false, errorMessages: ['B required'], fields: [document.getElementById('email-b')] } } };
+
+        renderError('email')(stateA);
+        renderError('email')(stateB);
+
+        // ids are scoped to the field, not a shared `email-error-message`
+        assert.ok(document.getElementById('email-a-error-message'), 'instance A error should render with a field-scoped id');
+        assert.ok(document.getElementById('email-b-error-message'), 'instance B error should render with a field-scoped id');
+
+        // clearing instance B must leave instance A's error and its aria wiring intact
+        clearError('email')(stateB);
+        assert.strictEqual(document.getElementById('email-b-error-message'), null);
+        assert.ok(document.getElementById('email-a-error-message'), 'instance A error must survive clearing instance B');
+        assert.strictEqual(document.getElementById('email-a').getAttribute('aria-describedby'), 'email-a-error-message');
+    });
+
 });
 
 describe('Validate > Unit > DOM > clearErrors', () => {

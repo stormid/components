@@ -70,6 +70,17 @@ describe('Toggle > dom > initUI', () => {
         warn.mock.restore();
     });
 
+    it('does not mint an id on a node it will not manage (no data-toggle)', () => {
+        document.body.innerHTML = `<div class="parent"><div class="js-unmanaged"></div></div>`;
+        const warn = mock.method(console, 'warn', () => {});
+
+        toggle('.js-unmanaged', { local: true });
+
+        warn.mock.restore();
+        //initUI bails before minting, so a node with no triggers is left untouched
+        assert.strictEqual(document.querySelector('.js-unmanaged').hasAttribute('id'), false);
+    });
+
     it('should mint an id for the toggled element when it has none, so triggers can still reference it', () => {
         document.body.innerHTML = `<div class="parent">
             <button class="js-no-id-btn">Test toggle</button>

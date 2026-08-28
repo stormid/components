@@ -65,8 +65,8 @@ export default ({ node, settings }) => {
 
             //close first, so the status className, hidden attribute and document listeners are cleaned up.
             //toggle rather than the lifecycle: teardown should not fire the prehook and callback,
-            //nor be deferred by the delay setting
-            if (store.getState().isOpen) toggle(store)();
+            //nor be deferred by the delay setting; silent so it does not dispatch a spurious toggle.close
+            if (store.getState().isOpen) toggle(store)(true);
 
             //closing may have scheduled a delayed focus restoration - cancel it and restore
             //synchronously instead, so destroy leaves nothing pending behind

@@ -296,9 +296,10 @@ export const getGroupValidityState = group => {
             })
             //a rejected validator (e.g. a remote request that errored) must still settle,
             //otherwise Promise.all never resolves and validation hangs. Fail closed: treat
-            //the field as invalid so its error message is shown.
+            //the field as invalid so its error message is shown. An AbortError is teardown,
+            //not a failure, so don't log it (the render is guarded by the caller either way).
             .catch(err => {
-                console.warn(err);
+                if (!(err && err.name === 'AbortError')) console.warn(err);
                 resolve(false);
             });
     })));

@@ -196,7 +196,8 @@ document.addEventListener('toggle.open', e => {
 
 ## Notes and limitations
 
-- The target element requires an `id` and a `data-toggle` attribute naming the className of its triggers. Toggle warns and does not initialise if either is missing, rather than throwing.
+- The target element needs a `data-toggle` attribute naming the className of its triggers. If it is missing (or names a className no `button`/`a` matches), Toggle warns and does not wire that node up, rather than throwing.
+- An `id` on the target is optional: if it has none, Toggle mints one so the triggers' `aria-controls` points at a real element. For a full-document toggle you should still give the target your own `id` — the status className is `on--<id>`, and a minted id would produce an unpredictable className. Without an author id the generic `is--active` className is used instead.
 - Only `button` and `a` elements are accepted as triggers. Anchors are given `role="button"` and activate on Space as well as click; an anchor without an `href` is also given `tabindex="0"` so it stays reachable.
 - Escape does not close the toggle. Toggle is used for expandable regions as well as overlays, and dismissing an expandable section on Escape is not expected behaviour. Add your own keydown handler if you need it for an overlay.
 - `closeOnBlur` and `closeOnClick` close the toggle through the full lifecycle, so the prehook, callback and animating className apply to those closes too. Focus is not returned to the trigger in that case, because the user has deliberately moved it elsewhere.

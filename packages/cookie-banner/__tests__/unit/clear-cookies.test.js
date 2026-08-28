@@ -47,6 +47,18 @@ describe('Cookie banner > cookie clearing', () => {
         assert.equal(readCookieValue(defaults.name), btoa(JSON.stringify({ consent: { performance: 0, ads: 0 } })));
     });
 
+    it('reject-all re-runs necessary consent fns so essential cookies survive the wipe', async () => {
+        const necessaryFn = () => { document.cookie = 'essential=1; path=/'; };
+        cookieBanner({ ...sampleTemplates, secure: false, types, necessary: [necessaryFn] });
+        // the necessary fn runs at init
+        assert.equal(readCookieValue('essential'), '1');
+
+        document.querySelector(`.${defaults.classNames.rejectBtn}`).click();
+
+        // deleteCookies wiped it, but necessary re-ran on reject and recreated it (no reload needed)
+        assert.equal(readCookieValue('essential'), '1', 'reject must re-run necessary fns to restore essential cookies');
+    });
+
     it('accept-all leaves other cookies in place (deleteCookies does not run on accept)', async () => {
         cookieBanner({ ...sampleTemplates, secure: false, types });
         document.cookie = 'unrelated=keep; path=/';

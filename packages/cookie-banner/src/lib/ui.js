@@ -1,6 +1,6 @@
 import { writeCookie, groupValueReducer, deleteCookies, getFocusableChildren, broadcast, setGoogleConsent } from './utils.js';
 import { ACCEPTED_TRIGGERS, EVENTS, KEYS } from './constants.js';
-import { apply } from './consent.js';
+import { apply, necessary } from './consent.js';
 import { updateConsent, updateBannerOpen, updateBanner } from './reducers.js';
 
 // Every template (banner, form, message) receives the same model: the full state, with the
@@ -99,8 +99,10 @@ export const initBannerListeners = store => () => {
                 updateConsent(state, consentObject),
                 [
                     // Reject-all is the only path that clears cookies: withdrawing ALL consent is the
-                    // one case where a blunt wipe is correct and no consent fns re-run to recreate them.
+                    // one case where a blunt wipe is correct. Re-run the strictly-necessary consent fns
+                    // afterwards so essential cookies the wipe removed are recreated without a reload.
                     deleteCookies,
+                    necessary,
                     writeCookie,
                     removeBanner(store),
                     initForm(store),
@@ -167,8 +169,15 @@ export const initForm = store => () => {
         else groups[groupName] = [field];
         return groups;
     }, {});
-    const formAnnouncement = document.querySelector(`.${state.settings.classNames.formAnnouncement}`)
-                            || document.body.appendChild(Object.assign(document.createElement('div'), { className: state.settings.classNames.formAnnouncement, role: 'alert' }));
+    let formAnnouncement = document.querySelector(`.${state.settings.classNames.formAnnouncement}`);
+    if (!formAnnouncement) {
+        formAnnouncement = document.createElement('div');
+        formAnnouncement.className = state.settings.classNames.formAnnouncement;
+        //setAttribute reflects to the role attribute in every browser; the el.role IDL property
+        //(ARIAMixin) is unsupported in older ones, leaving the live region unannounced
+        formAnnouncement.setAttribute('role', 'alert');
+        document.body.appendChild(formAnnouncement);
+    }
 
 
     const extractConsentObjects = () => {

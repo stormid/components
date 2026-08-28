@@ -83,11 +83,12 @@ const initListeners = (tab, nextIndex, store, signal) => {
         case KEYS.END: {
             e.preventDefault();
             const targetIndex = getNavTargetIndex(e.key, state);
-            store.update({
-                ...state,
-                activeTabIndex: targetIndex,
-                activeIndex: isManualActivation ? state.activeIndex : targetIndex
-            }, [ isManualActivation ? () => roveFocus(store) : () => changePanel(store, previousIndex) ]);
+            //Home/End (and the ends when arrows don't wrap) can resolve to where we already are;
+            //re-running the effect would rove focus needlessly or, in auto mode, re-fire onChange
+            //and rewrite the URL for a tab that is already active, so bail when nothing moves.
+            if (isManualActivation) {
+                if (targetIndex !== state.activeTabIndex) store.update({ ...state, activeTabIndex: targetIndex }, [() => roveFocus(store)]);
+            } else if (targetIndex !== previousIndex) store.update({ ...state, activeTabIndex: targetIndex, activeIndex: targetIndex }, [() => changePanel(store, previousIndex)]);
             break;
         }
         case KEYS.ENTER:
@@ -113,11 +114,13 @@ const initListeners = (tab, nextIndex, store, signal) => {
     }, { signal });
 };
 
-const changePanel = (store, previousActiveIndex) => {
+const changePanel = (store, previousActiveIndex, focus = true) => {
     const { activeIndex, settings, tabs, panels } = store.getState();
     close(store.getState(), previousActiveIndex);
     open(store)(store.getState());
-    focusTab(store);
+    //keyboard and click activation move focus onto the new tab; programmatic goTo can opt out
+    //so calling it from an unrelated control doesn't yank focus across the page
+    if (focus) focusTab(store);
     if (settings.updateUrl && window.history) {
         const hash = `#${panels[activeIndex].getAttribute('id')}`;
         window.history.replaceState({ URL: hash }, '', hash);
@@ -135,8 +138,11 @@ const close = ({ settings, tabs, panels }, previousActiveIndex) => {
 };
 
 const activateTab = ({ settings, tabs, activeTabIndex }) => {
+    //Reset the roving tabindex across every tab, not just the previously-selected one: manual
+    //arrow navigation can have parked tabindex="0" on a third, unselected tab, and leaving it
+    //would give the tablist two tab stops. Exactly one tab (the active one) stays reachable.
+    tabs.forEach((tab, i) => tab.setAttribute('tabindex', i === activeTabIndex ? '0' : '-1'));
     tabs[activeTabIndex].classList.add(settings.activeClass);
-    tabs[activeTabIndex].setAttribute('tabindex', '0');
 };
 
 const focusTab = store => {
