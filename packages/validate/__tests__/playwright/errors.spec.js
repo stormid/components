@@ -169,7 +169,7 @@ test.describe('Validate > Errors > Error message tokens', { tag: '@all'}, () => 
 		await page.fill("#group1", "test");
 		await page.fill("#group2", "test2");
 		await page.click("#submitTest");
-		await expect(page.locator("#group1-error-message")).toHaveText("test, test2 are not valid inputs");
+		await expect(page.locator("#group2-error-message")).toHaveText("test, test2 are not valid inputs");
 	});
 
 });

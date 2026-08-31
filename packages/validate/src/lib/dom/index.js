@@ -135,13 +135,8 @@ export const renderErrors = state => {
  * 
  */
 export const updateMessageValues = (state, groupName) => {
-    let msg = state.groups[groupName].errorMessages[0];
-
-    let values = state.groups[groupName].fields.reduce((newMsg, field, index, array) => {
-        if (index === array.length-1) return newMsg + field.value;
-        return newMsg = field.value + ', ';
-    }, '');
-
+    const msg = state.groups[groupName].errorMessages[0];
+    const values = state.groups[groupName].fields.map(field => field.value).join(', ');
     return msg.replace(TOKENS.VALUE, values);
 };
 
