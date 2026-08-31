@@ -47,11 +47,11 @@ const [ instance ] = scrollPoints(elements);
 > If the selector matches no elements (or `IntersectionObserver` is unsupported), `scrollPoints` returns `undefined` after logging a warning — guard before destructuring the result.
 
 ## Instance
-Each returned instance exposes the observed `node`, its merged `settings`, and a `disconnect()` method that stops the underlying IntersectionObserver — useful for cleanup in single-page apps when `unload: false`.
+Each returned instance exposes the observed `node`, its merged `settings`, and a `destroy()` method that stops the underlying IntersectionObserver and removes the applied className — useful for cleanup in single-page apps when `unload: false`.
 ```
 const [ instance ] = scrollPoints('.js-scroll-point', { unload: false });
 // later, e.g. before removing the node from the DOM
-instance.disconnect();
+instance.destroy();
 ```
 
 ## Options

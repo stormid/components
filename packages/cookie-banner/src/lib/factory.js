@@ -19,14 +19,19 @@ export default settings => {
     }
 
     const store = createStore();
-    
+
     const [ hasCookie, consent ] = extractFromCookie(settings);
-    
+
+    //every listener this instance adds (banner buttons, the document Tab trap, the form's
+    //submit/change) is bound to this signal, so destroy() can remove them all in one call
+    const controller = new AbortController();
+
     store.update(
         {
             settings,
             bannerOpen: false,
             keyListener: keyListener(store),
+            controller,
             consent,
             utils: { renderIframe, gtmSnippet }
         },
@@ -48,6 +53,12 @@ export default settings => {
             showBanner(store)(cb);
             initBannerListeners(store)();
         },
-        renderForm: initForm(store)
+        renderForm: initForm(store),
+        //remove every listener this instance added and take the banner back out of the DOM
+        destroy() {
+            const state = store.getState();
+            state.controller.abort();
+            if (state.banner && state.banner.parentNode) state.banner.parentNode.removeChild(state.banner);
+        }
     };
 };

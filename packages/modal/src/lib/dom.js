@@ -99,31 +99,39 @@ const setVisibility = state => {
 
 /*
  * Makes every body-level sibling of the modal node inert (removing it from focus, pointer and the
- * accessibility tree in supporting browsers). Only siblings not already inert are touched, and the
+ * accessibility tree in supporting browsers). Only siblings not already hidden are touched, and the
  * set is recorded on state so removeInert restores exactly what this instance changed.
  *
  * @param store, Object, store of the current instance state
  */
 const INERT_COUNT_ATTR = 'data-modal-inert-count';
 
+//the inert attribute removes an element from focus, pointer and the a11y tree in one go, but isn't
+//supported before ~2023. Where it's missing, fall back to aria-hidden so background content is at
+//least hidden from assistive tech (the pre-inert behaviour); focus containment still relies on the
+//Tab trap either way. The refcount marker below is mechanism-agnostic.
+const SUPPORTS_INERT = typeof HTMLElement !== 'undefined' && 'inert' in HTMLElement.prototype;
+const HIDE_ATTR = SUPPORTS_INERT ? 'inert' : 'aria-hidden';
+const HIDE_VALUE = SUPPORTS_INERT ? '' : 'true';
+
 const setInert = store => () => {
     const state = store.getState();
     const inerted = Array.from(document.querySelectorAll('body > *'))
-        //leave the modal itself, and any element the author made inert (inert with no modal
-        //refcount), untouched - the latter must not be un-inerted when the modal closes
-        .filter(child => child !== state.node && !(child.hasAttribute('inert') && !child.hasAttribute(INERT_COUNT_ATTR)));
+        //leave the modal itself, and any element the author already hid (the hide attribute with no
+        //modal refcount) untouched - the latter must not be un-hidden when the modal closes
+        .filter(child => child !== state.node && !(child.hasAttribute(HIDE_ATTR) && !child.hasAttribute(INERT_COUNT_ATTR)));
     inerted.forEach(child => {
-        //refcount so two open modals sharing a sibling don't fight: only the first sets inert,
-        //and a non-LIFO close can't strip inert an element another open modal still needs
+        //refcount so two open modals sharing a sibling don't fight: only the first hides it,
+        //and a non-LIFO close can't un-hide an element another open modal still needs
         const count = Number(child.getAttribute(INERT_COUNT_ATTR)) || 0;
-        if (count === 0) child.setAttribute('inert', '');
+        if (count === 0) child.setAttribute(HIDE_ATTR, HIDE_VALUE);
         child.setAttribute(INERT_COUNT_ATTR, String(count + 1));
     });
     store.update({ ...state, inerted });
 };
 
 /*
- * Drops this instance's inert refcount on the siblings it inerted, removing inert (and the marker)
+ * Drops this instance's refcount on the siblings it hid, removing the hide attribute (and the marker)
  * only when no other open modal still holds a reference, then clears the record.
  *
  * @param store, Object, store of the current instance state
@@ -134,7 +142,7 @@ const removeInert = store => () => {
         const count = Number(child.getAttribute(INERT_COUNT_ATTR)) || 0;
         if (count <= 1) {
             child.removeAttribute(INERT_COUNT_ATTR);
-            child.removeAttribute('inert');
+            child.removeAttribute(HIDE_ATTR);
         } else child.setAttribute(INERT_COUNT_ATTR, String(count - 1));
     });
     store.update({ ...store.getState(), inerted: [] });

@@ -149,6 +149,20 @@ export const setupListeners = state => {
     if (state.dom.input.form) state.dom.input.form.addEventListener('reset', state.handle.form.reset);
 };
 
+//Mirror of setupListeners: removes every listener it added, using the same stable handler
+//references held on state.handle. The enclosing form's reset listener is the one that outlives the
+//node (the rest go with the enhanced markup if it's removed), so detaching it matters most.
+export const teardownListeners = state => {
+    state.dom.input.removeEventListener('input', state.handle.input.input);
+    state.dom.input.removeEventListener('focus', state.handle.input.focus);
+    state.dom.input.removeEventListener('blur', state.handle.input.blur);
+    state.dom.list.removeEventListener('click', state.handle.option.click);
+    state.dom.node.removeEventListener('keydown', state.handle.container.keydown);
+    state.dom.list.removeEventListener('mousedown', state.handle.option.mousedown);
+    if (state.dom.output) state.dom.output.removeEventListener('click', state.handle.chip.remove);
+    if (state.dom.input.form) state.dom.input.form.removeEventListener('reset', state.handle.form.reset);
+};
+
 //emptying the list also drops the input's pointer to the (now gone) active option
 export const emptyList = state => {
     state.dom.list.replaceChildren();

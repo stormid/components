@@ -25,7 +25,8 @@ export const getActiveIndexOnLoad = (panels, node) => {
  */
 export const clampIndex = (index, length) => {
     if (!Number.isInteger(index) || index < 0 || index > length - 1) {
-        if (index !== undefined && !Number.isNaN(index)) console.warn(`Tabs: activeIndex ${index} is out of range, defaulting to 0`);
+        //index is always a Number here (callers pass +value), so NaN is the only non-finite case to stay quiet about
+        if (!Number.isNaN(index)) console.warn(`Tabs: activeIndex ${index} is out of range, defaulting to 0`);
         return 0;
     }
     return index;

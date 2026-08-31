@@ -19,6 +19,10 @@ export default ({ settings, node }) => {
     return {
         node,
         settings,
-        disconnect: () => observer.disconnect()
+        //stop observing and remove the applied className, so the instance leaves nothing behind
+        destroy: () => {
+            observer.disconnect();
+            node.classList.remove(settings.className);
+        }
     };
 };

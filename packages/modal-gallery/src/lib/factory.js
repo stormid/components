@@ -1,5 +1,5 @@
 import { createStore } from './store.js';
-import { initTriggers, keyListener, open } from './dom.js';
+import { initTriggers, keyListener, open, close } from './dom.js';
 
 /* 
  * @param items, HTMLElement, DOM node to be toggled
@@ -20,6 +20,12 @@ export default ({ items, settings }) => {
 
     return {
         getState: store.getState,
-        open: open(store)
+        open: open(store),
+        destroy() {
+            const state = store.getState();
+            //close first while open, so the overlay, keydown listener, background lock and focus are all cleaned up
+            if (state.isOpen) close(store);
+            (state.triggerHandlers || []).forEach(({ trigger, handler }) => trigger.removeEventListener('click', handler));
+        }
     };
 };

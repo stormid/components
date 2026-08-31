@@ -3,14 +3,21 @@ import { getFocusableChildren, escapeAttr } from './utils.js';
 
 export const initTriggers = store => state => {
     const { items, settings } = state;
-    
-    items.map((item, i) => {
-        if (!item.trigger) return;
-        item.trigger.addEventListener('click', e => {
+
+    //keep a stable handler per trigger so destroy() can remove the exact listeners this instance added
+    const triggerHandlers = items.reduce((handlers, item, i) => {
+        if (!item.trigger) return handlers;
+        const handler = e => {
             e.preventDefault();
             open(store)(i);
-        });
-    });
+        };
+        item.trigger.addEventListener('click', handler);
+        handlers.push({ trigger: item.trigger, handler });
+        return handlers;
+    }, []);
+
+    store.update({ ...store.getState(), triggerHandlers });
+
     if (settings.preload) items.map(loadImage(store));
 };
 
@@ -88,19 +95,27 @@ export const initUI = store => state => {
     ]);
 };
 
+//the inert attribute removes an element from focus, pointer and the a11y tree in one go, but isn't
+//supported before ~2023. Where it's missing, fall back to aria-hidden so background content is at
+//least hidden from assistive tech (the pre-inert behaviour); focus containment still relies on the
+//Tab trap either way. The data-* marker below is mechanism-agnostic.
+const SUPPORTS_INERT = typeof HTMLElement !== 'undefined' && 'inert' in HTMLElement.prototype;
+const HIDE_ATTR = SUPPORTS_INERT ? 'inert' : 'aria-hidden';
+const HIDE_VALUE = SUPPORTS_INERT ? '' : 'true';
+
 /*
  * Turns the page behind the open modal into a true modal context: stops the body scrolling
- * and marks every sibling of the overlay inert (removing it from the tab order and the
- * accessibility tree). Only elements this component marks are un-set on close, so pre-existing
- * inert/overflow state is left untouched. Both behaviours are opt-out via settings.
+ * and hides every sibling of the overlay from focus and the accessibility tree. Only elements
+ * this component marks are un-set on close, so pre-existing hidden/overflow state is left
+ * untouched. Both behaviours are opt-out via settings.
  */
 const lockBackground = store => () => {
     const { settings, dom } = store.getState();
     if (settings.lockScroll) document.body.style.overflow = 'hidden';
     if (settings.inertBackground) {
         Array.from(document.body.children).forEach(child => {
-            if (child === dom.overlay || child.hasAttribute('inert')) return;
-            child.setAttribute('inert', '');
+            if (child === dom.overlay || child.hasAttribute(HIDE_ATTR)) return;
+            child.setAttribute(HIDE_ATTR, HIDE_VALUE);
             child.setAttribute('data-modal-gallery-inert', '');
         });
     }
@@ -111,7 +126,7 @@ const unlockBackground = store => () => {
     if (settings.lockScroll) document.body.style.overflow = dom.bodyOverflow || '';
     if (settings.inertBackground) {
         Array.from(document.querySelectorAll('[data-modal-gallery-inert]')).forEach(el => {
-            el.removeAttribute('inert');
+            el.removeAttribute(HIDE_ATTR);
             el.removeAttribute('data-modal-gallery-inert');
         });
     }

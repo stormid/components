@@ -9,6 +9,7 @@ import {
     createHint,
     createSelectionSummary,
     setupListeners,
+    teardownListeners,
     setValue,
     syncOutput,
     createHiddenValue
@@ -163,6 +164,10 @@ export default ({ node, settings }) => {
     return {
         node,
         getState: store.getState,
-        clear: clear(store)
+        clear: clear(store),
+        //remove every listener this instance added (see teardownListeners). The decorated DOM is left
+        //in place, matching the other components' destroy() — the original <select> was consumed at
+        //enhancement, so it can't be restored anyway.
+        destroy: () => teardownListeners(store.getState())
     };
 };

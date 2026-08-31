@@ -84,21 +84,22 @@ describe('Scroll points > unit > callback', () => {
 
 describe('Scroll points > unit > factory', () => {
 
-    it('should expose a disconnect method that disconnects the observer', () => {
+    it('should expose a destroy method that disconnects the observer and removes the className', () => {
         const mockDisconnect = mock.fn();
         globalThis.IntersectionObserver = mock.fn(function () {
             this.observe = () => {};
             this.unobserve = () => {};
             this.disconnect = mockDisconnect;
         });
-        document.body.innerHTML = '<div class="test"></div>';
+        document.body.innerHTML = '<div class="test on"></div>';
         const node = document.querySelector('.test');
 
-        const instance = factory({ settings: defaults, node });
+        const instance = factory({ settings: { ...defaults, className: 'on' }, node });
 
-        assert.strictEqual(typeof instance.disconnect, 'function');
-        instance.disconnect();
+        assert.strictEqual(typeof instance.destroy, 'function');
+        instance.destroy();
         assert.strictEqual(mockDisconnect.mock.callCount(), 1);
+        assert.strictEqual(node.classList.contains('on'), false);
     });
 
 });

@@ -67,7 +67,10 @@ export const initBannerListeners = store => () => {
     const acceptBtns = Array.from(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
     const rejectBtns = Array.from(document.querySelectorAll(composeSelector(state.settings.classNames.rejectBtn)));
 
-    if (state.settings.trapTab) document.addEventListener('keydown', state.keyListener);
+    //bind to the instance's abort signal so destroy() removes these along with every other listener
+    const signal = state.controller && state.controller.signal;
+
+    if (state.settings.trapTab) document.addEventListener('keydown', state.keyListener, { signal });
 
     acceptBtns.forEach(acceptBtn => {
         acceptBtn.addEventListener('click', e => {
@@ -88,7 +91,7 @@ export const initBannerListeners = store => () => {
                     setGoogleConsent(store),
                 ]
             );
-        });
+        }, { signal });
     });
 
     rejectBtns.forEach(rejectBtn => {
@@ -114,7 +117,7 @@ export const initBannerListeners = store => () => {
                     setGoogleConsent(store),
                 ]
             );
-        });
+        }, { signal });
     });
 };
 
@@ -198,13 +201,16 @@ export const initForm = store => () => {
         };
     };
 
+    //bind to the instance's abort signal so destroy() removes these along with every other listener
+    const signal = state.controller && state.controller.signal;
+
     const enableButton = e => {
         if (Object.keys(extractConsentObjects().consentObject).length !== Object.keys(groups).length) return;
         button.removeAttribute('disabled');
         form.removeEventListener('change', enableButton);
     };
-    button.hasAttribute('disabled') && form.addEventListener('change', enableButton);
-    
+    button.hasAttribute('disabled') && form.addEventListener('change', enableButton, { signal });
+
     form.addEventListener('submit', event => {
         event.preventDefault();
         const { consentObject, analyticsObject } = extractConsentObjects();
@@ -225,7 +231,7 @@ export const initForm = store => () => {
                 setGoogleConsent(store),
             ]
         );
-    });
+    }, { signal });
 
     if (window.location.hash.substring(1) === form.id) {
         window.scrollTo(0, form.getBoundingClientRect().top + window.scrollY);
