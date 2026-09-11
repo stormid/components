@@ -1,6 +1,6 @@
 {
   "name": "@stormid/outliner",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Legacy-browser fallback for hiding focus outlines on mouse interactions — prefer native :focus-visible",
   "author": "stormid",
   "license": "MIT",

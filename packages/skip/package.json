@@ -1,6 +1,6 @@
 {
   "name": "@stormid/skip",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Fragment identifier links focus on their target node",
   "author": "stormid",
   "license": "MIT",

@@ -1,6 +1,6 @@
 {
   "name": "@stormid/textarea",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Auto-resizing textarea",
   "author": "stormid",
   "license": "MIT",
