@@ -23,10 +23,26 @@ describe('Autocomplete > Initialisation', () => {
         assert.notStrictEqual(instance.node, null);
         assert.strictEqual(typeof instance.getState, 'function');
         assert.strictEqual(typeof instance.clear, 'function');
+        assert.strictEqual(typeof instance.destroy, 'function');
     });
 
     it('should return an empty array (not undefined) when no nodes match', () => {
         assert.deepStrictEqual(autocomplete('.js-not-here'), []);
+    });
+
+    it('should stop responding to input once destroyed (listeners removed)', async () => {
+        const [instance] = autocomplete('.js-autocomplete', { values });
+        const input = instance.node.querySelector('input');
+
+        instance.destroy();
+
+        //the input listener is gone, so typing must not open the listbox
+        input.value = 'Ap';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        //past the 200ms debounce, plus a tick for any resolved promise
+        await new Promise(resolve => setTimeout(resolve, 250));
+
+        assert.strictEqual(instance.getState().open, false);
     });
 
     it('should let data attributes override options', () => {

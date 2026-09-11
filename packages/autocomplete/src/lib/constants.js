@@ -11,11 +11,13 @@ export const EVENTS = {
     close: 'autocomplete:close'
 };
 
-export const KEYCODES = {
-    8: 'backspace',
-    9: 'tab',
-    13: 'enter',
-    27: 'escape',
-    38: 'up',
-    40: 'down'
+// Keyboard keys (KeyboardEvent.key values) the combobox responds to.
+// KeyboardEvent.keyCode is deprecated - match on the standard event.key string instead.
+export const KEYS = {
+    BACKSPACE: 'Backspace',
+    TAB: 'Tab',
+    ENTER: 'Enter',
+    ESC: 'Escape',
+    UP: 'ArrowUp',
+    DOWN: 'ArrowDown'
 };

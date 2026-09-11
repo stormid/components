@@ -788,3 +788,31 @@ describe('Validate > Unit > Validator > methods > custom', () => {
         assert.deepStrictEqual(Methods.custom(customValidator, group), true);
     });
 });
+
+describe('Validate > Unit > Validator > methods > multi-field groups', () => {
+
+    it('should be invalid when an earlier field fails, not just the last (AND across fields)', () => {
+        document.body.innerHTML = `<form>
+            <input type="text" name="field" id="f1" value="ab" />
+            <input type="text" name="field" id="f2" value="abcd" />
+        </form>`;
+        const group = {
+            validators: [{ type: 'minlength', params: { min: '3' } }],
+            fields: [document.querySelector('#f1'), document.querySelector('#f2')]
+        };
+        //f1 ("ab") is too short; result must be false even though the last field ("abcd") passes
+        assert.deepStrictEqual(Methods.minlength(group), false);
+    });
+
+    it('should be valid only when every field in the group satisfies the constraint', () => {
+        document.body.innerHTML = `<form>
+            <input type="text" name="field" id="f1" value="abc" />
+            <input type="text" name="field" id="f2" value="abcd" />
+        </form>`;
+        const group = {
+            validators: [{ type: 'minlength', params: { min: '3' } }],
+            fields: [document.querySelector('#f1'), document.querySelector('#f2')]
+        };
+        assert.deepStrictEqual(Methods.minlength(group), true);
+    });
+});

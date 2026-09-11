@@ -3,4 +3,6 @@
 __tests__
 example
 coverage
+test-results
+tools
 playwright.config.js

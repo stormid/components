@@ -2,5 +2,6 @@
 export default {
     events: [
         'input'
-    ]
+    ],
+    forceFallback: false
 };

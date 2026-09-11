@@ -1,8 +1,10 @@
-import { describe, it, before } from 'node:test';
+import { describe, it, before, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import cookieBanner from '../../src/index.js';
 import { updateConsent, updateExecuted } from '../../src/lib/reducers.js';
 import sampleTemplates from '../../example/src/js/sample-templates.js';
+
+const domainTypes = { perf: { title: 't', description: 'd', labels: { yes: 'y', no: 'n' }, fns: [() => { }] } };
 
 const init = () => {
     // Set up container for form
@@ -29,11 +31,10 @@ describe(`Cookie banner > state > update/reducers`, () => {
         };
         const Store = cookieBanner({ ...sampleTemplates, types });
 
-        // Jest's toEqual ignored undefined-valued properties; node:assert's
-        // deepStrictEqual does not. Init runs the `executed` reducer, which sets
-        // types.test.executed to undefined (no consent yet), so reflect that here.
+        // Init runs the `executed` reducer, which sets types.test.executed to a boolean derived
+        // from consent — false here, since there is no consent yet.
         assert.deepStrictEqual(Store.getState().settings.types, {
-            test: { ...types.test, executed: undefined }
+            test: { ...types.test, executed: false }
         });
     });
 
@@ -146,5 +147,24 @@ describe(`Cookie banner > state > update/reducers`, () => {
                 }
             }
         });
+    });
+});
+
+describe(`Cookie banner > state > cookie domain`, () => {
+    beforeEach(() => { document.body.innerHTML = `<main></main>`; });
+
+    it('derives the domain once into state when not provided (host-only on localhost)', async () => {
+        const instance = cookieBanner({ ...sampleTemplates, secure: false, types: domainTypes });
+        assert.strictEqual(instance.getState().settings.domain, '');
+    });
+
+    it('respects an explicitly provided domain rather than deriving one', async () => {
+        const instance = cookieBanner({ ...sampleTemplates, secure: false, types: domainTypes, domain: '.example.com' });
+        assert.strictEqual(instance.getState().settings.domain, '.example.com');
+    });
+
+    it('treats an explicit empty-string domain as host-only, not as unset', async () => {
+        const instance = cookieBanner({ ...sampleTemplates, secure: false, types: domainTypes, domain: '' });
+        assert.strictEqual(instance.getState().settings.domain, '');
     });
 });

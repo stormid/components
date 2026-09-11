@@ -109,3 +109,15 @@ describe("Scroll points > Initialisation > Get Selection", () => {
 		assert.deepStrictEqual(els.length, 1);
 	});
 });
+
+describe("Scroll points > Initialisation > No IntersectionObserver support", () => {
+	it("should return undefined if IntersectionObserver is not supported", () => {
+		document.body.innerHTML = `<div class="js-scroll-point test"></div>`;
+		const original = window.IntersectionObserver;
+		delete window.IntersectionObserver;
+
+		assert.strictEqual(scrollPoints(".js-scroll-point"), undefined);
+
+		window.IntersectionObserver = original;
+	});
+});

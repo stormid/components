@@ -203,6 +203,62 @@ test.describe('Tabs > Auto activation > Keyboard', { tag: '@all'}, () => {
 });
 
 
+test.describe('Tabs > Keyboard > Home and End', { tag: '@all'}, () => {
+
+	test('should activate the first tab on Home and the last on End', async ({ page }) => {
+		await page.locator('#tab-5').click();
+		await expect(page.locator('#tab-5')).toHaveClass(/is--active/);
+
+		await page.keyboard.press('End');
+		await expect(page.locator('#tab-6')).toHaveClass(/is--active/);
+		await expect(page.locator('#panel-6')).toBeVisible();
+
+		await page.keyboard.press('Home');
+		await expect(page.locator('#tab-4')).toHaveClass(/is--active/);
+		await expect(page.locator('#panel-4')).toBeVisible();
+	});
+
+});
+
+test.describe('Tabs > Manual activation > Roving tabindex', { tag: '@all'}, () => {
+
+	test('should move tabindex to the focused tab without activating it', async ({ page }) => {
+		await page.keyboard.press(tabKey);
+		await expect(page.locator(':focus')).toHaveAttribute('id', 'tab-1');
+
+		await page.keyboard.press('ArrowRight');
+		await expect(page.locator(':focus')).toHaveAttribute('id', 'tab-2');
+		await expect(page.locator('#tab-2')).toHaveAttribute('tabindex', '0');
+		await expect(page.locator('#tab-1')).toHaveAttribute('tabindex', '-1');
+		// selection stays on the originally-active tab in manual mode
+		await expect(page.locator('#tab-1')).toHaveClass(/is--active/);
+	});
+
+});
+
+test.describe('Tabs > Buttons', { tag: '@all'}, () => {
+
+	test('should activate a button-based tab on click', async ({ page }) => {
+		await expect(page.locator('#panel-7')).toBeVisible();
+
+		await page.locator('#tab-8').click();
+		await expect(page.locator('#tab-8')).toHaveClass(/is--active/);
+		await expect(page.locator('#panel-8')).toBeVisible();
+		await expect(page.locator('#panel-7')).not.toBeVisible();
+	});
+
+	test('should activate a button-based tab with the keyboard', async ({ page }) => {
+		await page.locator('#tab-7').focus();
+		await page.keyboard.press('ArrowRight');
+		await expect(page.locator(':focus')).toHaveAttribute('id', 'tab-8');
+
+		await page.keyboard.press('Enter');
+		await expect(page.locator('#tab-8')).toHaveClass(/is--active/);
+		await expect(page.locator('#panel-8')).toBeVisible();
+	});
+
+});
+
 test.describe('Tabs > Axe', { tag: '@reduced'}, () => {
 	test('Should not have any automatically detectable accessibility issues', async ({ page }) => {	
 		const accessibilityScanResults = await new AxeBuilder({ page }).analyze(); 

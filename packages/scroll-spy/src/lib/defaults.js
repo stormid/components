@@ -4,6 +4,5 @@ export default {
     rootMargin: '0px 0px 0px 0px',
     threshold: 0,
     activeClassName: 'is--active',
-    callback: null,
     single: true,
 };

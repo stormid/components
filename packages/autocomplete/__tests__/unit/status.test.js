@@ -105,7 +105,7 @@ describe('Autocomplete > Status', () => {
         type(input, 'apple');
         clickOption(node, 0);
         input.value = '';
-        input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 8, bubbles: true }));
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true }));
 
         assert.strictEqual(node.querySelector('.autocomplete__status').textContent, 'Apple removed');
     });

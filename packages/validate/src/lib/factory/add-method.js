@@ -1,4 +1,4 @@
-import { ACTIONS } from '../constants/index.js';
+import { ACTIONS, GROUP_ATTRIBUTE } from '../constants/index.js';
 import reducers from '../reducers/index.js';
 
 /**
@@ -11,7 +11,15 @@ import reducers from '../reducers/index.js';
  * 
  */
 export const addMethod = store => (groupName, method, message, fields) => {
-    if ((groupName === undefined || method === undefined || message === undefined) || !store.getState()[groupName] && (document.getElementsByName(groupName).length === 0  && [].slice.call(document.querySelectorAll(`[data-val-group="${groupName}"]`)).length === 0) && !fields) {
+    const hasRequiredArgs = groupName !== undefined && method !== undefined && message !== undefined;
+    //the group must be resolvable to fields: already tracked in state, matchable by name or
+    //data-val-group in the DOM, or supplied explicitly via the fields argument.
+    const groupExists = hasRequiredArgs && !!store.getState().groups[groupName];
+    const hasNamedFields = hasRequiredArgs && document.getElementsByName(groupName).length > 0;
+    const hasGroupAttrFields = hasRequiredArgs && document.querySelectorAll(`[data-val-${GROUP_ATTRIBUTE}="${groupName}"]`).length > 0;
+    const canResolveGroup = groupExists || hasNamedFields || hasGroupAttrFields || !!fields;
+
+    if (!hasRequiredArgs || !canResolveGroup) {
         return console.warn('Custom validation method cannot be added.');
     }
     store.update(reducers[ACTIONS.ADD_VALIDATION_METHOD](store.getState(), { groupName, fields, validator: { type: 'custom', method, message } }));

@@ -67,3 +67,26 @@ describe(`Cookie banner > showBanner > show banner`, () => {
     });
 
 });
+
+describe(`Cookie banner > destroy`, () => {
+    it('should expose a destroy method that removes the banner and its listeners', () => {
+        //clear any consent cookie an earlier test wrote, so init shows the banner from a clean slate
+        document.cookie = `${defaults.name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+        init();
+        assert.strictEqual(typeof instance.destroy, 'function');
+        assert.strictEqual(instance.getState().bannerOpen, true);
+
+        //capture the accept button before destroy detaches it with the banner
+        const acceptBtn = document.querySelector(`.${defaults.classNames.acceptBtn}`);
+        assert.notStrictEqual(acceptBtn, null);
+
+        instance.destroy();
+
+        //banner taken back out of the DOM
+        assert.strictEqual(document.querySelector(`.${defaults.classNames.banner}`), null);
+
+        //listeners removed: activating the (now detached) accept button runs no accept effects
+        acceptBtn.click();
+        assert.strictEqual(instance.getState().bannerOpen, true);
+    });
+});

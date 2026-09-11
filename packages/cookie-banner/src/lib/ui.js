@@ -1,12 +1,25 @@
 import { writeCookie, groupValueReducer, deleteCookies, getFocusableChildren, broadcast, setGoogleConsent } from './utils.js';
-import { ACCEPTED_TRIGGERS, EVENTS } from './constants.js';
-import { apply } from './consent.js';
+import { ACCEPTED_TRIGGERS, EVENTS, KEYS } from './constants.js';
+import { apply, necessary } from './consent.js';
 import { updateConsent, updateBannerOpen, updateBanner } from './reducers.js';
+
+// Every template (banner, form, message) receives the same model: the full state, with the
+// settings object also spread at the top level. So `model.classNames`/`model.policyURL` resolve
+// (settings spread), `model.settings.*`/`model.consent` resolve, and any top-level state field the
+// form/message templates previously received (they were passed raw state) is still present.
+const templateModel = state => Object.assign({}, state, state.settings, {
+    settings: state.settings,
+    consent: state.consent
+});
 
 export const initBanner = store => () => {
     const state = store.getState();
     if (state.bannerOpen || (state.settings.hideBannerOnFormPage && document.querySelector(`.${state.settings.classNames.formContainer}`))) return;
-    document.body.firstElementChild.insertAdjacentHTML('beforebegin', state.settings.bannerTemplate(state.settings));
+    const markup = state.settings.bannerTemplate(templateModel(state));
+    // firstElementChild is null on a page whose body has no element children — fall back to
+    // inserting the banner as the body's first child rather than throwing.
+    if (document.body.firstElementChild) document.body.firstElementChild.insertAdjacentHTML('beforebegin', markup);
+    else document.body.insertAdjacentHTML('afterbegin', markup);
     
     store.update(
         updateBanner(state, {
@@ -51,10 +64,13 @@ export const initBannerListeners = store => () => {
         };
     };
 
-    const acceptBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
-    const rejectBtns = [].slice.call(document.querySelectorAll(composeSelector(state.settings.classNames.rejectBtn)));
+    const acceptBtns = Array.from(document.querySelectorAll(composeSelector(state.settings.classNames.acceptBtn)));
+    const rejectBtns = Array.from(document.querySelectorAll(composeSelector(state.settings.classNames.rejectBtn)));
 
-    if (state.settings.trapTab) document.addEventListener('keydown', state.keyListener);
+    //bind to the instance's abort signal so destroy() removes these along with every other listener
+    const signal = state.controller && state.controller.signal;
+
+    if (state.settings.trapTab) document.addEventListener('keydown', state.keyListener, { signal });
 
     acceptBtns.forEach(acceptBtn => {
         acceptBtn.addEventListener('click', e => {
@@ -63,7 +79,6 @@ export const initBannerListeners = store => () => {
             store.update(
                 updateConsent(state, consentObject),
                 [
-                    deleteCookies,
                     writeCookie,
                     apply(store),
                     removeBanner(store),
@@ -76,7 +91,7 @@ export const initBannerListeners = store => () => {
                     setGoogleConsent(store),
                 ]
             );
-        });
+        }, { signal });
     });
 
     rejectBtns.forEach(rejectBtn => {
@@ -86,6 +101,11 @@ export const initBannerListeners = store => () => {
             store.update(
                 updateConsent(state, consentObject),
                 [
+                    // Reject-all is the only path that clears cookies: withdrawing ALL consent is the
+                    // one case where a blunt wipe is correct. Re-run the strictly-necessary consent fns
+                    // afterwards so essential cookies the wipe removed are recreated without a reload.
+                    deleteCookies,
+                    necessary,
                     writeCookie,
                     removeBanner(store),
                     initForm(store),
@@ -97,7 +117,7 @@ export const initBannerListeners = store => () => {
                     setGoogleConsent(store),
                 ]
             );
-        });
+        }, { signal });
     });
 };
 
@@ -115,7 +135,7 @@ const trapTab = state => event => {
 };
 
 export const keyListener = store => event => {
-    if (store.getState().banner && event.keyCode === 9) trapTab(store.getState())(event);
+    if (store.getState().banner && event.key === KEYS.TAB) trapTab(store.getState())(event);
 };
 
 const removeBanner = store => () => {
@@ -142,18 +162,25 @@ export const initForm = store => () => {
     const formContainer = document.querySelector(`.${state.settings.classNames.formContainer}`);
     if (!formContainer) return;
 
-    formContainer.innerHTML = state.settings.formTemplate(suggestedConsent(state));
+    formContainer.innerHTML = state.settings.formTemplate(templateModel(suggestedConsent(state)));
 
     const form = document.querySelector(`.${state.settings.classNames.form}`);
     const button = document.querySelector(`.${state.settings.classNames.submitBtn}`);
-    const groups = [].slice.call(document.querySelectorAll(`.${state.settings.classNames.field}`)).reduce((groups, field) => {
-        const groupName = field.getAttribute('name').replace('privacy-', '');
+    const groups = Array.from(document.querySelectorAll(`.${state.settings.classNames.field}`)).reduce((groups, field) => {
+        const groupName = field.getAttribute('name').replace(/^privacy-/, '');
         if (groups[groupName]) groups[groupName].push(field);
         else groups[groupName] = [field];
         return groups;
     }, {});
-    const formAnnouncement = document.querySelector(`.${state.settings.classNames.formAnnouncement}`)
-                            || document.body.appendChild(Object.assign(document.createElement('div'), { className: state.settings.classNames.formAnnouncement, role: 'alert' }));
+    let formAnnouncement = document.querySelector(`.${state.settings.classNames.formAnnouncement}`);
+    if (!formAnnouncement) {
+        formAnnouncement = document.createElement('div');
+        formAnnouncement.className = state.settings.classNames.formAnnouncement;
+        //setAttribute reflects to the role attribute in every browser; the el.role IDL property
+        //(ARIAMixin) is unsupported in older ones, leaving the live region unannounced
+        formAnnouncement.setAttribute('role', 'alert');
+        document.body.appendChild(formAnnouncement);
+    }
 
 
     const extractConsentObjects = () => {
@@ -174,13 +201,16 @@ export const initForm = store => () => {
         };
     };
 
+    //bind to the instance's abort signal so destroy() removes these along with every other listener
+    const signal = state.controller && state.controller.signal;
+
     const enableButton = e => {
         if (Object.keys(extractConsentObjects().consentObject).length !== Object.keys(groups).length) return;
         button.removeAttribute('disabled');
         form.removeEventListener('change', enableButton);
     };
-    button.hasAttribute('disabled') && form.addEventListener('change', enableButton);
-    
+    button.hasAttribute('disabled') && form.addEventListener('change', enableButton, { signal });
+
     form.addEventListener('submit', event => {
         event.preventDefault();
         const { consentObject, analyticsObject } = extractConsentObjects();
@@ -188,7 +218,6 @@ export const initForm = store => () => {
         store.update(
             updateConsent(state, consentObject),
             [
-                deleteCookies,
                 writeCookie,
                 apply(store),
                 removeBanner(store),
@@ -202,7 +231,7 @@ export const initForm = store => () => {
                 setGoogleConsent(store),
             ]
         );
-    });
+    }, { signal });
 
     if (window.location.hash.substring(1) === form.id) {
         window.scrollTo(0, form.getBoundingClientRect().top + window.scrollY);
@@ -210,7 +239,7 @@ export const initForm = store => () => {
 };
 
 export const renderMessage = button => state => {
-    button.insertAdjacentHTML('afterend', state.settings.messageTemplate(state));
+    button.insertAdjacentHTML('afterend', state.settings.messageTemplate(templateModel(state)));
     button.setAttribute('disabled', 'disabled');
     /* node:coverage ignore next */
     window.setTimeout(() => {

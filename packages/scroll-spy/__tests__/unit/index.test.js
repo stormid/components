@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import scrollSpy from '../../src/index.js';
 import { getSelection } from '../../src/lib/utils.js';
 
-let basic, withCallback;
+let basic, withOptions;
 const init = () => {
     window.IntersectionObserver = mock.fn(function(cb) {
 	  this.observe = () => {};
@@ -39,11 +39,7 @@ const init = () => {
             </section>`;
 
     basic = scrollSpy('.js-scroll-spy');
-    withCallback = scrollSpy('.js-scroll-spy-two', {
-	  callback(){
-            // this.node.classList.toggle('callback-test');
-	  }
-    });
+    withOptions = scrollSpy('.js-scroll-spy-two', { single: false });
 };
 
 describe(`Scroll Spy > Initialisation`, () => {
@@ -61,8 +57,14 @@ describe(`Scroll Spy > Initialisation`, () => {
         assert.notStrictEqual(basic.getState(), null);
     });
 
-    it('should initialisation with different settings if different options are passed', () => {
-        assert.notDeepStrictEqual(basic.getState().settings.callback, withCallback.getState().settings.callback);
+    it('should initialise with different settings if different options are passed', () => {
+        assert.strictEqual(basic.getState().settings.single, true);
+        assert.strictEqual(withOptions.getState().settings.single, false);
+    });
+
+    it('should expose getState and destroy on the instance', () => {
+        assert.strictEqual(typeof basic.getState, 'function');
+        assert.strictEqual(typeof basic.destroy, 'function');
     });
 
 });
@@ -112,6 +114,43 @@ describe('Scroll spy > Initialisation > Get Selection', () => {
         const els = getSelection('.js-scroll-spy');
         assert.strictEqual(els instanceof Array, true);
         assert.deepStrictEqual(els.length, 1);
+    });
+
+    it('should return an array when passed an HTMLCollection', async () => {
+        const scroll = document.getElementsByClassName('js-scroll-spy');
+        const els = getSelection(scroll);
+        assert.strictEqual(els instanceof Array, true);
+        assert.deepStrictEqual(els.length, 1);
+    });
+
+    it('should return an empty array when passed an unsupported value', async () => {
+        assert.deepStrictEqual(getSelection(42), []);
+        assert.deepStrictEqual(getSelection(null), []);
+        assert.deepStrictEqual(getSelection(undefined), []);
+        assert.deepStrictEqual(getSelection({}), []);
+    });
+
+});
+
+describe(`Scroll Spy > malformed hash`, () => {
+
+    it('does not throw when a spy href has a malformed percent-escape', () => {
+        window.IntersectionObserver = mock.fn(function() {
+            this.observe = () => {};
+            this.disconnect = () => {};
+        });
+        globalThis.IntersectionObserver = window.IntersectionObserver;
+
+        document.body.innerHTML = `<nav>
+                <a class="js-malformed" href="#100%">Bad</a>
+                <a class="js-malformed" href="#good">Good</a>
+            </nav>
+            <section id="100%">Bad target</section>
+            <section id="good">Good target</section>`;
+
+        // decodeURIComponent('100%') throws a URIError; findSpies must fall back to the raw id
+        // rather than let the whole instance fail to initialise
+        assert.doesNotThrow(() => scrollSpy('.js-malformed'));
     });
 
 });

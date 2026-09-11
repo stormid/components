@@ -1,6 +1,13 @@
 const { devices } = require('@playwright/test');
+const freePort = require('./free-port');
 
-// CURRENT MAX PORT NUMBER IN USE: 8095
+// A free port is picked once per `playwright test` run, then memoised into an env var: Playwright
+// reloads this config in every worker process, and the port must stay identical across the runner
+// (which starts the dev server) and the workers (which navigate to baseURL). Workers inherit the
+// env the runner set before spawning them. Per package = per process = its own port, so concurrent
+// `lerna run test` never collides, and no ports are hardcoded. The dev server the webServer command
+// spawns is handed the same port via `--port`.
+const port = process.env.PLAYWRIGHT_DEV_PORT || (process.env.PLAYWRIGHT_DEV_PORT = String(freePort()));
 
 module.exports = {
   testDir: './__tests__/playwright',
@@ -14,7 +21,7 @@ module.exports = {
     timeout: 10_000,
   },
   use: {
-    baseURL: 'http://localhost:8081',
+    baseURL: `http://localhost:${port}`,
     trace: 'on-first-retry',
   },
   projects: [
@@ -48,8 +55,8 @@ module.exports = {
     },
   ],
   webServer: {
-    command: 'rspack serve --config tools/playwright.rspack.config.js',
-    url: 'http://localhost:8081',
+    command: `rspack serve --config tools/rspack.config.js --port ${port}`,
+    url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
   },
 };

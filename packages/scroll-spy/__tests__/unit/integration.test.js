@@ -4,7 +4,7 @@ import { intersectionCallback } from '../../src/lib/factory.js';
 import defaults from '../../src/lib/defaults.js';
 import { createStore } from '../../src/lib/store.js';
 
-describe('Scroll spy > factory > callback', () => {
+describe('Scroll spy > factory > intersectionCallback', () => {
 
     it('should update new state to the store', () => {
         const spy = { node: 'node-1', target: 'target-1' };
@@ -43,7 +43,7 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.update({ spies: [spy], settings: defaults, active: [spy], hasScrolledToBottom: false });
+        Store.update({ spies: [spy, spy2], settings: defaults, active: [spy], hasScrolledToBottom: false });
         const entries = [{ isIntersecting: true }];
         intersectionCallback(Store, spy2)(entries);
         assert.deepStrictEqual(Store.getState().active, [spy, spy2]);
@@ -58,7 +58,7 @@ describe('Scroll spy > factory > callback', () => {
         const spy = { node, target: 'target-1' };
         const spy2 = { node: node2, target: 'target-2' };
         const Store = createStore();
-        Store.update({ spies: [spy], settings: Object.assign({}, defaults, { single: false }), active: [spy], hasScrolled: false });
+        Store.update({ spies: [spy, spy2], settings: Object.assign({}, defaults, { single: false }), active: [spy], hasScrolledToBottom: false });
         const entries = [{ isIntersecting: true }];
         intersectionCallback(Store, spy2)(entries);
         assert.deepStrictEqual(Store.getState().active, [spy, spy2]);

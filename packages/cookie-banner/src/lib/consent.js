@@ -4,7 +4,7 @@ export const applyEffects = state => {
     Object.keys(state.consent).forEach(key => {
         if (!state.settings.types[key]) return;
         if (state.settings.types[key].executed === true) return;
-        if (state.consent[key] && Boolean(state.consent[key]) && state.settings.types[key].fns) {
+        if (state.consent[key] && state.settings.types[key].fns) {
             state.settings.types[key].fns.forEach(fn => fn(state));
         }
     });
@@ -18,7 +18,7 @@ export const apply = store => state => {
             Object.keys(state.settings.types).reduce((acc, type) => {
                 acc[type] = {
                     ...state.settings.types[type],
-                    executed: state.settings.types[type].executed || (state.consent[type] && Boolean(state.consent[type]))
+                    executed: state.settings.types[type].executed || Boolean(state.consent[type])
                 };
                 return acc;
             }, {})

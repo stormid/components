@@ -10,9 +10,9 @@ Example implementations of specific types of modal are available for reference a
 
 Create a modal dialog and button(s) to toggle in HTML
 ```
-<button class="js-modal-toggle">Open modal</button>
+<button class="js-modal-toggle" aria-haspopup="dialog">Open modal</button>
 <div id="modal-1" class="js-modal modal" data-modal-toggle="js-modal-toggle" hidden>
-    <div class="modal__inner" role="dialog" aria-labelledby="modal-label">
+    <div class="modal__inner" role="dialog" aria-modal="true" aria-labelledby="modal-label">
         <h2 id="modal-label">Modal title</h2>
         ...
         <button class="modal__close-btn js-modal-toggle" aria-label="close">
@@ -58,8 +58,10 @@ const elements = [].slice.call(document.querySelectorAll('.js-modal'));
 const [ instance ] = modal(elements);
 ```
 
+While the modal is open, all other top-level children of the `body` are made `inert` (removed from focus, pointer interaction and the accessibility tree). The modal node is temporarily moved to be the first child of the `body` and returned to its original position when it closes.
+
 CSS
-The className 'is--modal' added to the document.body when the modal is open. This can be used to prevent the body from scrolling and to use CSS to modify other parts of the document.
+The className `is--modal` is added to the document element (`<html>`) when the modal is open. This can be used to prevent the page from scrolling and to use CSS to modify other parts of the document.
 
 ```
 .is--modal {
@@ -74,23 +76,24 @@ Options can be set during initialising in an Object passed as the second argumen
     onClassName: 'is--active', //className added to node when modal is open
     toggleSelectorAttribute: 'data-modal-toggle', //attribute on node to use as toggle selector
     callback: false, //optional function called after modal state change
-    delay: 0, //ms delay before focus on first focuable element
-    startOpen //boolean, to trigger modal to open when initialised    
+    delay: 0, //ms delay before focus on first focusable element
+    startOpen: false //boolean, to trigger the modal to open when initialised
 }
 ```
 
 ## API
-modal() returns an array of instances. Each instance exposes the interface
+modal() returns an array of instances (an empty array if no elements match the selector). Each instance exposes the interface
 ```
 {
     getState, a Function that returns the current state Object
     open, a Function that opens the modal
-    close a Function that closes the modal
+    close, a Function that closes the modal
+    destroy, a Function that closes the modal and removes its event listeners
 }
 ```
 
 ## Events
-There are two custom events that an instance of the cookie banner dispatches:
+There are two custom events that an instance of the modal dispatches:
 - `modal.open` when the modal is opened
 - `modal.close` when it is closed
 
@@ -103,7 +106,7 @@ document.addEventListener('modal.open', e => {
     const state = e.detail.getState();
     // do something with state if we want to
 });
-
+```
 
 ## Tests
 ```

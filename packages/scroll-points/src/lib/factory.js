@@ -1,8 +1,10 @@
 export const callback = ({ settings, node }) => (entries, observer) => {
-    if (entries[0].isIntersecting) {
+    const [ entry ] = entries;
+    if (entry.isIntersecting) {
         node.classList.add(settings.className);
-        if (settings.callback && typeof settings.callback === 'function') settings.callback.call({ settings, node });
-        if (settings.unload) observer.disconnect(node);
+        if (typeof settings.callback === 'function') settings.callback(entry, { node, settings, observer });
+        // replay requires a live observer, so unload is ignored when replay is set
+        if (settings.unload && !settings.replay) observer.unobserve(node);
     } else if (settings.replay) node.classList.remove(settings.className);
 };
 
@@ -14,5 +16,13 @@ export default ({ settings, node }) => {
     });
     observer.observe(node);
 
-    return { node, settings };
+    return {
+        node,
+        settings,
+        //stop observing and remove the applied className, so the instance leaves nothing behind
+        destroy: () => {
+            observer.disconnect();
+            node.classList.remove(settings.className);
+        }
+    };
 };

@@ -90,7 +90,12 @@ const resolveMessages = (input, type) => input.getAttribute(`data-val-${type}`) 
  */
 export const extractAttrValidators = input => {
     let validators = [];
-    if ((input.hasAttribute('required') || input.hasAttribute('aria-required')) && (input.getAttribute('required') !== 'false' || input.getAttribute('aria-required') !== 'false')){
+    //required via either attribute, unless that attribute is explicitly "false".
+    //Each attribute is checked independently - a prior OR here meant required="false"
+    //was still treated as required whenever aria-required was absent.
+    const isRequired = input.hasAttribute('required') && input.getAttribute('required') !== 'false';
+    const isAriaRequired = input.hasAttribute('aria-required') && input.getAttribute('aria-required') !== 'false';
+    if (isRequired || isAriaRequired){
         validators.push({ type: 'required', ...resolveMessages(input, 'required') } );
     }
     if (input.getAttribute('type') === 'email') validators.push({ type: 'email', ...resolveMessages(input, 'email') });
@@ -113,26 +118,6 @@ export const extractAttrValidators = input => {
     }
     return validators;
 };
-
-/**
- * Validator checks to extract validators based on HTML5 attributes
- * 
- * Each function is so we can seed each fn with an input and pipe the result array through each function
- * Signature: inputDOMNode => validatorArray => updateValidatorArray
-
-const required = input => (validators = []) => {
-    // console.log(validators);
-    return input.hasAttribute('required') && input.getAttribute('required') !== 'false' ? [...validators, {type: 'required'}] : validators;
-};
-const email = input => (validators = [])  => input.getAttribute('type') === 'email' ? [...validators, {type: 'email'}] : validators;
-const url = input => (validators = [])  => input.getAttribute('type') === 'url' ? [...validators, {type: 'url'}] : validators;
-const number = input => (validators = [])  => input.getAttribute('type') === 'number' ? [...validators, {type: 'number'}] : validators;
-const minlength = input => (validators = [])  => (input.getAttribute('minlength') && input.getAttribute('minlength') !== 'false') ? [...validators, {type: 'minlength', params: { min: input.getAttribute('minlength')}}] : validators;
-const maxlength = input => (validators = [])  => (input.getAttribute('maxlength') && input.getAttribute('maxlength') !== 'false') ? [...validators, {type: 'maxlength', params: { max: input.getAttribute('maxlength')}}] : validators;
-const min = input => (validators = [])  => (input.getAttribute('min') && input.getAttribute('min') !== 'false') ? [...validators, {type: 'min', params: { min: input.getAttribute('min')}}] : validators;
-const max = input => (validators = [])  => (input.getAttribute('max') && input.getAttribute('max') !== 'false') ? [...validators, {type: 'max', params: { max: input.getAttribute('max')}}] : validators;
-const pattern = input => (validators = [])  => (input.getAttribute('pattern') && input.getAttribute('pattern') !== 'false') ? [...validators, {type: 'pattern', params: { regex: input.getAttribute('pattern')}}] : validators;
- */
 
 /**
  * Takes an input and returns the array of validators based on either .NET MVC data-val- or HTML5 attributes
@@ -202,7 +187,15 @@ export const assembleValidationGroup = (acc, input) => {
  * @return message [String] error message
  * 
  */
-export const extractErrorMessage = (messages, validator) => validator.message || messages[validator.type](validator.params !== undefined ? validator.params : null);
+export const extractErrorMessage = (messages, validator) => {
+    if (validator.message) return validator.message;
+    const resolveMessage = messages[validator.type];
+    //fall back to a generic message rather than throwing when a validator type has no default
+    //(data-val validators always carry a message; this guards direct/programmatic use)
+    return typeof resolveMessage === 'function'
+        ? resolveMessage(validator.params !== undefined ? validator.params : null)
+        : 'This field is invalid.';
+};
 
 /**
  * Returns a reducer that reduces the resolved response from an array of validation Promises performed against a group
@@ -246,7 +239,7 @@ export const removeUnvalidatableGroups = groups => {
  * 
  */
 export const getInitialState = (form, settings) => {
-    const groups = removeUnvalidatableGroups([].slice.call(form.querySelectorAll('input:not([type=submit]), textarea, select'))
+    const groups = removeUnvalidatableGroups(Array.from(form.querySelectorAll('input:not([type=submit]), textarea, select'))
         .reduce(assembleValidationGroup, {}));
     return {
         form,
@@ -295,13 +288,20 @@ export const getValidityState = groups => Promise.all(
 export const getGroupValidityState = group => {
     //check if group is disabled
     if (groupIsDisabled(group.fields)) return Promise.resolve([true]);
-    return Promise.all(group.validators.map(validator => new Promise((resolve, reject) => {
+    return Promise.all(group.validators.map(validator => new Promise((resolve) => {
         validate(group, validator)
             .then(res => {
                 if (String(res) !== 'true') resolve(String(res) === 'false' ? false : res);
                 else resolve(true);
             })
-            .catch(err => console.warn(err));
+            //a rejected validator (e.g. a remote request that errored) must still settle,
+            //otherwise Promise.all never resolves and validation hangs. Fail closed: treat
+            //the field as invalid so its error message is shown. An AbortError is teardown,
+            //not a failure, so don't log it (the render is guarded by the caller either way).
+            .catch(err => {
+                if (!(err && err.name === 'AbortError')) console.warn(err);
+                resolve(false);
+            });
     })));
 };
 

@@ -1,10 +1,8 @@
 /* node:coverage disable */
-import { removeSubdomain } from './utils.js';
-
 export default {
     name: '.CookiePreferences',
     path: '/',
-    domain: window.location.hostname === 'localhost' ? '' : `.${removeSubdomain(window.location.hostname)}`,
+    domain: undefined, // auto-derived from the host once at init (see factory), unless overridden
     secure: true,
     samesite: 'strict',
     expiry: 365,
@@ -32,8 +30,8 @@ export default {
     hideBannerOnFormPage: true,
     trapTab: false,
     savedMessage: 'Your settings have been saved.',
-    messageTemplate(model){ 
-        return `<div class="${model.settings.classNames.formMessage}" aria-role="alert">${model.settings.savedMessage}</div>`
+    messageTemplate(model){
+        return `<div class="${model.settings.classNames.formMessage}" aria-hidden="true">${model.settings.savedMessage}</div>`
     },
     bannerTemplate: null,
     formTemplate: null

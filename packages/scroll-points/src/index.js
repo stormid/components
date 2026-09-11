@@ -9,6 +9,9 @@ import { getSelection } from './lib/utils.js';
  * @params options, Object, to be merged with defaults to become the settings propery of each returned object
  */
 export default (selector, options) => {
+    //no IntersectionObserver support, return with warning
+    if (!('IntersectionObserver' in window)) return void console.warn('Scroll points not initialised, IntersectionObserver is not supported');
+
     let nodes = getSelection(selector);
 
     //no DOM nodes found, return with warning

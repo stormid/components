@@ -18,9 +18,13 @@ import { addGroup, validateGroup, removeGroup } from './group.js';
  */
 export default (form, settings) => {
     const store = createStore();
-    store.update(reducers[ACTIONS.SET_INITIAL_STATE](getInitialState(form, settings)), [ addAXAttributes ]);
-    form.addEventListener('submit', validate(store));
-    form.addEventListener('reset', () => store.update(reducers[ACTIONS.CLEAR_ERRORS](store.getState()), [ clearErrors ]));
+    //form-level listeners are bound to this controller's signal so destroy() can remove them.
+    //Per-group real-time listeners get their own controllers (see initRealTimeValidation) so a
+    //single group can be torn down by removeGroup.
+    const controller = new AbortController();
+    store.update(reducers[ACTIONS.SET_INITIAL_STATE]({ ...getInitialState(form, settings), controller }), [ addAXAttributes ]);
+    form.addEventListener('submit', validate(store), { signal: controller.signal });
+    form.addEventListener('reset', () => store.update(reducers[ACTIONS.CLEAR_ERRORS](store.getState()), [ clearErrors ]), { signal: controller.signal });
 
     return {
         getState: store.getState,
@@ -28,6 +32,14 @@ export default (form, settings) => {
         addMethod: addMethod(store),
         addGroup: addGroup(store),
         validateGroup: validateGroup(store),
-        removeGroup: removeGroup(store)
+        removeGroup: removeGroup(store),
+        //remove every listener this instance added: the form-level ones and each group's real-time ones
+        destroy: () => {
+            const state = store.getState();
+            state.controller.abort();
+            Object.keys(state.groups).forEach(groupName => {
+                if (state.groups[groupName].controller) state.groups[groupName].controller.abort();
+            });
+        }
     };
 };

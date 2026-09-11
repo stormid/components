@@ -11,16 +11,15 @@ Each package is available for use on npm. See [the docs](https://github.com/stor
 | Package                                   | Description                                                                                                                                         |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [Autocomplete](./packages/autocomplete)   | Accessible autocomplete / combobox (single, multiple, async and `<select>` enhancement)                                                             |
-| [Boilerplate](./packages/boilerplate)     | Boilerplate for developing new components                                                                                                           |
 | [Cookie Banner](./packages/cookie-banner) | GDPR compliant cookie banner                                                                                                                        |
 | [Modal](./packages/modal)                 | Accessible modal dialog                                                                                                                             |
 | [Modal Gallery](./packages/modal-gallery) | Accessible modal gallery                                                                                                                            |
-| [Outliner](./packages/outliner)           | Hide CSS outline on mouse interactions, until [:focus-visible](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible) has broader support |
+| [Outliner](./packages/outliner)           | Legacy-browser fallback for hiding focus outlines on mouse interactions — prefer native [:focus-visible](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible) |
 | [Scroll Points](./packages/scroll-points) | Trigger events based on element intersecting the viewport                                                                                           |
 | [Scroll Spy](./packages/scroll-spy)       | Update elements based on target element intersecting the viewport                                                                                   |
-| [Skip](./packages/skip)                   | Ensure fragment identifier links focus on their target node                                                                                         |
+| [Skip](./packages/skip)                   | Move focus to fragment identifier link targets — for cases native focus and a static [tabindex="-1"](./packages/skip) don't cover                    |
 | [Tabs](./packages/tabs)                   | Accessible tabbed panelled content areas                                                                                                            |
-| [Textarea](./packages/textarea)           | Auto-resizing textarea                                                                                                                              |
+| [Textarea](./packages/textarea)           | Auto-resizing textarea — fallback for browsers without native [field-sizing: content](https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing) |
 | [Toggle](./packages/toggle)               | Accessible DOM element expand and collapse                                                                                                          |
 | [Validate](./packages/validate)           | Client-side form validation library                                                                                                                 |
 

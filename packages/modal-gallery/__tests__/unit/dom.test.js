@@ -229,3 +229,139 @@ describe(`Modal Gallery > accessibility > buttons`, () => {
 
     });
 });
+
+describe(`Modal Gallery > DOM > image rendering`, () => {
+
+    it('should render srcset and sizes from the item model onto the image', () => {
+        document.body.innerHTML = ``;
+        const Store = createStore();
+        Store.update({
+            ...Store.getState(),
+            isOpen: true,
+            current: 0,
+            settings: defaults,
+            imageCache: [{}], // one cached entry === one item, so load() paints from cache
+            items: [{
+                src: 'https://placehold.co/500x500',
+                title: 'Image 1',
+                srcset: 'https://placehold.co/800x800 800w, https://placehold.co/500x500 320w',
+                sizes: '(max-width: 320px) 280px, 800px'
+            }],
+            keyListener: mock.fn()
+        });
+
+        initUI(Store)(Store.getState());
+        const img = document.querySelector('.modal-gallery__img');
+        assert.notStrictEqual(img, null);
+        assert.strictEqual(img.getAttribute('srcset'), 'https://placehold.co/800x800 800w, https://placehold.co/500x500 320w');
+        assert.strictEqual(img.getAttribute('sizes'), '(max-width: 320px) 280px, 800px');
+    });
+
+    it('should escape attribute values so a crafted title cannot inject markup', () => {
+        document.body.innerHTML = ``;
+        const Store = createStore();
+        Store.update({
+            ...Store.getState(),
+            isOpen: true,
+            current: 0,
+            settings: defaults,
+            imageCache: [{}],
+            items: [{ src: 'https://placehold.co/500x500', title: '" onerror="alert(1)', srcset: null, sizes: null }],
+            keyListener: mock.fn()
+        });
+
+        initUI(Store)(Store.getState());
+        const img = document.querySelector('.modal-gallery__img');
+        assert.notStrictEqual(img, null);
+        assert.strictEqual(img.hasAttribute('onerror'), false);
+        assert.strictEqual(img.getAttribute('alt'), '" onerror="alert(1)');
+    });
+
+    it('should paint cached slides that have no img yet (reopen / preload scenario)', () => {
+        document.body.innerHTML = ``;
+        const Store = createStore();
+        const imageCache = [];
+        imageCache[0] = {};
+        imageCache[2] = {}; // indices 0 and 2 cached, 1 not — so load() falls through to loadImages()
+        Store.update({
+            ...Store.getState(),
+            isOpen: true,
+            current: 0,
+            settings: defaults,
+            imageCache,
+            items: [
+                { src: 'https://placehold.co/1', title: 'A' },
+                { src: 'https://placehold.co/2', title: 'B' },
+                { src: 'https://placehold.co/3', title: 'C' }
+            ],
+            keyListener: mock.fn()
+        });
+
+        initUI(Store)(Store.getState());
+        assert.notStrictEqual(Store.getState().dom.items[0].querySelector('.modal-gallery__img'), null);
+        assert.notStrictEqual(Store.getState().dom.items[2].querySelector('.modal-gallery__img'), null);
+    });
+
+});
+
+describe(`Modal Gallery > DOM > modal background`, () => {
+
+    const setup = () => {
+        document.body.innerHTML = `<main id="bg">background content</main>`;
+        document.body.style.overflow = '';
+        const Store = createStore();
+        Store.update({
+            ...Store.getState(),
+            isOpen: true,
+            current: 0,
+            settings: defaults,
+            imageCache: [],
+            items: [{ src: 'https://placehold.co/500x500', title: 'A' }],
+            keyListener: mock.fn()
+        });
+        return Store;
+    };
+
+    it('should lock body scroll on open and restore it on close', () => {
+        const Store = setup();
+        initUI(Store)(Store.getState());
+        assert.strictEqual(document.body.style.overflow, 'hidden');
+        close(Store);
+        assert.strictEqual(document.body.style.overflow, '');
+    });
+
+    it('should mark background siblings inert on open and clear them on close', () => {
+        const Store = setup();
+        initUI(Store)(Store.getState());
+        assert.strictEqual(document.getElementById('bg').hasAttribute('inert'), true);
+        close(Store);
+        assert.strictEqual(document.getElementById('bg').hasAttribute('inert'), false);
+    });
+
+});
+
+describe(`Modal Gallery > DOM > status region`, () => {
+
+    it('should announce the current position and title, and update on navigation', () => {
+        document.body.innerHTML = ``;
+        const Store = createStore();
+        Store.update({
+            ...Store.getState(),
+            isOpen: true,
+            current: 0,
+            settings: defaults,
+            imageCache: [],
+            items: [
+                { src: 'https://placehold.co/1', title: 'A' },
+                { src: 'https://placehold.co/2', title: 'B' }
+            ],
+            keyListener: mock.fn()
+        });
+
+        initUI(Store)(Store.getState());
+        assert.strictEqual(Store.getState().dom.status.textContent, 'Image 1 of 2, A');
+        next(Store);
+        assert.strictEqual(Store.getState().dom.status.textContent, 'Image 2 of 2, B');
+    });
+
+});

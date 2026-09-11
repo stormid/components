@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { capResults, debounce, filterOptions, fromSelect, areEqual, isPrintableKeyCode, uid, fromValues, toValueArray, resolveMsg, escapeHtml, html, isHtml } from '../../src/lib/utils.js';
+import { capResults, debounce, filterOptions, fromSelect, areEqual, uid, fromValues, toValueArray, resolveMsg, escapeHtml, html, isHtml } from '../../src/lib/utils.js';
 
 const makeSelect = html => {
     const select = document.createElement('select');
@@ -151,17 +151,6 @@ describe('Autocomplete > Utils > areEqual', () => {
 
     it('should return false for arrays with differing contents', () => {
         assert.strictEqual(areEqual([{ a: 1 }], [{ a: 2 }]), false);
-    });
-});
-
-describe('Autocomplete > Utils > isPrintableKeyCode', () => {
-
-    it('should be true for letters, numbers, space and backspace', () => {
-        [65, 48, 32, 8].forEach(code => assert.strictEqual(isPrintableKeyCode(code), true));
-    });
-
-    it('should be false for navigation and control keys', () => {
-        [9, 13, 27, 38, 40].forEach(code => assert.strictEqual(isPrintableKeyCode(code), false));
     });
 });
 

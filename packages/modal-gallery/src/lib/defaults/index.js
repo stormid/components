@@ -7,5 +7,8 @@ export default {
     totals: true,
     scrollable: false,
     single: false,
+    lockScroll: true,
+    inertBackground: true,
+    headingLevel: 'h2',
     templates
 };

@@ -56,6 +56,12 @@
             padding: 1.5rem 1rem;
             background-color:#eee;
         }
+        button.tabs__tab {
+            border:0 none;
+            background:transparent;
+            cursor:pointer;
+            font: inherit;
+        }
     </style>
   </head>
   <body>
@@ -82,6 +88,20 @@
             <div id="panel-5" class="tabs__tabpanel" role="tabpanel" hidden>Panel 2</div>
             <div id="panel-6" class="tabs__tabpanel" role="tabpanel" hidden>Panel 3</div>
         </div>
+
+        <hr />
+
+        <div class="tabs js-tabs-buttons" id="button-tabs">
+            <div class="tabs__tabslist" role="tablist">
+                <button id="tab-7" class="tabs__tab js-tabs__link" aria-controls="panel-7" role="tab" type="button">Tab 1</button>
+                <button id="tab-8" class="tabs__tab js-tabs__link" aria-controls="panel-8" role="tab" type="button">Tab 2</button>
+                <button id="tab-9" class="tabs__tab js-tabs__link" aria-controls="panel-9" role="tab" type="button">Tab 3</button>
+            </div>
+            <div id="panel-7" class="tabs__tabpanel" role="tabpanel" hidden>Panel 1</div>
+            <div id="panel-8" class="tabs__tabpanel" role="tabpanel" hidden>Panel 2</div>
+            <div id="panel-9" class="tabs__tabpanel" role="tabpanel" hidden>Panel 3</div>
+        </div>
+        <p id="button-tabs-status" class="tabs__status" role="status"></p>
     </main>
   </body>
 </html>

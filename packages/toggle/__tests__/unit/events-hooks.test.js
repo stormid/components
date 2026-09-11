@@ -74,3 +74,25 @@ describe('Toggle > events', () => {
         assert.ok(listener.mock.callCount() > 0);
     });
 });
+
+describe('Toggle > destroy > events', () => {
+
+    it('does not dispatch toggle.close when destroying an open instance', () => {
+        document.body.innerHTML = `<button class="js-toggle__d-btn">Toggle</button>
+            <div id="d-target" class="js-toggle__d" data-toggle="js-toggle__d-btn"></div>`;
+        const instance = toggle('.js-toggle__d')[0];
+        const node = document.getElementById('d-target');
+
+        instance.startToggle(); // open
+        assert.strictEqual(instance.getState().isOpen, true);
+
+        const closeListener = mock.fn();
+        node.addEventListener(EVENTS.CLOSE, closeListener);
+        instance.destroy();
+
+        // teardown closes the toggle but must not emit a toggle.close listeners can't distinguish
+        assert.strictEqual(instance.getState().isOpen, false);
+        assert.strictEqual(closeListener.mock.callCount(), 0);
+    });
+
+});

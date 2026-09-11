@@ -12,7 +12,7 @@ module.exports = {
     mode: 'development',
     devtool: 'source-map',
     devServer: {
-        port: 8081
+        port: 'auto'
     },
     plugins: [
         new rspack.HtmlRspackPlugin({

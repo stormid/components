@@ -1,8 +1,18 @@
-import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, EVENTS } from './constants.js';
+import { FOCUSABLE_ELEMENTS, ACCEPTED_TRIGGERS, KEYS, EVENTS } from './constants.js';
 import { broadcast } from './utils.js';
 
 /*
- * @param node, HTMLElement 
+ * Tests whether an IDREF(S) attribute value points to at least one existing element.
+ * Uses getElementById (per space-separated id) rather than querySelector so ids that need
+ * CSS escaping, or lists of multiple ids, are handled correctly.
+ *
+ * @param ids, String|null, the value of an aria-labelledby/aria-describedby attribute
+ * @return Boolean
+ */
+const referencesElement = ids => !!ids && ids.split(/\s+/).some(id => id && document.getElementById(id));
+
+/*
+ * @param node, HTMLElement
  * @return child HTMLElement with dialog/alertdialog role
  */
 export const findDialog = node => (node.querySelector('[role=dialog]') || node.querySelector('[role=alertdialog]')) || console.warn(`No dialog or alertdialog found in modal node`);
@@ -16,7 +26,7 @@ export const findToggles = (node, settings) => {
     const toggleSelector = node.getAttribute(settings.toggleSelectorAttribute);
     const composeSelector = classSelector => ACCEPTED_TRIGGERS.map(sel => `${sel}.${classSelector}`).join(', ');
 
-    const toggles = toggleSelector && [].slice.call(document.querySelectorAll(composeSelector(toggleSelector)));
+    const toggles = toggleSelector && Array.from(document.querySelectorAll(composeSelector(toggleSelector)));
     if (!toggles) return void console.warn(`Modal cannot be initialised, no modal toggle elements found. Does the modal have a ${settings.toggleSelectorAttribute} attribute that identifies toggle buttons or links?`);
     return toggles;
 };
@@ -25,7 +35,7 @@ export const findToggles = (node, settings) => {
   * @param node, HTMLElement
   * @return Array of focusable child HTMLElements
  */
-export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
+export const getFocusableChildren = node => Array.from(node.querySelectorAll(FOCUSABLE_ELEMENTS.join(',')));
 
 /* 
  * Partially applied function that returns function
@@ -37,15 +47,11 @@ export const getFocusableChildren = node => [].slice.call(node.querySelectorAll(
  */
 export const keyListener = store => event => {
     const state = store.getState();
-    const { isOpen } = state;
-    if (isOpen && event.keyCode === 27) {
+    if (!state.isOpen) return;
+    if (event.key === KEYS.ESC) {
         event.preventDefault();
-        store.update({
-            ...store.getState(),
-            isOpen: !isOpen
-        }, [ change(store) ]);
-    }
-    if (isOpen && event.keyCode === 9) trapTab(state)(event);
+        lifecycle(store); // route through lifecycle rather than duplicating the state transition
+    } else if (event.key === KEYS.TAB) trapTab(state)(event);
 };
 
 /* 
@@ -57,51 +63,138 @@ export const keyListener = store => event => {
  * @param event, Event
  */
 const trapTab = state => event => {
-    const focusedIndex = state.focusableChildren.indexOf(document.activeElement);
-    if (event.shiftKey && focusedIndex === 0) {
+    const focusable = state.focusableChildren;
+    // nothing focusable inside the modal — keep focus on the dialog itself
+    if (focusable.length === 0) {
         event.preventDefault();
-        state.focusableChildren[state.focusableChildren.length - 1].focus();
-    } else if (!event.shiftKey && focusedIndex === state.focusableChildren.length - 1) {
+        state.dialog.focus();
+        return;
+    }
+    const focusedIndex = focusable.indexOf(document.activeElement);
+    // focus has escaped the modal (e.g. onto the body) — pull it back to the first focusable
+    if (focusedIndex === -1) {
         event.preventDefault();
-        state.focusableChildren[0].focus();
+        focusable[0].focus();
+    } else if (event.shiftKey && focusedIndex === 0) {
+        event.preventDefault();
+        focusable[focusable.length - 1].focus();
+    } else if (!event.shiftKey && focusedIndex === focusable.length - 1) {
+        event.preventDefault();
+        focusable[0].focus();
     }
 };
 
-/* 
+/*
+ * Reflects the open/closed state onto the modal node and document element.
+ * Uses explicit add/remove keyed on isOpen (rather than toggle) so state can't drift out of sync.
+ *
  * @param state, Object, the current instance state
  */
-const toggle = state => {
+const setVisibility = state => {
+    const method = state.isOpen ? 'add' : 'remove';
     state.node[state.isOpen ? 'removeAttribute' : 'setAttribute']('hidden', 'hidden');
-    const children = [].slice.call(document.querySelectorAll('body > *'));
-    children.forEach(child => child !== state.node && child[state.isOpen ? 'setAttribute' : 'removeAttribute']('aria-hidden', 'true'));
-    state.node.classList.toggle(state.settings.onClassName);
-    document.documentElement.classList.toggle('is--modal');
+    state.node.classList[method](state.settings.onClassName);
+    document.documentElement.classList[method]('is--modal');
 };
 
-/* 
+/*
+ * Makes every body-level sibling of the modal node inert (removing it from focus, pointer and the
+ * accessibility tree in supporting browsers). Only siblings not already hidden are touched, and the
+ * set is recorded on state so removeInert restores exactly what this instance changed.
+ *
+ * @param store, Object, store of the current instance state
+ */
+const INERT_COUNT_ATTR = 'data-modal-inert-count';
+
+//the inert attribute removes an element from focus, pointer and the a11y tree in one go, but isn't
+//supported before ~2023. Where it's missing, fall back to aria-hidden so background content is at
+//least hidden from assistive tech (the pre-inert behaviour); focus containment still relies on the
+//Tab trap either way. The refcount marker below is mechanism-agnostic.
+const SUPPORTS_INERT = typeof HTMLElement !== 'undefined' && 'inert' in HTMLElement.prototype;
+const HIDE_ATTR = SUPPORTS_INERT ? 'inert' : 'aria-hidden';
+const HIDE_VALUE = SUPPORTS_INERT ? '' : 'true';
+
+const setInert = store => () => {
+    const state = store.getState();
+    const inerted = Array.from(document.querySelectorAll('body > *'))
+        //leave the modal itself, and any element the author already hid (the hide attribute with no
+        //modal refcount) untouched - the latter must not be un-hidden when the modal closes
+        .filter(child => child !== state.node && !(child.hasAttribute(HIDE_ATTR) && !child.hasAttribute(INERT_COUNT_ATTR)));
+    inerted.forEach(child => {
+        //refcount so two open modals sharing a sibling don't fight: only the first hides it,
+        //and a non-LIFO close can't un-hide an element another open modal still needs
+        const count = Number(child.getAttribute(INERT_COUNT_ATTR)) || 0;
+        if (count === 0) child.setAttribute(HIDE_ATTR, HIDE_VALUE);
+        child.setAttribute(INERT_COUNT_ATTR, String(count + 1));
+    });
+    store.update({ ...state, inerted });
+};
+
+/*
+ * Drops this instance's refcount on the siblings it hid, removing the hide attribute (and the marker)
+ * only when no other open modal still holds a reference, then clears the record.
+ *
+ * @param store, Object, store of the current instance state
+ */
+const removeInert = store => () => {
+    const state = store.getState();
+    (state.inerted || []).forEach(child => {
+        const count = Number(child.getAttribute(INERT_COUNT_ATTR)) || 0;
+        if (count <= 1) {
+            child.removeAttribute(INERT_COUNT_ATTR);
+            child.removeAttribute(HIDE_ATTR);
+        } else child.setAttribute(INERT_COUNT_ATTR, String(count - 1));
+    });
+    store.update({ ...store.getState(), inerted: [] });
+};
+
+/*
  * @param store, Object, store of the current instance state
  */
 const open = store => () => {
     const state = store.getState();
     if (state.dialog.hasAttribute('aria-hidden')) state.dialog.removeAttribute('aria-hidden'); // past implementations encouraged having aria-hidden on dialog when closed
     const ref = document.body.firstElementChild || null;
-    if (ref !== state.node) document.body.insertBefore(state.node, ref);
+    const moved = ref !== state.node;
+    // recompute focusable children in case the modal's contents changed since init;
+    // capture the node's current position (before moving it) so close can restore it
+    store.update({
+        ...state,
+        focusableChildren: getFocusableChildren(state.node),
+        //always write both, so a later open that doesn't move the node clears any stale position
+        //from a previous cycle rather than letting close relocate the node to the wrong place
+        originalParent: moved ? state.node.parentNode : null,
+        originalNextSibling: moved ? state.node.nextSibling : null
+    });
+    if (moved) document.body.insertBefore(state.node, ref);
     document.addEventListener('keydown', state.keyListener);
-    toggle(state);
-    const focusFn = () => state.focusableChildren.length > 0 && state.focusableChildren[0].focus();
-    if (state.settings.delay) window.setTimeout(focusFn, state.settings.delay);
+    setVisibility(store.getState());
+    setInert(store)();
+    const current = store.getState();
+    const focusFn = () => (current.focusableChildren.length > 0 ? current.focusableChildren[0] : current.dialog).focus();
+    if (current.settings.delay) window.setTimeout(focusFn, current.settings.delay);
     else focusFn();
     broadcast(EVENTS.OPEN, store)();
 };
 
-/* 
+/*
  * @param store, Object, store of the current instance state
  */
 const close = store => () => {
     const state = store.getState();
     document.removeEventListener('keydown', state.keyListener);
-    toggle(state);
-    state.lastFocused.focus();
+    setVisibility(state);
+    removeInert(store)();
+    // restore the node to the position it was moved from on open, then clear the record so a
+    // later open that doesn't move the node can't be relocated to this now-stale position
+    if (state.originalParent) {
+        if (state.originalNextSibling && state.originalNextSibling.parentNode === state.originalParent) state.originalParent.insertBefore(state.node, state.originalNextSibling);
+        else state.originalParent.appendChild(state.node);
+        store.update({ ...store.getState(), originalParent: null, originalNextSibling: null });
+    }
+    // return focus to whatever opened the modal; fall back to a toggle when there was no trigger (e.g. startOpen)
+    const returnTarget = state.lastFocused && state.lastFocused !== document.body ? state.lastFocused : (state.toggles && state.toggles[0]);
+    if (returnTarget && typeof returnTarget.focus === 'function') returnTarget.focus();
     broadcast(EVENTS.CLOSE, store)();
 };
 
@@ -115,8 +208,8 @@ const close = store => () => {
  */
 export const change = store => state => {
     if (state.isOpen) open(store)();
-    else close(store)(state);
-    typeof state.settings.callback === 'function' &&  state.settings.callback.call(state);
+    else close(store)();
+    typeof state.settings.callback === 'function' && state.settings.callback.call(state);
 };
 
 /*
@@ -134,18 +227,12 @@ export const change = store => state => {
 export const initUI = store => ({ node, dialog, toggles }) => {
     if (!dialog || !toggles) return;
     node.setAttribute('hidden', 'hidden');
-    if (
-        !dialog.getAttribute('aria-label') &&
-        (!dialog.getAttribute('aria-labelledby') || !document.querySelector(`#${dialog.getAttribute('aria-labelledby')}`))
-    ) console.warn(`The modal dialog should have an aria-labelledby attribute that matches the id of an element that contains text, or an aria-label attribute.`);
-    if (dialog.getAttribute('role') === 'alertdialog' && (!dialog.getAttribute('aria-describedby') || !document.querySelector(`#${dialog.getAttribute('aria-describedby')}`))) console.warn(`The alertdialog should have an aria-describedby attribute that matches the id of an element that contains text`);
-    
-    toggles.forEach(tgl => {
-        tgl.addEventListener('click', e => {
-            e.preventDefault();
-            lifecycle(store);
-        });
-    });
+    dialog.setAttribute('aria-modal', 'true'); // mark the dialog as modal for assistive technology
+    if (!dialog.hasAttribute('tabindex')) dialog.setAttribute('tabindex', '-1'); // allow focus to land on the dialog when it has no focusable children
+    if (!dialog.getAttribute('aria-label') && !referencesElement(dialog.getAttribute('aria-labelledby'))) console.warn(`The modal dialog should have an aria-labelledby attribute that matches the id of an element that contains text, or an aria-label attribute.`);
+    if (dialog.getAttribute('role') === 'alertdialog' && !referencesElement(dialog.getAttribute('aria-describedby'))) console.warn(`The alertdialog should have an aria-describedby attribute that matches the id of an element that contains text`);
+
+    toggles.forEach(tgl => tgl.addEventListener('click', store.getState().toggleHandler));
 };
 
 /*

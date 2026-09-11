@@ -29,7 +29,7 @@ Initialise the module
 ```
 import modalGallery from '@stormid/modal-gallery';
 
-const [ gallery ] = modalGallery('.js-modal-gallery');
+const gallery = modalGallery('.js-modal-gallery');
 ```
 
 Example MVP CSS
@@ -113,7 +113,7 @@ To create from a JavaScript Object
 ```
 import modalGallery from '@stormid/modal-gallery';
 
-const [ gallery ] = modalGallery([
+const gallery = modalGallery([
     {
         src: 'https://placehold.co/500x500',
         srcset:'https://placehold.co/800x800 800w, https://placehold.co/500x500 320w',
@@ -141,19 +141,29 @@ document.querySelector('.js-modal-gallery__trigger').addEventListener('click', (
     totals: true,   //show totals
     scrollable: false, //modal is scrollable
     single: false, //images should display in separate modals rather than grouped into a navigable gallery
+    lockScroll: true, //prevent the page behind the modal from scrolling while it is open
+    inertBackground: true, //mark the rest of the page inert while open, so it is unreachable by keyboard and assistive tech
+    headingLevel: 'h2', //heading level (h1–h6) used for image titles in the default template
     templates: { // see src/lib/defaults/templates.js
         overlay,
         overlayInner,
         buttons,
-        item,
-        details
+        item, // item(items) => (details, index) => string
+        details // details(item, headingLevel) => string
     }
 }
 ```
 
 ## API
 
-Initialisation returns an array of instances. Each instance exposes the interface
+By default (a grouped gallery) initialisation returns a single instance. With `{ single: true }` each
+image becomes its own modal, so initialisation returns an array of instances instead:
+```
+const gallery = modalGallery('.js-modal-gallery');              // one instance
+const galleries = modalGallery('.js-modal-gallery', { single: true }); // array of instances
+```
+
+Each instance exposes the interface
 ```
 {
     getState, a Function that returns the current state Object

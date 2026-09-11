@@ -178,6 +178,41 @@ test.describe('Toggle > Aria', { tag: '@all'}, () => {
 	
 });
 
+test.describe('Toggle > API', { tag: '@all'}, () => {
+
+	test('Should close the toggle and stop responding once an instance is destroyed', async ({ page }) => {
+		const toggleBlock = page.locator('#child1');
+		const toggleButton = page.locator('.js-toggle__btn-local');
+		const toggleWrapper = page.locator('#parent1');
+
+		await toggleButton.click();
+		await expect(toggleBlock).toBeVisible();
+		await expect(toggleWrapper).toHaveClass(/is--active/);
+
+		await page.evaluate(() => window.instances[0].destroy());
+		await expect(toggleBlock).not.toBeVisible();
+		await expect(toggleWrapper).not.toHaveClass(/is--active/);
+
+		//the trigger no longer responds once its listeners have been removed
+		await toggleButton.click();
+		await expect(toggleBlock).not.toBeVisible();
+		await expect(toggleWrapper).not.toHaveClass(/is--active/);
+	});
+
+	test('Should be safe to destroy an instance twice', async ({ page }) => {
+		const errors = [];
+		page.on('pageerror', error => errors.push(error));
+
+		await page.evaluate(() => {
+			window.instances[0].destroy();
+			window.instances[0].destroy();
+		});
+
+		expect(errors).toEqual([]);
+	});
+
+});
+
 test.describe('Toggle > Axe', { tag: '@reduced'}, () => {
 	test('Should not have any automatically detectable accessibility issues', async ({ page }) => {	
 		const accessibilityScanResults = await new AxeBuilder({ page }).analyze(); 

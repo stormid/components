@@ -42,6 +42,10 @@ export const validateGroup = store => groupName => new Promise(resolve => {
     }
     getGroupValidityState(store.getState().groups[groupName])
         .then(res => {
+            //the group may have been removed or the instance destroyed while a remote check was
+            //in flight; resolve without rendering into torn-down or missing DOM.
+            const current = store.getState();
+            if (!current.groups[groupName] || (current.controller && current.controller.signal.aborted)) return resolve(false);
             if (!res.reduce(reduceGroupValidityState, true)) {
                 store.update(
                     reducers[ACTIONS.VALIDATION_ERROR](store.getState(), {
@@ -65,6 +69,8 @@ export const validateGroup = store => groupName => new Promise(resolve => {
  */
 export const removeGroup = store => groupName => {
     const state = store.getState();
+    //detach the group's real-time listeners before dropping it from state
+    if (state.groups[groupName] && state.groups[groupName].controller) state.groups[groupName].controller.abort();
     if (state.errors[groupName]) clearError(groupName)(state);
     store.update(reducers[ACTIONS.REMOVE_GROUP](store.getState(), groupName));
 };

@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import modalGallery from '../../src/index.js';
-import { KEY_CODES } from '../../src/lib/constants.js';
+import { KEYS } from '../../src/lib/constants.js';
 
 describe(`Modal Gallery > accessibility > keyboard > escape`, () => {
 
@@ -25,7 +25,7 @@ describe(`Modal Gallery > accessibility > keyboard > escape`, () => {
         const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[0].trigger.click();
         assert.deepStrictEqual(Gallery.getState().isOpen, true);
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.ESC, bubbles: true }));
+        document.dispatchEvent(new window.KeyboardEvent('keydown', { key: KEYS.ESC, bubbles: true }));
         assert.deepStrictEqual(Gallery.getState().isOpen, false);
     });
 
@@ -53,7 +53,7 @@ describe(`Modal Gallery > accessibility > keyboard > left`, () => {
         const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[1].trigger.click();
         assert.deepStrictEqual(Gallery.getState().current, 1);
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.LEFT, bubbles: true }));
+        document.dispatchEvent(new window.KeyboardEvent('keydown', { key: KEYS.LEFT, bubbles: true }));
         assert.deepStrictEqual(Gallery.getState().current, 0);
 
     });
@@ -62,7 +62,7 @@ describe(`Modal Gallery > accessibility > keyboard > left`, () => {
 
 describe(`Modal Gallery > accessibility > keyboard > right`, () => {
 
-    it('should navigate to the previous item', () => {
+    it('should navigate to the next item', () => {
         document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">
             <img src="https://placehold.co/200x200" alt="">
         </a>
@@ -82,7 +82,7 @@ describe(`Modal Gallery > accessibility > keyboard > right`, () => {
         const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[0].trigger.click();
         assert.deepStrictEqual(Gallery.getState().current, 0);
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.RIGHT, bubbles: true }));
+        document.dispatchEvent(new window.KeyboardEvent('keydown', { key: KEYS.RIGHT, bubbles: true }));
         assert.deepStrictEqual(Gallery.getState().current, 1);
 
     });
@@ -91,7 +91,7 @@ describe(`Modal Gallery > accessibility > keyboard > right`, () => {
 
 describe(`Modal Gallery > accessibility > keyboard > tab`, () => {
 
-    it('should navigate to the previous item', () => {
+    it('should trap focus within the modal', () => {
         document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">
             <img src="https://placehold.co/200x200" alt="">
         </a>
@@ -114,13 +114,13 @@ describe(`Modal Gallery > accessibility > keyboard > tab`, () => {
         // expect(document.activeElement).toEqual(Gallery.getState().dom.focusableChildren[0]);
         //urgh, JSDOM doesn't dig document.activeElement
         //checking the test coverage it doesa appear that the correct items are being focused and tab is trapped
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: KEY_CODES.TAB, bubbles: true }));
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { shiftKey: true, keyCode: KEY_CODES.TAB, bubbles: true }));
+        document.dispatchEvent(new window.KeyboardEvent('keydown', { key: KEYS.TAB, bubbles: true }));
+        document.dispatchEvent(new window.KeyboardEvent('keydown', { key: KEYS.TAB, bubbles: true }));
+        document.dispatchEvent(new window.KeyboardEvent('keydown', { key: KEYS.TAB, bubbles: true }));
+        document.dispatchEvent(new window.KeyboardEvent('keydown', { key: KEYS.TAB, bubbles: true }));
+        document.dispatchEvent(new window.KeyboardEvent('keydown', { key: KEYS.TAB, bubbles: true }));
+        document.dispatchEvent(new window.KeyboardEvent('keydown', { key: KEYS.TAB, bubbles: true }));
+        document.dispatchEvent(new window.KeyboardEvent('keydown', { shiftKey: true, key: KEYS.TAB, bubbles: true }));
         // expect(document.activeElement).toEqual(Gallery.getState().dom.focusableChildren[0]);
 
     });
@@ -130,7 +130,7 @@ describe(`Modal Gallery > accessibility > keyboard > tab`, () => {
 
 describe(`Modal Gallery > accessibility > keyboard`, () => {
 
-    it('should navigate to the previous item', () => {
+    it('should ignore unhandled keys', () => {
         document.body.innerHTML = `<a class="js-modal-gallery" href="https://placehold.co/500x500" data-title="Image 1" data-description="Description 1" data-srcset="https://placehold.co/800x800 800w, https://placehold.co/500x500 320w">
             <img src="https://placehold.co/200x200" alt="">
         </a>
@@ -150,7 +150,7 @@ describe(`Modal Gallery > accessibility > keyboard`, () => {
         const Gallery = modalGallery('.js-modal-gallery');
         Gallery.getState().items[0].trigger.click();
         assert.deepStrictEqual(Gallery.getState().current, 0);
-        document.dispatchEvent(new window.KeyboardEvent('keydown', { keyCode: 83, bubbles: true }));
+        document.dispatchEvent(new window.KeyboardEvent('keydown', { key: 's', bubbles: true }));
         assert.deepStrictEqual(Gallery.getState().current, 0);
 
     });

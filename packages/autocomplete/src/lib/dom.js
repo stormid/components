@@ -18,18 +18,15 @@ export const broadcast = (store, action, option = null) => {
 //enhancing a server-rendered input keeps whatever it was authored with.
 const OPTIONAL_INPUT_ATTRIBUTES = [ 'inputmode', 'autocorrect', 'autocapitalize' ];
 
-//a data-* attribute arrives as a string, so "false" must not be read as the truthy
-//string it technically is
-const isFalse = value => value === false || value === 'false';
-
 const applyInputAttributes = (input, settings) => {
     OPTIONAL_INPUT_ATTRIBUTES.forEach(attribute => {
         const value = settings[attribute];
         if (value !== null && value !== undefined && value !== '') input.setAttribute(attribute, value);
     });
     //always written (defaulting to off — see the README on why), and enumerated rather
-    //than boolean, so it has to carry the string "false" to switch checking off
-    input.setAttribute('spellcheck', String(!isFalse(settings.spellcheck)));
+    //than boolean, so it has to carry the string "false" to switch checking off. settings.spellcheck
+    //is coerced to a real Boolean at init, so String() yields the "true"/"false" the attribute needs
+    input.setAttribute('spellcheck', String(settings.spellcheck));
 };
 
 export const createInput = ({ node, settings, id, listId, describedby, input }) => {
@@ -150,6 +147,20 @@ export const setupListeners = state => {
     if (state.dom.output) state.dom.output.addEventListener('click', state.handle.chip.remove);
     //restore the initial selection when the enclosing form is reset (see resetForm)
     if (state.dom.input.form) state.dom.input.form.addEventListener('reset', state.handle.form.reset);
+};
+
+//Mirror of setupListeners: removes every listener it added, using the same stable handler
+//references held on state.handle. The enclosing form's reset listener is the one that outlives the
+//node (the rest go with the enhanced markup if it's removed), so detaching it matters most.
+export const teardownListeners = state => {
+    state.dom.input.removeEventListener('input', state.handle.input.input);
+    state.dom.input.removeEventListener('focus', state.handle.input.focus);
+    state.dom.input.removeEventListener('blur', state.handle.input.blur);
+    state.dom.list.removeEventListener('click', state.handle.option.click);
+    state.dom.node.removeEventListener('keydown', state.handle.container.keydown);
+    state.dom.list.removeEventListener('mousedown', state.handle.option.mousedown);
+    if (state.dom.output) state.dom.output.removeEventListener('click', state.handle.chip.remove);
+    if (state.dom.input.form) state.dom.input.form.removeEventListener('reset', state.handle.form.reset);
 };
 
 //emptying the list also drops the input's pointer to the (now gone) active option

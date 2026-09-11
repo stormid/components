@@ -1,6 +1,6 @@
 import { emptyList, renderList, renderStatus, renderActive, clearStatus, announceSelectionChange, showList, hideList, showLoading, setValue, clearInput, focusInput, syncOutput, syncHiddenValue, broadcast } from './dom.js';
 import { areEqual, capResults, debounce } from './utils.js';
-import { KEYCODES } from './constants.js';
+import { KEYS } from './constants.js';
 
 //resolve the option an event fired from via its aria-posinset. closest() finds
 //the option element even when a click lands on a child node of a custom
@@ -72,23 +72,23 @@ const resolveAsyncResults = (store, value, results) => {
 };
 
 export const keydown = store => event => {
-    switch (KEYCODES[event.keyCode]) {
-    case 'up':
+    switch (event.key) {
+    case KEYS.UP:
         handleUpArrow(store, event);
         break;
-    case 'down':
+    case KEYS.DOWN:
         handleDownArrow(store, event);
         break;
-    case 'enter':
+    case KEYS.ENTER:
         handleEnter(store, event);
         break;
-    case 'escape':
+    case KEYS.ESC:
         handleEscape(store);
         break;
-    case 'tab':
+    case KEYS.TAB:
         handleBlur(store);
         break;
-    case 'backspace':
+    case KEYS.BACKSPACE:
         handleBackspace(store, event);
         break;
     }

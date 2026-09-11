@@ -1,16 +1,23 @@
-import { KEY_CODES, ACCEPTED_TRIGGERS } from './constants.js';
-import { getFocusableChildren } from './utils.js';
+import { KEYS, ACCEPTED_TRIGGERS } from './constants.js';
+import { getFocusableChildren, escapeAttr } from './utils.js';
 
 export const initTriggers = store => state => {
     const { items, settings } = state;
-    
-    items.map((item, i) => {
-        if (!item.trigger) return;
-        item.trigger.addEventListener('click', e => {
+
+    //keep a stable handler per trigger so destroy() can remove the exact listeners this instance added
+    const triggerHandlers = items.reduce((handlers, item, i) => {
+        if (!item.trigger) return handlers;
+        const handler = e => {
             e.preventDefault();
             open(store)(i);
-        });
-    });
+        };
+        item.trigger.addEventListener('click', handler);
+        handlers.push({ trigger: item.trigger, handler });
+        return handlers;
+    }, []);
+
+    store.update({ ...store.getState(), triggerHandlers });
+
     if (settings.preload) items.map(loadImage(store));
 };
 
@@ -25,6 +32,8 @@ const loadImage = store => (item, i) => {
             writeImage(state, i);
         };
         img.onload = loaded;
+        if (item.srcset) img.srcset = item.srcset;
+        if (item.sizes) img.sizes = item.sizes;
         img.src = item.src;
         if (img.complete) loaded();
     } catch (e) {
@@ -42,34 +51,85 @@ const loadImages = store => i => {
         if (imageCache[idx] === undefined) {
             dom.items[idx].classList.add('loading');
             loadImage(store)(items[idx], idx);
+        } else {
+            /* Already cached (e.g. a reopened gallery, or a preload that completed
+               before this DOM existed) — the fresh DOM has no <img> yet, so paint it. */
+            writeImage(store.getState(), idx);
         }
     });
 
 };
 
 export const initUI = store => state => {
-    const { settings, items, keyListener } = store.getState();
+    const { settings, items, current, keyListener } = store.getState();
     const container = document.body.appendChild(settings.templates.overlay());
     const buttons = items.length > 1 ? settings.templates.buttons() : '';
-    container.insertAdjacentHTML('beforeend', settings.templates.overlayInner(buttons, items.map(settings.templates.details).map(settings.templates.item(items)).join('')));
-    const domItems = [].slice.call(container.querySelectorAll('.js-modal-gallery__item'));
+    container.insertAdjacentHTML('beforeend', settings.templates.overlayInner(buttons, items.map(item => settings.templates.details(item, settings.headingLevel)).map(settings.templates.item(items)).join('')));
+    const domItems = Array.from(container.querySelectorAll('.js-modal-gallery__item'));
     const domTotals = container.querySelector('.js-gallery-totals');
+    const domStatus = container.querySelector('.js-modal-gallery__status');
     store.update({
         ...store.getState(),
         dom: {
             overlay: container,
             items: domItems,
             totals: domTotals,
+            status: domStatus,
             focusableChildren: getFocusableChildren(container),
-            lastFocused: document.activeElement
+            //where focus returns to on close: whatever was focused when the gallery opened, falling
+            //back to the trigger of the opened item — a mouse click doesn't focus the trigger in every
+            //browser (notably WebKit), so document.activeElement can be the body at this point
+            lastFocused: (document.activeElement && document.activeElement !== document.body)
+                ? document.activeElement
+                : ((items[current] && items[current].trigger) || null),
+            bodyOverflow: document.body.style.overflow
         }
     }, [
         load(store),
         initUIButtons(store),
         () => document.addEventListener('keydown', keyListener),
+        lockBackground(store),
         toggle(store),
-        writeTotals
+        writeTotals,
+        writeStatus
     ]);
+};
+
+//the inert attribute removes an element from focus, pointer and the a11y tree in one go, but isn't
+//supported before ~2023. Where it's missing, fall back to aria-hidden so background content is at
+//least hidden from assistive tech (the pre-inert behaviour); focus containment still relies on the
+//Tab trap either way. The data-* marker below is mechanism-agnostic.
+const SUPPORTS_INERT = typeof HTMLElement !== 'undefined' && 'inert' in HTMLElement.prototype;
+const HIDE_ATTR = SUPPORTS_INERT ? 'inert' : 'aria-hidden';
+const HIDE_VALUE = SUPPORTS_INERT ? '' : 'true';
+
+/*
+ * Turns the page behind the open modal into a true modal context: stops the body scrolling
+ * and hides every sibling of the overlay from focus and the accessibility tree. Only elements
+ * this component marks are un-set on close, so pre-existing hidden/overflow state is left
+ * untouched. Both behaviours are opt-out via settings.
+ */
+const lockBackground = store => () => {
+    const { settings, dom } = store.getState();
+    if (settings.lockScroll) document.body.style.overflow = 'hidden';
+    if (settings.inertBackground) {
+        Array.from(document.body.children).forEach(child => {
+            if (child === dom.overlay || child.hasAttribute(HIDE_ATTR)) return;
+            child.setAttribute(HIDE_ATTR, HIDE_VALUE);
+            child.setAttribute('data-modal-gallery-inert', '');
+        });
+    }
+};
+
+const unlockBackground = store => () => {
+    const { settings, dom } = store.getState();
+    if (settings.lockScroll) document.body.style.overflow = dom.bodyOverflow || '';
+    if (settings.inertBackground) {
+        Array.from(document.querySelectorAll('[data-modal-gallery-inert]')).forEach(el => {
+            el.removeAttribute(HIDE_ATTR);
+            el.removeAttribute('data-modal-gallery-inert');
+        });
+    }
 };
 
 const load = store => state => {
@@ -85,10 +145,12 @@ const writeImage = (state, i) => {
     const img = imageContainer.querySelector('.modal-gallery__img');
     if (img) return;
     const imageClassName = settings.scrollable ? 'modal-gallery__img modal-gallery__img--scrollable' : 'modal-gallery__img';
-    const srcsetAttribute = dom.items[i].srcset ? ` srcset="${dom.items[i].srcset}"` : '';
-    const sizesAttribute = dom.items[i].sizes ? ` sizes="${dom.items[i].sizes}"` : '';
-    
-    imageContainer.innerHTML = `<img class="${imageClassName}" src="${items[i].src}" alt="${items[i].title}"${srcsetAttribute}${sizesAttribute}>`;
+    const srcsetAttribute = items[i].srcset ? ` srcset="${escapeAttr(items[i].srcset)}"` : '';
+    const sizesAttribute = items[i].sizes ? ` sizes="${escapeAttr(items[i].sizes)}"` : '';
+
+    //a programmatic item may carry no title; fall back to an empty alt (correct for an image with
+    //no text alternative) rather than rendering the literal alt="undefined"
+    imageContainer.innerHTML = `<img class="${imageClassName}" src="${escapeAttr(items[i].src)}" alt="${escapeAttr(items[i].title || '')}"${srcsetAttribute}${sizesAttribute}>`;
     dom.items[i].classList.remove('loading');
 };
 
@@ -124,17 +186,17 @@ const initUIButtons = store => state => {
 export const keyListener = store => e => {
     const { isOpen } = store.getState();
     if (!isOpen) return;
-    switch (e.keyCode) {
-    case KEY_CODES.ESC:
+    switch (e.key) {
+    case KEYS.ESC:
         close(store);
         break;
-    case KEY_CODES.TAB:
+    case KEYS.TAB:
         trapTab(store, e);
         break;
-    case KEY_CODES.LEFT:
+    case KEYS.LEFT:
         previous(store);
         break;
-    case KEY_CODES.RIGHT:
+    case KEYS.RIGHT:
         next(store);
         break;
     default:
@@ -144,17 +206,20 @@ export const keyListener = store => e => {
 
 const trapTab = (store, e) => {
     const { dom } = store.getState();
-    const focusedIndex = dom.focusableChildren.indexOf(document.activeElement);
-    if (e.shiftKey && focusedIndex === 0) {
-        /* node:coverage ignore next */
-        e.preventDefault();
-        dom.focusableChildren[dom.focusableChildren.length - 1].focus();
-    }
-    /* node:coverage ignore next */
-    if (!e.shiftKey && focusedIndex === dom.focusableChildren.length - 1) {
-        e.preventDefault();
-        dom.focusableChildren[0].focus();
-    }
+    if (!dom.focusableChildren || dom.focusableChildren.length === 0) return;
+    // fully manage Tab rather than leaning on the browser's native tab order: WebKit leaves
+    // <button>/<a> out of the keyboard tab sequence by default, so a boundary-only trap (one that
+    // only intervenes at the first/last child) leaks out of an overlay whose only focusable
+    // children are buttons and links. Moving focus explicitly on every Tab traps it everywhere.
+    e.preventDefault();
+    const children = dom.focusableChildren;
+    const lastIndex = children.length - 1;
+    const focusedIndex = children.indexOf(document.activeElement);
+    let nextIndex;
+    if (focusedIndex === -1) nextIndex = 0;                                       // focus escaped the set — pull it back to the first
+    else if (e.shiftKey) nextIndex = focusedIndex === 0 ? lastIndex : focusedIndex - 1;
+    else nextIndex = focusedIndex === lastIndex ? 0 : focusedIndex + 1;
+    children[nextIndex].focus();
 };
 
 const toggle = store => state => {
@@ -162,14 +227,27 @@ const toggle = store => state => {
     dom.overlay.classList.toggle('is--active');
     dom.overlay.setAttribute('aria-hidden', !isOpen);
     dom.overlay.setAttribute('tabindex', isOpen ? '0' : '-1');
-    isOpen !== null && dom.items[current].classList.add('is--active');
-    if (dom.focusableChildren && dom.focusableChildren.length > 0) window.setTimeout(() => { dom.focusableChildren[0].focus(); }, 0);
+    current !== null && dom.items[current].classList.add('is--active');
+    window.setTimeout(() => {
+        const target = dom.overlay.querySelector('.js-modal-gallery__close')
+            || (dom.focusableChildren && dom.focusableChildren[0])
+            || dom.overlay;
+        if (target) target.focus();
+    }, 0);
 
     settings.fullscreen && toggleFullScreen(state);
 };
 
 const writeTotals = ({ dom, current, items, settings }) => {
     if (settings.totals) dom.totals.innerHTML = `${current + 1}/${items.length}`;
+};
+
+/* Announces the current position (and title) to assistive tech via a dedicated live region;
+   textContent is used so titles can never inject markup. */
+const writeStatus = ({ dom, current, items }) => {
+    if (!dom.status || current === null) return;
+    const title = items[current] && items[current].title ? `, ${items[current].title}` : '';
+    dom.status.textContent = `Image ${current + 1} of ${items.length}${title}`;
 };
 
 const toggleFullScreen = ({ isOpen, dom }) => {
@@ -199,7 +277,8 @@ export const previous = store => {
         () => dom.items[current].classList.remove('is--active'),
         () => dom.items[next].classList.add('is--active'),
         load(store),
-        writeTotals
+        writeTotals,
+        writeStatus
     ]);
 };
 
@@ -213,21 +292,23 @@ export const next = store => {
         () => dom.items[current].classList.remove('is--active'),
         () => dom.items[next].classList.add('is--active'),
         load(store),
-        writeTotals
+        writeTotals,
+        writeStatus
     ]);
 };
 
 export const close = store => {
-    const { keyListener, lastFocused, dom } = store.getState();
+    const { keyListener, dom, settings } = store.getState();
     store.update({
         ...store.getState(),
         current: null,
         isOpen: false
     }, [
         () => document.removeEventListener('keydown', keyListener),
-        () => { if (lastFocused) lastFocused.focus(); },
-        // () => dom.items[current].classList.remove('is--active'),
-        // toggle(store),
+        () => { if (settings.fullscreen) toggleFullScreen(store.getState()); },
+        unlockBackground(store),
+        //return focus to the trigger before the overlay (which holds the focused close button) is removed
+        () => { if (dom.lastFocused && typeof dom.lastFocused.focus === 'function') dom.lastFocused.focus(); },
         () => dom.overlay.parentNode.removeChild(dom.overlay)
     ]);
 };

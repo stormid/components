@@ -17,15 +17,30 @@ test.describe('Scroll spy > functionality', { tag: '@all'}, () => {
 		await expect(matchingLink).toHaveClass(/is--active/);
 	});
 
-	test('Only one link should be active when the page is loaded', async ({ page }) => {	
-		const matchingLinks = page.locator('.is--active');		
-		expect(await matchingLinks.count()).toBe(1);
+	test('Only one link should be active when the page is loaded', async ({ page }) => {
+		await expect(page.locator('.is--active')).toHaveCount(1);
 	});
 
-	test('Only one link should be active when the page is scrolled', async ({ page }) => {	
+	test('Only one link should be active when the page is scrolled', async ({ page }) => {
 		await page.evaluate(() => window.scrollBy(0, 500));
-		const matchingLinks = page.locator('.is--active');		
-		expect(await matchingLinks.count()).toBe(1);
+		await expect(page.locator('.is--active')).toHaveCount(1);
+	});
+
+	test('The active link exposes aria-current and inactive links do not', async ({ page }) => {
+		await expect(page.locator('nav a[href="#section1"]')).toHaveAttribute('aria-current', 'true');
+		await expect(page.locator('nav a[href="#section3"]')).not.toHaveAttribute('aria-current', 'true');
+	});
+
+	test('Dispatches a scroll-spy.active event carrying the changed node on the detail', async ({ page }) => {
+		const detail = await page.evaluate(() => new Promise(resolve => {
+			const timeout = setTimeout(() => resolve(null), 3000);
+			document.addEventListener('scroll-spy.active', e => {
+				clearTimeout(timeout);
+				resolve({ hasNode: !!(e.detail && e.detail.node), hasGetState: !!(e.detail && typeof e.detail.getState === 'function') });
+			}, { once: true });
+			window.scrollBy(0, 500);
+		}));
+		expect(detail).toEqual({ hasNode: true, hasGetState: true });
 	});
 
 	test('Clicking the spy link should activate it', async ({ page }) => {	

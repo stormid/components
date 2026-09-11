@@ -30,6 +30,11 @@ export const initRealTimeValidation = store => {
         }
         getGroupValidityState(groups[groupName])
             .then(res => {
+                //bail if the group was removed or the instance destroyed while a (possibly remote)
+                //check was in flight: the group may be gone from state (renderError would throw) or
+                //the whole form torn down (an error rendered into a dead form).
+                const current = store.getState();
+                if (!current.groups[groupName] || (current.controller && current.controller.signal.aborted)) return;
                 if (!res.reduce(reduceGroupValidityState, true)) {
                     store.update(
                         reducers[ACTIONS.VALIDATION_ERROR](store.getState(),
@@ -44,31 +49,33 @@ export const initRealTimeValidation = store => {
     };
 
     Object.keys(store.getState().groups).forEach(groupName => {
+        const group = store.getState().groups[groupName];
+        if (group.hasEvent) return;
 
-        const { groups } = store.getState();
-        const groupUpdate = { ...groups };
-        
-        if (!groupUpdate[groupName].hasEvent) {
-            groupUpdate[groupName].fields.forEach(input => {
-                input.addEventListener(resolveRealTimeValidationEvent(input), handler(groupName));
-            });
+        //per-group controller so removeGroup/destroy can detach just this group's listeners
+        const controller = new AbortController();
+        const { signal } = controller;
 
-            //;_; can do better?
-            const equalToValidator = groupUpdate[groupName].validators.filter(validator => validator.type === 'equalto');
-            
-            if (equalToValidator.length > 0){
-                equalToValidator[0].params.other.forEach(subgroup => {
-                    subgroup.forEach(item => {
-                        item.addEventListener('blur', handler(groupName));
-                    });
+        group.fields.forEach(input => {
+            input.addEventListener(resolveRealTimeValidationEvent(input), handler(groupName), { signal });
+        });
+
+        const equalToValidator = group.validators.filter(validator => validator.type === 'equalto');
+
+        if (equalToValidator.length > 0){
+            equalToValidator[0].params.other.forEach(subgroup => {
+                subgroup.forEach(item => {
+                    item.addEventListener('blur', handler(groupName), { signal });
                 });
-            }
-            
-            groupUpdate[groupName].hasEvent = true;
+            });
         }
-      
+
+        //record listener state immutably through the reducer rather than mutating the group in place
         store.update(reducers[ACTIONS.START_REALTIME](store.getState(), {
-            groups: groupUpdate
+            groups: {
+                ...store.getState().groups,
+                [groupName]: { ...group, hasEvent: true, controller }
+            }
         }));
     });
 };
