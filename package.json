@@ -2,7 +2,7 @@
   "name": "components",
   "private": true,
   "scripts": {
-    "test": "lerna run test --stream",
+    "test": "lerna run test --stream --concurrency 4",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix"
   },
