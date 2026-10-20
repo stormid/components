@@ -34,7 +34,7 @@ export const postValidation = (event, resolve, store) => {
         const submit = () => submitForm(store, event.submitter);
 
         if (settings.preSubmitHook) {
-            settings.preSubmitHook();
+            settings.preSubmitHook(event.submitter);
             window.setTimeout(submit, PREHOOK_DELAY);
         } else submit();
     }

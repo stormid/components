@@ -2,6 +2,7 @@ import { describe, it, mock } from 'node:test';
 import assert from 'node:assert/strict';
 import validate from '../../src/index.js';
 import { submitForm } from '../../src/lib/validator/post-validation.js';
+import { getSubmitterEntries } from '../../src/lib/dom/index.js';
 import { DOTNET_CLASSNAMES } from '../../src/lib/constants/index.js';
 
 const getHiddenEntries = form => Array.from(form.querySelectorAll('input[type="hidden"]')).map(node => [ node.name, node.value ]);
@@ -102,17 +103,31 @@ describe('Validate > Integration > Submit', () => {
         assert.ok(submit.mock.calls[0].arguments[0] === button);
     });
 
-    it('should submit natively via the HTMLFormElement prototype if there is no submit function', async () => {
+    it('should pass the submit button to the preSubmitHook', async () => {
+        document.body.innerHTML = `<form method="post" action="/original">
+            <input id="group1" name="group1" value="valid" required>
+            <button type="submit">Submit</button>
+        </form>`;
+        const form = document.querySelector('form');
+        const button = form.querySelector('button');
+        const preSubmitHook = mock.fn();
+        const [ validator ] = validate(form, { submit: mock.fn(), preSubmitHook });
+
+        await validator.validate(submitEvent(form, button));
+
+        assert.ok(preSubmitHook.mock.calls[0].arguments[0] === button);
+    });
+
+    it('should submit natively via the HTMLFormElement prototype if there is no submit function', async t => {
         document.body.innerHTML = `<form method="post" action="/original">
             <input id="group1" name="group1" value="valid" required>
             <input type="submit" name="submit" value="Send">
         </form>`;
         const form = document.querySelector('form');
-        const nativeSubmit = mock.method(HTMLFormElement.prototype, 'submit', () => {});
+        const nativeSubmit = t.mock.method(HTMLFormElement.prototype, 'submit', () => {});
         const [ validator ] = validate(form);
 
         await validator.validate(submitEvent(form, form.querySelector('[type="submit"]')));
-        nativeSubmit.mock.restore();
 
         assert.strictEqual(nativeSubmit.mock.callCount(), 1);
         assert.ok(nativeSubmit.mock.calls[0].this === form);
@@ -129,6 +144,43 @@ describe('Validate > Integration > Submit', () => {
         assert.throws(() => submitForm({ getState: validator.getState }, form.querySelector('button')), /Submit failed/);
         assert.strictEqual(form.getAttribute('action'), '/original');
         assert.strictEqual(form.querySelectorAll('input[type="hidden"]').length, 0);
+    });
+});
+
+describe('Validate > Unit > DOM > getSubmitterEntries', () => {
+    it('should return the name and value of a named button', async () => {
+        document.body.innerHTML = `<form>
+            <button id="btn" type="submit" name="op" value="save">Save</button>
+        </form>`;
+        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), [ [ 'op', 'save' ] ]);
+    });
+
+    it('should return an empty value for a named button with no value attribute', async () => {
+        document.body.innerHTML = `<form>
+            <button id="btn" type="submit" name="op">Save</button>
+        </form>`;
+        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), [ [ 'op', '' ] ]);
+    });
+
+    it('should return nothing for an unnamed button', async () => {
+        document.body.innerHTML = `<form>
+            <input id="btn" type="submit" value="Save" />
+        </form>`;
+        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), []);
+    });
+
+    it('should return zero coordinates, not the value, for a named image button', async () => {
+        document.body.innerHTML = `<form>
+            <input id="btn" type="image" name="pos" value="ignored" alt="Save" />
+        </form>`;
+        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), [ [ 'pos.x', '0' ], [ 'pos.y', '0' ] ]);
+    });
+
+    it('should return unprefixed zero coordinates for an unnamed image button', async () => {
+        document.body.innerHTML = `<form>
+            <input id="btn" type="image" alt="Save" />
+        </form>`;
+        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), [ [ 'x', '0' ], [ 'y', '0' ] ]);
     });
 });
 

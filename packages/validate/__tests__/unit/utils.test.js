@@ -5,7 +5,6 @@ import {
     isFile,
     isSelect,
     isSubmitButton,
-    getSubmitterEntries,
     isRequired,
     isHidden,
     hasValue,
@@ -104,43 +103,6 @@ describe('Validate > Unit > Utils > isSubmitButton', () => {
         </form>`;
         const field = document.getElementById('checkbox');
         assert.deepStrictEqual(isSubmitButton(field), false);
-    });
-});
-
-describe('Validate > Unit > Utils > getSubmitterEntries', () => {
-    it('should return the name and value of a named button', async () => {
-        document.body.innerHTML = `<form>
-            <button id="btn" type="submit" name="op" value="save">Save</button>
-        </form>`;
-        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), [ [ 'op', 'save' ] ]);
-    });
-
-    it('should return an empty value for a named button with no value attribute', async () => {
-        document.body.innerHTML = `<form>
-            <button id="btn" type="submit" name="op">Save</button>
-        </form>`;
-        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), [ [ 'op', '' ] ]);
-    });
-
-    it('should return nothing for an unnamed button', async () => {
-        document.body.innerHTML = `<form>
-            <input id="btn" type="submit" value="Save" />
-        </form>`;
-        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), []);
-    });
-
-    it('should return zero coordinates, not the value, for a named image button', async () => {
-        document.body.innerHTML = `<form>
-            <input id="btn" type="image" name="pos" value="ignored" alt="Save" />
-        </form>`;
-        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), [ [ 'pos.x', '0' ], [ 'pos.y', '0' ] ]);
-    });
-
-    it('should return unprefixed zero coordinates for an unnamed image button', async () => {
-        document.body.innerHTML = `<form>
-            <input id="btn" type="image" alt="Save" />
-        </form>`;
-        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), [ [ 'x', '0' ], [ 'y', '0' ] ]);
     });
 });
 

@@ -8,25 +8,6 @@ export const isSelect = field => field.nodeName.toLowerCase() === 'select';
 
 export const isSubmitButton = node =>  node.getAttribute('type') === 'submit' || node.nodeName === 'BUTTON';
 
-/**
- * Returns the name/value pairs a submit button adds to its form's data when it submits the form.
- * A named button with no value attribute submits an empty value; an unnamed one submits nothing.
- * An image button submits click coordinates instead of its value: they are not known here, so they
- * are 0,0 as for a keyboard activation
- *
- * @param submitter [Node] A submit button
- *
- * @returns [Array] of [name, value] pairs
- *
- */
-export const getSubmitterEntries = submitter => {
-    if (submitter.type === 'image') {
-        const prefix = submitter.name ? `${submitter.name}.` : '';
-        return [ [ `${prefix}x`, '0' ], [ `${prefix}y`, '0' ] ];
-    }
-    return submitter.name ? [ [ submitter.name, submitter.value ] ] : [];
-};
-
 export const isRequired = group => group.validators.filter(validator => validator.type === 'required').length > 0;
 
 export const groupIsAllHidden = fields => fields.reduce((acc, field) => {
