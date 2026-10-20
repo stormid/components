@@ -5,7 +5,6 @@ import {
     isFile,
     isSelect,
     isSubmitButton,
-    hasNameValue,
     isRequired,
     isHidden,
     hasValue,
@@ -104,32 +103,6 @@ describe('Validate > Unit > Utils > isSubmitButton', () => {
         </form>`;
         const field = document.getElementById('checkbox');
         assert.deepStrictEqual(isSubmitButton(field), false);
-    });
-});
-
-describe('Validate > Unit > Utils > hasNameValue', () => {
-    it('should return true if the node has name and value attributes', async () => {
-        document.body.innerHTML = `<form>
-            <input id="field" name="field" value="" />
-        </form>`;
-        const node = document.getElementById('field');
-        assert.deepStrictEqual(hasNameValue(node), true);
-    });
-
-    it('should return false if the node has no name attribute', async () => {
-        document.body.innerHTML = `<form>
-            <input id="field" value="" />
-        </form>`;
-        const node = document.getElementById('field');
-        assert.deepStrictEqual(hasNameValue(node), false);
-    });
-
-    it('should return false if the node has no value attribute', async () => {
-        document.body.innerHTML = `<form>
-            <input id="field" name="field" />
-        </form>`;
-        const node = document.getElementById('field');
-        assert.deepStrictEqual(hasNameValue(node), false);
     });
 });
 

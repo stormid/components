@@ -1,4 +1,4 @@
-import { DOTNET_CLASSNAMES, TOKENS } from '../constants/index.js';
+import { DOTNET_CLASSNAMES, TOKENS, SUBMITTER_OVERRIDES } from '../constants/index.js';
 
 /**
  * Hypertext DOM factory function
@@ -216,17 +216,18 @@ export const focusFirstInvalidField = state => {
 };
 
 /**
- * Creates a hidden field duplicate of a given field, for conferring submit button values
- * 
- * @param source [Node] A submit input/button
+ * Creates a hidden field, for conferring a submit button's value
+ *
  * @param form [Node] A form node
- * 
+ * @param name [String]
+ * @param value [String]
+ *
  */
-export const createButtonValueNode = (source, form) => {
+export const createButtonValueNode = (form, name, value) => {
     const node = document.createElement('input');
     node.setAttribute('type', 'hidden');
-    node.setAttribute('name', source.getAttribute('name'));
-    node.setAttribute('value', source.getAttribute('value'));
+    node.setAttribute('name', name);
+    node.setAttribute('value', value);
     return form.appendChild(node);
 };
 
@@ -238,6 +239,57 @@ export const createButtonValueNode = (source, form) => {
  */
 export const cleanupButtonValueNode = node => {
     node.parentNode.removeChild(node);
+};
+
+/**
+ * Returns the name/value pairs a submit button adds to its form's data when it submits the form.
+ * A named button with no value attribute submits an empty value; an unnamed one submits nothing.
+ * An image button submits click coordinates instead of its value: they are not known here, so they
+ * are 0,0 as for a keyboard activation
+ *
+ * @param submitter [Node] A submit button
+ *
+ * @returns [Array] of [name, value] pairs
+ *
+ */
+export const getSubmitterEntries = submitter => {
+    if (submitter.type === 'image') {
+        const prefix = submitter.name ? `${submitter.name}.` : '';
+        return [ [ `${prefix}x`, '0' ], [ `${prefix}y`, '0' ] ];
+    }
+    return submitter.name ? [ [ submitter.name, submitter.value ] ] : [];
+};
+
+/**
+ * Mirrors a submit button onto its form, so that a programmatic submission sends what a native
+ * submission by that button would: its formaction/formmethod/formenctype/formtarget override the
+ * form's attributes, and its name/value is added as hidden fields
+ *
+ * @param form [Node] A form node
+ * @param submitter [Node] The submit button that submitted the form
+ *
+ * @returns [Function] Restores the form to its previous state
+ *
+ */
+export const applySubmitter = (form, submitter) => {
+    const restorers = Object.keys(SUBMITTER_OVERRIDES)
+        .filter(attribute => submitter.hasAttribute(attribute))
+        .map(attribute => {
+            const formAttribute = SUBMITTER_OVERRIDES[attribute];
+            //null when absent, so restoring removes the attribute rather than setting it to ""
+            const original = form.getAttribute(formAttribute);
+            form.setAttribute(formAttribute, submitter.getAttribute(attribute));
+            return () => {
+                if (original === null) form.removeAttribute(formAttribute);
+                else form.setAttribute(formAttribute, original);
+            };
+        });
+    const buttonValueNodes = getSubmitterEntries(submitter).map(([ name, value ]) => createButtonValueNode(form, name, value));
+
+    return () => {
+        restorers.forEach(restore => restore());
+        buttonValueNodes.forEach(cleanupButtonValueNode);
+    };
 };
 
 /**

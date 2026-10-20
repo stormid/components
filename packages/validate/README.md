@@ -9,6 +9,7 @@ Client-side form validation library to support .NET validation using data-val at
 - [Usage](#usage)
 - [Validators](#validators)
 - [Errors](#errors)
+- [Submit buttons](#submit-buttons)
 - [Options](#options)
 - [API](#api)
 - [Plugins](#plugins)
@@ -337,12 +338,34 @@ To include the user input value in your error message, place a token "{{value}}"
 If a validation group contains more than one field, the values of these will be returned as a comma seperated list within the message.  For example:  "{{value}} are not valid inputs" becomes "test1, test2 are not valid inputs".
 
 
+## Submit buttons
+
+A valid form is submitted by the library rather than the browser, so the library reproduces what the browser would do for the submit button that was used:
+
+- its `name` and `value` are submitted. A named `<button>` with no `value` submits an empty value, as it does natively. An `<input type="submit">` with no `value` also submits an empty value, whereas browsers submit their own default label (e.g. "Submit"), so give submit inputs an explicit `value`. An image button submits `name.x` and `name.y` coordinates of 0
+- its `formaction`, `formmethod`, `formenctype` and `formtarget` attributes override the form's `action`, `method`, `enctype` and `target`
+
+These are applied to the form only for the duration of the submit, so a custom `submit` function sees them if it reads the form synchronously, e.g. `new FormData(form)`. Don't use `new FormData(form, submitter)`: the button's value is already in the form, so it would be submitted twice.
+
+The submit button is passed to the `preSubmitHook` and `submit` functions, e.g. to show progress on the button that was used.
+
+A `formtarget` of `_blank` opens a new window from a script, which browsers only allow shortly after the click. If validation includes a slow remote validator, the new window may be blocked as a popup.
+
+A submit button with the `formnovalidate` attribute skips validation, and the browser submits the form as normal. If a custom `submit` function is provided it is called instead, without the `preSubmitHook`.
+```
+<button name="intent" value="continue">Continue</button>
+<button name="intent" value="save" formaction="/save-for-later" formnovalidate>Save and come back later</button>
+```
+
+Pressing Enter in a field submits the form with its first submit button in document order, so make that the primary button: if it has `formnovalidate`, Enter will skip validation.
+
+
 ## Options
 
 ```
 {
-    preSubmitHook: undefined, // optional function, called on validation pass before the form is submitted
-    submit: undefined, // optional function; when provided it is called instead of form.submit() (e.g. for async submissions)
+    preSubmitHook: undefined, // optional function, called on validation pass before the form is submitted, with the submit button that was used, if any; if it throws, the form is not submitted
+    submit: undefined, // optional function; when provided it is called instead of form.submit() (e.g. for async submissions), with the submit button that was used, if any
     messages: { // default error messages, keyed by validator type
         required() { return 'You must answer this question.'; },
         email() { return 'Enter a valid email address, for example: example@example.com.'; },
@@ -392,7 +415,7 @@ validator.addMethod(
 ```
 
 ### validate
-Manually trigger validation on the whole form, returns a promise:
+Manually trigger validation on the whole form. Returns a promise that resolves with the form's validity, or rejects if an error is thrown while rendering the errors (e.g. by a custom message function):
 ```
 const [ validator ] = validate('.my-form');
 

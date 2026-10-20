@@ -1,55 +1,55 @@
-import { hasNameValue, hasFormactionValue } from './utils.js';
-import {
-    createButtonValueNode,
-    cleanupButtonValueNode
-}  from '../dom/index.js';
+import { applySubmitter }  from '../dom/index.js';
 import { PREHOOK_DELAY } from '../constants/index.js';
 
-export const postValidation = (event, resolve, store) => {
+/**
+ * Submits the form via settings.submit or natively, with the submit button that submitted it
+ * mirrored onto the form for the duration (see applySubmitter).
+ *
+ * Mirroring, submitting and restoring all happen synchronously: form.submit() (and new FormData(form)
+ * in a custom submit function) read the form at the time of the call, and overlapping submissions
+ * can't interleave and leave one another's overrides behind
+ *
+ * @param store [Object]
+ * @param submitter [Node] The submit button (event.submitter), if any
+ *
+ */
+export const submitForm = (store, submitter) => {
     const { settings, form } = store.getState();
+    const restore = submitter ? applySubmitter(form, submitter) : () => {};
 
-    /*
-     * The submit-button handling below mutates the DOM (adds a hidden field to
-     * carry a named button's value through a programmatic submit, and can rewrite
-     * form.action for a formaction button). Those mutations are only cleaned up
-     * inside submit(), so they must not run when validate() is invoked via the API
-     * (no event) - otherwise every call leaks a hidden input and a formaction
-     * button permanently rewrites form.action. Confine the whole thing to the
-     * real submit-event path.
-     */
-    if (event && event.target) {
-        let buttonValueNode = false;
-        //track whether we overrode the action separately from its value, so an original
-        //action of "" or an absent attribute is still restored correctly after submit.
-        let actionOverridden = false;
-        let cachedAction = null;
-        const submit = () => {
-            if (settings.submit) settings.submit();
-            else form.submit();
-
-            buttonValueNode && cleanupButtonValueNode(buttonValueNode);
-            if (actionOverridden) {
-                if (cachedAction === null) form.removeAttribute('action');
-                else form.setAttribute('action', cachedAction);
-            }
-        };
-
-        Array.from(form.querySelectorAll('[type="submit"]')).forEach(formSubmitButton => {
-            if (hasNameValue(formSubmitButton)) {
-                buttonValueNode = createButtonValueNode(formSubmitButton, form);
-            }
-            if (hasFormactionValue(formSubmitButton)) {
-                if (!actionOverridden) cachedAction = form.getAttribute('action');
-                actionOverridden = true;
-                form.setAttribute('action', formSubmitButton.getAttribute('formaction'));
-            }
-        });
-
-        if (settings.preSubmitHook) {
-            settings.preSubmitHook();
-            window.setTimeout(submit, PREHOOK_DELAY);
-        } else submit();
+    try {
+        if (settings.submit) settings.submit(submitter);
+        //called via the prototype as a control named "submit" shadows form.submit
+        else HTMLFormElement.prototype.submit.call(form);
+    } finally {
+        restore();
     }
+};
 
-    return resolve(true);
+const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+
+/**
+ * Called once the form is valid. If called as a submit eventListener, calls the preSubmitHook (if any)
+ * then submits the form. Anything these throw propagates, so validate() rejects
+ *
+ * @param event [Event] The submit event, undefined if validate() is invoked via the API
+ * @param store [Object]
+ *
+ * @returns [Boolean|Promise] true, once the form has been submitted
+ *
+ */
+export const postValidation = (event, store) => {
+    const { settings } = store.getState();
+
+    //only submit on the real submit-event path, not when validate() is invoked via the API (no event)
+    if (!event || !event.target) return true;
+
+    const submit = () => {
+        submitForm(store, event.submitter);
+        return true;
+    };
+    if (!settings.preSubmitHook) return submit();
+
+    settings.preSubmitHook(event.submitter);
+    return wait(PREHOOK_DELAY).then(submit);
 };

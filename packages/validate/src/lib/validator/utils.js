@@ -8,10 +8,6 @@ export const isSelect = field => field.nodeName.toLowerCase() === 'select';
 
 export const isSubmitButton = node =>  node.getAttribute('type') === 'submit' || node.nodeName === 'BUTTON';
 
-export const hasNameValue = node => node.hasAttribute('name') && node.hasAttribute('value');
-
-export const hasFormactionValue = node => node.hasAttribute('formaction') && node.getAttribute('formaction') !== '';
-
 export const isRequired = group => group.validators.filter(validator => validator.type === 'required').length > 0;
 
 export const groupIsAllHidden = fields => fields.reduce((acc, field) => {
