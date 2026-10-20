@@ -24,41 +24,45 @@ import {
  *
  * @param form [DOM node]
  *
- * @returns [Promise] Resolves with boolean validityState of the form
+ * @returns [Promise] Resolves with boolean validityState of the form, once submitted if called as a submit eventListener
+ *                    Rejects if rendering the errors, the preSubmitHook or submitting the form throws
  *
  */
 export const validate = store => event => {
     if (event && event.submitter && event.submitter.hasAttribute('formnovalidate')) {
         //leave the submission to the browser, unless there's a custom submit function to call instead
-        if (store.getState().settings.submit) {
-            event.preventDefault();
+        if (!store.getState().settings.submit) return Promise.resolve(true);
+        event.preventDefault();
+        //submitted inside the promise so a throwing submit function rejects, as it does after validation
+        return new Promise(resolve => {
             submitForm(store, event.submitter);
-        }
-        return Promise.resolve(true);
+            resolve(true);
+        });
     }
 
     event && event.preventDefault();
     store.update(reducers[ACTIONS.CLEAR_ERRORS](store.getState()), [clearErrors]);
 
-    return new Promise(resolve => {
-        const state = store.getState();
-        const { groups, realTimeValidation } = state;
-        getValidityState(groups)
-            .then(validityState => {
-                if (isFormValid(validityState)) return postValidation(event, resolve, store);
+    const state = store.getState();
+    const { groups, realTimeValidation } = state;
 
-                if (realTimeValidation === false) initRealTimeValidation(store);
+    //validators settle even when they fail (see getGroupValidityState), so a rejection here is an
+    //error thrown afterwards: it rejects the returned promise rather than leaving it pending
+    return getValidityState(groups)
+        .then(validityState => {
+            if (isFormValid(validityState)) return postValidation(event, store);
 
-                store.update(
-                    reducers[ACTIONS.VALIDATION_ERRORS](store.getState(), Object.keys(groups)
-                        .reduce((acc, group, i) => (acc[group] = {
-                            valid: validityState[i].reduce(reduceGroupValidityState, true),
-                            errorMessages: validityState[i].reduce(reduceErrorMessages(group, state), [])
-                        }, acc), {})),
-                    [renderErrors, focusFirstInvalidField]
-                );
+            if (realTimeValidation === false) initRealTimeValidation(store);
 
-                return resolve(false);
-            }).catch(err => console.warn(err));
-    });
+            store.update(
+                reducers[ACTIONS.VALIDATION_ERRORS](store.getState(), Object.keys(groups)
+                    .reduce((acc, group, i) => (acc[group] = {
+                        valid: validityState[i].reduce(reduceGroupValidityState, true),
+                        errorMessages: validityState[i].reduce(reduceErrorMessages(group, state), [])
+                    }, acc), {})),
+                [renderErrors, focusFirstInvalidField]
+            );
+
+            return false;
+        });
 };

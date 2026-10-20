@@ -26,18 +26,30 @@ export const submitForm = (store, submitter) => {
     }
 };
 
-export const postValidation = (event, resolve, store) => {
+const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+
+/**
+ * Called once the form is valid. If called as a submit eventListener, calls the preSubmitHook (if any)
+ * then submits the form. Anything these throw propagates, so validate() rejects
+ *
+ * @param event [Event] The submit event, undefined if validate() is invoked via the API
+ * @param store [Object]
+ *
+ * @returns [Boolean|Promise] true, once the form has been submitted
+ *
+ */
+export const postValidation = (event, store) => {
     const { settings } = store.getState();
 
     //only submit on the real submit-event path, not when validate() is invoked via the API (no event)
-    if (event && event.target) {
-        const submit = () => submitForm(store, event.submitter);
+    if (!event || !event.target) return true;
 
-        if (settings.preSubmitHook) {
-            settings.preSubmitHook(event.submitter);
-            window.setTimeout(submit, PREHOOK_DELAY);
-        } else submit();
-    }
+    const submit = () => {
+        submitForm(store, event.submitter);
+        return true;
+    };
+    if (!settings.preSubmitHook) return submit();
 
-    return resolve(true);
+    settings.preSubmitHook(event.submitter);
+    return wait(PREHOOK_DELAY).then(submit);
 };

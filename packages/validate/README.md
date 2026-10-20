@@ -364,7 +364,7 @@ Pressing Enter in a field submits the form with its first submit button in docum
 
 ```
 {
-    preSubmitHook: undefined, // optional function, called on validation pass before the form is submitted, with the submit button that was used, if any
+    preSubmitHook: undefined, // optional function, called on validation pass before the form is submitted, with the submit button that was used, if any; if it throws, the form is not submitted
     submit: undefined, // optional function; when provided it is called instead of form.submit() (e.g. for async submissions), with the submit button that was used, if any
     messages: { // default error messages, keyed by validator type
         required() { return 'You must answer this question.'; },
@@ -415,7 +415,7 @@ validator.addMethod(
 ```
 
 ### validate
-Manually trigger validation on the whole form, returns a promise:
+Manually trigger validation on the whole form. Returns a promise that resolves with the form's validity, or rejects if an error is thrown while rendering the errors (e.g. by a custom message function):
 ```
 const [ validator ] = validate('.my-form');
 

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import validate from '../../src/index.js';
 import { submitForm } from '../../src/lib/validator/post-validation.js';
 import { getSubmitterEntries } from '../../src/lib/dom/index.js';
-import { DOTNET_CLASSNAMES } from '../../src/lib/constants/index.js';
+import { DOTNET_CLASSNAMES, PREHOOK_DELAY } from '../../src/lib/constants/index.js';
 
 const getHiddenEntries = form => Array.from(form.querySelectorAll('input[type="hidden"]')).map(node => [ node.name, node.value ]);
 
@@ -21,6 +21,10 @@ const createSnapshotSubmit = form => {
 };
 
 const submitEvent = (form, submitter) => ({ target: form, submitter, preventDefault: mock.fn() });
+
+const throwError = message => () => {
+    throw new Error(message);
+};
 
 describe('Validate > Integration > Submit', () => {
     it('should call the submit function if validation passes', async () => {
@@ -312,7 +316,6 @@ describe('Validate > Integration > Submit > Submit button', () => {
             validator.validate(submitEvent(form, form.querySelector('[value="save"]'))),
             validator.validate(submitEvent(form, form.querySelector('[value="publish"]')))
         ]);
-        await new Promise(resolve => setTimeout(resolve, 50));
 
         assert.deepStrictEqual(snapshots.map(({ action, entries }) => ({ action, entries })), [
             { action: '/save', entries: [ [ 'op', 'save' ] ] },
@@ -376,5 +379,88 @@ describe('Validate > Integration > Submit > formnovalidate', () => {
         const result = await validator.validate();
 
         assert.strictEqual(result, false);
+    });
+});
+
+describe('Validate > Integration > Submit > Errors', () => {
+    //an error that isn't propagated leaves validate() pending forever, so fail fast instead
+    const timeout = 1000;
+
+    it('should reject if the submit function throws', { timeout }, async () => {
+        document.body.innerHTML = `<form method="post" action="/original">
+            <input id="group1" name="group1" value="valid" required>
+            <button type="submit">Submit</button>
+        </form>`;
+        const form = document.querySelector('form');
+        const [ validator ] = validate(form, { submit: throwError('Submit failed') });
+
+        await assert.rejects(validator.validate(submitEvent(form, form.querySelector('button'))), /Submit failed/);
+    });
+
+    it('should reject if the submit function throws after the preSubmitHook', { timeout }, async () => {
+        document.body.innerHTML = `<form method="post" action="/original">
+            <input id="group1" name="group1" value="valid" required>
+            <button type="submit">Submit</button>
+        </form>`;
+        const form = document.querySelector('form');
+        const [ validator ] = validate(form, { submit: throwError('Submit failed'), preSubmitHook: () => {} });
+
+        await assert.rejects(validator.validate(submitEvent(form, form.querySelector('button'))), /Submit failed/);
+    });
+
+    it('should reject without submitting if the preSubmitHook throws', { timeout }, async () => {
+        document.body.innerHTML = `<form method="post" action="/original">
+            <input id="group1" name="group1" value="valid" required>
+            <button type="submit">Submit</button>
+        </form>`;
+        const form = document.querySelector('form');
+        const submit = mock.fn();
+        const [ validator ] = validate(form, { submit, preSubmitHook: throwError('Hook failed') });
+
+        await assert.rejects(validator.validate(submitEvent(form, form.querySelector('button'))), /Hook failed/);
+        await new Promise(resolve => setTimeout(resolve, PREHOOK_DELAY * 2));
+
+        assert.strictEqual(submit.mock.callCount(), 0);
+    });
+
+    it('should return a rejected promise, not throw, if the submit function throws for a formnovalidate submission', { timeout }, async () => {
+        document.body.innerHTML = `<form method="post" action="/original">
+            <input id="group1" name="group1" required>
+            <button type="submit" formnovalidate>Save draft</button>
+        </form>`;
+        const form = document.querySelector('form');
+        const [ validator ] = validate(form, { submit: throwError('Submit failed') });
+
+        let result;
+        assert.doesNotThrow(() => {
+            result = validator.validate(submitEvent(form, form.querySelector('button')));
+        });
+        await assert.rejects(result, /Submit failed/);
+    });
+
+    it('should reject if rendering the errors throws', { timeout }, async () => {
+        document.body.innerHTML = `<form method="post" action="/original">
+            <label for="group1">Label</label>
+            <input id="group1" name="group1" required>
+        </form>`;
+        const form = document.querySelector('form');
+        const [ validator ] = validate(form, { messages: { required: throwError('Message failed') } });
+
+        await assert.rejects(validator.validate(submitEvent(form, null)), /Message failed/);
+    });
+
+    it('should resolve once the form has been submitted after the preSubmitHook', { timeout }, async () => {
+        document.body.innerHTML = `<form method="post" action="/original">
+            <input id="group1" name="group1" value="valid" required>
+            <button type="submit">Submit</button>
+        </form>`;
+        const form = document.querySelector('form');
+        const submit = mock.fn();
+        const [ validator ] = validate(form, { submit, preSubmitHook: () => {} });
+
+        const result = await validator.validate(submitEvent(form, form.querySelector('button')));
+
+        assert.strictEqual(result, true);
+        assert.strictEqual(submit.mock.callCount(), 1);
     });
 });
