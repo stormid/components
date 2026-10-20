@@ -5,7 +5,7 @@ import {
     isFile,
     isSelect,
     isSubmitButton,
-    hasNameValue,
+    getSubmitterEntries,
     isRequired,
     isHidden,
     hasValue,
@@ -107,29 +107,40 @@ describe('Validate > Unit > Utils > isSubmitButton', () => {
     });
 });
 
-describe('Validate > Unit > Utils > hasNameValue', () => {
-    it('should return true if the node has name and value attributes', async () => {
+describe('Validate > Unit > Utils > getSubmitterEntries', () => {
+    it('should return the name and value of a named button', async () => {
         document.body.innerHTML = `<form>
-            <input id="field" name="field" value="" />
+            <button id="btn" type="submit" name="op" value="save">Save</button>
         </form>`;
-        const node = document.getElementById('field');
-        assert.deepStrictEqual(hasNameValue(node), true);
+        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), [ [ 'op', 'save' ] ]);
     });
 
-    it('should return false if the node has no name attribute', async () => {
+    it('should return an empty value for a named button with no value attribute', async () => {
         document.body.innerHTML = `<form>
-            <input id="field" value="" />
+            <button id="btn" type="submit" name="op">Save</button>
         </form>`;
-        const node = document.getElementById('field');
-        assert.deepStrictEqual(hasNameValue(node), false);
+        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), [ [ 'op', '' ] ]);
     });
 
-    it('should return false if the node has no value attribute', async () => {
+    it('should return nothing for an unnamed button', async () => {
         document.body.innerHTML = `<form>
-            <input id="field" name="field" />
+            <input id="btn" type="submit" value="Save" />
         </form>`;
-        const node = document.getElementById('field');
-        assert.deepStrictEqual(hasNameValue(node), false);
+        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), []);
+    });
+
+    it('should return zero coordinates, not the value, for a named image button', async () => {
+        document.body.innerHTML = `<form>
+            <input id="btn" type="image" name="pos" value="ignored" alt="Save" />
+        </form>`;
+        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), [ [ 'pos.x', '0' ], [ 'pos.y', '0' ] ]);
+    });
+
+    it('should return unprefixed zero coordinates for an unnamed image button', async () => {
+        document.body.innerHTML = `<form>
+            <input id="btn" type="image" alt="Save" />
+        </form>`;
+        assert.deepStrictEqual(getSubmitterEntries(document.getElementById('btn')), [ [ 'x', '0' ], [ 'y', '0' ] ]);
     });
 });
 

@@ -6,7 +6,7 @@ import {
     isFormValid,
     reduceErrorMessages
 } from '../validator/index.js';
-import { postValidation } from '../validator/post-validation.js';
+import { postValidation, submitForm } from '../validator/post-validation.js';
 import { initRealTimeValidation } from '../validator/real-time-validation.js';
 import {
     clearErrors,
@@ -20,13 +20,23 @@ import {
  * 
  * Submits the form if called as a submit eventListener and is valid
  * Dispatches error state to store if errors
- * 
+ * Skips validation if the form was submitted by a button with formnovalidate
+ *
  * @param form [DOM node]
- * 
+ *
  * @returns [Promise] Resolves with boolean validityState of the form
- * 
+ *
  */
 export const validate = store => event => {
+    if (event && event.submitter && event.submitter.hasAttribute('formnovalidate')) {
+        //leave the submission to the browser, unless there's a custom submit function to call instead
+        if (store.getState().settings.submit) {
+            event.preventDefault();
+            submitForm(store, event.submitter);
+        }
+        return Promise.resolve(true);
+    }
+
     event && event.preventDefault();
     store.update(reducers[ACTIONS.CLEAR_ERRORS](store.getState()), [clearErrors]);
 

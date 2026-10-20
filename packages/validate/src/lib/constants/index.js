@@ -1,5 +1,13 @@
 export const PREHOOK_DELAY = 16;
 
+//submit button attributes that override their form's attributes when that button submits the form, mapped to the form attribute they override
+export const SUBMITTER_OVERRIDES = {
+    formaction: 'action',
+    formmethod: 'method',
+    formenctype: 'enctype',
+    formtarget: 'target'
+};
+
 export const ACTIONS = {
     SET_INITIAL_STATE: 'SET_INITIAL_STATE',
     CLEAR_ERRORS: 'CLEAR_ERRORS',

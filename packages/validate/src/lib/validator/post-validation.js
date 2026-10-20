@@ -1,49 +1,37 @@
-import { hasNameValue, hasFormactionValue } from './utils.js';
-import {
-    createButtonValueNode,
-    cleanupButtonValueNode
-}  from '../dom/index.js';
+import { applySubmitter }  from '../dom/index.js';
 import { PREHOOK_DELAY } from '../constants/index.js';
 
-export const postValidation = (event, resolve, store) => {
+/**
+ * Submits the form via settings.submit or natively, with the submit button that submitted it
+ * mirrored onto the form for the duration (see applySubmitter).
+ *
+ * Mirroring, submitting and restoring all happen synchronously: form.submit() (and new FormData(form)
+ * in a custom submit function) read the form at the time of the call, and overlapping submissions
+ * can't interleave and leave one another's overrides behind
+ *
+ * @param store [Object]
+ * @param submitter [Node] The submit button (event.submitter), if any
+ *
+ */
+export const submitForm = (store, submitter) => {
     const { settings, form } = store.getState();
+    const restore = submitter ? applySubmitter(form, submitter) : () => {};
 
-    /*
-     * The submit-button handling below mutates the DOM (adds a hidden field to
-     * carry a named button's value through a programmatic submit, and can rewrite
-     * form.action for a formaction button). Those mutations are only cleaned up
-     * inside submit(), so they must not run when validate() is invoked via the API
-     * (no event) - otherwise every call leaks a hidden input and a formaction
-     * button permanently rewrites form.action. Confine the whole thing to the
-     * real submit-event path.
-     */
+    try {
+        if (settings.submit) settings.submit(submitter);
+        //called via the prototype as a control named "submit" shadows form.submit
+        else HTMLFormElement.prototype.submit.call(form);
+    } finally {
+        restore();
+    }
+};
+
+export const postValidation = (event, resolve, store) => {
+    const { settings } = store.getState();
+
+    //only submit on the real submit-event path, not when validate() is invoked via the API (no event)
     if (event && event.target) {
-        let buttonValueNode = false;
-        //track whether we overrode the action separately from its value, so an original
-        //action of "" or an absent attribute is still restored correctly after submit.
-        let actionOverridden = false;
-        let cachedAction = null;
-        const submit = () => {
-            if (settings.submit) settings.submit();
-            else form.submit();
-
-            buttonValueNode && cleanupButtonValueNode(buttonValueNode);
-            if (actionOverridden) {
-                if (cachedAction === null) form.removeAttribute('action');
-                else form.setAttribute('action', cachedAction);
-            }
-        };
-
-        Array.from(form.querySelectorAll('[type="submit"]')).forEach(formSubmitButton => {
-            if (hasNameValue(formSubmitButton)) {
-                buttonValueNode = createButtonValueNode(formSubmitButton, form);
-            }
-            if (hasFormactionValue(formSubmitButton)) {
-                if (!actionOverridden) cachedAction = form.getAttribute('action');
-                actionOverridden = true;
-                form.setAttribute('action', formSubmitButton.getAttribute('formaction'));
-            }
-        });
+        const submit = () => submitForm(store, event.submitter);
 
         if (settings.preSubmitHook) {
             settings.preSubmitHook();
