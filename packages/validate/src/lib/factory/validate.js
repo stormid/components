@@ -41,16 +41,20 @@ export const validate = store => event => {
     }
 
     event && event.preventDefault();
-    store.update(reducers[ACTIONS.CLEAR_ERRORS](store.getState()), [clearErrors]);
 
     const state = store.getState();
     const { groups, realTimeValidation } = state;
 
     //validators settle even when they fail (see getGroupValidityState), so a rejection here is an
-    //error thrown afterwards: it rejects the returned promise rather than leaving it pending
+    //error thrown afterwards: it rejects the returned promise rather than leaving it pending.
+    //Errors are not cleared before validating: renderErrors clears the valid groups and leaves unchanged
+    //errors in place, so re-submitting doesn't remove and re-render them.
     return getValidityState(groups)
         .then(validityState => {
-            if (isFormValid(validityState)) return postValidation(event, store);
+            if (isFormValid(validityState)) {
+                store.update(reducers[ACTIONS.CLEAR_ERRORS](store.getState()), [clearErrors]);
+                return postValidation(event, store);
+            }
 
             if (realTimeValidation === false) initRealTimeValidation(store);
 
