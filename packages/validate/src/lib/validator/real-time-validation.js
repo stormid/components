@@ -12,30 +12,31 @@ import {
 }  from '../dom/index.js';
 
 /**
- * Starts real-time validation on each group, adding an eventListener to each field 
- * that resets the validityState for the field's group and acquires the new validity state
+ * Starts real-time validation on each group, adding an eventListener to each field
+ * that acquires the new validity state for the field's group
  * 
  * The event that triggers validation is defined by the field type
  * 
- * Only if the new validityState is invalid is the validation error object 
- * dispatched to the store to update state and render the error
+ * An invalid validityState dispatches the validation error object to the store to update state and render
+ * the error; a valid one clears any error the group has
  * 
  */
 export const initRealTimeValidation = store => {
     const handler = groupName => () => {
-        const { groups, errors } = store.getState();
-        
-        if (!groups[groupName].valid && errors[groupName]) {
-            store.update(reducers[ACTIONS.CLEAR_ERROR](store.getState(), groupName), [ clearError(groupName) ]);
-        }
-        getGroupValidityState(groups[groupName])
+        //the current error stays in place until the new result is known (rather than being cleared up front),
+        //so that renderError can leave an unchanged message alone instead of re-rendering it on every keystroke
+        getGroupValidityState(store.getState().groups[groupName])
             .then(res => {
                 //bail if the group was removed or the instance destroyed while a (possibly remote)
                 //check was in flight: the group may be gone from state (renderError would throw) or
                 //the whole form torn down (an error rendered into a dead form).
                 const current = store.getState();
                 if (!current.groups[groupName] || (current.controller && current.controller.signal.aborted)) return;
-                if (!res.reduce(reduceGroupValidityState, true)) {
+                if (res.reduce(reduceGroupValidityState, true)) {
+                    if (!current.groups[groupName].valid && current.errors[groupName]) {
+                        store.update(reducers[ACTIONS.CLEAR_ERROR](current, groupName), [ clearError(groupName) ]);
+                    }
+                } else {
                     store.update(
                         reducers[ACTIONS.VALIDATION_ERROR](store.getState(),
                             {

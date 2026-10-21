@@ -169,31 +169,33 @@ describe('Validate > Unit > DOM > clearErrors', () => {
 
 describe('Validate > Integration > DOM > error announcement', () => {
 
-    it('should mark a server-rendered error container as a polite live region on init', () => {
+    it('should not make a server-rendered error container a live region', async () => {
         document.body.innerHTML = `<form class="form">
             <label for="group1">Label</label>
             <input id="group1" name="group1" data-val="true" data-val-required="Required" value="" />
             <span data-valmsg-for="group1" class="field-validation-valid"></span>
         </form>`;
-        validate('form');
+        const [ validator ] = validate('form');
         const node = document.querySelector('[data-valmsg-for="group1"]');
-        assert.strictEqual(node.getAttribute('aria-live'), 'polite');
         assert.strictEqual(node.getAttribute('id'), 'group1-error-message');
+        await validator.validate();
+        assert.strictEqual(node.hasAttribute('aria-live'), false);
+        assert.strictEqual(node.hasAttribute('role'), false);
     });
 
-    it('should not override an author-provided role/aria-live on a server error container', () => {
+    it('should leave an author-provided role/aria-live on a server error container in place', async () => {
         document.body.innerHTML = `<form class="form">
             <label for="group1">Label</label>
             <input id="group1" name="group1" data-val="true" data-val-required="Required" value="" />
             <span data-valmsg-for="group1" role="alert" class="field-validation-valid"></span>
         </form>`;
-        validate('form');
+        const [ validator ] = validate('form');
+        await validator.validate();
         const node = document.querySelector('[data-valmsg-for="group1"]');
-        assert.strictEqual(node.hasAttribute('aria-live'), false);
         assert.strictEqual(node.getAttribute('role'), 'alert');
     });
 
-    it('should render an inline error span with role="alert" when no server error node exists', async () => {
+    it('should render an inline error span without a role or aria-live when no server error node exists', async () => {
         document.body.innerHTML = `<form class="form">
             <label for="group1">Label</label>
             <input id="group1" name="group1" data-val="true" data-val-required="Required" value="" />
@@ -202,7 +204,85 @@ describe('Validate > Integration > DOM > error announcement', () => {
         await validator.validate();
         const span = document.getElementById('group1-error-message');
         assert.ok(span);
-        assert.strictEqual(span.getAttribute('role'), 'alert');
+        assert.strictEqual(span.hasAttribute('role'), false);
+        assert.strictEqual(span.hasAttribute('aria-live'), false);
+    });
+
+    it('should not rewrite an unchanged error during real-time validation', async () => {
+        document.body.innerHTML = `<form class="form">
+            <label for="group1">Label</label>
+            <input id="group1" name="group1" type="email" data-val="true" data-val-email="Enter a valid email" value="a" />
+        </form>`;
+        const [ validator ] = validate('form');
+        await validator.validate();
+        const span = document.getElementById('group1-error-message');
+        const textNode = span.firstChild;
+        let mutations = 0;
+        const observer = new MutationObserver(records => { mutations += records.length; });
+        observer.observe(span, { childList: true, characterData: true, subtree: true });
+
+        const input = document.getElementById('group1');
+        for (const value of ['ab', 'abc', 'abc@']) {
+            input.value = value;
+            input.dispatchEvent(new Event('input'));
+            await new Promise(resolve => setTimeout(resolve));
+        }
+        observer.disconnect();
+        assert.strictEqual(mutations, 0);
+        assert.strictEqual(document.getElementById('group1-error-message'), span);
+        assert.strictEqual(span.firstChild, textNode);
+    });
+
+    it('should not rewrite unchanged errors when the form is re-submitted', async () => {
+        document.body.innerHTML = `<form class="form">
+            <label for="group1">Label</label>
+            <input id="group1" name="group1" data-val="true" data-val-required="Required" value="" />
+            <span data-valmsg-for="group1" class="field-validation-valid"></span>
+        </form>`;
+        const [ validator ] = validate('form');
+        await validator.validate();
+        const node = document.querySelector('[data-valmsg-for="group1"]');
+        let mutations = 0;
+        const observer = new MutationObserver(records => { mutations += records.length; });
+        observer.observe(node, { childList: true, characterData: true, subtree: true });
+        await validator.validate();
+        await new Promise(resolve => setTimeout(resolve));
+        observer.disconnect();
+        assert.strictEqual(mutations, 0);
+        assert.strictEqual(node.textContent, 'Required');
+        assert.strictEqual(document.getElementById('group1').getAttribute('aria-invalid'), 'true');
+    });
+
+    it('should replace an error during real-time validation when the message changes', async () => {
+        document.body.innerHTML = `<form class="form">
+            <label for="group1">Label</label>
+            <input id="group1" name="group1" type="email" data-val="true" data-val-required="Required" data-val-email="Enter a valid email" value="" />
+        </form>`;
+        const [ validator ] = validate('form');
+        await validator.validate();
+        assert.strictEqual(document.getElementById('group1-error-message').textContent, 'Required');
+        const input = document.getElementById('group1');
+        input.value = 'a';
+        input.dispatchEvent(new Event('input'));
+        await new Promise(resolve => setTimeout(resolve));
+        assert.strictEqual(document.querySelectorAll('.error-message').length, 1);
+        assert.strictEqual(document.getElementById('group1-error-message').textContent, 'Enter a valid email');
+    });
+
+    it('should remove an error during real-time validation once the group is valid', async () => {
+        document.body.innerHTML = `<form class="form">
+            <label for="group1">Label</label>
+            <input id="group1" name="group1" data-val="true" data-val-required="Required" value="" />
+        </form>`;
+        const [ validator ] = validate('form');
+        await validator.validate();
+        const input = document.getElementById('group1');
+        input.value = 'x';
+        input.dispatchEvent(new Event('input'));
+        await new Promise(resolve => setTimeout(resolve));
+        assert.ok(!document.getElementById('group1-error-message'));
+        assert.strictEqual(input.hasAttribute('aria-invalid'), false);
+        assert.strictEqual(validator.getState().errors.group1, undefined);
     });
 
     it('should expose the displayed message in getState().errors after a failed validate()', async () => {

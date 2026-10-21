@@ -56,6 +56,27 @@ export const clientErrorId = group => {
 };
 
 /**
+ * The element a group's error message is written into: its server error node, or else the client-rendered
+ * span (which carries an id unique to this instance, so it can be found without holding a reference in state)
+ *
+ * @param group [Object, validation group]
+ * @returns Node|null|false
+ */
+const findErrorContainer = group => {
+    if (group.serverErrorNode) return group.serverErrorNode;
+    const errorId = clientErrorId(group);
+    return errorId && document.getElementById(errorId);
+};
+
+/**
+ * The label a client-rendered error span is inserted after
+ *
+ * @param group [Object, validation group]
+ * @returns Node|null
+ */
+const findLabel = group => document.querySelector(`[for="${group.fields[group.fields.length-1].getAttribute('id')}"]`);
+
+/**
  * Removes a group's rendered error message and its invalidity attributes (a pure DOM effect).
  * The `errors` state slice is maintained by the reducers, not here.
  *
@@ -76,10 +97,7 @@ export const clearError = groupName => state => {
         serverErrorNode.classList.remove(DOTNET_CLASSNAMES.ERROR);
         serverErrorNode.classList.add(DOTNET_CLASSNAMES.VALID);
     } else {
-        //the client-side span carries an id unique to this instance, so it can be found and
-        //removed without holding a node reference in state
-        const errorId = clientErrorId(state.groups[groupName]);
-        const errorNode = errorId && document.getElementById(errorId);
+        const errorNode = findErrorContainer(state.groups[groupName]);
         if (errorNode) errorNode.parentNode.removeChild(errorNode);
     }
 
@@ -115,14 +133,17 @@ export const clearErrors = state => {
 };
 
 /**
- * Iterates over all groups to render each error post-vaidation
+ * Iterates over all groups post-validation, rendering each error and clearing any valid group's error
  * 
  * @param state [Object, validation state]
  * 
  */
 export const renderErrors = state => {
     Object.keys(state.groups).forEach(groupName => {
-        if (!state.groups[groupName].valid) renderError(groupName)(state);
+        //groups that are now valid are cleared here rather than before validating, so an error that is
+        //unchanged on re-submission is left in place rather than removed and re-rendered
+        if (state.groups[groupName].valid) clearError(groupName)(state);
+        else renderError(groupName)(state);
     });
 };
 
@@ -155,28 +176,29 @@ export const updateMessageValues = (state, groupName) => {
  * 
  */
 export const renderError = groupName => state => {
-    //clear any error currently rendered for this group first (idempotent) so a re-render can't duplicate it
-    clearError(groupName)(state);
-
     const msg = updateMessageValues(state, groupName);
     const { serverErrorNode } = state.groups[groupName];
-    let errorNode;
+    let errorContainer = findErrorContainer(state.groups[groupName]);
 
-    if (serverErrorNode) {
-        createErrorTextNode(state.groups[groupName], msg);
-    } else {
-        //No server error node found, so attempt to render inside the label.  If no label found, log error to console.
-        const label = document.querySelector(`[for="${state.groups[groupName].fields[state.groups[groupName].fields.length-1].getAttribute('id')}"]`);
+    //Only rewrite the message when it has changed: real-time validation runs on every keystroke, and replacing
+    //identical text each time is needless DOM churn (and re-announces it if an author has made the container live)
+    if (!errorContainer || !errorContainer.classList.contains(DOTNET_CLASSNAMES.ERROR) || errorContainer.textContent !== msg) {
+        //clear any error currently rendered for this group first (idempotent) so a re-render can't duplicate it
+        clearError(groupName)(state);
 
-        if (label === null) {
-            console.error(`No matching HTML label or server error node found for validation group: ${groupName}. Error message: '${msg}' cannot be displayed. Form will not be submitted.`);
-            return;
+        if (serverErrorNode) {
+            createErrorTextNode(state.groups[groupName], msg);
+        } else {
+            //No server error node found, so attempt to render inside the label.  If no label found, log error to console.
+            const label = findLabel(state.groups[groupName]);
+
+            if (label === null) {
+                console.error(`No matching HTML label or server error node found for validation group: ${groupName}. Error message: '${msg}' cannot be displayed. Form will not be submitted.`);
+                return;
+            }
+            errorContainer = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: clientErrorId(state.groups[groupName]) }, msg), label.nextSibling);
         }
-        //role="alert" so the message is announced when inserted (e.g. during real-time validation, where focus doesn't move)
-        errorNode = label.parentNode.insertBefore(h('span', { class: DOTNET_CLASSNAMES.ERROR, id: clientErrorId(state.groups[groupName]), role: 'alert' }, msg), label.nextSibling);
     }
-
-    const errorContainer = serverErrorNode || errorNode;
 
     state.groups[groupName].fields.forEach(field => {
         field.parentNode.classList.add('is--invalid');
@@ -324,10 +346,6 @@ export const addAXAttributes = state => {
         if (serverErrorNode) {
             //ensure error message has an id for aria-describedby
             if (!serverErrorNode.hasAttribute('id')) serverErrorNode.setAttribute('id', `${groupName}-error-message`);
-            //make the (initially empty) server-rendered container a live region so errors
-            //inserted during real-time validation are announced, not only on submit.
-            //Respect an author-provided role/aria-live if one is already present.
-            if (!serverErrorNode.hasAttribute('aria-live') && !serverErrorNode.hasAttribute('role')) serverErrorNode.setAttribute('aria-live', 'polite');
         }
 
         //Add aria-required to inputs that are not radios, nor checkbox groups (single checkbox gets the attribute added)

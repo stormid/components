@@ -37,9 +37,8 @@ export const addGroup = store => nodes => {
  * @returns [Promise] Resolves with boolean validityState of the group
  */
 export const validateGroup = store => groupName => new Promise(resolve => {
-    if (!store.getState().groups[groupName].valid && store.getState().errors[groupName]) {
-        store.update(reducers[ACTIONS.CLEAR_ERROR](store.getState(), groupName), [clearError(groupName)]);
-    }
+    //as in real-time validation, the current error stays in place until the new result is known so an
+    //unchanged message isn't removed and re-rendered
     getGroupValidityState(store.getState().groups[groupName])
         .then(res => {
             //the group may have been removed or the instance destroyed while a remote check was
@@ -55,6 +54,9 @@ export const validateGroup = store => groupName => new Promise(resolve => {
                     [renderError(groupName)]
                 );
                 return resolve(false);
+            }
+            if (!current.groups[groupName].valid && current.errors[groupName]) {
+                store.update(reducers[ACTIONS.CLEAR_ERROR](current, groupName), [clearError(groupName)]);
             }
             return resolve(true);
         });

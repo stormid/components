@@ -21,6 +21,8 @@ test.describe('Validate > Errors > Render errors', { tag: '@all'}, () => {
 
 		const message = await page.evaluate(() => document.querySelector("#lname").getAttribute("data-val-required"));
 		await expect(page.locator("#lname-error-message")).toHaveText(message);
+		await expect(page.locator("#lname-error-message")).not.toHaveAttribute("aria-live");
+		await expect(page.locator("#lname-error-message")).not.toHaveAttribute("role");
 		await expect(page.locator("#lname")).toHaveAttribute("aria-invalid", "true");
 		await expect(page.locator("#lname")).toHaveAttribute("aria-describedby", "lname-error-message");
 		await expect(page.locator("//*[@id='lname']//parent::div")).toHaveClass(/is--invalid/);
