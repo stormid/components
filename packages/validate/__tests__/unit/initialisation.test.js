@@ -8,7 +8,7 @@ let validators;
 const setUpDOM = () => {
     document.body.innerHTML = `<form class="form" method="post" action="">
         <label for="group1-1">Text (required, min 2 characters, max 8 characters)</label>
-        <input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="${defaults.messages.required()}" data-val-length-min="2" data-val-length-max="8" type="text">
+        <input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="Required error message" data-val-length-min="2" data-val-length-max="8" type="text">
         <span class="text-danger field-validation-valid" data-valmsg-for="group1" data-valmsg-replace="true"></span>
       </form>`;
 };
@@ -64,7 +64,7 @@ describe('Validate > Initialisation', () => {
 
     it('validator state group validators should consist of a type, a message, and optional params', async () => {
         assert.deepStrictEqual(validators[0].getState().groups.group1.validators[0].type, 'required');
-        assert.deepStrictEqual(validators[0].getState().groups.group1.validators[0].message, defaults.messages.required());
+        assert.deepStrictEqual(validators[0].getState().groups.group1.validators[0].message, 'Required error message');
         assert.deepStrictEqual(validators[0].getState().groups.group1.validators[1].type, 'length');
         assert.deepStrictEqual(validators[0].getState().groups.group1.validators[1].message, 'Please enter between 2 and 8 characters');
         assert.deepStrictEqual(validators[0].getState().groups.group1.validators[1].params, { min: '2', max: '8' });
@@ -128,7 +128,7 @@ describe('Validate > Initialisation > novalidate', () => {
     it('should not initialise when passed a form element (or selector identiying a form element) with a novalidate attribute', async () => {
         document.body.innerHTML = `<form class="form" method="post" action="" novalidate>
             <label for="group1-1">Text (required, min 2 characters, max 8 characters)</label>
-            <input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="${defaults.messages.required()}" data-val-length-min="2" data-val-length-max="8" type="text">
+            <input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="Required error message" data-val-length-min="2" data-val-length-max="8" type="text">
             <span class="text-danger field-validation-valid" data-valmsg-for="group1" data-valmsg-replace="true"></span>
         </form>`;
         const validators = await validate('.form');
@@ -141,7 +141,7 @@ describe('Validate > Initialisation > server-side errors', () => {
         const serverRenderedErrorMessage = 'Please enter between 2 and 8 characters';
         document.body.innerHTML = `<form class="form" method="post" action="">
             <label for="group1-1">Text (required, min 2 characters, max 8 characters)</label>
-            <input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="${defaults.messages.required()}" data-val-length-min="2" data-val-length-max="8" type="text">
+            <input id="group1-1" name="group1" data-val="true" data-val-length="Please enter between 2 and 8 characters" data-val-required="Required error message" data-val-length-min="2" data-val-length-max="8" type="text">
             <span class="text-danger field-validation-valid" data-valmsg-for="group1">${serverRenderedErrorMessage}</span>
         </form>`;
         const [ validator ] = await validate('.form');

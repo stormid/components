@@ -18,7 +18,7 @@ describe('Validate > Integration > api > validate > remote', () => {
         globalThis.XMLHttpRequest = window.XMLHttpRequest;
     });
 
-    it('should validate a form based on the HTML5 remote validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if the remote validation returns an error', async () => {
+    it('should validate a form based on the data-val remote validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering an error message if the remote validation returns an error', async () => {
  
         xhrMock.post('/api/validate', {
             status: 201,
@@ -52,7 +52,7 @@ describe('Validate > Integration > api > validate > remote', () => {
         assert.deepStrictEqual(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent, 'Remote error message');
     });
 
-    it('should validate a form based on the HTML5 remote validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering the error message if noe is returned from the remote validation API', async () => {
+    it('should validate a form based on the data-val remote validator returning false, staring realTimeValidation, focusing on first invalid field, and rendering the error message if noe is returned from the remote validation API', async () => {
  
         xhrMock.post('/api/validate', {
             status: 201,
@@ -80,7 +80,7 @@ describe('Validate > Integration > api > validate > remote', () => {
         assert.deepStrictEqual(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent, 'Error message from API');
     });
     
-    it('should validate a form based on the HTML5 remote validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if the remote validation returns an error via a GET request', async () => {
+    it('should validate a form based on the data-val remote validator returning false, starting realTimeValidation, focusing on first invalid field, and rendering an error message if the remote validation returns an error via a GET request', async () => {
  
         xhrMock.get('/api/validate?group1=Failure&group2=Value%202', {
             status: 201,

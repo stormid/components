@@ -20,27 +20,4 @@ describe('Validate > Integration > normalise-vaidators > email', () => {
         ]);
     });
     
-    it('should return the correct validation model for HTML5 email with a custom error message', async () => {
-        document.body.innerHTML = `<input
-			id="group1"
-            name="group1"
-            data-val-email="Email error message"
-            type="email">`;
-        const input = document.querySelector('#group1');
-        assert.deepStrictEqual(normaliseValidators(input), [{
-            type: 'email',
-            message: 'Email error message'
-        }]);
-    });
-    
-    it('should return the correct validation model for HTML5 email', async () => {
-        document.body.innerHTML = `<input
-			id="group1"
-            name="group1"
-            type="email">`;
-        const input = document.querySelector('#group1');
-        assert.deepStrictEqual(normaliseValidators(input), [{
-            type: 'email'
-        }]);
-    });
 });

@@ -33,7 +33,7 @@ describe('Validate > Integration > Submit', () => {
                 id="group1"
                 name="group1"
                 value="valid"
-                required>
+                data-val="true" data-val-required="This field is required">
             <button type="submit">Submit</button>
         </form>`;
 
@@ -46,7 +46,7 @@ describe('Validate > Integration > Submit', () => {
 
     it('should not leak a hidden input or mutate form.action when validate() is called via the API (no event)', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit" name="btn" value="v" formaction="/other">Submit</button>
         </form>`;
         const form = document.querySelector('form');
@@ -61,7 +61,7 @@ describe('Validate > Integration > Submit', () => {
 
     it('should clean up the hidden input and restore form.action after a real submit', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit" name="btn" value="v" formaction="/other">Submit</button>
         </form>`;
         const form = document.querySelector('form');
@@ -78,7 +78,7 @@ describe('Validate > Integration > Submit', () => {
 
     it('should not leave hidden inputs behind across repeated submits', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit" name="op" value="save">Save</button>
             <button type="submit" name="op" value="publish">Publish</button>
         </form>`;
@@ -93,7 +93,7 @@ describe('Validate > Integration > Submit', () => {
 
     it('should pass the submit button to the submit function', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit">Submit</button>
         </form>`;
         const form = document.querySelector('form');
@@ -109,7 +109,7 @@ describe('Validate > Integration > Submit', () => {
 
     it('should pass the submit button to the preSubmitHook', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit">Submit</button>
         </form>`;
         const form = document.querySelector('form');
@@ -124,7 +124,7 @@ describe('Validate > Integration > Submit', () => {
 
     it('should submit natively via the HTMLFormElement prototype if there is no submit function', async t => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <input type="submit" name="submit" value="Send">
         </form>`;
         const form = document.querySelector('form');
@@ -139,7 +139,7 @@ describe('Validate > Integration > Submit', () => {
 
     it('should restore the form if the submit function throws', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit" name="op" value="save" formaction="/save">Save</button>
         </form>`;
         const form = document.querySelector('form');
@@ -191,7 +191,7 @@ describe('Validate > Unit > DOM > getSubmitterEntries', () => {
 describe('Validate > Integration > Submit > Submit button', () => {
     it('should submit the name/value and formaction of the button that submitted the form, not other submit buttons', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit" name="op" value="save" formaction="/save">Save</button>
             <button type="submit" name="op" value="publish" formaction="/publish">Publish</button>
         </form>`;
@@ -207,7 +207,7 @@ describe('Validate > Integration > Submit > Submit button', () => {
 
     it('should keep the form action if the button that submitted the form has no formaction', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit" name="op" value="next">Next</button>
             <button type="submit" name="op" value="back" formaction="/back">Back</button>
         </form>`;
@@ -223,7 +223,7 @@ describe('Validate > Integration > Submit > Submit button', () => {
 
     it('should apply formmethod, formenctype and formtarget for the submit and restore the form after', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit" formmethod="get" formenctype="multipart/form-data" formtarget="_blank">Preview</button>
         </form>`;
         const form = document.querySelector('form');
@@ -246,7 +246,7 @@ describe('Validate > Integration > Submit > Submit button', () => {
 
     it('should apply an empty formaction, as the browser does, and restore the form action after', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit" formaction="">Submit</button>
         </form>`;
         const form = document.querySelector('form');
@@ -261,7 +261,7 @@ describe('Validate > Integration > Submit > Submit button', () => {
 
     it('should submit an empty value for a named button with no value attribute', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button name="op">Submit</button>
         </form>`;
         const form = document.querySelector('form');
@@ -275,7 +275,7 @@ describe('Validate > Integration > Submit > Submit button', () => {
 
     it('should submit zero coordinates for an image button', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <input type="image" name="pos" value="ignored" alt="Submit">
         </form>`;
         const form = document.querySelector('form');
@@ -289,7 +289,7 @@ describe('Validate > Integration > Submit > Submit button', () => {
 
     it('should not change the form if the submit event has no submit button', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit" name="op" value="save" formaction="/save">Save</button>
         </form>`;
         const form = document.querySelector('form');
@@ -304,7 +304,7 @@ describe('Validate > Integration > Submit > Submit button', () => {
 
     it('should apply each submit button after the preSubmitHook, so overlapping submissions do not interleave', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit" name="op" value="save" formaction="/save">Save</button>
             <button type="submit" name="op" value="publish" formaction="/publish">Publish</button>
         </form>`;
@@ -330,7 +330,7 @@ describe('Validate > Integration > Submit > formnovalidate', () => {
     it('should not validate or prevent the native submission if the submit button has formnovalidate', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
             <label for="group1">Label</label>
-            <input id="group1" name="group1" required>
+            <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
             <button type="submit" name="op" value="draft" formnovalidate>Save draft</button>
         </form>`;
         const form = document.querySelector('form');
@@ -348,7 +348,7 @@ describe('Validate > Integration > Submit > formnovalidate', () => {
     it('should call the submit function, without validating or calling the preSubmitHook, if the submit button has formnovalidate', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
             <label for="group1">Label</label>
-            <input id="group1" name="group1" required>
+            <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
             <button type="submit" name="op" value="draft" formaction="/draft" formnovalidate>Save draft</button>
         </form>`;
         const form = document.querySelector('form');
@@ -371,7 +371,7 @@ describe('Validate > Integration > Submit > formnovalidate', () => {
 
     it('should validate as normal when validate() is called via the API, even if the form has a formnovalidate button', async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" required>
+            <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
             <button type="submit" formnovalidate>Save draft</button>
         </form>`;
         const [ validator ] = validate(document.querySelector('form'));
@@ -388,7 +388,7 @@ describe('Validate > Integration > Submit > Errors', () => {
 
     it('should reject if the submit function throws', { timeout }, async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit">Submit</button>
         </form>`;
         const form = document.querySelector('form');
@@ -399,7 +399,7 @@ describe('Validate > Integration > Submit > Errors', () => {
 
     it('should reject if the submit function throws after the preSubmitHook', { timeout }, async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit">Submit</button>
         </form>`;
         const form = document.querySelector('form');
@@ -410,7 +410,7 @@ describe('Validate > Integration > Submit > Errors', () => {
 
     it('should reject without submitting if the preSubmitHook throws', { timeout }, async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit">Submit</button>
         </form>`;
         const form = document.querySelector('form');
@@ -425,7 +425,7 @@ describe('Validate > Integration > Submit > Errors', () => {
 
     it('should return a rejected promise, not throw, if the submit function throws for a formnovalidate submission', { timeout }, async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" required>
+            <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
             <button type="submit" formnovalidate>Save draft</button>
         </form>`;
         const form = document.querySelector('form');
@@ -441,17 +441,19 @@ describe('Validate > Integration > Submit > Errors', () => {
     it('should reject if rendering the errors throws', { timeout }, async () => {
         document.body.innerHTML = `<form method="post" action="/original">
             <label for="group1">Label</label>
-            <input id="group1" name="group1" required>
+            <input id="group1" name="group1" data-val="true" data-val-required="This field is required">
+            <span data-valmsg-for="group1"></span>
         </form>`;
         const form = document.querySelector('form');
-        const [ validator ] = validate(form, { messages: { required: throwError('Message failed') } });
+        const [ validator ] = validate(form);
+        form.querySelector('[data-valmsg-for]').appendChild = throwError('Render failed');
 
-        await assert.rejects(validator.validate(submitEvent(form, null)), /Message failed/);
+        await assert.rejects(validator.validate(submitEvent(form, null)), /Render failed/);
     });
 
     it('should resolve once the form has been submitted after the preSubmitHook', { timeout }, async () => {
         document.body.innerHTML = `<form method="post" action="/original">
-            <input id="group1" name="group1" value="valid" required>
+            <input id="group1" name="group1" value="valid" data-val="true" data-val-required="This field is required">
             <button type="submit">Submit</button>
         </form>`;
         const form = document.querySelector('form');

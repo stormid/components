@@ -82,6 +82,9 @@ export const DOTNET_CLASSNAMES = {
 
 export const GROUP_ATTRIBUTE = 'group';
 
+//shown in place of an empty data-val- error message, so a validator is never dropped and an error is never blank
+export const FALLBACK_ERROR_MESSAGE = 'This field is invalid.';
+
 export const TOKENS = {
     VALUE: '{{value}}'
 };

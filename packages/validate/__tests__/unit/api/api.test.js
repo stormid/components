@@ -2,7 +2,6 @@ import { describe, it, mock } from 'node:test';
 import assert from 'node:assert/strict';
 import validate from "../../../src/index.js";
 import { GROUP_ATTRIBUTE, DOTNET_CLASSNAMES } from "../../../src/lib/constants/index.js";
-import defaults from "../../../src/lib/defaults/index.js";
 
 describe("Validate > Integration > API > addGroup", () => {
 	it("should add a validation group", async () => {
@@ -18,12 +17,13 @@ describe("Validate > Integration > API > addGroup", () => {
 		const validator = validate("form")[0];
 
 		assert.deepStrictEqual(validator.getState().groups, {});
-		input.setAttribute("required", "required");
+		input.setAttribute("data-val", "true");
+		input.setAttribute("data-val-required", "This field is required");
 		validator.addGroup([input]);
 		assert.deepStrictEqual(validator.getState().groups, {
 			group1: {
 				serverErrorNode: false,
-				validators: [{ type: "required" }],
+				validators: [{ type: "required", message: "This field is required" }],
 				fields: [input],
 				valid: false,
 			},
@@ -44,7 +44,8 @@ describe("Validate > Integration > API > addGroup", () => {
 		const validator = validate("form")[0];
 
 		assert.deepStrictEqual(validator.getState().groups, {});
-		input.setAttribute("required", "required");
+		input.setAttribute("data-val", "true");
+		input.setAttribute("data-val-required", "This field is required");
 		validator.addGroup([input]);
 		console.log(validator.getState().errors);
 		assert.deepStrictEqual(validator.getState().errors, {
@@ -79,7 +80,7 @@ describe("Validate > Integration > API > removeGroup", () => {
             <input
                 id="group1-1"
                 name="group1"
-                required
+                data-val="true" data-val-required="This field is required"
                 value=""
                 type="text" />
         </form>`;
@@ -89,12 +90,12 @@ describe("Validate > Integration > API > removeGroup", () => {
 		assert.deepStrictEqual(validator.getState().groups, {
 			group1: {
 				serverErrorNode: false,
-				validators: [{ type: "required" }],
+				validators: [{ type: "required", message: "This field is required" }],
 				fields: [input],
 				valid: false,
 			},
 		});
-		input.removeAttribute("required");
+		input.removeAttribute("data-val-required");
 		validator.removeGroup("group1");
 		assert.deepStrictEqual(validator.getState().groups, {});
 	});
@@ -107,7 +108,7 @@ describe("Validate > Integration > API > validateGroup", () => {
             <input
                 id="group1-1"
                 name="group1"
-                required
+                data-val="true" data-val-required="This field is required"
                 value=""
                 type="text" />
         </form>`;
@@ -115,7 +116,7 @@ describe("Validate > Integration > API > validateGroup", () => {
 		const validator = validate("form")[0];
 		await validator.validateGroup("group1");
 
-		assert.deepStrictEqual(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent, defaults.messages.required());
+		assert.deepStrictEqual(document.querySelector(`.${DOTNET_CLASSNAMES.ERROR}`).textContent, 'This field is required');
 
 		input.value = "test";
 		await validator.validateGroup("group1");
@@ -131,7 +132,7 @@ describe("Validate > Integration > API > addMethod", () => {
                 id="group1-1"
                 name="group1"
                 value=""
-                required
+                data-val="true" data-val-required="This field is required"
                 type="text" />
         </form>`;
 		const input = document.querySelector("#group1-1");
@@ -140,7 +141,7 @@ describe("Validate > Integration > API > addMethod", () => {
 		assert.deepStrictEqual(validator.getState().groups, {
 			group1: {
 				serverErrorNode: false,
-				validators: [{ type: "required" }],
+				validators: [{ type: "required", message: "This field is required" }],
 				fields: [input],
 				valid: false,
 			},
@@ -152,7 +153,7 @@ describe("Validate > Integration > API > addMethod", () => {
 		assert.deepStrictEqual(validator.getState().groups, {
 			group1: {
 				serverErrorNode: false,
-				validators: [{ type: "required" }, { type: "custom", method, message }],
+				validators: [{ type: "required", message: "This field is required" }, { type: "custom", method, message }],
 				fields: [input],
 				valid: false,
 			},
@@ -166,7 +167,7 @@ describe("Validate > Integration > API > addMethod", () => {
                 id="group1-1"
                 name="group1"
                 value=""
-                required
+                data-val="true" data-val-required="This field is required"
                 type="text" />
         </form>`;
 		const input = document.querySelector("#group1-1");
@@ -176,7 +177,7 @@ describe("Validate > Integration > API > addMethod", () => {
 		assert.deepStrictEqual(validator.getState().groups, {
 			group1: {
 				serverErrorNode: false,
-				validators: [{ type: "required" }],
+				validators: [{ type: "required", message: "This field is required" }],
 				fields: [input],
 				valid: false,
 			},
@@ -188,7 +189,7 @@ describe("Validate > Integration > API > addMethod", () => {
 		assert.deepStrictEqual(validator.getState().groups, {
 			group1: {
 				serverErrorNode: false,
-				validators: [{ type: "required" }],
+				validators: [{ type: "required", message: "This field is required" }],
 				fields: [input],
 				valid: false,
 			},
@@ -204,7 +205,7 @@ describe("Validate > Integration > API > addMethod", () => {
                 name="group1"
                 data-val-${GROUP_ATTRIBUTE}="groupX"
                 value=""
-                required
+                data-val="true" data-val-required="This field is required"
                 type="text" />
         </form>`;
 		const input = document.querySelector("#group1-1");
@@ -213,7 +214,7 @@ describe("Validate > Integration > API > addMethod", () => {
 		assert.deepStrictEqual(validator.getState().groups, {
 			groupX: {
 				serverErrorNode: false,
-				validators: [{ type: "required" }],
+				validators: [{ type: "required", message: "This field is required" }],
 				fields: [input],
 				valid: false,
 			},
@@ -225,7 +226,7 @@ describe("Validate > Integration > API > addMethod", () => {
 		assert.deepStrictEqual(validator.getState().groups, {
 			groupX: {
 				serverErrorNode: false,
-				validators: [{ type: "required" }],
+				validators: [{ type: "required", message: "This field is required" }],
 				fields: [input],
 				valid: false,
 			},
@@ -239,7 +240,7 @@ describe("Validate > Integration > API > addMethod", () => {
                 id="group1-1"
                 name="group1"
                 value=""
-                required
+                data-val="true" data-val-required="This field is required"
                 type="text" />
         </form>`;
 		const input = document.querySelector("#group1-1");
@@ -248,7 +249,7 @@ describe("Validate > Integration > API > addMethod", () => {
 		assert.deepStrictEqual(validator.getState().groups, {
 			group1: {
 				serverErrorNode: false,
-				validators: [{ type: "required" }],
+				validators: [{ type: "required", message: "This field is required" }],
 				fields: [input],
 				valid: false,
 			},
@@ -260,7 +261,7 @@ describe("Validate > Integration > API > addMethod", () => {
 		assert.deepStrictEqual(validator.getState().groups, {
 			group1: {
 				serverErrorNode: false,
-				validators: [{ type: "required" }],
+				validators: [{ type: "required", message: "This field is required" }],
 				fields: [input],
 				valid: false,
 			},
