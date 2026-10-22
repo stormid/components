@@ -80,6 +80,7 @@ Multiple validators can be used on a single field. Custom validators can be adde
   - [Errors](#errors)
     - [Error message container](#error-message-container)
     - [Error messages](#error-messages)
+    - [Error summary](#error-summary)
       - [Including values in error messages](#including-values-in-error-messages)
   - [Options](#options)
   - [API](#api)
@@ -313,6 +314,32 @@ To include the user input value in your error message, place a token "{{value}}"
 If a validation group contains more than one field, the values of these will be returned as a comma seperated list within the message.  For example:  "{{value}} are not valid inputs" becomes "test1, test2 are not valid inputs".
 
 
+### Error summary
+With the `errorSummary` option enabled, an error summary is rendered immediately before the form when it is submitted with errors, following the [GOV.UK](https://design-system.service.gov.uk/components/error-summary/) and [Scottish Government](https://designsystem.gov.scot/components/error-summary) design system patterns. It is shown alongside the inline error messages, not instead of them, and uses the same wording.
+
+```
+<div class="error-summary">
+    <div role="alert">
+        <h2 class="error-summary__title">There is a problem</h2>
+        <ul class="error-summary__list">
+            <li><a href="#fname">First name must not be empty</a></li>
+            <li><a href="#contact-email">Select a contact preference</a></li>
+        </ul>
+    </div>
+</div>
+```
+
+`role="alert"` is on an inner element rather than the focused summary, as an alert that is also focused can have its announcement cut short.
+
+- On submit, focus moves to the summary instead of the first invalid field. A `tabindex="-1"` is added to make it focusable, and removed when it loses focus. If the summary can't be rendered (the form has no parent node), focus moves to the first invalid field
+- Errors are listed in document order, each linking to the first field in its group with an id (e.g. the first radio button in a group). Following a link focuses the field and scrolls its label into view, or the group's legend for radio buttons and checkboxes, and for other fields close to the legend (e.g. a date's day, month and year)
+- During real-time validation (and `validateGroup` or `removeGroup`), errors that are fixed are removed from the summary, and the summary is removed once none remain. If focus is on a link that is removed it moves to the next link, or to the form when the summary is removed. The summary isn't otherwise changed, as changing an alert's content re-announces it: new errors and changed messages are shown inline, and in the summary on the next submit
+- The summary is removed when the form is submitted without errors, reset, or the instance is destroyed
+
+A server-rendered summary immediately before the form, with the `error-summary` class, is taken over: it's replaced on submit and removed on reset, and its links to a field in a validation group are removed when that group is fixed.
+
+The summary is placed before the form, so put the form at the top of the page's main content (below any back link or breadcrumbs) for the summary to be where users expect it. Consider also prefixing the page `<title>` with "Error: " when there are errors.
+
 ## Submit buttons
 
 A valid form is submitted by the library rather than the browser, so the library reproduces what the browser would do for the submit button that was used:
@@ -341,6 +368,8 @@ Pressing Enter in a field submits the form with its first submit button in docum
 {
     preSubmitHook: undefined, // optional function, called on validation pass before the form is submitted, with the submit button that was used, if any; if it throws, the form is not submitted
     submit: undefined, // optional function; when provided it is called instead of form.submit() (e.g. for async submissions), with the submit button that was used, if any
+    errorSummary: false, // render an error summary above the form on submit, see Error summary
+    errorSummaryTitle: 'There is a problem' // the error summary heading
 }
 ```
 

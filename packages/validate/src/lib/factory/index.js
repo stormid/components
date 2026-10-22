@@ -4,6 +4,7 @@ import reducers from '../reducers/index.js';
 import { getInitialState } from '../validator/index.js';
 import { validate }  from './validate.js';
 import { clearErrors, addAXAttributes }  from '../dom/index.js';
+import { adoptErrorSummary, removeErrorSummary } from '../dom/error-summary.js';
 import { addMethod } from './add-method.js';
 import { addGroup, validateGroup, removeGroup } from './group.js';
 
@@ -22,9 +23,9 @@ export default (form, settings) => {
     //Per-group real-time listeners get their own controllers (see initRealTimeValidation) so a
     //single group can be torn down by removeGroup.
     const controller = new AbortController();
-    store.update(reducers[ACTIONS.SET_INITIAL_STATE]({ ...getInitialState(form, settings), controller }), [ addAXAttributes ]);
+    store.update(reducers[ACTIONS.SET_INITIAL_STATE]({ ...getInitialState(form, settings), controller }), [ addAXAttributes, adoptErrorSummary ]);
     form.addEventListener('submit', validate(store), { signal: controller.signal });
-    form.addEventListener('reset', () => store.update(reducers[ACTIONS.CLEAR_ERRORS](store.getState()), [ clearErrors ]), { signal: controller.signal });
+    form.addEventListener('reset', () => store.update(reducers[ACTIONS.CLEAR_ERRORS](store.getState()), [ clearErrors, removeErrorSummary ]), { signal: controller.signal });
 
     return {
         getState: store.getState,
@@ -40,6 +41,8 @@ export default (form, settings) => {
             Object.keys(state.groups).forEach(groupName => {
                 if (state.groups[groupName].controller) state.groups[groupName].controller.abort();
             });
+            //the summary would no longer be kept up to date
+            removeErrorSummary(state);
         }
     };
 };
