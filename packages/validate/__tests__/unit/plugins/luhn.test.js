@@ -12,7 +12,7 @@ describe('Validate > Integration > Plugins > Luhn', () => {
                 id="group1-1"
                 name="group1"
                 value=""
-                required
+                data-val="true" data-val-required="This field is required"
                 type="text" />
         </form>`;
         // const form = document.querySelector('.form');
@@ -22,7 +22,7 @@ describe('Validate > Integration > Plugins > Luhn', () => {
         assert.deepStrictEqual(validator.getState().groups, {
             group1: {
                 serverErrorNode: false,
-                validators: [{ type: 'required' }],
+                validators: [{ type: 'required', message: 'This field is required' }],
                 fields: [input],
                 valid: false
             }
@@ -33,7 +33,7 @@ describe('Validate > Integration > Plugins > Luhn', () => {
         assert.deepStrictEqual(validator.getState().groups, {
             group1: {
                 serverErrorNode: false,
-                validators: [{ type: 'required' }, { type: 'custom', method: luhn, message }],
+                validators: [{ type: 'required', message: 'This field is required' }, { type: 'custom', method: luhn, message }],
                 fields: [input],
                 valid: false
             }
@@ -94,7 +94,7 @@ describe('Validate > Integration > Plugins > Luhn', () => {
                 id="group1-1"
                 name="group1"
                 value=""
-                required
+                data-val="true" data-val-required="This field is required"
                 type="text" />
         </form>`;
         const [ validator ] = validate('form');

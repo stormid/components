@@ -10,9 +10,9 @@ import { postValidation, submitForm } from '../validator/post-validation.js';
 import { initRealTimeValidation } from '../validator/real-time-validation.js';
 import {
     clearErrors,
-    renderErrors,
-    focusFirstInvalidField
+    renderErrors
 }  from '../dom/index.js';
+import { renderErrorSummary, removeErrorSummary, focusErrorSummary } from '../dom/error-summary.js';
 
 /**
  * Returns a function that extracts the validityState of the entire form
@@ -52,7 +52,7 @@ export const validate = store => event => {
     return getValidityState(groups)
         .then(validityState => {
             if (isFormValid(validityState)) {
-                store.update(reducers[ACTIONS.CLEAR_ERRORS](store.getState()), [clearErrors]);
+                store.update(reducers[ACTIONS.CLEAR_ERRORS](store.getState()), [clearErrors, removeErrorSummary]);
                 return postValidation(event, store);
             }
 
@@ -64,7 +64,8 @@ export const validate = store => event => {
                         valid: validityState[i].reduce(reduceGroupValidityState, true),
                         errorMessages: validityState[i].reduce(reduceErrorMessages(group, state), [])
                     }, acc), {})),
-                [renderErrors, focusFirstInvalidField]
+                //focus moves to the error summary, or without one to the first invalid field
+                [renderErrors, renderErrorSummary, focusErrorSummary]
             );
 
             return false;

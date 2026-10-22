@@ -80,7 +80,17 @@ export const DOTNET_CLASSNAMES = {
     ERROR: 'error-message'
 };
 
+//classNames of the error summary
+export const ERROR_SUMMARY_CLASSNAMES = {
+    SUMMARY: 'error-summary',
+    TITLE: 'error-summary__title',
+    LIST: 'error-summary__list'
+};
+
 export const GROUP_ATTRIBUTE = 'group';
+
+//shown in place of an empty data-val- error message, so a validator is never dropped and an error is never blank
+export const FALLBACK_ERROR_MESSAGE = 'This field is invalid.';
 
 export const TOKENS = {
     VALUE: '{{value}}'

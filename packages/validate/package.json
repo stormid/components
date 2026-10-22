@@ -22,8 +22,7 @@
     "unobtrustive",
     "constraint",
     "dotnetcore",
-    ".NetMVC",
-    "HTML5"
+    ".NetMVC"
   ],
   "scripts": {
     "build": "microbundle --name Validate",

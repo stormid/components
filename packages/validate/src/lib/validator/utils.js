@@ -20,6 +20,9 @@ export const groupIsDisabled = fields => fields.reduce((acc, field) => {
     return acc;
 }, false);
 
+//an error message must be a non-empty, non-whitespace string, otherwise the rendered error would be blank
+export const isMessage = message => typeof message === 'string' && message.trim() !== '';
+
 export const hasValue = input => (input.value !== undefined && input.value !== null && input.value.length > 0);
 
 export const groupValueReducer = (acc, input) => {

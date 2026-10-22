@@ -42,16 +42,6 @@ export default {
     ),
     equalto: paramMethod('equalto', params => (acc, input) => acc && params.other.reduce((subgroupAcc, subgroup) =>
         subgroupAcc && extractValueFromGroup(subgroup) === input.value, true)),
-    //HTML5 pattern matches against the whole value (implicitly anchored per the HTML spec),
-    //unlike the unanchored .NET regex adaptor below. The non-capturing group keeps alternations
-    //(e.g. "cat|dog") anchored as a whole rather than becoming "^cat" | "dog$".
-    pattern: paramMethod('pattern', params => {
-        //accept a string (the pattern attribute) or a RegExp, preserving any flags
-        const source = params.regex instanceof RegExp ? params.regex.source : params.regex;
-        const flags = params.regex instanceof RegExp ? params.regex.flags : undefined;
-        const regex = RegExp(`^(?:${source})$`, flags);
-        return (acc, input) => acc && regex.test(input.value);
-    }),
     regex: paramMethod('regex', params => (acc, input) => acc && RegExp(params.pattern).test(input.value)),
     min: paramMethod('min', params => (acc, input) => acc && !isNaN(parseInt(input.value, 10)) && +input.value >= +params.min),
     max: paramMethod('max', params => (acc, input) => acc && !isNaN(parseInt(input.value, 10)) && +input.value <= +params.max),

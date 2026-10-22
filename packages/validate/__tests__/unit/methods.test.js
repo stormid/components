@@ -366,52 +366,6 @@ describe('Validate > Unit > Validator > methods > equalto', () => {
     
 });
 
-describe('Validate > Unit > Validator > methods > pattern', () => {
-
-    it('should return true for group with no value that is not required', () => {
-        document.body.innerHTML = `<form><input type="text" name="field" id="field" value="" /></form>`;
-        const group = {
-            validators: [
-                {
-                    type: 'pattern',
-                    params: { regex: /^(pass)$/ }
-                }
-            ],
-            fields: [document.querySelector('#field')]
-        };
-        assert.deepStrictEqual(Methods.pattern(group), true);
-    });
-
-    it('should return false for group with a non-matching value', () => {
-        document.body.innerHTML = `<form><input type="text" name="field" id="field" value="fail" /></form>`;
-        const group = {
-            validators: [
-                {
-                    type: 'pattern',
-                    params: { regex: /^(pass)$/ }
-                }
-            ],
-            fields: [document.querySelector('#field')]
-        };
-        assert.deepStrictEqual(Methods.pattern(group), false);
-    });
-
-    it('should return false for group with a matching value', () => {
-        document.body.innerHTML = `<form><input type="text" name="field" id="field" value="pass" /></form>`;
-        const group = {
-            validators: [
-                {
-                    type: 'pattern',
-                    params: { regex: /^(pass)$/ }
-                }
-            ],
-            fields: [document.querySelector('#field')]
-        };
-        assert.deepStrictEqual(Methods.pattern(group), true);
-    });
-    
-});
-
 describe('Validate > Unit > Validator > methods > regex', () => {
 
     it('should return true for group with no value that is not required', () => {
