@@ -24,6 +24,13 @@ test.describe('Validate > Error summary', { tag: '@all'}, () => {
 	});
 
 	test('Should focus the field and bring its legend into view when a link is followed', async ({ page }) => {
+		//push the question below the fold, so following its link has to scroll it into view
+		await page.evaluate(() => {
+			const spacer = document.createElement('div');
+			spacer.style.height = '150vh';
+			const fieldset = document.getElementById('contact-email').closest('fieldset');
+			fieldset.parentNode.insertBefore(spacer, fieldset);
+		});
 		await page.click('#submitTest');
 		const legend = page.locator('legend', { hasText: 'Contact preference' });
 		await page.evaluate(() => window.scrollTo(0, 0));
