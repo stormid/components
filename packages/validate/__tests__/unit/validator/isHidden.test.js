@@ -7,13 +7,13 @@ describe('Validate > Integration > assembleValidationGroup > With hidden element
         document.body.innerHTML = `<input
 			id="group1-1"
             name="group1"
-            required
+            data-val="true" data-val-required="This field is required"
             value="test"
             type="text">
             <input
 			id="group1-2"
             name="group1"
-            required
+            data-val="true" data-val-required="This field is required"
             value=""
             type="hidden">`;
         const inputs = [].slice.call(document.querySelectorAll('[name="group1"]'));
@@ -26,13 +26,13 @@ describe('Validate > Integration > assembleValidationGroup > With hidden element
         document.body.innerHTML = `<input
 			id="group1-1"
             name="group1"
-            required
+            data-val="true" data-val-required="This field is required"
             value="test"
             type="text">
             <input
 			id="group1-2"
             name="group1"
-            required
+            data-val="true" data-val-required="This field is required"
             value=""
             type="hidden">`;
         const inputs = [].slice.call(document.querySelectorAll('[name="group1"]'));
@@ -49,13 +49,13 @@ describe('Validate > Integration > assembleValidationGroup > With hidden element
         document.body.innerHTML = `<input
 			id="group1-1"
             name="group1"
-            required
+            data-val="true" data-val-required="This field is required"
             value=""
             type="text">
             <input
 			id="group1-2"
             name="group1"
-            required
+            data-val="true" data-val-required="This field is required"
             value=""
             type="hidden">`;
         const inputs = [].slice.call(document.querySelectorAll('[name="group1"]'));

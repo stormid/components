@@ -3,42 +3,6 @@ import assert from 'node:assert/strict';
 import { validate, assembleValidationGroup } from '../../../src/lib/validator/index.js';
 
 describe('Validate > Integration > validator > regex/pattern', () => {
-    it('should return the validityState false for HTML5 pattern validator with non-matching value', async () => {
-        document.body.innerHTML = `<input
-			id="group1"
-            name="group1"
-            pattern="^(pass)$"
-            value="fail"
-			type="text">`;
-        const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input).group1;
-        assert.deepStrictEqual(await validate(group, group.validators[0]), false);
-    });
-    
-    it('should return the validityState false for HTML5 pattern validator with matching value', async () => {
-        document.body.innerHTML = `<input
-			id="group1"
-            name="group1"
-            pattern="^(pass)$"
-            value="pass"
-			type="text">`;
-        const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input).group1;
-        assert.deepStrictEqual(await validate(group, group.validators[0]), true);
-    });
-
-    it('should return the validityState true for non-required empty HTML5 pattern validator field', async () => {
-        document.body.innerHTML = `<input
-            id="group1"
-            name="group1"
-            pattern="^(pass)$"
-            value=""
-			type="text">`;
-        const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input).group1;
-        assert.deepStrictEqual(await validate(group, group.validators[0]), true);
-    });
-
     it('should return the validityState false for data-val regex validator with non-matching value', async () => {
         document.body.innerHTML = `<input
 			id="group1"
@@ -79,42 +43,6 @@ describe('Validate > Integration > validator > regex/pattern', () => {
         const input = document.querySelector('#group1');
         const group = assembleValidationGroup({}, input).group1;
         assert.deepStrictEqual(await validate(group, group.validators[0]), true);
-    });
-
-    it('should anchor an unanchored HTML5 pattern to the whole value (partial match is invalid)', async () => {
-        document.body.innerHTML = `<input
-			id="group1"
-            name="group1"
-            pattern="[a-z]+"
-            value="abc123"
-			type="text">`;
-        const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input).group1;
-        assert.deepStrictEqual(await validate(group, group.validators[0]), false);
-    });
-
-    it('should pass an unanchored HTML5 pattern when the whole value matches', async () => {
-        document.body.innerHTML = `<input
-			id="group1"
-            name="group1"
-            pattern="[a-z]+"
-            value="abc"
-			type="text">`;
-        const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input).group1;
-        assert.deepStrictEqual(await validate(group, group.validators[0]), true);
-    });
-
-    it('should anchor a top-level alternation in an HTML5 pattern as a whole', async () => {
-        document.body.innerHTML = `<input
-			id="group1"
-            name="group1"
-            pattern="cat|dog"
-            value="dogs"
-			type="text">`;
-        const input = document.querySelector('#group1');
-        const group = assembleValidationGroup({}, input).group1;
-        assert.deepStrictEqual(await validate(group, group.validators[0]), false);
     });
 
 });

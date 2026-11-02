@@ -10,6 +10,7 @@ import {
     clearError,
     renderError
 }  from '../dom/index.js';
+import { updateErrorSummary } from '../dom/error-summary.js';
 
 /**
  * Starts real-time validation on each group, adding an eventListener to each field
@@ -34,7 +35,7 @@ export const initRealTimeValidation = store => {
                 if (!current.groups[groupName] || (current.controller && current.controller.signal.aborted)) return;
                 if (res.reduce(reduceGroupValidityState, true)) {
                     if (!current.groups[groupName].valid && current.errors[groupName]) {
-                        store.update(reducers[ACTIONS.CLEAR_ERROR](current, groupName), [ clearError(groupName) ]);
+                        store.update(reducers[ACTIONS.CLEAR_ERROR](current, groupName), [ clearError(groupName), updateErrorSummary ]);
                     }
                 } else {
                     store.update(
@@ -43,7 +44,7 @@ export const initRealTimeValidation = store => {
                                 group: groupName,
                                 errorMessages: res.reduce(reduceErrorMessages(groupName, store.getState()), [])
                             }),
-                        [ renderError(groupName) ]
+                        [ renderError(groupName), updateErrorSummary ]
                     );
                 }
             });

@@ -1,5 +1,6 @@
 import { ACTIONS, GROUP_ATTRIBUTE } from '../constants/index.js';
 import reducers from '../reducers/index.js';
+import { isMessage } from '../validator/utils.js';
 
 /**
  * Adds a custom validation method to the validation model, used via the API
@@ -7,11 +8,11 @@ import reducers from '../reducers/index.js';
  * 
  * @param groupName [String] The name attribute shared by the DOM nodes in the group
  * @param method [Function] The validation method (function that returns true or false) that is called on the group
- * @param message [String] Te error message displayed if the validation method returns false
+ * @param message [String] The error message displayed if the validation method returns false, must not be empty
  * 
  */
 export const addMethod = store => (groupName, method, message, fields) => {
-    const hasRequiredArgs = groupName !== undefined && method !== undefined && message !== undefined;
+    const hasRequiredArgs = groupName !== undefined && method !== undefined && isMessage(message);
     //the group must be resolvable to fields: already tracked in state, matchable by name or
     //data-val-group in the DOM, or supplied explicitly via the fields argument.
     const groupExists = hasRequiredArgs && !!store.getState().groups[groupName];

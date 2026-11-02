@@ -7,14 +7,16 @@ import {
     domNodesFromCommaList,
     groupIsDisabled,
     findErrors,
-    groupIsAllHidden
+    groupIsAllHidden,
+    isMessage
 } from './utils.js';
 import {
     DOTNET_ADAPTORS,
     DOTNET_PARAMS,
     DOTNET_ERROR_SPAN_DATA_ATTRIBUTE,
     DOM_SELECTOR_PARAMS,
-    GROUP_ATTRIBUTE
+    GROUP_ATTRIBUTE,
+    FALLBACK_ERROR_MESSAGE
 } from '../constants/index.js';
 
 /**
@@ -49,6 +51,22 @@ export const extractParams = (input, adaptor) => DOTNET_PARAMS[adaptor]
     : false;
 
 /**
+ * Returns the error message of a data-val- validator attribute. An empty message is an authoring error:
+ * the validator is kept (so e.g. a required field stays required) with a generic message rather than a blank one
+ * 
+ * @param input [DOM node]
+ * @param adaptor [String] .NET MVC data-attribute that identifies validator
+ * 
+ * @return message [String]
+ */
+const resolveMessage = (input, adaptor) => {
+    const message = input.getAttribute(`data-val-${adaptor}`);
+    if (isMessage(message)) return message;
+    console.warn(`Empty data-val-${adaptor} error message on field '${input.getAttribute('name')}', using '${FALLBACK_ERROR_MESSAGE}'.`);
+    return FALLBACK_ERROR_MESSAGE;
+};
+
+/**
  * Reducer that takes all known .NET MVC adaptors (data-attributes that specify a validation method that should be applied to the node)
  * and checks against a DOM node for matches, returning an array of validators
  * 
@@ -60,67 +78,20 @@ export const extractParams = (input, adaptor) => DOTNET_PARAMS[adaptor]
  *                              params [Object] (optional) 
  */
 export const extractDataValValidators = input => DOTNET_ADAPTORS.reduce((validators, adaptor) =>
-    !input.getAttribute(`data-val-${adaptor}`)
+    !input.hasAttribute(`data-val-${adaptor}`)
         ? validators
         : [...validators,
             Object.assign({
                 type: adaptor,
-                message: input.getAttribute(`data-val-${adaptor}`) },
+                message: resolveMessage(input, adaptor) },
             extractParams(input, adaptor)
             )
         ],
 []);
 
 /**
- * Looks for a data-val attribute matching the validator type and returns the value
- * 
- * @param input [DOM node]
- * @param type [String]
- * 
- * @return [Object] Error message or empty
- */
-const resolveMessages = (input, type) => input.getAttribute(`data-val-${type}`) ? { message: input.getAttribute(`data-val-${type}`) } : {};
-
-/**
- * Checks attributes on an input to generate an array of validators the attributes describe
- * 
- * @param input [DOM node]
- * 
- * @return validators [Array]
- */
-export const extractAttrValidators = input => {
-    let validators = [];
-    //required via either attribute, unless that attribute is explicitly "false".
-    //Each attribute is checked independently - a prior OR here meant required="false"
-    //was still treated as required whenever aria-required was absent.
-    const isRequired = input.hasAttribute('required') && input.getAttribute('required') !== 'false';
-    const isAriaRequired = input.hasAttribute('aria-required') && input.getAttribute('aria-required') !== 'false';
-    if (isRequired || isAriaRequired){
-        validators.push({ type: 'required', ...resolveMessages(input, 'required') } );
-    }
-    if (input.getAttribute('type') === 'email') validators.push({ type: 'email', ...resolveMessages(input, 'email') });
-    if (input.getAttribute('type') === 'url') validators.push({ type: 'url', ...resolveMessages(input, 'url') });
-    if (input.getAttribute('type') === 'number') validators.push({ type: 'number', ...resolveMessages(input, 'number') });
-    if ((input.getAttribute('minlength') && input.getAttribute('minlength') !== 'false')){
-        validators.push({ type: 'minlength', params: { min: input.getAttribute('minlength') }, ...resolveMessages(input, 'minlength') });
-    }
-    if ((input.getAttribute('maxlength') && input.getAttribute('maxlength') !== 'false')){
-        validators.push({ type: 'maxlength', params: { max: input.getAttribute('maxlength') }, ...resolveMessages(input, 'maxlength') });
-    }
-    if ((input.getAttribute('min') && input.getAttribute('min') !== 'false')){
-        validators.push({ type: 'min', params: { min: input.getAttribute('min') }, ...resolveMessages(input, 'min') });
-    }
-    if ((input.getAttribute('max') && input.getAttribute('max') !== 'false')){
-        validators.push({ type: 'max', params: { max: input.getAttribute('max') }, ...resolveMessages(input, 'max') });
-    }
-    if ((input.getAttribute('pattern') && input.getAttribute('pattern') !== 'false')){
-        validators.push({ type: 'pattern', params: { regex: input.getAttribute('pattern') }, ...resolveMessages(input, 'pattern') });
-    }
-    return validators;
-};
-
-/**
- * Takes an input and returns the array of validators based on either .NET MVC data-val- or HTML5 attributes
+ * Takes an input and returns the array of validators described by its .NET MVC data-val- attributes.
+ * Fields without data-val="true" have no validators; native constraint attributes (required, pattern, etc.) are not read.
  * 
  * @param input [DOM node]
  * 
@@ -128,7 +99,7 @@ export const extractAttrValidators = input => {
  */
 export const normaliseValidators = input => input.getAttribute('data-val') === 'true'
     ? extractDataValValidators(input)
-    : extractAttrValidators(input);
+    : [];
 
 /**
  * Calls a validation method against an input group
@@ -180,35 +151,16 @@ export const assembleValidationGroup = (acc, input) => {
 };
 
 /**
- * Returns an error message property of the validator Object that has returned false or the corresponding default message
- * 
- * @param validator [Object] 
- * 
- * @return message [String] error message
- * 
- */
-export const extractErrorMessage = (messages, validator) => {
-    if (validator.message) return validator.message;
-    const resolveMessage = messages[validator.type];
-    //fall back to a generic message rather than throwing when a validator type has no default
-    //(data-val validators always carry a message; this guards direct/programmatic use)
-    return typeof resolveMessage === 'function'
-        ? resolveMessage(validator.params !== undefined ? validator.params : null)
-        : 'This field is invalid.';
-};
-
-/**
  * Returns a reducer that reduces the resolved response from an array of validation Promises performed against a group
- * into an array of error messages or an empty array
+ * into an array of error messages or an empty array.
+ * A message returned by the validation method (e.g. from a remote API) is used if it is a non-empty string, otherwise the validator's message
  * 
  * @return error messages [Array]
  * 
  */
 export const reduceErrorMessages = (group, state) => (acc, validity, j) => validity === true
     ? acc
-    : [...acc, typeof validity === 'boolean'
-        ? extractErrorMessage(state.settings.messages, state.groups[group].validators[j])
-        : validity];
+    : [...acc, isMessage(validity) ? validity : state.groups[group].validators[j].message];
 
 /**
  * From all groups found in the current form, thosethat do not require validation (have no assocated validators) are removed

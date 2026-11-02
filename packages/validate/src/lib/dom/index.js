@@ -315,7 +315,7 @@ export const applySubmitter = (form, submitter) => {
 };
 
 /**
- * Add aria-required attribute to fields if appropriate (has required/data-val-required, is not a checkbox or radio group) 
+ * Add aria-required attribute to fields if appropriate (has data-val-required, is not a checkbox or radio group) 
  * 
  * @param fields [Array of DOMElements]
  * 
@@ -324,7 +324,7 @@ export const applySubmitter = (form, submitter) => {
 export const addAriaRequired = fields => {
     fields.forEach(field => {
         if (
-            (field.hasAttribute('required') || field.hasAttribute('data-val-required'))
+            field.hasAttribute('data-val-required')
             && ((field.getAttribute('type') !== 'radio' && field.getAttribute('type') !== 'checkbox')
                 || (field.getAttribute('type') === 'checkbox' && fields.length === 1))
         ) {

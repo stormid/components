@@ -6,6 +6,7 @@ import {
     reduceErrorMessages } from '../validator/index.js';
 import { initRealTimeValidation } from '../validator/real-time-validation.js';
 import { renderError, clearError, addAXAttributes } from '../dom/index.js';
+import { updateErrorSummary } from '../dom/error-summary.js';
 import { findErrors } from '../validator/utils.js';
 import { ACTIONS } from '../constants/index.js';
 import reducers from '../reducers/index.js';
@@ -51,12 +52,12 @@ export const validateGroup = store => groupName => new Promise(resolve => {
                         group: groupName,
                         errorMessages: res.reduce(reduceErrorMessages(groupName, store.getState()), [])
                     }),
-                    [renderError(groupName)]
+                    [renderError(groupName), updateErrorSummary]
                 );
                 return resolve(false);
             }
             if (!current.groups[groupName].valid && current.errors[groupName]) {
-                store.update(reducers[ACTIONS.CLEAR_ERROR](current, groupName), [clearError(groupName)]);
+                store.update(reducers[ACTIONS.CLEAR_ERROR](current, groupName), [clearError(groupName), updateErrorSummary]);
             }
             return resolve(true);
         });
@@ -74,5 +75,5 @@ export const removeGroup = store => groupName => {
     //detach the group's real-time listeners before dropping it from state
     if (state.groups[groupName] && state.groups[groupName].controller) state.groups[groupName].controller.abort();
     if (state.errors[groupName]) clearError(groupName)(state);
-    store.update(reducers[ACTIONS.REMOVE_GROUP](store.getState(), groupName));
+    store.update(reducers[ACTIONS.REMOVE_GROUP](store.getState(), groupName), [updateErrorSummary]);
 };

@@ -12,7 +12,7 @@ describe('Validate > Integration > api > validate > bypass disabled fields', () 
                 name="group1"
                 value=""
                 type="text"
-                required
+                data-val="true" data-val-required="This field is required"
                 disabled
             />
             <label id="group1-1-label" for="group1-1">group1</label>
@@ -21,7 +21,7 @@ describe('Validate > Integration > api > validate > bypass disabled fields', () 
                 name="group2"
                 value="Test"
                 type="text"
-                required
+                data-val="true" data-val-required="This field is required"
             />
         </form>`;
         const [ validator ] = validate('form');
