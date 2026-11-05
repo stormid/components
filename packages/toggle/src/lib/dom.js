@@ -59,7 +59,7 @@ export const initUI = store => () => {
 export const toggle = store => (silent = false) => {
     //broadcast the open/close event, unless closing silently during destroy(): a teardown-driven
     //toggle.close is indistinguishable from a genuine one to listeners
-    const effects = [ toggleAttributes, manageFocus(store), closeProxy(store) ];
+    const effects = [ toggleAttributes, closeProxy(store), manageFocus(store) ];
     if (!silent) effects.push(broadcast(store));
     store.update({
         ...store.getState(),
@@ -230,8 +230,8 @@ const closeFromOutside = store => {
  * @param Event, event dispatched from document
  */
 export const focusInListener = store => e => {
-    const { node, toggles } = store.getState();
-    if (node.contains(e.target) || targetIsToggle(toggles, e.target)) return;
+    const { node, toggles, isOpen } = store.getState();
+    if (!isOpen || node.contains(e.target) || targetIsToggle(toggles, e.target)) return;
     closeFromOutside(store);
 };
 
@@ -245,8 +245,8 @@ export const focusInListener = store => e => {
  * @param Event, event dispatched from document
  */
 export const clickListener = store => e => {
-    const { node, toggles } = store.getState();
-    if (node.contains(e.target) || targetIsToggle(toggles, e.target)) return;
+    const { node, toggles, isOpen } = store.getState();
+    if (!isOpen || node.contains(e.target) || targetIsToggle(toggles, e.target)) return;
     closeFromOutside(store);
 };
 

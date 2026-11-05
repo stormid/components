@@ -389,6 +389,50 @@ describe('Toggle > dom > manageFocus', () => {
         assert.strictEqual(document.activeElement, button);
     });
 
+    it('should stay closed with closeOnBlur when focus returns to an element outside the node and its toggles', () => {
+        document.body.insertAdjacentHTML('afterbegin', '<input id="before">');
+        const before = document.getElementById('before');
+        const [ instance ] = toggle('.js-focus', { local: true, focus: true, closeOnBlur: true });
+        before.focus();
+
+        instance.startToggle();
+        assert.strictEqual(instance.getState().isOpen, true);
+        assert.strictEqual(document.activeElement, document.getElementById('focus-first'));
+
+        instance.startToggle(); //restoring focus to #before must not be read as a blur and reopen it
+        assert.strictEqual(instance.getState().isOpen, false);
+        assert.strictEqual(document.activeElement, before);
+    });
+
+});
+
+describe('Toggle > dom > outside-close listeners', () => {
+
+    beforeEach(() => {
+        document.body.innerHTML = `<div class="parent">
+            <input id="outside">
+            <button class="js-outside-btn">Test toggle</button>
+            <div id="outside-target" class="js-outside" data-toggle="js-outside-btn">
+                <a href="#">First</a>
+            </div>
+        </div>`;
+    });
+
+    //the listeners are removed on close, but must still only ever close if one fires while closed
+    it('should not open a closed toggle from the focusin listener', () => {
+        const [ instance ] = toggle('.js-outside', { local: true, closeOnBlur: true });
+        const { focusInListener } = instance.getState();
+        focusInListener({ target: document.getElementById('outside') });
+        assert.strictEqual(instance.getState().isOpen, false);
+    });
+
+    it('should not open a closed toggle from the click listener', () => {
+        const [ instance ] = toggle('.js-outside', { local: true, closeOnClick: true });
+        const { clickListener } = instance.getState();
+        clickListener({ target: document.getElementById('outside') });
+        assert.strictEqual(instance.getState().isOpen, false);
+    });
+
 });
 
 describe('Toggle > dom > delay', () => {
