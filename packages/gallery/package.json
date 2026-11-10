@@ -1,0 +1,30 @@
+{
+  "name": "@stormid/gallery",
+  "version": "1.0.0",
+  "description": "Accessible image gallery",
+  "author": "stormid",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "https://github.com/stormid/components/tree/master/packages/gallery",
+  "private": false,
+  "main": "dist/index.js",
+  "source": "src/index.js",
+  "module": "dist/index.modern.mjs",
+  "unpkg": "dist/index.umd.js",
+  "browser": "dist/index.umd.js",
+  "keywords": [
+    "stormid",
+    "component",
+    "ui",
+    "gallery"
+  ],
+  "scripts": {
+    "build": "npx microbundle --name Gallery",
+    "test": "jest --coverage & npx playwright test",
+    "dev": "webpack-dev-server --config example/webpack.config.js --mode development",
+    "prod": "webpack --config example/webpack.config.js --mode production",
+    "prepublish": "npm run -s build"
+  }
+}
