@@ -73,6 +73,8 @@ test.describe('Skip > Same-hash re-activation', { tag: '@all'}, async () => {
 
 	test('should re-focus the target when a link to the current hash is re-activated', async ({page}) => {
 		// beforeEach has already activated the skip link: focus is on #content and the hash is #content.
+		// Wait for its hashchange to focus #content first, or that focus can land after the one below and take it back.
+		await expect(page.locator(':focus')).toHaveId('content');
 		await page.locator('#test-2').focus();
 		await expect(page.locator(':focus')).toHaveId('test-2');
 		// Re-activate the skip link. Its hash matches the current URL, so no hashchange fires.
