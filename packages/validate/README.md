@@ -81,6 +81,7 @@ Multiple validators can be used on a single field. Custom validators can be adde
     - [Error message container](#error-message-container)
     - [Error messages](#error-messages)
     - [Error summary](#error-summary)
+      - [Rendering into your own element](#rendering-into-your-own-element)
       - [Including values in error messages](#including-values-in-error-messages)
   - [Options](#options)
   - [API](#api)
@@ -338,7 +339,31 @@ With the `errorSummary` option enabled, an error summary is rendered immediately
 
 A server-rendered summary immediately before the form, with the `error-summary` class, is taken over: it's replaced on submit and removed on reset, and its links to a field in a validation group are removed when that group is fixed.
 
-The summary is placed before the form, so put the form at the top of the page's main content (below any back link or breadcrumbs) for the summary to be where users expect it. Consider also prefixing the page `<title>` with "Error: " when there are errors.
+By default the summary is placed before the form, so put the form at the top of the page's main content (below any back link or breadcrumbs) for the summary to be where users expect it, or use the `errorSummaryId` option to place it elsewhere (see below). Consider also prefixing the page `<title>` with "Error: " when there are errors.
+
+#### Rendering into your own element
+To control where the summary appears and what wraps it, e.g. at the top of `<main>` or inside a grid column, add an element to the page and pass its id as the `errorSummaryId` option, along with `errorSummary: true`:
+
+```
+<main>
+    <div class="grid-row">
+        <div id="form-errors" class="error-summary"></div>
+    </div>
+    <a href="/previous">Back</a>
+    <form>...</form>
+</main>
+```
+
+```
+validate('form', { errorSummary: true, errorSummaryId: 'form-errors' });
+```
+
+- The summary's markup (the `role="alert"` container, title and list) is rendered inside the element in place of its contents. The element's own attributes and classes are left alone, so style it as the summary, and it receives focus on submit
+- The element is never removed: when there are no errors it is emptied and hidden with the `hidden` attribute, including when the instance is created, if it's empty. If you style it with `display`, make sure `[hidden]` still hides it
+- If it already contains a server-rendered summary (any list items) it is left visible and taken over, as a summary before the form would be
+- Pass the id without a `#`. If no element has the id, a warning is logged and the summary is rendered before the form instead. The element is looked up once, when the instance is created
+- The element must not contain the form, and each form needs its own element: if it contains the form, or another form already uses it, a warning is logged and the summary is rendered before the form instead. When the instance is destroyed the element is released
+- `errorSummaryId` is ignored, with a warning, unless `errorSummary` is enabled. When it is used, a summary immediately before the form is not taken over
 
 ## Submit buttons
 
@@ -369,7 +394,8 @@ Pressing Enter in a field submits the form with its first submit button in docum
     preSubmitHook: undefined, // optional function, called on validation pass before the form is submitted, with the submit button that was used, if any; if it throws, the form is not submitted
     submit: undefined, // optional function; when provided it is called instead of form.submit() (e.g. for async submissions), with the submit button that was used, if any
     errorSummary: false, // render an error summary above the form on submit, see Error summary
-    errorSummaryTitle: 'There is a problem' // the error summary heading
+    errorSummaryTitle: 'There is a problem', // the error summary heading
+    errorSummaryId: undefined // id of an element to render the error summary into, instead of before the form; requires errorSummary, see Error summary
 }
 ```
 

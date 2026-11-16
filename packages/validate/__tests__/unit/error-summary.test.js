@@ -365,3 +365,292 @@ describe('Validate > Unit > Error summary > server-rendered summary', () => {
         assert.ok(summary());
     });
 });
+
+const setUpContainerDOM = (containerMarkup = '<div id="form-errors" class="my-summary"></div>') => {
+    document.body.innerHTML = `<main>
+        <div class="grid">${containerMarkup}</div>
+        <a href="/back">Back</a>
+        <form class="form">
+            <label for="name">Name</label>
+            <input id="name" name="name" data-val="true" data-val-required="Enter your name" type="text">
+            <fieldset>
+                <legend>Colour</legend>
+                <input id="colour-1" name="colour" type="radio" value="red" data-val="true" data-val-required="Select a colour">
+                <label for="colour-1">Red</label>
+                <input id="colour-2" name="colour" type="radio" value="blue">
+                <label for="colour-2">Blue</label>
+            </fieldset>
+            <label for="email">Email</label>
+            <input id="email" name="email" data-val="true" data-val-email="{{value}} is not an email address" value="nope" type="text">
+        </form>
+    </main>`;
+    return document.querySelector('form');
+};
+
+const container = () => document.getElementById('form-errors');
+const containerHrefs = () => Array.from(container().querySelectorAll('a')).map(link => link.getAttribute('href'));
+const fillForm = () => {
+    document.getElementById('name').value = 'Mick';
+    document.getElementById('colour-1').checked = true;
+    document.getElementById('email').value = 'mick@example.com';
+};
+const assertEmptyAndHidden = () => {
+    assert.ok(container(), 'the container is still in the page');
+    assert.strictEqual(container().childNodes.length, 0);
+    assert.strictEqual(container().hasAttribute('hidden'), true);
+};
+
+describe('Validate > Unit > Error summary > container', () => {
+
+    it('should render the summary inside the container, not before the form', async () => {
+        const form = setUpContainerDOM();
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        assert.strictEqual(await validator.validate(), false);
+
+        assert.strictEqual(form.previousElementSibling.tagName, 'A');
+        assert.strictEqual(document.querySelector('.error-summary'), null);
+        assert.strictEqual(container().className, 'my-summary');
+        assert.strictEqual(container().hasAttribute('hidden'), false);
+        assert.strictEqual(container().hasAttribute('role'), false);
+        const alert = container().querySelector(':scope > [role="alert"]');
+        assert.strictEqual(alert.querySelector(':scope > h2.error-summary__title').textContent, 'There is a problem');
+        assert.deepStrictEqual(Array.from(alert.querySelectorAll(':scope > ul.error-summary__list > li > a')).map(link => link.getAttribute('href')), [ '#name', '#colour-1', '#email' ]);
+        assert.ok(document.activeElement === container(), 'focus is on the container');
+    });
+
+    it('should hide an empty container at initialisation', () => {
+        const form = setUpContainerDOM();
+        validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        assert.strictEqual(container().hasAttribute('hidden'), true);
+    });
+
+    it('should replace the container contents on re-submit rather than add to them', async () => {
+        const form = setUpContainerDOM();
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        await validator.validate();
+        document.getElementById('name').value = 'Mick';
+        await validator.validate();
+        assert.strictEqual(container().querySelectorAll('[role="alert"]').length, 1);
+        assert.deepStrictEqual(containerHrefs(), [ '#colour-1', '#email' ]);
+    });
+
+    it('should empty and hide the container, keeping it in the page, when the form is valid on submit', async () => {
+        const form = setUpContainerDOM();
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        await validator.validate();
+        fillForm();
+        assert.strictEqual(await validator.validate(), true);
+        assertEmptyAndHidden();
+    });
+
+    it('should empty and hide the container, keeping it in the page, when the form is reset', async () => {
+        const form = setUpContainerDOM();
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        await validator.validate();
+        form.dispatchEvent(new Event('reset'));
+        assertEmptyAndHidden();
+    });
+
+    it('should empty and hide the container, keeping it in the page, when the instance is destroyed', async () => {
+        const form = setUpContainerDOM();
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        await validator.validate();
+        validator.destroy();
+        assertEmptyAndHidden();
+    });
+
+    it('should move focus to the form when the focused container is hidden', async () => {
+        const form = setUpContainerDOM();
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        await validator.validate();
+        assert.ok(document.activeElement === container(), 'focus is on the container');
+        form.dispatchEvent(new Event('reset'));
+        assert.ok(document.activeElement === form, 'focus is on the form');
+    });
+
+    it('should hide the container once the last error is fixed via validateGroup', async () => {
+        const form = setUpContainerDOM();
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        await validator.validate();
+        fillForm();
+        await validator.validateGroup('name');
+        await validator.validateGroup('colour');
+        assert.strictEqual(container().hasAttribute('hidden'), false);
+        await validator.validateGroup('email');
+        assertEmptyAndHidden();
+    });
+
+    it('should warn and render before the form when the container is not found', async () => {
+        const form = setUpContainerDOM();
+        console.warn = mock.fn();
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: '#form-errors' });
+        assert.strictEqual(console.warn.mock.callCount(), 1);
+        assert.match(console.warn.mock.calls[0].arguments[0], /'#form-errors'/);
+        await validator.validate();
+        assert.ok(form.previousElementSibling.classList.contains('error-summary'));
+        assert.strictEqual(container().childNodes.length, 0);
+        assert.strictEqual(container().hasAttribute('hidden'), false);
+    });
+
+    it('should warn and render before the form when errorSummaryId is not a non-empty string', async () => {
+        const form = setUpContainerDOM();
+        console.warn = mock.fn();
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: '  ' });
+        assert.strictEqual(console.warn.mock.callCount(), 1);
+        await validator.validate();
+        assert.ok(form.previousElementSibling.classList.contains('error-summary'));
+        assert.strictEqual(container().childNodes.length, 0);
+    });
+
+    it('should warn and render no summary when errorSummaryId is set without errorSummary', async () => {
+        const form = setUpContainerDOM();
+        console.warn = mock.fn();
+        const [ validator ] = validate(form, { errorSummaryId: 'form-errors' });
+        assert.strictEqual(console.warn.mock.callCount(), 1);
+        await validator.validate();
+        assert.strictEqual(document.querySelector('.error-summary'), null);
+        assert.strictEqual(container().childNodes.length, 0);
+        assert.ok(document.activeElement === document.getElementById('name'), 'focus is on the first invalid field');
+    });
+
+    it('should stop using the container once the instance is destroyed', async () => {
+        const form = setUpContainerDOM();
+        const [ first ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        first.destroy();
+        form.removeAttribute('novalidate');
+        const [ second ] = validate(form, { errorSummary: true });
+        await second.validate();
+        assert.ok(form.previousElementSibling.classList.contains('error-summary'));
+        assert.strictEqual(container().childNodes.length, 0);
+    });
+
+    it('should warn and render before the form when the container contains the form', async () => {
+        const form = setUpContainerDOM();
+        const wrapper = document.createElement('div');
+        wrapper.id = 'form-wrapper';
+        form.parentNode.insertBefore(wrapper, form);
+        wrapper.appendChild(form);
+        console.warn = mock.fn();
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-wrapper' });
+        assert.strictEqual(console.warn.mock.callCount(), 1);
+        assert.strictEqual(wrapper.hasAttribute('hidden'), false);
+        await validator.validate();
+        assert.ok(document.contains(form), 'the form is still in the page');
+        assert.ok(form.previousElementSibling.classList.contains('error-summary'));
+    });
+
+    it('should move focus to the form when the focused last link\'s group is fixed', async () => {
+        const form = setUpContainerDOM();
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        await validator.validate();
+        fillForm();
+        await validator.validateGroup('name');
+        await validator.validateGroup('colour');
+        container().querySelector('a[href="#email"]').focus();
+        await validator.validateGroup('email');
+        assertEmptyAndHidden();
+        assert.ok(document.activeElement === form, 'focus is on the form');
+    });
+
+    it('should warn and render before the form when another form already uses the container', async () => {
+        document.body.innerHTML = `<main>
+            <div id="form-errors"></div>
+            <form id="first"><label for="a">A</label><input id="a" name="a" data-val="true" data-val-required="Enter A"></form>
+            <form id="second"><label for="b">B</label><input id="b" name="b" data-val="true" data-val-required="Enter B"></form>
+        </main>`;
+        console.warn = mock.fn();
+        const [ first, second ] = validate('form', { errorSummary: true, errorSummaryId: 'form-errors' });
+        assert.strictEqual(console.warn.mock.callCount(), 1);
+        await first.validate();
+        await second.validate();
+        const secondForm = document.getElementById('second');
+        assert.ok(secondForm.previousElementSibling.classList.contains('error-summary'));
+        assert.deepStrictEqual(containerHrefs(), [ '#a' ]);
+        secondForm.dispatchEvent(new Event('reset'));
+        assert.deepStrictEqual(containerHrefs(), [ '#a' ]);
+    });
+});
+
+describe('Validate > Unit > Error summary > focus when the last link is removed', () => {
+
+    it('should move focus to the form when the focused last link of a summary before the form is removed', async () => {
+        const form = setUpDOM();
+        const [ validator ] = validate(form, { errorSummary: true });
+        await validator.validate();
+        document.getElementById('name').value = 'Mick';
+        document.getElementById('colour-1').checked = true;
+        document.getElementById('email').value = 'mick@example.com';
+        await validator.validateGroup('name');
+        await validator.validateGroup('colour');
+        summary().querySelector('a[href="#email"]').focus();
+        await validator.validateGroup('email');
+        assert.strictEqual(summary(), null);
+        assert.ok(document.activeElement === form, 'focus is on the form');
+    });
+});
+
+const SERVER_CONTAINER = `<div id="form-errors" class="my-summary">
+    <div role="alert">
+        <h2 class="error-summary__title">There is a problem</h2>
+        <ul class="error-summary__list">
+            <li><a href="#name">Enter your name</a></li>
+            <li><a href="#other">Something else went wrong</a></li>
+        </ul>
+    </div>
+</div>`;
+
+describe('Validate > Unit > Error summary > container with server-rendered errors', () => {
+
+    it('should leave a container with server-rendered errors visible and track its links', () => {
+        const form = setUpContainerDOM(SERVER_CONTAINER);
+        validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        assert.strictEqual(container().hasAttribute('hidden'), false);
+        container().querySelector('a[href="#name"]').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+        assert.ok(document.activeElement === document.getElementById('name'), 'focus is on the linked field');
+    });
+
+    it('should remove a fixed group\'s link from the container, keeping links not to a group', async () => {
+        const form = setUpContainerDOM(SERVER_CONTAINER);
+        //the server renders the inline error alongside the summary, as it does in the server-rendered summary tests
+        const serverError = document.createElement('span');
+        serverError.setAttribute('data-valmsg-for', 'name');
+        serverError.textContent = 'Enter your name';
+        document.getElementById('name').before(serverError);
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        document.getElementById('name').value = 'Mick';
+        await validator.validateGroup('name');
+        assert.deepStrictEqual(containerHrefs(), [ '#other' ]);
+        assert.strictEqual(container().hasAttribute('hidden'), false);
+    });
+
+    it('should replace server-rendered container content on submit', async () => {
+        const form = setUpContainerDOM(SERVER_CONTAINER);
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        await validator.validate();
+        assert.strictEqual(container().querySelectorAll('[role="alert"]').length, 1);
+        assert.deepStrictEqual(containerHrefs(), [ '#name', '#colour-1', '#email' ]);
+    });
+
+    it('should empty and hide a container with server-rendered errors on valid submit', async () => {
+        const form = setUpContainerDOM(SERVER_CONTAINER);
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        fillForm();
+        assert.strictEqual(await validator.validate(), true);
+        assertEmptyAndHidden();
+    });
+
+    it('should leave a summary before the form alone when a container is used', async () => {
+        const form = setUpContainerDOM();
+        const sibling = document.createElement('div');
+        sibling.className = 'error-summary';
+        sibling.innerHTML = '<ul><li><a href="#name">Enter your name</a></li></ul>';
+        form.parentNode.insertBefore(sibling, form);
+        const before = sibling.outerHTML;
+
+        const [ validator ] = validate(form, { errorSummary: true, errorSummaryId: 'form-errors' });
+        await validator.validate();
+        form.dispatchEvent(new Event('reset'));
+        assert.ok(form.previousElementSibling === sibling, 'the sibling summary is still before the form');
+        assert.strictEqual(sibling.outerHTML, before);
+    });
+});

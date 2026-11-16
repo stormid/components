@@ -4,7 +4,7 @@ import reducers from '../reducers/index.js';
 import { getInitialState } from '../validator/index.js';
 import { validate }  from './validate.js';
 import { clearErrors, addAXAttributes }  from '../dom/index.js';
-import { adoptErrorSummary, removeErrorSummary } from '../dom/error-summary.js';
+import { adoptErrorSummary, removeErrorSummary, destroyErrorSummary } from '../dom/error-summary.js';
 import { addMethod } from './add-method.js';
 import { addGroup, validateGroup, removeGroup } from './group.js';
 
@@ -42,7 +42,7 @@ export default (form, settings) => {
                 if (state.groups[groupName].controller) state.groups[groupName].controller.abort();
             });
             //the summary would no longer be kept up to date
-            removeErrorSummary(state);
+            destroyErrorSummary(state);
         }
     };
 };

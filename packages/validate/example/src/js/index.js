@@ -12,6 +12,7 @@ import { isValidDate, isFutureDate } from '../../../src/lib/plugins/methods/date
     
     const [ validator ] = validate(formToValidate, {
         errorSummary: formToValidate.hasAttribute('data-error-summary'),
+        errorSummaryId: formToValidate.getAttribute('data-error-summary-id') || undefined,
         preSubmitHook: () => {
             const hiddenCheck = document.createElement('input');
             hiddenCheck.setAttribute('type', 'hidden');

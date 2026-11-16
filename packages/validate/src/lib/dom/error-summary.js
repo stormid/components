@@ -7,7 +7,43 @@ import { ERROR_SUMMARY_CLASSNAMES } from '../constants/index.js';
 //don't track DOM nodes; a WeakMap so a form that is removed from the document isn't kept alive
 const summaries = new WeakMap();
 
+//each form's errorSummaryId element, if it has one: the summary is rendered into it rather than before the form
+const containers = new WeakMap();
+//the form each errorSummaryId element is in use by, so another form can't render into and clear it
+const owners = new WeakMap();
+
 const isEnabled = state => !!(state.settings && state.settings.errorSummary);
+
+/**
+ * Empties a node without innerHTML or replaceChildren, which older browsers don't support
+ *
+ * @param node [DOM node]
+ */
+const empty = node => {
+    while (node.firstChild) node.removeChild(node.firstChild);
+};
+
+/**
+ * Finds the element named by the errorSummaryId option, warning if it can't be used so the summary falls back to
+ * being rendered before the form
+ *
+ * @param state [Object, validation state]
+ *
+ * @returns [DOM node|undefined]
+ */
+const resolveContainer = state => {
+    const id = state.settings.errorSummaryId;
+    if (id === undefined) return;
+    if (!isMessage(id)) return console.warn('The errorSummaryId option must be a non-empty string, rendering the error summary before the form.');
+    const container = document.getElementById(id);
+    if (!container) return console.warn(`No element with the id '${id}' was found for the error summary, rendering it before the form.`);
+    //rendering into an element that contains the form would empty the form out of the page
+    if (container.contains(state.form)) return console.warn(`The element with the id '${id}' contains the form, so it can't be used for the error summary, rendering it before the form.`);
+    const owner = owners.get(container);
+    if (owner && owner !== state.form) return console.warn(`The element with the id '${id}' is already used for another form's error summary, rendering it before the form.`);
+    owners.set(container, state.form);
+    return container;
+};
 
 /**
  * Focuses a node that isn't natively focusable, as govuk-frontend does: a temporary tabindex makes it focusable,
@@ -78,7 +114,25 @@ export const removeErrorSummary = state => {
     if (!summary) return;
     summaries.delete(state.form);
     if (summary.node.contains(document.activeElement)) setFocus(state.form);
-    if (summary.node.parentNode) summary.node.parentNode.removeChild(summary.node);
+    //an errorSummaryId element belongs to the page, so it is emptied and hidden rather than removed
+    if (summary.container) {
+        empty(summary.node);
+        summary.node.setAttribute('hidden', '');
+    } else if (summary.node.parentNode) summary.node.parentNode.removeChild(summary.node);
+};
+
+/**
+ * Removes the form's error summary when the instance is destroyed, and releases its errorSummaryId element,
+ * so a new instance on the form doesn't render into it unless it is given its id again
+ *
+ * @param state [Object, validation state]
+ */
+export const destroyErrorSummary = state => {
+    removeErrorSummary(state);
+    const container = containers.get(state.form);
+    if (!container) return;
+    containers.delete(state.form);
+    if (owners.get(container) === state.form) owners.delete(container);
 };
 
 /**
@@ -93,23 +147,23 @@ const removeItem = (summary, groupName) => {
     if (item.contains(document.activeElement)) {
         const sibling = item.nextElementSibling || item.previousElementSibling;
         const link = sibling && sibling.querySelector('a');
+        //with no link left to move to, focus moves to the summary, and from there to the form if the summary is removed
         if (link) link.focus();
+        else setFocus(summary.node);
     }
     item.parentNode.removeChild(item);
 };
 
 /**
- * Takes over a server-rendered summary immediately before the form (one with the error summary class),
- * so that it is replaced on submit and removed on reset rather than left alongside the client's summary.
- * Its links to the fields of a group are tracked as that group's items, so they are removed when the group is fixed
+ * Tracks a server-rendered summary's links to the fields of a group as that group's items, so they are removed
+ * when the group is fixed, and following one focuses the field
  *
  * @param state [Object, validation state]
+ * @param node [DOM node] the server-rendered summary
+ *
+ * @returns [Map] the items, keyed by group name
  */
-export const adoptErrorSummary = state => {
-    if (!isEnabled(state)) return;
-    const node = state.form.previousElementSibling;
-    if (!node || !node.classList.contains(ERROR_SUMMARY_CLASSNAMES.SUMMARY)) return;
-
+const adoptItems = (state, node) => {
     const items = new Map();
     Array.from(node.querySelectorAll('li a[href^="#"]')).forEach(link => {
         const id = decodeURIComponent(link.getAttribute('href').slice(1));
@@ -120,7 +174,32 @@ export const adoptErrorSummary = state => {
             items.set(groupName, { item: link.closest('li') });
         });
     });
-    summaries.set(state.form, { node, items });
+    return items;
+};
+
+/**
+ * Sets up the summary when the instance is created. With the errorSummaryId option, the element it names is used:
+ * if it contains server-rendered errors (any list item) they are taken over, otherwise it is hidden until there are errors.
+ * Without it, a server-rendered summary immediately before the form (one with the error summary class) is taken over,
+ * so that it is replaced on submit and removed on reset rather than left alongside the client's summary
+ *
+ * @param state [Object, validation state]
+ */
+export const adoptErrorSummary = state => {
+    if (!isEnabled(state)) {
+        if (state.settings && state.settings.errorSummaryId !== undefined) console.warn('The errorSummaryId option is ignored unless the errorSummary option is enabled.');
+        return;
+    }
+    const container = resolveContainer(state);
+    if (container) {
+        containers.set(state.form, container);
+        if (container.querySelector('li')) summaries.set(state.form, { node: container, items: adoptItems(state, container), container: true });
+        else container.setAttribute('hidden', '');
+        return;
+    }
+    const node = state.form.previousElementSibling;
+    if (!node || !node.classList.contains(ERROR_SUMMARY_CLASSNAMES.SUMMARY)) return;
+    summaries.set(state.form, { node, items: adoptItems(state, node) });
 };
 
 /**
@@ -133,7 +212,8 @@ export const adoptErrorSummary = state => {
 export const renderErrorSummary = state => {
     if (!isEnabled(state)) return;
     removeErrorSummary(state);
-    if (!state.form.parentNode) return console.warn('The error summary cannot be rendered as the form has no parent node.');
+    const container = containers.get(state.form);
+    if (!container && !state.form.parentNode) return console.warn('The error summary cannot be rendered as the form has no parent node.');
 
     const invalidGroups = Object.keys(state.groups)
         .filter(groupName => !state.groups[groupName].valid && state.groups[groupName].errorMessages && state.groups[groupName].errorMessages.length)
@@ -167,6 +247,14 @@ export const renderErrorSummary = state => {
     const alert = h('div', { role: 'alert' });
     alert.appendChild(h('h2', { class: ERROR_SUMMARY_CLASSNAMES.TITLE }, title));
     alert.appendChild(list);
+    if (container) {
+        //removeErrorSummary has emptied it, unless it was never rendered into (e.g. on the first submit)
+        empty(container);
+        container.appendChild(alert);
+        container.removeAttribute('hidden');
+        summaries.set(state.form, { node: container, items, container: true });
+        return;
+    }
     const node = h('div', { class: ERROR_SUMMARY_CLASSNAMES.SUMMARY });
     node.appendChild(alert);
     state.form.parentNode.insertBefore(node, state.form);
