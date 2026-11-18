@@ -393,7 +393,7 @@ Pressing Enter in a field submits the form with its first submit button in docum
 {
     preSubmitHook: undefined, // optional function, called on validation pass before the form is submitted, with the submit button that was used, if any; if it throws, the form is not submitted
     submit: undefined, // optional function; when provided it is called instead of form.submit() (e.g. for async submissions), with the submit button that was used, if any
-    errorSummary: false, // render an error summary above the form on submit, see Error summary
+    errorSummary: false, // render an error summary on submit, before the form or inside the errorSummaryId element, see Error summary
     errorSummaryTitle: 'There is a problem', // the error summary heading
     errorSummaryId: undefined // id of an element to render the error summary into, instead of before the form; requires errorSummary, see Error summary
 }

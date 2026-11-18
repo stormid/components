@@ -203,7 +203,7 @@ export const adoptErrorSummary = state => {
 };
 
 /**
- * Renders an error summary immediately before the form, replacing any previous one, listing a link to each
+ * Renders an error summary into the errorSummaryId element, or otherwise immediately before the form, replacing any previous one, listing a link to each
  * invalid group with its error message, in document order. role="alert" is on an inner container rather than the
  * focused summary, as an alert that is also focused can have its announcement cut short
  *
