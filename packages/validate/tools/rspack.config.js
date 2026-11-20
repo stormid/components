@@ -34,6 +34,11 @@ module.exports = {
             title: pkg.name,
             template: './example/src/error-summary.html',
             filename: 'error-summary.html'
+        }),
+        new rspack.HtmlRspackPlugin({
+            title: pkg.name,
+            template: './example/src/error-summary-container.html',
+            filename: 'error-summary-container.html'
         })
     ],
     module: {
